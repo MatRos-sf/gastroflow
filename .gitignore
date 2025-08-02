@@ -186,3 +186,4 @@ fabric.properties
 
 */migrations/
 *.sqlite3
+.idea

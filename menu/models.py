@@ -25,6 +25,9 @@ class Addition(models.Model):
     price = models.DecimalField(max_digits=5, decimal_places=2)
     is_available = models.BooleanField(default=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Item(models.Model):
     menu = models.CharField(
@@ -47,3 +50,6 @@ class Item(models.Model):
     is_available = models.BooleanField(default=True)
     price = models.DecimalField(max_digits=5, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
