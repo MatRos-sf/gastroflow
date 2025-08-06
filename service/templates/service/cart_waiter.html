@@ -1,0 +1,49 @@
+{% extends "menu/base.html" %}
+{% block content %}
+    <h2 class="mb-4">Your Cart</h2>
+    <div class="row">
+        {% for item in cart %}
+            <div class="col-md-3 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.name }}</h5>
+                        <p class="card-text">{{ item.note }}</p>
+                        <p class="mb-1">
+                            <strong>Price:</strong> {{ item.price }} zł
+                        </p>
+                        <p class="mb-3">
+                            <strong>Quantity:</strong> {{ item.quantity }}
+                        </p>
+                        {% if item.additions %}
+                            <p class="mb-1">
+                                <strong>Additions:</strong>
+                            </p>
+                            <ul class="list-group mb-3">
+                                {% for add in item.additions %}<li class="list-group-item py-1">{{ add.name }} (+{{ add.price }} zł)</li>{% endfor %}
+                            </ul>
+                        {% endif %}
+                        <a href="{% url 'service:remove-from-cart' forloop.counter0 %}"
+                           class="btn btn-outline-danger w-100">🗑 Remove</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <hr class="my-4">
+    <h4>Place Order</h4>
+    <form method="post"
+          action="{% url 'waiter:summary-waiter' %}"
+          class="row g-3">
+        {% csrf_token %}
+        <div class="col-md-4">
+            <input id="table"
+                   type="text"
+                   name="table"
+                   class="form-control"
+                   placeholder="Table number">
+        </div>
+        <div class="col-md-4">
+            <button type="submit" class="btn btn-success">✅ Place Order</button>
+        </div>
+    </form>
+{% endblock content %}
