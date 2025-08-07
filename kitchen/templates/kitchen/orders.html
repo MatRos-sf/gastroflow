@@ -1,0 +1,107 @@
+{% extends "menu/base.html" %}
+{% block title %}
+    Kitchen Orders
+{% endblock title %}
+{% block content %}
+    <div class="container my-4">
+        <h1 class="text-center text-dark mb-4">Kitchen Orders</h1>
+        <div id="orders-container"></div>
+    </div>
+    <script>
+    const ordersContainer = document.getElementById('orders-container');
+    const kitchenSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/kitchen/orders/'
+    );
+
+    kitchenSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        console.log("Message received:", data);
+
+        if (data.type === 'initial_orders') {
+            ordersContainer.innerHTML = '';
+            data.orders.forEach(order => {
+                addOrderToView(order);
+            });
+        } else if (data.type === 'new_order') {
+            const order = data.order;
+            addOrderToView(order);
+        } else if (data.type === 'order_status_update') {
+            const orderId = data.order_id;
+            const newStatus = data.new_status;
+
+            if (newStatus.toLowerCase() === 'ready') {
+                const orderElement = document.getElementById(`order-${orderId}`);
+                if (orderElement) {
+                    orderElement.remove();
+                    console.log(`Order ${orderId} has been removed.`);
+                }
+            } else {
+                const statusSpan = document.getElementById(`status-${orderId}`);
+                if (statusSpan) {
+                    statusSpan.innerText = newStatus;
+                    statusSpan.className = `badge bg-${getStatusClass(newStatus)}`;
+                }
+            }
+        }
+    };
+
+    kitchenSocket.onclose = function(e) {
+        console.error('Kitchen socket closed unexpectedly');
+    };
+
+    function getStatusClass(status) {
+        switch (status.toLowerCase()) {
+            case 'ordering':
+                return 'primary';
+            case 'preparing':
+                return 'warning text-dark';
+            case 'ready':
+                return 'success';
+            default:
+                return 'secondary';
+        }
+    }
+
+    function changeStatus(orderId, status) {
+        kitchenSocket.send(JSON.stringify({
+            'action': status,
+            'order_id': orderId
+        }));
+    }
+
+    function addOrderToView(order) {
+        if (document.getElementById(`order-${order.id}`)) return;
+
+        let orderItemsHtml = '';
+        order.order_items.forEach(item => {
+            orderItemsHtml += `<li class="list-group-item">
+                ${item.name_snapshot} ×${item.quantity} ${item.note ? `<small class="text-muted">(${item.note})</small>` : ''}
+            </li>`;
+        });
+
+        const orderElement = document.createElement('div');
+        orderElement.id = `order-${order.id}`;
+        orderElement.className = 'card mb-3 shadow-sm';
+
+        const statusClass = getStatusClass(order.status);
+
+        orderElement.innerHTML = `
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Order #${order.id}</h5>
+                <span id="status-${order.id}" class="badge bg-${statusClass}">${order.status}</span>
+            </div>
+            <div class="card-body">
+                <p class="mb-1"><strong>Table:</strong> ${order.table}</p>
+                <p class="mb-2"><strong>Created At:</strong> ${order.created_at}</p>
+                <ul class="list-group mb-3">${orderItemsHtml}</ul>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-warning text-dark" onclick="changeStatus(${order.id}, 'preparing')">Preparing</button>
+                    <button class="btn btn-success" onclick="changeStatus(${order.id}, 'ready')">Ready</button>
+                </div>
+            </div>
+        `;
+
+        ordersContainer.prepend(orderElement);
+    }
+    </script>
+{% endblock content %}
