@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "channels",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -38,9 +39,13 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
+    "crispy_forms",
+    "crispy_bootstrap5",
     # custom apps
     "menu",
     "order",
+    "service",
+    "kitchen",
 ]
 
 
@@ -126,3 +131,14 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+ASGI_APPLICATION = "gastroflow.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
