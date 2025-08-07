@@ -2,10 +2,10 @@ from django.db import models
 
 
 class MenuType(models.TextChoices):
-    MAIN = "main", "MAIN"
-    MENU_FOR_CHILDREN = "menu_for_children", "MENU_FOR_CHILDREN"
-    DRINK = "napoje", "NAPOJE"
-    COLD_DRINK = "napoje zimne", "NAPOJE_ZIMNE"
+    MAIN = "main", "Main menu"
+    MENU_FOR_CHILDREN = "menu_for_children", "Menu for children"
+    DRINK = "drinks", "Drinks"
+    COLD_DRINK = "cold_drinks", "Cold drinks"
 
 
 class SubMenuType(models.TextChoices):
