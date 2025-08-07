@@ -1,49 +1,61 @@
 {% extends "menu/base.html" %}
 {% block content %}
-    <h2 class="mb-4">Your Cart</h2>
-    <div class="row">
-        {% for item in cart %}
-            <div class="col-md-3 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ item.name }}</h5>
-                        <p class="card-text">{{ item.note }}</p>
-                        <p class="mb-1">
-                            <strong>Price:</strong> {{ item.price }} zł
-                        </p>
-                        <p class="mb-3">
-                            <strong>Quantity:</strong> {{ item.quantity }}
-                        </p>
-                        {% if item.additions %}
-                            <p class="mb-1">
-                                <strong>Additions:</strong>
-                            </p>
-                            <ul class="list-group mb-3">
-                                {% for add in item.additions %}<li class="list-group-item py-1">{{ add.name }} (+{{ add.price }} zł)</li>{% endfor %}
-                            </ul>
-                        {% endif %}
-                        <a href="{% url 'service:remove-from-cart' forloop.counter0 %}"
-                           class="btn btn-outline-danger w-100">🗑 Remove</a>
+    <div class="container my-5">
+        <h2 class="mb-4">🛒 Your Cart</h2>
+        {% if cart %}
+            <div class="row">
+                {% for item in cart %}
+                    <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ item.name }}</h5>
+                                <p class="card-text">{{ item.note }}</p>
+                                <p class="mb-1">
+                                    <strong>Price:</strong> {{ item.price }} zł
+                                </p>
+                                <p class="mb-3">
+                                    <strong>Quantity:</strong> {{ item.quantity }}
+                                </p>
+                                {% if item.additions %}
+                                    <p class="mb-1">
+                                        <strong>Additions:</strong>
+                                    </p>
+                                    <ul class="list-group mb-3">
+                                        {% for add in item.additions %}<li class="list-group-item py-1">{{ add.name }} (+{{ add.price }} zł)</li>{% endfor %}
+                                    </ul>
+                                {% endif %}
+                                <a href="{% url 'service:remove-from-cart' forloop.counter0 %}"
+                                   class="btn btn-outline-danger w-100">🗑 Remove</a>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                {% endfor %}
             </div>
-        {% endfor %}
+            <hr class="my-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h4>🧾 Place Order</h4>
+                <a href="{% url 'service:clear-cart' %}"
+                   class="btn btn-outline-secondary"
+                   onclick="return confirm('Are you sure you want to cancel and clear the cart?');">❌ Cancel</a>
+            </div>
+            <form method="post"
+                  action="{% url 'service:summary-waiter' %}"
+                  class="row g-3 align-items-end">
+                {% csrf_token %}
+                <div class="col-md-4">
+                    <label for="table" class="form-label">Table Number</label>
+                    <input id="table"
+                           type="text"
+                           name="table"
+                           class="form-control"
+                           placeholder="e.g. 12">
+                </div>
+                <div class="col-md-4">
+                    <button type="submit" class="btn btn-success w-100">✅ Place Order</button>
+                </div>
+            </form>
+        {% else %}
+            <div class="alert alert-info">Your cart is currently empty.</div>
+        {% endif %}
     </div>
-    <hr class="my-4">
-    <h4>Place Order</h4>
-    <form method="post"
-          action="{% url 'waiter:summary-waiter' %}"
-          class="row g-3">
-        {% csrf_token %}
-        <div class="col-md-4">
-            <input id="table"
-                   type="text"
-                   name="table"
-                   class="form-control"
-                   placeholder="Table number">
-        </div>
-        <div class="col-md-4">
-            <button type="submit" class="btn btn-success">✅ Place Order</button>
-        </div>
-    </form>
 {% endblock content %}

@@ -1,5 +1,9 @@
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.http import HttpResponseNotFound
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
+from django.views.generic import DetailView, ListView
 
 from menu.models import Addition, Item
 from order.models import Bill, Order, OrderItem, OrderItemAddition, StatusBill
@@ -60,16 +64,15 @@ def api_remove_from_cart(request, index):
 
 def do_order(request):
     cart = request.session.get("cart", [])
-    print(cart)
     if request.method == "POST":
-        print("request.POST")
         if cart:
-            print("cart")
             table = request.POST.get("table")
             bill = Bill.objects.create(table=table)
-            print(bill)
+            print(
+                f"Saved bill: {bill}, table from db: {Bill.objects.get(pk=bill.pk).table}"
+            )
             # Order
-            order = Order.objects.create(bill=bill, status=StatusBill.OPEN)
+            order = Order.objects.create(bill=bill, table=table)
             for item in cart:
                 payload = {
                     "order": order,
@@ -87,10 +90,82 @@ def do_order(request):
                         name_snapshot=addition["name"],
                         price_snapshot=addition["price"],
                     )
+            make_payload_to_kitchen(order.pk, order.table)
             request.session["cart"] = []
+
             return redirect("service:menu-waiter")
+
+
+def get_order_details(order_id):
+    try:
+        order = Order.objects.get(pk=order_id)
+    except Order.DoesNotExist:
+        return None  # lub raise, zależnie od kontekstu
+
+    order_items = []
+    for item in order.order_items.order_by("name_snapshot").all():
+        order_items.append(
+            {
+                "id": item.id,
+                "name_snapshot": item.full_name_snapshot,
+                "quantity": item.quantity,
+                "note": item.note,
+            }
+        )
+
+    return {
+        "id": order.id,
+        "table": order.table,
+        "status": order.status,
+        "order_items": order_items,
+    }
+
+
+def make_payload_to_kitchen(pk: int, table: str):
+    order_detail = get_order_details(pk)
+    if order_detail is None:
+        return None
+
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        "kitchen_orders",
+        {"type": "new_order", "table": table, "order_data": order_detail},
+    )
 
 
 def cart(request):
     cart = request.session.get("cart", [])
     return render(request, "service/cart_waiter.html", {"cart": cart})
+
+
+def clear_cart(request):
+    if "cart" in request.session:
+        del request.session["cart"]
+    return redirect("service:menu-waiter")
+
+
+class BillListView(ListView):
+    model = Bill
+    template_name = "service/bill_list.html"
+
+    def get_objects(self):
+        return Bill.objects.filter(status=StatusBill.OPEN)
+
+
+class BillDetailView(DetailView):
+    model = Bill
+    template_name = "service/bill_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["summary"] = self.object.bill_summary_view()
+        return context
+
+
+def close_bill(request, pk):
+    bill = get_object_or_404(Bill, pk=pk)
+    bill.status = StatusBill.CLOSED
+    bill.closed_at = timezone.now()
+    bill.save()
+    # add message
+    return redirect("service:bill")
