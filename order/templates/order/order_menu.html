@@ -1,0 +1,67 @@
+{% extends "menu/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container mt-4">
+        <div class="row g-4">
+            {% for item in object_list %}
+                <div class="col-sm-6 col-md-4 col-lg-3">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">{{ item.name }}</h5>
+                            <p class="card-text flex-grow-1">{{ item.description }}</p>
+                            <p>
+                                <strong>Price:</strong> {{ item.price }} zł
+                            </p>
+                            <form method="post"
+                                  action="{% url 'add-to-cart' item.id %}"
+                                  class="mt-auto">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="quantity_{{ item.id }}" class="form-label">Quantity:</label>
+                                    <input type="number"
+                                           class="form-control"
+                                           name="quantity"
+                                           id="quantity_{{ item.id }}"
+                                           min="1"
+                                           value="1"
+                                           required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="note_{{ item.id }}" class="form-label">Note:</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           name="note"
+                                           id="note_{{ item.id }}"
+                                           placeholder="Optional note">
+                                </div>
+                                {% if item.additions.all %}
+                                    <div class="mb-3">
+                                        <strong>Additions:</strong>
+                                        <div>
+                                            {% for add in item.additions.all %}
+                                                <div class="form-check">
+                                                    <input class="form-check-input"
+                                                           type="checkbox"
+                                                           name="additions"
+                                                           value="{{ add.id }}"
+                                                           id="addition_{{ add.id }}_item_{{ item.id }}">
+                                                    <label class="form-check-label"
+                                                           for="addition_{{ add.id }}_item_{{ item.id }}">
+                                                        {{ add.name }} (+{{ add.price }} zł)
+                                                    </label>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+                                <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No items available.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock content %}
