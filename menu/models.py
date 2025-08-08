@@ -9,11 +9,8 @@ class MenuType(models.TextChoices):
 
 
 class SubMenuType(models.TextChoices):
-    COFFEE = "kawa", "KAWA"
-    TEA = "herbata", "HERBATA"
-    MATCHA = "matcha", "MATCHA"
-    COCKTAIL = "koktajle", "KOKTAJLE"
-    SOFT_DRINK = "napoje_bezalkoholowe", "NAPOJE_BEZALKOHOLOWE"
+    BAR = "bar", "BAR"
+    KITCHEN = "kitchen", "KITCHEN"
 
 
 class Addition(models.Model):
