@@ -45,6 +45,7 @@ class Bill(models.Model):
                 name_item = summary.get(item.name_snapshot, None)
                 if not name_item:
                     summary[item.name_snapshot] = {
+                        "id": item.menu_item.id_checkout,
                         "quantity": item.quantity,
                         "total_cost": item.raw_cost,
                     }
@@ -58,6 +59,7 @@ class Bill(models.Model):
                         name_addition = summary.get(addition.name_snapshot, None)
                         if not name_addition:
                             summary[addition.name_snapshot] = {
+                                "id": addition.addition.id_checkout,
                                 "quantity": 1,
                                 "total_cost": addition.price_snapshot,
                             }

@@ -18,18 +18,22 @@
                 <table class="table table-bordered table-hover">
                     <thead class="table-light">
                         <tr>
-                            <th>Name</th>
+                            <th>Id</th>
                             <th class="text-end">Quantity</th>
                             <th class="text-end">Total Cost (zł)</th>
+                            <th>Name</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for name, data in summary.items %}
+                            {% if data.id > 0 %}
                             <tr>
-                                <td>{{ name }}</td>
+                                <td>{{ data.id }}</td>
                                 <td class="text-end">{{ data.quantity }}</td>
                                 <td class="text-end">{{ data.total_cost }}</td>
+                                <td>{{ name }}</td>
                             </tr>
+                            {% endif %}
                         {% endfor %}
                     </tbody>
                 </table>

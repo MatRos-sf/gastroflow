@@ -121,23 +121,34 @@ class OrderConsumer(AsyncWebsocketConsumer):
         orders_list = []
         for order in orders:
             order_items = []
-            for item in order.order_items.all():
+            for item in order.order_items.order_by("name_snapshot").all():
                 order_items.append(
                     {
                         "id": item.id,
-                        "name_snapshot": item.name_snapshot,
+                        "name_snapshot": item.full_name_snapshot,
                         "quantity": item.quantity,
                         "note": item.note,
                     }
                 )
+
+
+            # for item in order.order_items.all():
+            #     order_items.append(
+            #         {
+            #             "id": item.id,
+            #             "name_snapshot": item.name_snapshot,
+            #             "quantity": item.quantity,
+            #             "note": item.note,
+            #         }
+            #     )
 
             orders_list.append(
                 {
                     "id": order.id,
                     "table": order.table,
                     "status": order.status,
-                    "created_at": order.created_at.strftime("%Y-%m-%d %H:%M:%S"),
                     "order_items": order_items,
+                    "created_at": order.created_at.strftime("%Y-%m-%d %H:%M:%S"),
                 }
             )
 
