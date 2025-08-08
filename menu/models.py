@@ -19,6 +19,7 @@ class Addition(models.Model):
     """
 
     name = models.CharField(max_length=100)
+    id_checkout = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=5, decimal_places=2)
     is_available = models.BooleanField(default=True)
 
@@ -45,6 +46,7 @@ class Item(models.Model):
         Addition, blank=True, related_name="addition_items"
     )
     is_available = models.BooleanField(default=True)
+    id_checkout = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=5, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
 
