@@ -35,7 +35,7 @@ class Item(models.Model):
         blank=True,
         null=True,
     )
-    sub_menu = models.CharField(
+    category = models.CharField(
         max_length=30, choices=SubMenuType.choices, default=None, blank=True, null=True
     )
     name = models.CharField(max_length=100, help_text="Name of dish")
