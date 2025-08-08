@@ -8,7 +8,7 @@ class MenuType(models.TextChoices):
     COLD_DRINK = "cold_drinks", "Cold drinks"
 
 
-class SubMenuType(models.TextChoices):
+class CategoryOrder(models.TextChoices):
     BAR = "bar", "BAR"
     KITCHEN = "kitchen", "KITCHEN"
 
@@ -36,7 +36,7 @@ class Item(models.Model):
         null=True,
     )
     category = models.CharField(
-        max_length=30, choices=SubMenuType.choices, default=None, blank=True, null=True
+        max_length=30, choices=CategoryOrder.choices, default=None, blank=True, null=True
     )
     name = models.CharField(max_length=100, help_text="Name of dish")
     description = models.CharField(

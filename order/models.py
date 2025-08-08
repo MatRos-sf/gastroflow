@@ -3,8 +3,7 @@ from decimal import Decimal
 from django.db import models
 from django.db.models import Sum
 
-from menu.models import Addition, Item
-
+from menu.models import Addition, Item, CategoryOrder
 
 class StatusOrder(models.TextChoices):
     ORDER = "ordering", "ORDERING"
@@ -78,7 +77,7 @@ class Order(models.Model):
     )
     # del ?
     table = models.CharField(null=True, blank=True, max_length=20)
-
+    category = models.CharField(default=CategoryOrder.KITCHEN, choices=CategoryOrder.choices)
     # Date time fields
     created_at = models.DateTimeField(auto_now_add=True)
     readied_at = models.DateTimeField(null=True, blank=True)

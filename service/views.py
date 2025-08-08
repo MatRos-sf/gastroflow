@@ -1,3 +1,5 @@
+from typing import Iterable, Optional
+
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.http import HttpResponseNotFound
@@ -5,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.generic import DetailView, ListView
 
-from menu.models import Addition, Item
+from menu.models import Addition, Item, CategoryOrder
 from order.models import Bill, Order, OrderItem, OrderItemAddition, StatusBill
 
 
@@ -42,6 +44,7 @@ def add_to_cart(request):
                     {"id": a.id, "name": a.name, "price": str(a.price)}
                     for a in additions
                 ],
+                "category": item.category
             }
         )
         request.session["cart"] = cart
@@ -61,6 +64,30 @@ def api_remove_from_cart(request, index):
         print("Deleted item:", del_item)
     return redirect("service:cart-waiter")
 
+def create_order(bill: Bill,  items: Iterable[dict], **kwargs):
+    if not items:
+        return
+    order = Order.objects.create(bill=bill, **kwargs)
+    for item in items:
+        payload = {
+            "order": order,
+            "menu_item_id": item["item_id"],
+            "name_snapshot": item["name"],
+            "price_snapshot": item["price"],
+            "quantity": item["quantity"],
+            "note": item["note"],
+        }
+        order_item = OrderItem.objects.create(**payload)
+        for addition in item["additions"]:
+            OrderItemAddition.objects.create(
+                order_item=order_item,
+                addition_id=addition["id"],
+                name_snapshot=addition["name"],
+                price_snapshot=addition["price"],
+            )
+    send_payload_to_recipient(order.pk, order.table)
+
+
 
 def do_order(request):
     cart = request.session.get("cart", [])
@@ -71,36 +98,44 @@ def do_order(request):
             print(
                 f"Saved bill: {bill}, table from db: {Bill.objects.get(pk=bill.pk).table}"
             )
-            # Order
-            order = Order.objects.create(bill=bill, table=table)
-            for item in cart:
-                payload = {
-                    "order": order,
-                    "menu_item_id": item["item_id"],
-                    "name_snapshot": item["name"],
-                    "price_snapshot": item["price"],
-                    "quantity": item["quantity"],
-                    "note": item["note"],
-                }
-                order_item = OrderItem.objects.create(**payload)
-                for addition in item["additions"]:
-                    OrderItemAddition.objects.create(
-                        order_item=order_item,
-                        addition_id=addition["id"],
-                        name_snapshot=addition["name"],
-                        price_snapshot=addition["price"],
-                    )
-            make_payload_to_kitchen(order.pk, order.table)
+            # split into 2 orders if exists!
+            kitchen = filter(lambda data: data['category'] == CategoryOrder.KITCHEN, cart)
+            bar = filter(lambda data: data['category'] == CategoryOrder.BAR, cart)
+
+            create_order(bill, kitchen, table=table, category=CategoryOrder.KITCHEN)
+            create_order(bill, bar, table=table, category=CategoryOrder.BAR)
+            # Order kitchen
+            # order = Order.objects.create(bill=bill, table=table)
+            # for item in cart:
+            #     payload = {
+            #         "order": order,
+            #         "menu_item_id": item["item_id"],
+            #         "name_snapshot": item["name"],
+            #         "price_snapshot": item["price"],
+            #         "quantity": item["quantity"],
+            #         "note": item["note"],
+            #     }
+            #     order_item = OrderItem.objects.create(**payload)
+            #     for addition in item["additions"]:
+            #         OrderItemAddition.objects.create(
+            #             order_item=order_item,
+            #             addition_id=addition["id"],
+            #             name_snapshot=addition["name"],
+            #             price_snapshot=addition["price"],
+            #         )
+            # make_payload_to_kitchen(order.pk, order.table)
             request.session["cart"] = []
 
             return redirect("service:menu-waiter")
 
 
-def get_order_details(order_id):
+def get_order_details(order_id) -> Optional[dict]:
     try:
         order = Order.objects.get(pk=order_id)
     except Order.DoesNotExist:
         return None  # lub raise, zależnie od kontekstu
+    if order.category == CategoryOrder.BAR:
+        return
 
     order_items = []
     for item in order.order_items.order_by("name_snapshot").all():
@@ -122,7 +157,7 @@ def get_order_details(order_id):
     }
 
 
-def make_payload_to_kitchen(pk: int, table: str):
+def send_payload_to_recipient(pk: int, table: str):
     order_detail = get_order_details(pk)
     if order_detail is None:
         return None

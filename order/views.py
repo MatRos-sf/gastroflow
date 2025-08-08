@@ -19,28 +19,28 @@ def item_list(request):
     return render(request, "order/order_menu.html", {"object_list": items})
 
 
-def add_to_cart(request, item_id):
-    item = get_object_or_404(Item, pk=item_id)
-    quantity = int(request.POST.get("quantity", 1))
-    note = request.POST.get("note", "")
-    additions_ids = request.POST.getlist("additions")
-    additions = Addition.objects.filter(id__in=additions_ids)
-
-    cart = request.session.get("cart", [])
-
-    cart_item = {
-        "item_id": item.id,
-        "name": item.name,
-        "price": str(item.price),
-        "quantity": quantity,
-        "note": note,
-        "additions": [
-            {"id": add.id, "name": add.name, "price": str(add.price)}
-            for add in additions
-        ],
-    }
-
-    cart.append(cart_item)
-    request.session["cart"] = cart
-    request.session.modified = True
-    return redirect("item-list")
+# def add_to_cart(request, item_id):
+#     item = get_object_or_404(Item, pk=item_id)
+#     quantity = int(request.POST.get("quantity", 1))
+#     note = request.POST.get("note", "")
+#     additions_ids = request.POST.getlist("additions")
+#     additions = Addition.objects.filter(id__in=additions_ids)
+#
+#     cart = request.session.get("cart", [])
+#
+#     cart_item = {
+#         "item_id": item.id,
+#         "name": item.name,
+#         "price": str(item.price),
+#         "quantity": quantity,
+#         "note": note,
+#         "additions": [
+#             {"id": add.id, "name": add.name, "price": str(add.price)}
+#             for add in additions
+#         ],
+#     }
+#
+#     cart.append(cart_item)
+#     request.session["cart"] = cart
+#     request.session.modified = True
+#     return redirect("item-list")
