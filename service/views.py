@@ -118,6 +118,7 @@ def get_order_details(order_id):
         "table": order.table,
         "status": order.status,
         "order_items": order_items,
+        "created_at": order.created_at.strftime("%Y-%m-%d %H:%M:%S"),
     }
 
 
@@ -148,7 +149,7 @@ class BillListView(ListView):
     model = Bill
     template_name = "service/bill_list.html"
 
-    def get_objects(self):
+    def get_queryset(self):
         return Bill.objects.filter(status=StatusBill.OPEN)
 
 
