@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "order",
     "service",
     "kitchen",
+    "bar"
 ]
 
 
