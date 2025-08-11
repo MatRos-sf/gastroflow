@@ -1,0 +1,64 @@
+{% extends "menu/base.html" %}
+{% block title %}
+    Widok stolików
+{% endblock title %}
+{% block content %}
+    <style>
+    .floor-plan {
+        position: relative;
+        width: 800px;
+        height: 400px;
+        border: 2px solid #ccc;
+        background-color: #f8f9fa;
+        margin: 20px auto;
+    }
+    .table-btn {
+        position: absolute;
+        width: 60px;
+        height: 40px;
+        border-radius: 5px;
+    }
+    .selected {
+        background-color: orange !important;
+        color: white !important;
+    }
+    </style>
+    <h2 class="text-center mt-4">Widok stolików</h2>
+    <form id="tables-form"
+          method="post"
+          action="{% url 'service:order-table' %}">
+        {% csrf_token %}
+        <input type="hidden" name="tables" id="tables-input" value="">
+        <div class="floor-plan">
+            {% for t in tables %}
+                <button type="button"
+                        class="btn btn-success table-btn"
+                        style="left: {{ t.x }}px;
+                               top: {{ t.y }}px"
+                        data-pk="{{ t.pk }}">{{ t.name }}</button>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-3">
+            <button type="submit" class="btn btn-primary btn-lg">Złóż zamówienie</button>
+        </div>
+    </form>
+    <script>
+    let selectedTables = [];
+
+    document.querySelectorAll(".table-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            let pk = btn.dataset.pk;
+            if (selectedTables.includes(pk)) {
+                selectedTables = selectedTables.filter(t => t !== pk);
+                btn.classList.remove("selected", "btn-warning");
+                btn.classList.add("btn-success");
+            } else {
+                selectedTables.push(pk);
+                btn.classList.add("selected", "btn-warning");
+                btn.classList.remove("btn-success");
+            }
+            document.getElementById("tables-input").value = selectedTables.join(",");
+        });
+    });
+    </script>
+{% endblock content %}

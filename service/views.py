@@ -10,6 +10,8 @@ from django.views.generic import DetailView, ListView
 from menu.models import Addition, CategoryOrder, Item, MenuType
 from order.models import Bill, Order, OrderItem, OrderItemAddition, StatusBill
 
+from .models import Table
+
 
 def menu_waiter(request):
     return render(request, "service/menu_waiter.html")
@@ -209,3 +211,16 @@ def close_bill(request, pk):
     bill.save()
     # add message
     return redirect("service:bill")
+
+
+def tables_view(request):
+    if request.method == "GET":
+        tables = Table.objects.filter(is_active=True)
+    elif request.method == "POST":
+        tables_selected = request.POST.get("tables")
+        if tables_selected:
+            tables_list = [int(t.strip()) for t in tables_selected.split(",")]
+            request.session["tables"] = tables_list
+            print(tables_list)
+        return redirect("service:items-waiter")
+    return render(request, "service/table_order.html", {"tables": tables})
