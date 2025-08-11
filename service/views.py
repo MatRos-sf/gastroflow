@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.generic import DetailView, ListView
 
-from menu.models import Addition, Item, CategoryOrder, MenuType
+from menu.models import Addition, CategoryOrder, Item, MenuType
 from order.models import Bill, Order, OrderItem, OrderItemAddition, StatusBill
 
 
@@ -46,7 +46,7 @@ def add_to_cart(request):
                     {"id": a.id, "name": a.name, "price": str(a.price)}
                     for a in additions
                 ],
-                "category": item.category
+                "category": item.category,
             }
         )
         request.session["cart"] = cart
@@ -66,7 +66,8 @@ def api_remove_from_cart(request, index):
         print("Deleted item:", del_item)
     return redirect("service:cart-waiter")
 
-def create_order(bill: Bill,  items: Iterable[dict], **kwargs):
+
+def create_order(bill: Bill, items: Iterable[dict], **kwargs):
     if not items:
         return
     order = Order.objects.create(bill=bill, **kwargs)
@@ -90,7 +91,6 @@ def create_order(bill: Bill,  items: Iterable[dict], **kwargs):
     send_payload_to_recipient(order.pk, order.table)
 
 
-
 def do_order(request):
     cart = request.session.get("cart", [])
     if request.method == "POST":
@@ -101,8 +101,10 @@ def do_order(request):
                 f"Saved bill: {bill}, table from db: {Bill.objects.get(pk=bill.pk).table}"
             )
             # split into 2 orders if exists!
-            kitchen = filter(lambda data: data['category'] == CategoryOrder.KITCHEN, cart)
-            bar = filter(lambda data: data['category'] == CategoryOrder.BAR, cart)
+            kitchen = filter(
+                lambda data: data["category"] == CategoryOrder.KITCHEN, cart
+            )
+            bar = filter(lambda data: data["category"] == CategoryOrder.BAR, cart)
 
             create_order(bill, kitchen, table=table, category=CategoryOrder.KITCHEN)
             create_order(bill, bar, table=table, category=CategoryOrder.BAR)
