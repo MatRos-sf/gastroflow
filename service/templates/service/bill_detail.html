@@ -1,0 +1,50 @@
+{% extends "menu/base.html" %}
+{% block title %}
+    Bill Details
+{% endblock title %}
+{% block content %}
+    <div class="container mt-4">
+        <h2 class="mb-3">Bill #{{ object.id }} – Table {{ object.table_number }}</h2>
+        <p>
+            <strong>Status:</strong> {{ object.status }}
+        </p>
+        <p>
+            <strong>Created:</strong> {{ object.created_at }}
+        </p>
+        <hr class="my-4">
+        <h4>Order Summary</h4>
+        {% if summary %}
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Id</th>
+                            <th class="text-end">Quantity</th>
+                            <th class="text-end">Total Cost (zł)</th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for name, data in summary.items %}
+                            {% if data.id > 0 %}
+                            <tr>
+                                <td>{{ data.id }}</td>
+                                <td class="text-end">{{ data.quantity }}</td>
+                                <td class="text-end">{{ data.total_cost }}</td>
+                                <td>{{ name }}</td>
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-secondary">No items in the bill.</div>
+        {% endif %}
+        <div class="d-flex justify-content-between mt-4">
+            <a href="{% url 'service:bill' %}" class="btn btn-outline-secondary">← Back to List</a>
+            <a href="{% url 'service:close-bill' object.id %}"
+               class="btn btn-outline-success">✅ Finish</a>
+        </div>
+    </div>
+{% endblock content %}

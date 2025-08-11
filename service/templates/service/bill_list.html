@@ -1,0 +1,32 @@
+{% extends "menu/base.html" %}
+{% block title %}
+    Open Bills
+{% endblock title %}
+{% block content %}
+    <div class="container mt-4">
+        <h2 class="mb-4">Open Bills</h2>
+        {% if object_list %}
+            <div class="row">
+                {% for bill in object_list %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">Table {{ bill.table }}</h5>
+                                <p class="card-text mb-1">
+                                    <strong>Status:</strong> {{ bill.status }}
+                                </p>
+                                <p class="card-text mb-1">
+                                    <strong>Created:</strong> {{ bill.created_at }}
+                                </p>
+                                <a href="{% url 'service:bill-detail' bill.id %}"
+                                   class="btn btn-primary w-100">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">No open bills at the moment.</div>
+        {% endif %}
+    </div>
+{% endblock content %}

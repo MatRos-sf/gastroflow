@@ -2,18 +2,16 @@ from django.db import models
 
 
 class MenuType(models.TextChoices):
-    MAIN = "main", "MAIN"
-    MENU_FOR_CHILDREN = "menu_for_children", "MENU_FOR_CHILDREN"
-    DRINK = "napoje", "NAPOJE"
-    COLD_DRINK = "napoje zimne", "NAPOJE_ZIMNE"
+    MAIN = "main", "Main menu"
+    MENU_FOR_CHILDREN = "menu_for_children", "Menu for children"
+    DRINK = "drinks", "Drinks"
+    COLD_DRINK = "cold_drinks", "Cold drinks"
+    UNAVAILABLE = "niedostępny", "UNAVAILABLE"
 
 
-class SubMenuType(models.TextChoices):
-    COFFEE = "kawa", "KAWA"
-    TEA = "herbata", "HERBATA"
-    MATCHA = "matcha", "MATCHA"
-    COCKTAIL = "koktajle", "KOKTAJLE"
-    SOFT_DRINK = "napoje_bezalkoholowe", "NAPOJE_BEZALKOHOLOWE"
+class CategoryOrder(models.TextChoices):
+    BAR = "bar", "BAR"
+    KITCHEN = "kitchen", "KITCHEN"
 
 
 class Addition(models.Model):
@@ -22,8 +20,12 @@ class Addition(models.Model):
     """
 
     name = models.CharField(max_length=100)
+    id_checkout = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=5, decimal_places=2)
     is_available = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Item(models.Model):
@@ -34,8 +36,8 @@ class Item(models.Model):
         blank=True,
         null=True,
     )
-    sub_menu = models.CharField(
-        max_length=30, choices=SubMenuType.choices, default=None, blank=True, null=True
+    category = models.CharField(
+        max_length=30, choices=CategoryOrder.choices, default=None, blank=True, null=True
     )
     name = models.CharField(max_length=100, help_text="Name of dish")
     description = models.CharField(
@@ -45,5 +47,9 @@ class Item(models.Model):
         Addition, blank=True, related_name="addition_items"
     )
     is_available = models.BooleanField(default=True)
+    id_checkout = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=5, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name

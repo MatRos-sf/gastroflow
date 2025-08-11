@@ -1,7 +1,13 @@
+from typing import Iterable, Optional
+
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.http import HttpResponseNotFound
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
+from django.views.generic import DetailView, ListView
 
-from menu.models import Addition, Item
+from menu.models import Addition, CategoryOrder, Item, MenuType
 from order.models import Bill, Order, OrderItem, OrderItemAddition, StatusBill
 
 
@@ -13,7 +19,9 @@ def item_list(request):
     if request.method == "POST":
         print("Hello")
 
-    items = Item.objects.filter(is_available=True)
+    items = Item.objects.exclude(menu=MenuType.UNAVAILABLE)
+    for i in items:
+        print(i.is_available)
     return render(request, "service/items_waiter.html", {"object_list": items})
 
 
@@ -38,6 +46,7 @@ def add_to_cart(request):
                     {"id": a.id, "name": a.name, "price": str(a.price)}
                     for a in additions
                 ],
+                "category": item.category,
             }
         )
         request.session["cart"] = cart
@@ -58,39 +67,145 @@ def api_remove_from_cart(request, index):
     return redirect("service:cart-waiter")
 
 
+def create_order(bill: Bill, items: Iterable[dict], **kwargs):
+    if not items:
+        return
+    order = Order.objects.create(bill=bill, **kwargs)
+    for item in items:
+        payload = {
+            "order": order,
+            "menu_item_id": item["item_id"],
+            "name_snapshot": item["name"],
+            "price_snapshot": item["price"],
+            "quantity": item["quantity"],
+            "note": item["note"],
+        }
+        order_item = OrderItem.objects.create(**payload)
+        for addition in item["additions"]:
+            OrderItemAddition.objects.create(
+                order_item=order_item,
+                addition_id=addition["id"],
+                name_snapshot=addition["name"],
+                price_snapshot=addition["price"],
+            )
+    send_payload_to_recipient(order.pk, order.table)
+
+
 def do_order(request):
     cart = request.session.get("cart", [])
-    print(cart)
     if request.method == "POST":
-        print("request.POST")
         if cart:
-            print("cart")
             table = request.POST.get("table")
             bill = Bill.objects.create(table=table)
-            print(bill)
-            # Order
-            order = Order.objects.create(bill=bill, status=StatusBill.OPEN)
-            for item in cart:
-                payload = {
-                    "order": order,
-                    "menu_item_id": item["item_id"],
-                    "name_snapshot": item["name"],
-                    "price_snapshot": item["price"],
-                    "quantity": item["quantity"],
-                    "note": item["note"],
-                }
-                order_item = OrderItem.objects.create(**payload)
-                for addition in item["additions"]:
-                    OrderItemAddition.objects.create(
-                        order_item=order_item,
-                        addition_id=addition["id"],
-                        name_snapshot=addition["name"],
-                        price_snapshot=addition["price"],
-                    )
+            print(
+                f"Saved bill: {bill}, table from db: {Bill.objects.get(pk=bill.pk).table}"
+            )
+            # split into 2 orders if exists!
+            kitchen = filter(
+                lambda data: data["category"] == CategoryOrder.KITCHEN, cart
+            )
+            bar = filter(lambda data: data["category"] == CategoryOrder.BAR, cart)
+
+            create_order(bill, kitchen, table=table, category=CategoryOrder.KITCHEN)
+            create_order(bill, bar, table=table, category=CategoryOrder.BAR)
+            # Order kitchen
+            # order = Order.objects.create(bill=bill, table=table)
+            # for item in cart:
+            #     payload = {
+            #         "order": order,
+            #         "menu_item_id": item["item_id"],
+            #         "name_snapshot": item["name"],
+            #         "price_snapshot": item["price"],
+            #         "quantity": item["quantity"],
+            #         "note": item["note"],
+            #     }
+            #     order_item = OrderItem.objects.create(**payload)
+            #     for addition in item["additions"]:
+            #         OrderItemAddition.objects.create(
+            #             order_item=order_item,
+            #             addition_id=addition["id"],
+            #             name_snapshot=addition["name"],
+            #             price_snapshot=addition["price"],
+            #         )
+            # make_payload_to_kitchen(order.pk, order.table)
             request.session["cart"] = []
+
             return redirect("service:menu-waiter")
+
+
+def get_order_details(order_id) -> Optional[dict]:
+    try:
+        order = Order.objects.get(pk=order_id)
+    except Order.DoesNotExist:
+        return None  # lub raise, zależnie od kontekstu
+    if order.category == CategoryOrder.BAR:
+        return
+
+    order_items = []
+    for item in order.order_items.order_by("name_snapshot").all():
+        order_items.append(
+            {
+                "id": item.id,
+                "name_snapshot": item.full_name_snapshot,
+                "quantity": item.quantity,
+                "note": item.note,
+            }
+        )
+
+    return {
+        "id": order.id,
+        "table": order.table,
+        "status": order.status,
+        "order_items": order_items,
+        "created_at": order.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+    }
+
+
+def send_payload_to_recipient(pk: int, table: str):
+    order_detail = get_order_details(pk)
+    if order_detail is None:
+        return None
+
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        "kitchen_orders",
+        {"type": "new_order", "table": table, "order_data": order_detail},
+    )
 
 
 def cart(request):
     cart = request.session.get("cart", [])
     return render(request, "service/cart_waiter.html", {"cart": cart})
+
+
+def clear_cart(request):
+    if "cart" in request.session:
+        del request.session["cart"]
+    return redirect("service:menu-waiter")
+
+
+class BillListView(ListView):
+    model = Bill
+    template_name = "service/bill_list.html"
+
+    def get_queryset(self):
+        return Bill.objects.filter(status=StatusBill.OPEN)
+
+
+class BillDetailView(DetailView):
+    model = Bill
+    template_name = "service/bill_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["summary"] = self.object.bill_summary_view()
+        return context
+
+
+def close_bill(request, pk):
+    bill = get_object_or_404(Bill, pk=pk)
+    bill.status = StatusBill.CLOSED
+    bill.closed_at = timezone.now()
+    bill.save()
+    # add message
+    return redirect("service:bill")

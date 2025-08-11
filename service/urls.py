@@ -16,5 +16,9 @@ urlpatterns = [
         name="remove-from-cart",
     ),
     path("cart/summary/", views.do_order, name="summary-waiter"),
+    path("clear-cart/", views.clear_cart, name="clear-cart"),
+    path("bill/", views.BillListView.as_view(), name="bill"),
+    path("bill/<int:pk>/", views.BillDetailView.as_view(), name="bill-detail"),
+    path("bill/<int:pk>/close/", views.close_bill, name="close-bill"),
     # path("api/remove-from-cart/", views.api_remove_from_cart, name="remove-from-cart"),
 ]
