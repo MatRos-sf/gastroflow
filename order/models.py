@@ -2,8 +2,11 @@ from decimal import Decimal
 
 from django.db import models
 from django.db.models import Sum
+from django.utils import timezone
 
-from menu.models import Addition, Item, CategoryOrder
+from menu.models import Addition, CategoryOrder, Item
+from service.models import Table
+
 
 class StatusOrder(models.TextChoices):
     ORDER = "ordering", "ORDERING"
@@ -19,7 +22,7 @@ class StatusBill(models.TextChoices):
 
 
 class Bill(models.Model):
-    table = models.CharField(null=True, blank=True, max_length=20)
+    table = models.ManyToManyField(Table, blank=True)
     status = models.CharField(
         max_length=10, choices=StatusBill.choices, default=StatusBill.OPEN
     )
@@ -36,6 +39,11 @@ class Bill(models.Model):
     @property
     def total(self):
         raise NotImplementedError
+
+    def close(self):
+        self.status = StatusBill.CLOSED
+        self.closed_at = timezone.now()
+        self.save()
 
     def bill_summary_view(self):
         summary = {}
@@ -76,8 +84,10 @@ class Order(models.Model):
         default=StatusOrder.ORDER,
     )
     # del ?
-    table = models.CharField(null=True, blank=True, max_length=20)
-    category = models.CharField(default=CategoryOrder.KITCHEN, choices=CategoryOrder.choices)
+    table = models.ManyToManyField(Table, blank=True)
+    category = models.CharField(
+        default=CategoryOrder.KITCHEN, choices=CategoryOrder.choices
+    )
     # Date time fields
     created_at = models.DateTimeField(auto_now_add=True)
     readied_at = models.DateTimeField(null=True, blank=True)
