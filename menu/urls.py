@@ -9,6 +9,8 @@ from .views import (
     ItemDetailView,
     ItemListView,
     ItemUpdateView,
+    AvailableListView,
+    toggle_availability
 )
 
 addition_patterns = [
@@ -25,4 +27,7 @@ urlpatterns = [
     path("<int:pk>/", ItemDetailView.as_view(), name="item-detail"),
     path("update/<int:pk>/", ItemUpdateView.as_view(), name="item-update"),
     path("addition/", include((addition_patterns, "menu"))),
+    path("changer/", AvailableListView.as_view(), name="available"),
+    path("toggle/<int:pk>/", toggle_availability, name="toggle-availability"),
+
 ]

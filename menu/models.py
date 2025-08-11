@@ -6,6 +6,7 @@ class MenuType(models.TextChoices):
     MENU_FOR_CHILDREN = "menu_for_children", "Menu for children"
     DRINK = "drinks", "Drinks"
     COLD_DRINK = "cold_drinks", "Cold drinks"
+    UNAVAILABLE = "niedostępny", "UNAVAILABLE"
 
 
 class CategoryOrder(models.TextChoices):

@@ -1,5 +1,26 @@
 {% extends 'menu/base.html' %}
 {% block content %}
+<!-- MENU TYLKO DLA KITCHEN -->
+<ul class="nav nav-tabs bg-dark rounded-0 border-0 px-2">
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'kitchen-orders' %}active bg-warning text-dark fw-bold{% else %}text-white{% endif %}"
+           href="{% url 'kitchen-orders' %}">
+            Zamówienia
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'available' %}active bg-warning text-dark fw-bold{% else %}text-white{% endif %}"
+           href="{% url 'available' %}">
+            Zmień status
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if request.resolver_match.url_name == 'orders-history-kitchen' %}active bg-warning text-dark fw-bold{% else %}text-white{% endif %}"
+           href="{% url 'orders-history' %}">
+            Historia zamówień
+        </a>
+    </li>
+</ul>
 <div class="container mt-4">
 
     <!-- Filtr po dniach -->

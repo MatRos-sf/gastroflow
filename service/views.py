@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.generic import DetailView, ListView
 
-from menu.models import Addition, Item, CategoryOrder
+from menu.models import Addition, Item, CategoryOrder, MenuType
 from order.models import Bill, Order, OrderItem, OrderItemAddition, StatusBill
 
 
@@ -19,7 +19,9 @@ def item_list(request):
     if request.method == "POST":
         print("Hello")
 
-    items = Item.objects.filter(is_available=True)
+    items = Item.objects.exclude(menu=MenuType.UNAVAILABLE)
+    for i in items:
+        print(i.is_available)
     return render(request, "service/items_waiter.html", {"object_list": items})
 
 

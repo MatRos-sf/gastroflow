@@ -12,6 +12,7 @@
                             <p>
                                 <strong>Price:</strong> {{ item.price }} zł
                             </p>
+                            {% if item.is_available %}
                             <form method="post"
                                   action="{% url 'add-to-cart' item.id %}"
                                   class="mt-auto">
@@ -56,6 +57,9 @@
                                 {% endif %}
                                 <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
                             </form>
+                            {% else %}
+                                <p class="text-danger fw-semibold">Danie niedostępne</p>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

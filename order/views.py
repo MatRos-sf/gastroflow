@@ -15,7 +15,7 @@ def home(request):
 
 
 def item_list(request):
-    items = Item.objects.filter(is_available=True)
+    items = Item.objects.all()
     return render(request, "order/order_menu.html", {"object_list": items})
 
 

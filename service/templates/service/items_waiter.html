@@ -9,6 +9,7 @@
                         <h5 class="card-title">{{ item.name }}</h5>
                         <p class="card-text">{{ item.description }}</p>
                         <p class="fw-bold">{{ item.price }} zł</p>
+                        {% if item.is_available %}
                         <form method="post" action="{% url 'service:add-to-cart' %}">
                             {% csrf_token %}
                             <input type="hidden" name="item_id" value="{{ item.id }}">
@@ -43,6 +44,9 @@
                             {% endif %}
                             <button type="submit" class="btn btn-primary w-100">➕ Add to Cart</button>
                         </form>
+                        {% else %}
+                            <p class="text-danger fw-semibold">Danie niedostępne</p>
+                        {% endif %}
                     </div>
                 </div>
             </div>

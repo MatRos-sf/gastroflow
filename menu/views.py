@@ -1,5 +1,7 @@
 from django.urls import reverse
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from django.shortcuts import get_object_or_404, redirect
+
 
 from .forms import AdditionForm, ItemForm
 from .models import Addition, Item
@@ -65,3 +67,13 @@ class AdditionUpdateView(UpdateView):
     model = Addition
     form_class = AdditionForm
     template_name = "menu/add.html"
+
+class AvailableListView(ListView):
+    template_name = "menu/available_changer.html"
+    model = Item
+
+def toggle_availability(request, pk: int):
+    item = get_object_or_404(Item, pk=pk)
+    item.is_available = not item.is_available
+    item.save()
+    return redirect("available")
