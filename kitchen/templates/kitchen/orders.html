@@ -4,36 +4,27 @@
 {% endblock title %}
 {% block content %}
     <div class="container-fluid p-0">
-
         <!-- MENU TYLKO DLA KITCHEN -->
         <ul class="nav nav-tabs bg-dark rounded-0 border-0 px-2">
             <li class="nav-item">
                 <a class="nav-link {% if request.resolver_match.url_name == 'kitchen-orders' %}active bg-warning text-dark fw-bold{% else %}text-white{% endif %}"
-                   href="{% url 'kitchen-orders' %}">
-                    Zamówienia
-                </a>
+                   href="{% url 'kitchen-orders' %}">Zamówienia</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {% if request.resolver_match.url_name == 'available' %}active bg-warning text-dark fw-bold{% else %}text-white{% endif %}"
-                   href="{% url 'available' %}">
-                    Zmień status
-                </a>
+                   href="{% url 'available' %}">Zmień status</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link {% if request.resolver_match.url_name == 'orders-history-kitchen' %}active bg-warning text-dark fw-bold{% else %}text-white{% endif %}"
-                   href="{% url 'orders-history' %}">
-                    Historia zamówień
-                </a>
+                   href="{% url 'orders-history' %}">Historia zamówień</a>
             </li>
         </ul>
-
         <!-- TREŚĆ -->
         <div class="container py-4">
             <h1 class="text-center text-dark mb-4">Kuchnia Zamówienia:</h1>
             <div id="orders-container"></div>
         </div>
     </div>
-
     <script>
         // Twój oryginalny JavaScript bez zmian
         const ordersContainer = document.getElementById('orders-container');
@@ -129,7 +120,7 @@
                 </div>
             `;
 
-            ordersContainer.prepend(orderElement);
+            ordersContainer.append(orderElement);
         }
     </script>
 {% endblock content %}

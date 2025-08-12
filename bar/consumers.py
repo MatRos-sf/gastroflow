@@ -133,7 +133,7 @@ class OrderConsumer(AsyncWebsocketConsumer):
             orders_list.append(
                 {
                     "id": order.id,
-                    "table": order.table,
+                    "table": None,
                     "status": order.status,
                     "order_items": order_items,
                     "created_at": order.created_at.strftime("%Y-%m-%d %H:%M:%S"),
