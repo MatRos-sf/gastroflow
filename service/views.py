@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.generic import DetailView, ListView
 
-from menu.models import Addition, CategoryOrder, Item, MenuType
+from menu.models import Addition, Item, Location, MenuType
 from order.models import Bill, Order, OrderItem, OrderItemAddition, StatusBill
 
 from .models import Table
@@ -48,7 +48,7 @@ def add_to_cart(request):
                     {"id": a.id, "name": a.name, "price": str(a.price)}
                     for a in additions
                 ],
-                "category": item.category,
+                "category": item.preparation_location,
             }
         )
         request.session["cart"] = cart
@@ -103,13 +103,11 @@ def do_order(request):
                 f"Saved bill: {bill}, table from db: {Bill.objects.get(pk=bill.pk).table}"
             )
             # split into 2 orders if exists!
-            kitchen = filter(
-                lambda data: data["category"] == CategoryOrder.KITCHEN, cart
-            )
-            bar = filter(lambda data: data["category"] == CategoryOrder.BAR, cart)
+            kitchen = filter(lambda data: data["category"] == Location.KITCHEN, cart)
+            bar = filter(lambda data: data["category"] == Location.BAR, cart)
 
-            create_order(bill, kitchen, table=table, category=CategoryOrder.KITCHEN)
-            create_order(bill, bar, table=table, category=CategoryOrder.BAR)
+            create_order(bill, kitchen, table=table, category=Location.KITCHEN)
+            create_order(bill, bar, table=table, category=Location.BAR)
             # Order kitchen
             # order = Order.objects.create(bill=bill, table=table)
             # for item in cart:
@@ -140,7 +138,7 @@ def get_order_details(order_id) -> Optional[dict]:
         order = Order.objects.get(pk=order_id)
     except Order.DoesNotExist:
         return None  # lub raise, zależnie od kontekstu
-    if order.category == CategoryOrder.BAR:
+    if order.preparation_location == Location.BAR:
         return
 
     order_items = []

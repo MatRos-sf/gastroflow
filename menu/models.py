@@ -2,14 +2,26 @@ from django.db import models
 
 
 class MenuType(models.TextChoices):
-    MAIN = "main", "Main menu"
-    MENU_FOR_CHILDREN = "menu_for_children", "Menu for children"
-    DRINK = "drinks", "Drinks"
-    COLD_DRINK = "cold_drinks", "Cold drinks"
-    UNAVAILABLE = "niedostępny", "UNAVAILABLE"
+    MAIN = "menu", "Menu"
+    MENU_FOR_CHILDREN = "menu dla dzieci", "Menu dla dzieci"
+    DRINK = "napoje", "Napoje"
+    COLD_DRINK = "zimne napoje", "Zimne napoje"
+    DESSERT = "deser", "Deser"
+    OTHER = "inne", "Inne"
+    UNAVAILABLE = "niedostępny", "Niedostępny"
 
 
-class CategoryOrder(models.TextChoices):
+class SubMenuType(models.TextChoices):
+    COFFEE = "kawa", "Kawa"
+    TEA = "herbata", "Herbata"
+    MATCHA = "matcha", "Matcha"
+    COCKTAIL = "koktajle", "Koktajle"
+    SOFT_DRINK = "pitku", "Pitku"
+    WAFFLE = "gofry", "Gofry"
+    CAKE = "ciasto", "Ciasto"
+
+
+class Location(models.TextChoices):
     BAR = "bar", "BAR"
     KITCHEN = "kitchen", "KITCHEN"
 
@@ -36,8 +48,20 @@ class Item(models.Model):
         blank=True,
         null=True,
     )
-    category = models.CharField(
-        max_length=30, choices=CategoryOrder.choices, default=None, blank=True, null=True
+    sub_menu = models.CharField(
+        max_length=20,
+        choices=SubMenuType.choices,
+        default=None,
+        blank=True,
+        null=True,
+    )
+
+    preparation_location = models.CharField(
+        max_length=30,
+        choices=Location.choices,
+        default=Location.KITCHEN,
+        blank=True,
+        null=True,
     )
     name = models.CharField(max_length=100, help_text="Name of dish")
     description = models.CharField(
