@@ -1,55 +1,30 @@
 {% extends "menu/base.html" %}
 {% block content %}
-    <h2 class="mb-4">Menu</h2>
-    <div class="row">
-        {% for item in object_list %}
-            <div class="col-md-3 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ item.name }}</h5>
-                        <p class="card-text">{{ item.description }}</p>
-                        <p class="fw-bold">{{ item.price }} zł</p>
-                        {% if item.is_available %}
-                            <form method="post" action="{% url 'service:add-to-cart' %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="item_id" value="{{ item.id }}">
-                                <!-- Ilość -->
-                                <div class="mb-2">
-                                    <input type="number" class="form-control" name="quantity" value="1" min="1">
-                                </div>
-                                <!-- Notatka -->
-                                <div class="mb-2">
-                                    <input type="text"
-                                           class="form-control"
-                                           name="note"
-                                           placeholder="Optional note">
-                                </div>
-                                <!-- Dodatki -->
-                                {% if item.additions.all %}
-                                    <p class="mb-1">
-                                        <strong>Additions:</strong>
-                                    </p>
-                                    <div class="mb-2">
-                                        {% for add in item.additions.all %}
-                                            <div class="form-check">
-                                                <input class="form-check-input"
-                                                       type="checkbox"
-                                                       name="additions"
-                                                       value="{{ add.id }}"
-                                                       id="add{{ add.id }}">
-                                                <label class="form-check-label" for="add{{ add.id }}">{{ add.name }} (+{{ add.price }} zł)</label>
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                                <button type="submit" class="btn btn-primary w-100">➕ Add to Cart</button>
-                            </form>
-                        {% else %}
-                            <p class="text-danger fw-semibold">Danie niedostępne</p>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
+    <h2 class="mb-4 text-center">Menu</h2>
+    <!-- Pasek kategorii -->
+    <div class="d-flex justify-content-center mb-4 flex-wrap">
+        {% for value, label in categories %}
+            <a href="?category={{ value }}"
+               class="btn {% if selected_category == value %}btn-primary{% else %}btn-outline-primary{% endif %} m-1">
+                {{ label }}
+            </a>
         {% endfor %}
     </div>
+    <!-- Pozycje bez sub_menu -->
+    {% if items_no_sub %}
+        <div class="row mb-4">
+            {% for item in items_no_sub %}
+                <div class="col-12 col-sm-6 col-lg-3 mb-4 px-2">{% include "service/_item_card.html" with item=item %}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <!-- Pozycje z sub_menu -->
+    {% for sub_menu, group_items in sub_menu_groups.items %}
+        <h3 class="mt-4">{{ sub_menu|capfirst }}</h3>
+        <div class="row mb-4">
+            {% for item in group_items %}
+                <div class="col-12 col-sm-6 col-lg-3 mb-4 px-2">{% include "service/_item_card.html" with item=item %}</div>
+            {% endfor %}
+        </div>
+    {% endfor %}
 {% endblock content %}

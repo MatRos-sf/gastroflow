@@ -18,13 +18,27 @@ def menu_waiter(request):
 
 
 def item_list(request):
-    if request.method == "POST":
-        print("Hello")
+    category = request.GET.get("category", MenuType.MAIN)
 
-    items = Item.objects.exclude(menu=MenuType.UNAVAILABLE)
-    for i in items:
-        print(i.is_available)
-    return render(request, "service/items_waiter.html", {"object_list": items})
+    items = Item.objects.exclude(menu=MenuType.UNAVAILABLE).filter(menu=category)
+
+    items_no_sub = items.filter(sub_menu__isnull=True)
+    items_with_sub = items.exclude(sub_menu__isnull=True)
+
+    sub_menu_groups = {}
+    for sub in items_with_sub.values_list("sub_menu", flat=True).distinct():
+        sub_menu_groups[sub] = items_with_sub.filter(sub_menu=sub)
+    context = {
+        "categories": [
+            (value, label)
+            for value, label in MenuType.choices
+            if value != MenuType.UNAVAILABLE
+        ],
+        "selected_category": category,
+        "items_no_sub": items_no_sub,
+        "sub_menu_groups": sub_menu_groups,
+    }
+    return render(request, "service/items_waiter.html", context)
 
 
 def add_to_cart(request):

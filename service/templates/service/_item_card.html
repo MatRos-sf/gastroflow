@@ -1,0 +1,44 @@
+<div class="card h-100 shadow-sm p-2">
+    <div class="card-body">
+        <h5 class="card-title">{{ item.name }}</h5>
+        <p class="fw-bold">{{ item.price }} zł</p>
+        {% if item.is_available %}
+            <form method="post" action="{% url 'service:add-to-cart' %}">
+                {% csrf_token %}
+                <input type="hidden" name="item_id" value="{{ item.id }}">
+                <!-- Ilość -->
+                <div class="mb-2">
+                    <input type="number" class="form-control" name="quantity" value="1" min="1">
+                </div>
+                <!-- Notatka -->
+                <div class="mb-2">
+                    <input type="text"
+                           class="form-control"
+                           name="note"
+                           placeholder="Optional note">
+                </div>
+                <!-- Dodatki -->
+                {% if item.additions.exists %}
+                    <p class="mb-1">
+                        <strong>Additions:</strong>
+                    </p>
+                    <div class="mb-2">
+                        {% for add in item.additions.all %}
+                            <div class="form-check">
+                                <input class="form-check-input"
+                                       type="checkbox"
+                                       name="additions"
+                                       value="{{ add.id }}"
+                                       id="add{{ add.id }}">
+                                <label class="form-check-label" for="add{{ add.id }}">{{ add.name }} (+{{ add.price }} zł)</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <button type="submit" class="btn btn-primary w-100">➕ Add to Cart</button>
+            </form>
+        {% else %}
+            <p class="text-danger fw-semibold">Danie niedostępne</p>
+        {% endif %}
+    </div>
+</div>
