@@ -4,7 +4,7 @@ from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.utils import timezone
 
-from order.models import Order, StatusOrder, CategoryOrder
+from order.models import Location, Order, StatusOrder
 
 
 class OrderConsumer(AsyncWebsocketConsumer):
@@ -115,7 +115,7 @@ class OrderConsumer(AsyncWebsocketConsumer):
         Jest wywoływana przez `sync_to_async`.
         """
         orders = Order.objects.filter(
-            status__in=[StatusOrder.ORDER, StatusOrder.PREPARING], category = CategoryOrder.BAR
+            status__in=[StatusOrder.ORDER, StatusOrder.PREPARING], category=Location.BAR
         ).order_by("-created_at")
         orders_list = []
         for order in orders:

@@ -4,7 +4,7 @@ from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
 
-from menu.models import Addition, CategoryOrder, Item
+from menu.models import Addition, Item, Location
 from service.models import Table
 
 
@@ -85,9 +85,7 @@ class Order(models.Model):
     )
     # del ?
     table = models.ManyToManyField(Table, blank=True)
-    category = models.CharField(
-        default=CategoryOrder.KITCHEN, choices=CategoryOrder.choices
-    )
+    category = models.CharField(default=Location.KITCHEN, choices=Location.choices)
     # Date time fields
     created_at = models.DateTimeField(auto_now_add=True)
     readied_at = models.DateTimeField(null=True, blank=True)

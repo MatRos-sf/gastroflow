@@ -1,14 +1,13 @@
-
-from django.shortcuts import render
-from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from datetime import datetime
 
-from order.models import Order, CategoryOrder
+from django.shortcuts import render
+from django.views.generic import ListView
+
+from order.models import Location, Order
 
 
 def kitchen_orders_view(request):
     return render(request, "kitchen/orders.html")
-
 
 
 class HistoryOrderKitchen(ListView):
@@ -38,10 +37,9 @@ class HistoryOrderKitchen(ListView):
         context = super().get_context_data(**kwargs)
 
         # Lista unikalnych dni, w których były zamówienia "ready"
-        context["available_days"] = (
-            Order.objects.filter(status="ready", category=CategoryOrder.KITCHEN)
-            .dates("created_at", "day", order="DESC")
-        )
+        context["available_days"] = Order.objects.filter(
+            status="ready", category=Location.KITCHEN
+        ).dates("created_at", "day", order="DESC")
 
         # Wybrany dzień (do podświetlenia w szablonie)
         context["selected_day"] = self.request.GET.get("day")
