@@ -83,8 +83,6 @@ class Order(models.Model):
         choices=StatusOrder.choices,
         default=StatusOrder.ORDER,
     )
-    # del ?
-    table = models.ManyToManyField(Table, blank=True)
     category = models.CharField(default=Location.KITCHEN, choices=Location.choices)
     # Date time fields
     created_at = models.DateTimeField(auto_now_add=True)
