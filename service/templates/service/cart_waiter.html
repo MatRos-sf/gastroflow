@@ -1,7 +1,7 @@
 {% extends "menu/base.html" %}
 {% block content %}
     <div class="container my-5">
-        <h2 class="mb-4">🛒 Your Cart</h2>
+        <h2 class="mb-4">🧾 Zamówienie</h2>
         {% if cart %}
             <div class="row">
                 {% for item in cart %}
@@ -25,37 +25,34 @@
                                     </ul>
                                 {% endif %}
                                 <a href="{% url 'service:remove-from-cart' forloop.counter0 %}"
-                                   class="btn btn-outline-danger w-100">🗑 Remove</a>
+                                   class="btn btn-outline-danger w-100">❌ Usuń</a>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
             </div>
             <hr class="my-4">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4>🧾 Place Order</h4>
+            <div class="d-flex justify-content-between gap-2">
+                <!-- Anuluj zamówienie -->
                 <a href="{% url 'service:clear-cart' %}"
-                   class="btn btn-outline-secondary"
-                   onclick="return confirm('Are you sure you want to cancel and clear the cart?');">❌ Cancel</a>
+                   class="btn btn-outline-danger w-50"
+                   onclick="return confirm('Are you sure you want to cancel and clear the cart?');">
+                    ❌ Anuluj zamówienie
+                </a>
+                <!-- Złóż zamówienie -->
+                <a href="{% url 'service:summary-waiter' %}"
+                   class="btn btn-success w-50">✅ Złóż zamówienie</a>
             </div>
-            <form method="post"
-                  action="{% url 'service:summary-waiter' %}"
-                  class="row g-3 align-items-end">
-                {% csrf_token %}
-                <div class="col-md-4">
-                    <label for="table" class="form-label">Table Number</label>
-                    <input id="table"
-                           type="text"
-                           name="table"
-                           class="form-control"
-                           placeholder="e.g. 12">
-                </div>
-                <div class="col-md-4">
-                    <button type="submit" class="btn btn-success w-100">✅ Place Order</button>
-                </div>
-            </form>
         {% else %}
-            <div class="alert alert-info">Your cart is currently empty.</div>
-        {% endif %}
+            <div class="alert alert-info">Nie dodałeś jeszcze zamówienia.</div>
+            <div class="d-flex justify-content-between gap-2">
+                <!-- Anuluj zamówienie -->
+                <a href="{% url 'service:clear-cart' %}"
+                   class="btn btn-outline-danger w-50"
+                   onclick="return confirm('Are you sure you want to cancel and clear the cart?');">
+                    ❌ Anuluj zamówienie
+                </a>
+            {% endif %}
+        </div>
     </div>
 {% endblock content %}

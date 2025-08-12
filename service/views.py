@@ -196,6 +196,15 @@ def cart(request):
 def clear_cart(request):
     if "cart" in request.session:
         del request.session["cart"]
+        messages.success(request, "Zamówienie został wyczyszczone")
+
+    if "tables" in request.session:
+        tables = request.session.pop("tables")
+        messages.success(
+            request,
+            f"Stoliki {', '.join(str(table) for table in tables)} zostały wyczyszczone",
+        )
+
     return redirect("service:menu-waiter")
 
 
