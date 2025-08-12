@@ -2,6 +2,7 @@ from typing import Iterable, Optional
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.contrib import messages
 from django.http import HttpResponseNotFound
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -230,6 +231,9 @@ def tables_view(request):
         tables = Table.objects.filter(is_active=True)
     elif request.method == "POST":
         tables_selected = request.POST.get("tables")
+        if not tables_selected:
+            messages.error(request, "Aby przejść do zamówienia wybierz stolik")
+            return redirect("service:order-table")
         if tables_selected:
             tables_list = [int(t.strip()) for t in tables_selected.split(",")]
             request.session["tables"] = tables_list
