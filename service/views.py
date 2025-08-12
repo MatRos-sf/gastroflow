@@ -2,6 +2,7 @@ from typing import Iterable, Optional
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
+from django.contrib import messages
 from django.http import HttpResponseNotFound
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -18,13 +19,27 @@ def menu_waiter(request):
 
 
 def item_list(request):
-    if request.method == "POST":
-        print("Hello")
+    category = request.GET.get("category", MenuType.MAIN)
 
-    items = Item.objects.exclude(menu=MenuType.UNAVAILABLE)
-    for i in items:
-        print(i.is_available)
-    return render(request, "service/items_waiter.html", {"object_list": items})
+    items = Item.objects.exclude(menu=MenuType.UNAVAILABLE).filter(menu=category)
+
+    items_no_sub = items.filter(sub_menu__isnull=True)
+    items_with_sub = items.exclude(sub_menu__isnull=True)
+
+    sub_menu_groups = {}
+    for sub in items_with_sub.values_list("sub_menu", flat=True).distinct():
+        sub_menu_groups[sub] = items_with_sub.filter(sub_menu=sub)
+    context = {
+        "categories": [
+            (value, label)
+            for value, label in MenuType.choices
+            if value != MenuType.UNAVAILABLE
+        ],
+        "selected_category": category,
+        "items_no_sub": items_no_sub,
+        "sub_menu_groups": sub_menu_groups,
+    }
+    return render(request, "service/items_waiter.html", context)
 
 
 def add_to_cart(request):
@@ -90,56 +105,42 @@ def create_order(bill: Bill, items: Iterable[dict], **kwargs):
                 name_snapshot=addition["name"],
                 price_snapshot=addition["price"],
             )
-    send_payload_to_recipient(order.pk, order.table)
+    if kwargs["category"] == Location.KITCHEN:
+        group_name = "kitchen_orders"
+    else:
+        group_name = "bar_orders"
+    send_payload_to_recipient(order.pk, group_name)
 
 
 def do_order(request):
     cart = request.session.get("cart", [])
-    if request.method == "POST":
-        if cart:
-            table = request.POST.get("table")
-            bill = Bill.objects.create(table=table)
-            print(
-                f"Saved bill: {bill}, table from db: {Bill.objects.get(pk=bill.pk).table}"
-            )
-            # split into 2 orders if exists!
-            kitchen = filter(lambda data: data["category"] == Location.KITCHEN, cart)
-            bar = filter(lambda data: data["category"] == Location.BAR, cart)
+    tables = request.session.get("tables", [])
+    tables = [table for table in tables]
 
-            create_order(bill, kitchen, table=table, category=Location.KITCHEN)
-            create_order(bill, bar, table=table, category=Location.BAR)
-            # Order kitchen
-            # order = Order.objects.create(bill=bill, table=table)
-            # for item in cart:
-            #     payload = {
-            #         "order": order,
-            #         "menu_item_id": item["item_id"],
-            #         "name_snapshot": item["name"],
-            #         "price_snapshot": item["price"],
-            #         "quantity": item["quantity"],
-            #         "note": item["note"],
-            #     }
-            #     order_item = OrderItem.objects.create(**payload)
-            #     for addition in item["additions"]:
-            #         OrderItemAddition.objects.create(
-            #             order_item=order_item,
-            #             addition_id=addition["id"],
-            #             name_snapshot=addition["name"],
-            #             price_snapshot=addition["price"],
-            #         )
-            # make_payload_to_kitchen(order.pk, order.table)
-            request.session["cart"] = []
+    if cart:
+        bill = Bill.objects.create()
+        bill.table.add(*tables)
+        print(
+            f"Saved bill: {bill}, table from db: {Bill.objects.get(pk=bill.pk).table}"
+        )
+        # split into 2 orders if exists!
+        kitchen = filter(lambda data: data["category"] == Location.KITCHEN, cart)
+        bar = filter(lambda data: data["category"] == Location.BAR, cart)
+        create_order(bill, list(kitchen), category=Location.KITCHEN)
+        create_order(bill, list(bar), category=Location.BAR)
 
-            return redirect("service:menu-waiter")
+        request.session["cart"] = []
+
+        return redirect("service:menu-waiter")
 
 
 def get_order_details(order_id) -> Optional[dict]:
     try:
         order = Order.objects.get(pk=order_id)
     except Order.DoesNotExist:
-        return None  # lub raise, zależnie od kontekstu
-    if order.preparation_location == Location.BAR:
-        return
+        return None
+    # if order.category == Location.BAR:
+    #     return
 
     order_items = []
     for item in order.order_items.order_by("name_snapshot").all():
@@ -154,22 +155,22 @@ def get_order_details(order_id) -> Optional[dict]:
 
     return {
         "id": order.id,
-        "table": order.table,
+        "table": None,
         "status": order.status,
         "order_items": order_items,
         "created_at": order.created_at.strftime("%Y-%m-%d %H:%M:%S"),
     }
 
 
-def send_payload_to_recipient(pk: int, table: str):
+def send_payload_to_recipient(pk: int, group_name: str):
     order_detail = get_order_details(pk)
     if order_detail is None:
         return None
 
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
-        "kitchen_orders",
-        {"type": "new_order", "table": table, "order_data": order_detail},
+        group_name,
+        {"type": "new_order", "table": None, "order_data": order_detail},
     )
 
 
@@ -181,6 +182,15 @@ def cart(request):
 def clear_cart(request):
     if "cart" in request.session:
         del request.session["cart"]
+        messages.success(request, "Zamówienie został wyczyszczone")
+
+    if "tables" in request.session:
+        tables = request.session.pop("tables")
+        messages.success(
+            request,
+            f"Stoliki {', '.join(str(table) for table in tables)} zostały wyczyszczone",
+        )
+
     return redirect("service:menu-waiter")
 
 
@@ -216,6 +226,9 @@ def tables_view(request):
         tables = Table.objects.filter(is_active=True)
     elif request.method == "POST":
         tables_selected = request.POST.get("tables")
+        if not tables_selected:
+            messages.error(request, "Aby przejść do zamówienia wybierz stolik")
+            return redirect("service:order-table")
         if tables_selected:
             tables_list = [int(t.strip()) for t in tables_selected.split(",")]
             request.session["tables"] = tables_list
