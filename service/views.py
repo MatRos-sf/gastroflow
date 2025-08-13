@@ -221,7 +221,9 @@ class BillDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["summary"] = self.object.bill_summary_view()
+        payoff = self.object.bill_summary_view()
+        context["summary"] = payoff["summary"]
+        context["total"] = payoff["total"]
         return context
 
 
@@ -230,8 +232,17 @@ def close_bill(request, pk):
     bill.status = StatusBill.CLOSED
     bill.closed_at = timezone.now()
     bill.save()
-    # add message
-    return redirect("service:bill")
+
+    bill_tables = bill.table.all()
+    for table in bill_tables:
+        _number_of_open_bills = Bill.objects.filter(
+            Q(table=table) & Q(status=StatusBill.OPEN)
+        ).count()
+        if _number_of_open_bills == 0:
+            table.is_occupied = False
+            table.save()
+
+    return redirect("service:table-settle")
 
 
 def tables_view(request):

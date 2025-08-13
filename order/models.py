@@ -57,33 +57,38 @@ class Bill(models.Model):
 
     def bill_summary_view(self):
         summary = {}
+        total = Decimal("0.00")
         for order in self.orders.all():
             for item in order.order_items.all():
                 name_item = summary.get(item.name_snapshot, None)
+                cost = item.raw_cost
                 if not name_item:
                     summary[item.name_snapshot] = {
                         "id": item.menu_item.id_checkout,
                         "quantity": item.quantity,
-                        "total_cost": item.raw_cost,
+                        "total_cost": cost,
                     }
                 else:
                     name_item["quantity"] += item.quantity
-                    name_item["total_cost"] += item.raw_cost
+                    name_item["total_cost"] += cost
+                total += cost
                 # check additions
                 additions = item.order_item_additions.all()
                 if additions:
                     for addition in additions:
                         name_addition = summary.get(addition.name_snapshot, None)
+                        cost = addition.price_snapshot
                         if not name_addition:
                             summary[addition.name_snapshot] = {
                                 "id": addition.addition.id_checkout,
                                 "quantity": 1,
-                                "total_cost": addition.price_snapshot,
+                                "total_cost": cost,
                             }
                         else:
                             name_addition["quantity"] += 1
-                            name_addition["total_cost"] += addition.price_snapshot
-        return summary
+                            name_addition["total_cost"] += cost
+                        total += cost
+        return {"total": total, "summary": summary}
 
 
 class Order(models.Model):

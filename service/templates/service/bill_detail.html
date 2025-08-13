@@ -4,47 +4,53 @@
 {% endblock title %}
 {% block content %}
     <div class="container mt-4">
-        <h2 class="mb-3">Bill #{{ object.id }} – Table {{ object.table_number }}</h2>
-        <p>
+        <h2 class="mb-3 fs-3">Bill #{{ object.id }} – Table {{ object.table_number }}</h2>
+        <p class="fs-5">
             <strong>Status:</strong> {{ object.status }}
         </p>
-        <p>
+        <p class="fs-5">
             <strong>Created:</strong> {{ object.created_at }}
         </p>
         <hr class="my-4">
-        <h4>Order Summary</h4>
+        <h4 class="fs-4">Order Summary</h4>
         {% if summary %}
             <div class="table-responsive">
-                <table class="table table-bordered table-hover">
-                    <thead class="table-light">
+                <table class="table table-bordered table-hover table-lg align-middle">
+                    <thead class="table-light fs-5">
                         <tr>
                             <th>Id</th>
-                            <th class="text-end">Quantity</th>
-                            <th class="text-end">Total Cost (zł)</th>
-                            <th>Name</th>
+                            <th class="text-end">Ilość</th>
+                            <th class="text-end">Koszt (sum)</th>
+                            <th>Nazwa</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="fs-5">
                         {% for name, data in summary.items %}
                             {% if data.id > 0 %}
-                            <tr>
-                                <td>{{ data.id }}</td>
-                                <td class="text-end">{{ data.quantity }}</td>
-                                <td class="text-end">{{ data.total_cost }}</td>
-                                <td>{{ name }}</td>
-                            </tr>
+                                <tr>
+                                    <td>{{ data.id }}</td>
+                                    <td class="text-end">{{ data.quantity }}</td>
+                                    <td class="text-end">{{ data.total_cost }}</td>
+                                    <td>{{ name }}</td>
+                                </tr>
                             {% endif %}
                         {% endfor %}
+                        <tr class="table-secondary fw-bold">
+                            <td colspan="2" class="text-end">Razem do zapłaty:</td>
+                            <td class="text-end">{{ total }}</td>
+                            <td></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
         {% else %}
-            <div class="alert alert-secondary">No items in the bill.</div>
+            <div class="alert alert-secondary">Nic nie ma.</div>
         {% endif %}
         <div class="d-flex justify-content-between mt-4">
-            <a href="{% url 'service:bill' %}" class="btn btn-outline-secondary">← Back to List</a>
+            <a href="{% url 'service:table-settle' %}"
+               class="btn btn-outline-secondary btn-lg">← Powrót</a>
             <a href="{% url 'service:close-bill' object.id %}"
-               class="btn btn-outline-success">✅ Finish</a>
+               class="btn btn-success btn-lg">✅ Zamknij Rachunek</a>
         </div>
     </div>
 {% endblock content %}
