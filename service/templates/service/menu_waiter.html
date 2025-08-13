@@ -3,15 +3,31 @@
     Menu waiter
 {% endblock title %}
 {% block content %}
+    <style>
+        .waiter-btn {
+            font-size: 1.5rem;        /* większy tekst */
+            padding: 1.2rem;          /* większe wypełnienie */
+            border-radius: 10px;      /* zaokrąglenia rogów */
+            font-weight: bold;        /* pogrubiony tekst */
+            transition: transform 0.1s ease-in-out;
+        }
+        .waiter-btn:hover {
+            transform: scale(1.05);   /* lekkie powiększenie przy najechaniu */
+        }
+        .waiter-btn:disabled {
+            background-color: #b0b0b0 !important;
+            border-color: #b0b0b0 !important;
+        }
+    </style>
     <div class="container">
-        <div class="d-grid gap-2 col-6 mx-auto pt-5">
+        <div class="d-grid gap-3 col-8 mx-auto pt-5">
             <a href="{% url 'service:order-table' %}"
-               class="btn btn-primary"
-               type="button">Stwórz zamówienie</a>
-            <button class="btn btn-primary" type="button" disabled>Dodaj do zamówienia</button>
-            <button class="btn btn-primary" type="button" disabled>Edytuj zamówienie</button>
+               class="btn btn-primary waiter-btn"
+               type="button">Stwórz zamówienie</a>
+            <button class="btn btn-primary waiter-btn" type="button" disabled>Dodaj do zamówienia</button>
+            <button class="btn btn-primary waiter-btn" type="button" disabled>Edytuj zamówienie</button>
             <a href="{% url 'service:table-settle' %}"
-               class="btn btn-primary"
+               class="btn btn-primary waiter-btn"
                type="button">Rozliczenie</a>
         </div>
     </div>
