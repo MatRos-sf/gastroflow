@@ -98,7 +98,7 @@ class Order(models.Model):
     canceled_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return f"Order {self.id} - Table {self.table if self.table else 'N/A'}"
+        return f"Order {self.id}"
 
     @property
     def total(self):

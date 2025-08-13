@@ -118,11 +118,12 @@ class OrderConsumer(AsyncWebsocketConsumer):
         orders = Order.objects.filter(
             status__in=[StatusOrder.ORDER, StatusOrder.PREPARING],
             category=Location.KITCHEN,
-        ).order_by("-created_at")
+        ).order_by("created_at")
         orders_list = []
         for order in orders:
             order_items = []
             for item in order.order_items.order_by("name_snapshot").all():
+                print(order.bill.service.user.username)
                 order_items.append(
                     {
                         "id": item.id,
@@ -145,6 +146,7 @@ class OrderConsumer(AsyncWebsocketConsumer):
             orders_list.append(
                 {
                     "id": order.id,
+                    "sender": order.bill.service.user.username,
                     "table": None,
                     "status": order.status,
                     "order_items": order_items,

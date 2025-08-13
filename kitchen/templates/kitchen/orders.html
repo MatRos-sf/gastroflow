@@ -22,11 +22,28 @@
         <!-- TREŚĆ -->
         <div class="container py-4">
             <h1 class="text-center text-dark mb-4">Kuchnia Zamówienia:</h1>
-            <div id="orders-container"></div>
+            <!-- FLEXBOX do kart -->
+            <div id="orders-container" class="d-flex flex-wrap gap-3"></div>
         </div>
     </div>
+    <style>
+        /* Większa czcionka dla całej sekcji zamówień */
+        #orders-container {
+            font-size: 1.1rem; /* ~17-18px */
+        }
+        /* Szerokość kart i wyrównanie */
+        .order-card {
+            flex: 1 1 300px; /* min 300px, reszta dopasowana */
+            max-width: 350px;
+        }
+        .card-header h5 {
+            font-size: 1.25rem; /* większy tytuł */
+        }
+        .list-group-item {
+            font-size: 1rem;
+        }
+    </style>
     <script>
-        // Twój oryginalny JavaScript bez zmian
         const ordersContainer = document.getElementById('orders-container');
         const kitchenSocket = new WebSocket(
             'ws://' + window.location.host + '/ws/kitchen/orders/'
@@ -93,20 +110,21 @@
 
             let orderItemsHtml = '';
             order.order_items.forEach(item => {
-                orderItemsHtml += `<li class="list-group-item">
-                    ${item.name_snapshot} ×${item.quantity} ${item.note ? `<small class="text-muted">(${item.note})</small>` : ''}
+                orderItemsHtml += `<li class="list-group-item" id="order-${order.id}-item-${item.id}" onclick="toggleItemDone(${order.id}, ${item.id})">
+                    ${item.name_snapshot} ×${item.quantity}
+                    ${item.note ? `<small class="text-muted">(${item.note})</small>` : ''}
                 </li>`;
             });
 
             const orderElement = document.createElement('div');
             orderElement.id = `order-${order.id}`;
-            orderElement.className = 'card mb-3 shadow-sm';
+            orderElement.className = 'card mb-3 shadow-sm order-card';
 
             const statusClass = getStatusClass(order.status);
 
             orderElement.innerHTML = `
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Order #${order.id}</h5>
+                    <h5 class="mb-0">Order #${order.id} @${order.sender}</h5>
                     <span id="status-${order.id}" class="badge bg-${statusClass}">${order.status}</span>
                 </div>
                 <div class="card-body">
@@ -122,5 +140,17 @@
 
             ordersContainer.append(orderElement);
         }
+        function toggleItemDone(orderId, itemId) {
+            const el = document.getElementById(`order-${orderId}-item-${itemId}`);
+            el.classList.toggle('text-decoration-line-through');
+            el.classList.toggle('text-muted');
+
+            // w przyszłości: wysyłanie powiadomienia do serwera
+            // kitchenSocket.send(JSON.stringify({
+            //     action: 'item_done',
+            //     order_id: orderId,
+            //     item_id: itemId
+            // }));
+}
     </script>
 {% endblock content %}

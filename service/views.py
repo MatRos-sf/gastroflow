@@ -111,16 +111,17 @@ def create_order(bill: Bill, items: Iterable[dict], **kwargs):
         group_name = "kitchen_orders"
     else:
         group_name = "bar_orders"
-    send_payload_to_recipient(order.pk, group_name)
+    send_payload_to_recipient(order.pk, group_name, bill.service.user.username)
 
 
 def do_order(request):
     cart = request.session.get("cart", [])
     tables = request.session.get("tables", [])
+    waiter = request.session.get("waiter")
     tables = [table for table in tables]
 
-    if cart:
-        bill = Bill.objects.create()
+    if cart and waiter:
+        bill = Bill.objects.create(service_id=waiter)
         bill.table.add(*tables)
         print(
             f"Saved bill: {bill}, table from db: {Bill.objects.get(pk=bill.pk).table}"
@@ -134,9 +135,10 @@ def do_order(request):
         request.session["cart"] = []
 
         return redirect("service:menu-waiter")
+    return HttpResponseNotFound("<h1>Page not found</h1>")
 
 
-def get_order_details(order_id) -> Optional[dict]:
+def get_order_details(order_id, sender: str) -> Optional[dict]:
     try:
         order = Order.objects.get(pk=order_id)
     except Order.DoesNotExist:
@@ -157,6 +159,7 @@ def get_order_details(order_id) -> Optional[dict]:
 
     return {
         "id": order.id,
+        "sender": sender,
         "table": None,
         "status": order.status,
         "order_items": order_items,
@@ -164,8 +167,8 @@ def get_order_details(order_id) -> Optional[dict]:
     }
 
 
-def send_payload_to_recipient(pk: int, group_name: str):
-    order_detail = get_order_details(pk)
+def send_payload_to_recipient(pk: int, group_name: str, sender: str):
+    order_detail = get_order_details(pk, sender)
     if order_detail is None:
         return None
 
