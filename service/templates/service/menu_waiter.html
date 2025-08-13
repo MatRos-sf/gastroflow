@@ -10,7 +10,9 @@
                type="button">Stwórz zamówienie</a>
             <button class="btn btn-primary" type="button" disabled>Dodaj do zamówienia</button>
             <button class="btn btn-primary" type="button" disabled>Edytuj zamówienie</button>
-            <a href="{% url 'service:bill' %}" class="btn btn-primary" type="button">Rozliczenie</a>
+            <a href="{% url 'service:table-settle' %}"
+               class="btn btn-primary"
+               type="button">Rozliczenie</a>
         </div>
     </div>
 {% endblock content %}

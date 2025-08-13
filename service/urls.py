@@ -20,4 +20,5 @@ urlpatterns = [
     path("bill/<int:pk>/", views.BillDetailView.as_view(), name="bill-detail"),
     path("bill/<int:pk>/close/", views.close_bill, name="close-bill"),
     path("order/table", views.tables_view, name="order-table"),
+    path("order/table/settle", views.table_settle_view, name="table-settle"),
 ]

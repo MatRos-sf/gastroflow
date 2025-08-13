@@ -43,6 +43,9 @@ class Bill(models.Model):
     def __str__(self):
         return f"Bill {self.id} - Table {self.table or 'take-away'}"
 
+    def str_tables(self):
+        return ", ".join(str(table.name) for table in self.table.all())
+
     @property
     def total(self):
         raise NotImplementedError

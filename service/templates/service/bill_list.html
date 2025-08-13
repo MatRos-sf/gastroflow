@@ -11,9 +11,12 @@
                     <div class="col-md-4 mb-4">
                         <div class="card shadow-sm h-100">
                             <div class="card-body">
-                                <h5 class="card-title">Table {{ bill.table }}</h5>
+                                <h5 class="card-title">Stolik: {{ bill.str_tables }}</h5>
                                 <p class="card-text mb-1">
                                     <strong>Status:</strong> {{ bill.status }}
+                                </p>
+                                <p class="card-text mb-1">
+                                    <strong>Kelner:</strong> {{ bill.service.user.username }}
                                 </p>
                                 <p class="card-text mb-1">
                                     <strong>Created:</strong> {{ bill.created_at }}

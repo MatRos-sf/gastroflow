@@ -118,8 +118,7 @@ def do_order(request):
     cart = request.session.get("cart", [])
     tables = request.session.get("tables", [])
     waiter = request.session.get("waiter")
-    tables = [table for table in tables]
-
+    # tables = [table for table in tables]
     if cart and waiter:
         bill = Bill.objects.create(service_id=waiter)
         bill.table.add(*tables)
@@ -132,7 +131,12 @@ def do_order(request):
         create_order(bill, list(kitchen), category=Location.KITCHEN)
         create_order(bill, list(bar), category=Location.BAR)
 
+        # change tables status
+        print(f"{tables = }")
+        Table.objects.filter(pk__in=tables).update(is_occupied=True)
         request.session["cart"] = []
+        request.session["tables"] = []
+        del request.session["waiter"]
 
         return redirect("service:menu-waiter")
     return HttpResponseNotFound("<h1>Page not found</h1>")
@@ -204,7 +208,11 @@ class BillListView(ListView):
     template_name = "service/bill_list.html"
 
     def get_queryset(self):
-        return Bill.objects.filter(status=StatusBill.OPEN)
+        queryset = Bill.objects.filter(status=StatusBill.OPEN)
+        table_pk = self.request.GET.get("table")
+        if table_pk:
+            queryset = queryset.filter(table__pk=table_pk)
+        return queryset
 
 
 class BillDetailView(DetailView):
@@ -250,3 +258,11 @@ def tables_view(request):
             request.session["tables"] = tables_list
             request.session["waiter"] = waiter
         return redirect("service:items-waiter")
+
+
+def table_settle_view(request):
+    return render(
+        request,
+        "service/table_settle.html",
+        {"tables": Table.objects.filter(is_active=True)},
+    )
