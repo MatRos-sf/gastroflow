@@ -22,6 +22,9 @@
         background-color: orange !important;
         color: white !important;
     }
+    .waiter-btn {
+        margin: 5px;
+    }
     </style>
     <h2 class="text-center mt-4">Widok stolików</h2>
     <form id="tables-form"
@@ -29,6 +32,7 @@
           action="{% url 'service:order-table' %}">
         {% csrf_token %}
         <input type="hidden" name="tables" id="tables-input" value="">
+        <input type="hidden" name="waiter" id="waiter-input" value="">
         <div class="floor-plan">
             {% for t in tables %}
                 <button type="button"
@@ -38,13 +42,24 @@
                         data-pk="{{ t.pk }}">{{ t.name }}</button>
             {% endfor %}
         </div>
+        <!-- Wybór kelnera -->
+        <div class="text-center mt-4">
+            <h4>Wybierz kelnera</h4>
+            {% for w in waiters %}
+                <button type="button"
+                        class="btn btn-outline-primary waiter-btn"
+                        data-pk="{{ w.pk }}">{{ w.user__username }}</button>
+            {% endfor %}
+        </div>
         <div class="text-center mt-3">
             <button type="submit" class="btn btn-primary btn-lg">Złóż zamówienie</button>
         </div>
     </form>
     <script>
     let selectedTables = [];
+    let selectedWaiter = null;
 
+    // Obsługa stolików
     document.querySelectorAll(".table-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             let pk = btn.dataset.pk;
@@ -58,6 +73,24 @@
                 btn.classList.remove("btn-success");
             }
             document.getElementById("tables-input").value = selectedTables.join(",");
+        });
+    });
+
+    // Obsługa kelnerów (tylko jeden może być wybrany)
+    document.querySelectorAll(".waiter-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            // Usuwamy zaznaczenie z poprzedniego
+            document.querySelectorAll(".waiter-btn").forEach(b => {
+                b.classList.remove("btn-warning");
+                b.classList.add("btn-outline-primary");
+            });
+
+            // Zaznaczamy nowy wybór
+            btn.classList.remove("btn-outline-primary");
+            btn.classList.add("btn-warning");
+
+            selectedWaiter = btn.dataset.pk;
+            document.getElementById("waiter-input").value = selectedWaiter;
         });
     });
     </script>

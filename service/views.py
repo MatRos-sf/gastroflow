@@ -3,6 +3,7 @@ from typing import Iterable, Optional
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib import messages
+from django.db.models import Q
 from django.http import HttpResponseNotFound
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -10,6 +11,7 @@ from django.views.generic import DetailView, ListView
 
 from menu.models import Addition, Item, Location, MenuType
 from order.models import Bill, Order, OrderItem, OrderItemAddition, StatusBill
+from worker.models import Position, Worker
 
 from .models import Table
 
@@ -224,14 +226,24 @@ def close_bill(request, pk):
 def tables_view(request):
     if request.method == "GET":
         tables = Table.objects.filter(is_active=True)
+        waiters = Worker.objects.filter(
+            Q(position=Position.WAITER) | Q(position=Position.BARISTA)
+        ).values("user__username", "pk")
+        return render(
+            request, "service/table_order.html", {"tables": tables, "waiters": waiters}
+        )
+
     elif request.method == "POST":
         tables_selected = request.POST.get("tables")
-        if not tables_selected:
-            messages.error(request, "Aby przejść do zamówienia wybierz stolik")
+        waiter = request.POST.get("waiter")
+        if not tables_selected or not waiter:
+            messages.error(
+                request,
+                "Aby przejść do zamówienia wybierz stolik oraz kelnera który przyjmie zamówienie",
+            )
             return redirect("service:order-table")
         if tables_selected:
             tables_list = [int(t.strip()) for t in tables_selected.split(",")]
             request.session["tables"] = tables_list
-            print(tables_list)
+            request.session["waiter"] = waiter
         return redirect("service:items-waiter")
-    return render(request, "service/table_order.html", {"tables": tables})

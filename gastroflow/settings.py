@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     "order",
     "service",
     "kitchen",
-    "bar"
+    "bar",
+    "worker",  # must be before order I think so
 ]
 
 

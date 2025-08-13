@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from menu.models import Addition, Item, Location
 from service.models import Table
+from worker.models import Worker
 
 
 class StatusOrder(models.TextChoices):
@@ -28,6 +29,12 @@ class Bill(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True)
     closed_at = models.DateTimeField(null=True, blank=True)
+    service = models.ForeignKey(
+        Worker,
+        on_delete=models.SET_NULL,
+        null=True,
+        help_text="Person who served the customer",
+    )
 
     # Payment additional
     # is_cash
