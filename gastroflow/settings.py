@@ -43,11 +43,11 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",
     # custom apps
     "menu",
+    "worker",  # must be before order I think so
     "order",
     "service",
     "kitchen",
     "bar",
-    "worker",  # must be before order I think so
 ]
 
 
