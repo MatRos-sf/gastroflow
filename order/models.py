@@ -9,6 +9,13 @@ from service.models import Table
 from worker.models import Worker
 
 
+class OrderItemStatus(models.TextChoices):
+    WAITING = "waiting", "WAITING"
+    PREPARING = "preparing", "PREPARING"
+    READY = "ready", "READY"
+    CANCELED = "canceled", "CANCELED"
+
+
 class StatusOrder(models.TextChoices):
     ORDER = "ordering", "ORDERING"
     PREPARING = "preparing", "PREPARING"
@@ -113,6 +120,27 @@ class Order(models.Model):
         return self.order_items.aggregate(total=Sum("total_cost"))["total"]
 
 
+class NotificationStatus(models.TextChoices):
+    PREPARE = "prepare", "Prepare"  # when kitchen is preparing the order
+    WAIT = "wait", "Wait"  # when the dish waiting to be served
+    SERVE = "serve", "Serve"  # when the dish is served
+
+
+class Notification(models.Model):
+    worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    order_item = models.OneToOneField("order.OrderItem", on_delete=models.CASCADE)
+    status = models.CharField(
+        max_length=20,
+        choices=NotificationStatus.choices,
+        default=NotificationStatus.PREPARE,
+    )
+    last_update = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"@{self.worker} - {self.order_item.name_snapshot} | {self.order_item.order.bill.str_tables()}"
+
+
 class OrderItem(models.Model):
     order = models.ForeignKey(
         Order, on_delete=models.CASCADE, related_name="order_items"
@@ -125,6 +153,18 @@ class OrderItem(models.Model):
         max_digits=5, decimal_places=2, help_text="Price of dish when it was ordered"
     )
     note = models.TextField(null=True, blank=True, max_length=500)
+    status = models.CharField(
+        max_length=20, choices=OrderItemStatus.choices, default=OrderItemStatus.WAITING
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True, help_text="Datetime order was added"
+    )
+    started_at = models.DateTimeField(
+        null=True, blank=True, help_text="Datetime when the cook started preparing"
+    )
+    finished_at = models.DateTimeField(
+        null=True, blank=True, help_text="Datetime when the cook finished preparing"
+    )
     quantity = models.PositiveIntegerField(default=1)
 
     cost = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
@@ -156,12 +196,16 @@ class OrderItem(models.Model):
         return self.name_snapshot
 
     def save(self, *args, **kwargs):
-        if not self.pk:
+        is_init = not self.pk
+        if is_init:
             self.cost = Decimal("0.00")
             super().save(*args, **kwargs)
         else:
             self.cost = self.total_cost
             super().save(*args, **kwargs)
+
+        if is_init:
+            Notification.objects.create(worker=self.order.bill.service, order_item=self)
 
 
 class OrderItemAddition(models.Model):
