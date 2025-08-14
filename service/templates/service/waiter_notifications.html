@@ -1,0 +1,110 @@
+{% extends "menu/base.html" %}
+{% block title %}
+    Kitchen Notifications
+{% endblock title %}
+{% block content %}
+    <div class="container py-4">
+        <h1 class="text-center text-dark mb-4">Powiadomienia Kuchni</h1>
+        <div id="notifications-container" class="d-flex flex-column gap-2"></div>
+    </div>
+    <style>
+    #notifications-container {
+        font-size: 1.1rem;
+    }
+    .notification-card {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        padding: 10px;
+        border-radius: 8px;
+        background-color: #f8f9fa;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .notification-card:hover {
+        background-color: #e2e6ea;
+    }
+    .notification-time {
+        font-size: 0.9rem;
+        color: #6c757d;
+        margin-right: 10px;
+        min-width: 50px;
+        text-align: right;
+    }
+    </style>
+    <script>
+const notificationsContainer = document.getElementById('notifications-container');
+const notificationSocket = new WebSocket(
+    'ws://' + window.location.host + '/ws/notifications/'
+);
+
+let notifications = {};
+
+// Funkcja licząca różnicę czasu w sekundach
+function timeDiffFromNow(createdAt) {
+    const created = new Date(createdAt);
+    const now = new Date();
+    const diffMs = now - created;
+    const diffSec = Math.floor(diffMs / 1000);
+    const minutes = Math.floor(diffSec / 60);
+    const seconds = diffSec % 60;
+    return `${minutes}m ${seconds}s`;
+}
+
+// Aktualizacja liczników co sekundę
+function updateTimers() {
+    Object.values(notifications).forEach(notification => {
+        const timeEl = document.getElementById(`time-${notification.id}`);
+        if(timeEl) timeEl.innerText = timeDiffFromNow(notification.created_at);
+    });
+}
+setInterval(updateTimers, 1000);
+
+notificationSocket.onmessage = function(e) {
+    const data = JSON.parse(e.data);
+
+    if (data.type === 'initial_notifications') {
+        notificationsContainer.innerHTML = '';
+        data.notifications.forEach(n => {
+            notifications[n.id] = n;
+            addNotificationToView(n);
+        });
+    } else if (data.type === 'new_notification') {
+        // Dodaj tę sekcję, aby obsłużyć nowe powiadomienia
+        notifications[data.id] = data;
+        addNotificationToView(data);
+    } else if (data.type === 'notification_seen') {
+        const el = document.getElementById(`notification-${data.notification_id}`);
+        if(el) el.remove();
+        delete notifications[data.notification_id];
+    }
+};
+
+function addNotificationToView(notification) {
+    if(document.getElementById(`notification-${notification.id}`)) return;
+
+    const el = document.createElement('div');
+    el.id = `notification-${notification.id}`;
+    el.className = 'notification-card';
+
+    el.innerHTML = `
+        <span class="notification-time" id="time-${notification.id}">
+            ${timeDiffFromNow(notification.created_at)}
+        </span>
+        <div>
+            <strong>@${notification.worker}</strong>: ${notification.order_item} (Table: ${notification.table})
+        </div>
+    `;
+
+    el.onclick = () => {
+        notificationSocket.send(JSON.stringify({
+            action: 'notification_seen',
+            notification_id: notification.id
+        }));
+    };
+
+    notificationsContainer.appendChild(el);
+}
+    </script>
+{% endblock content %}

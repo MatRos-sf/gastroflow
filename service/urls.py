@@ -21,4 +21,7 @@ urlpatterns = [
     path("bill/<int:pk>/close/", views.close_bill, name="close-bill"),
     path("order/table", views.tables_view, name="order-table"),
     path("order/table/settle", views.table_settle_view, name="table-settle"),
+    path(
+        "service/notifications/", views.waiter_notification, name="waiter-notifications"
+    ),
 ]

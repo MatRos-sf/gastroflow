@@ -277,3 +277,7 @@ def table_settle_view(request):
         "service/table_settle.html",
         {"tables": Table.objects.filter(is_active=True)},
     )
+
+
+def waiter_notification(request):
+    return render(request, "service/waiter_notifications.html")

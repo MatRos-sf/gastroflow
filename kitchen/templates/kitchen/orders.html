@@ -110,10 +110,12 @@
 
             let orderItemsHtml = '';
             order.order_items.forEach(item => {
-                orderItemsHtml += `<li class="list-group-item" id="order-${order.id}-item-${item.id}" onclick="toggleItemDone(${order.id}, ${item.id})">
-                    ${item.name_snapshot} ×${item.quantity}
-                    ${item.note ? `<small class="text-muted">(${item.note})</small>` : ''}
-                </li>`;
+                orderItemsHtml += `
+                    <li class="list-group-item" id="order-${order.id}-item-${item.id}" onclick="toggleItemDone(${order.id}, ${item.id}, '${order.sender}')">
+                        ${item.name_snapshot} ×${item.quantity}
+                        ${item.note ? `<small class="text-muted">(${item.note})</small>` : ''}
+                    </li>
+                `;
             });
 
             const orderElement = document.createElement('div');
@@ -129,7 +131,7 @@
                 </div>
                 <div class="card-body">
                     <p class="mb-1"><strong>Table:</strong> ${order.table}</p>
-                    <p class="mb-2"><strong>Created At:</strong> ${order.created_at}</p>
+                    <p class="mb-2"><strong>Created At:</strong> ${order.last_update}</p>
                     <ul class="list-group mb-3">${orderItemsHtml}</ul>
                     <div class="d-flex gap-2">
                         <button class="btn btn-warning text-dark" onclick="changeStatus(${order.id}, 'preparing')">Preparing</button>
@@ -140,17 +142,18 @@
 
             ordersContainer.append(orderElement);
         }
-        function toggleItemDone(orderId, itemId) {
+        function toggleItemDone(orderId, itemId, senderUsername) {
             const el = document.getElementById(`order-${orderId}-item-${itemId}`);
             el.classList.toggle('text-decoration-line-through');
             el.classList.toggle('text-muted');
 
-            // w przyszłości: wysyłanie powiadomienia do serwera
-            // kitchenSocket.send(JSON.stringify({
-            //     action: 'item_done',
-            //     order_id: orderId,
-            //     item_id: itemId
-            // }));
-}
+            kitchenSocket.send(JSON.stringify({
+                action: 'item_done',
+                order_id: orderId,
+                item_id: itemId,
+                username: senderUsername
+            }));
+        }
+
     </script>
 {% endblock content %}
