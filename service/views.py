@@ -118,10 +118,15 @@ def do_order(request):
     cart = request.session.get("cart", [])
     tables = request.session.get("tables", [])
     waiter = request.session.get("waiter")
+    bill_pk = request.session.get('bill')
     # tables = [table for table in tables]
     if cart and waiter:
-        bill = Bill.objects.create(service_id=waiter)
-        bill.table.add(*tables)
+        if bill_pk:
+            bill = Bill.objects.get(pk=bill_pk)
+        else:
+            bill = Bill.objects.create(service_id=waiter)
+            bill.table.add(*tables)
+
         print(
             f"Saved bill: {bill}, table from db: {Bill.objects.get(pk=bill.pk).table}"
         )
@@ -137,7 +142,8 @@ def do_order(request):
         request.session["cart"] = []
         request.session["tables"] = []
         del request.session["waiter"]
-
+        if bill_pk:
+            del request.session['bill']
         return redirect("service:menu-waiter")
     return HttpResponseNotFound("<h1>Page not found</h1>")
 
@@ -199,6 +205,8 @@ def clear_cart(request):
             request,
             f"Stoliki {', '.join(str(table) for table in tables)} zostały wyczyszczone",
         )
+    if "bill" in request.session:
+        del request.session['bill']
 
     return redirect("service:menu-waiter")
 
@@ -214,6 +222,14 @@ class BillListView(ListView):
             queryset = queryset.filter(table__pk=table_pk)
         return queryset
 
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        action = self.request.GET.get("action", "").lower()
+        if not action or action not in ["bill", "order"]:
+            data['action'] = "bill"
+        else:
+            data['action'] = action
+        return data
 
 class BillDetailView(DetailView):
     model = Bill
@@ -268,16 +284,33 @@ def tables_view(request):
             tables_list = [int(t.strip()) for t in tables_selected.split(",")]
             request.session["tables"] = tables_list
             request.session["waiter"] = waiter
+            print(f"{tables_list = }, {waiter = }")
         return redirect("service:items-waiter")
 
 
 def table_settle_view(request):
+    """
+    View for tables where are only tables booking.
+    """
+    action = request.GET.get('action', "").lower()
+    if not action or action not in ["bill", "order"]:
+        action = "bill"
+
     return render(
         request,
         "service/table_settle.html",
-        {"tables": Table.objects.filter(is_active=True)},
+        {"tables": Table.objects.filter(is_active=True), "action": action},
     )
 
 
 def waiter_notification(request):
     return render(request, "service/waiter_notifications.html")
+
+def add_order_to_bill(request, pk: int):
+    bill = Bill.objects.get(pk=pk)
+    if not bill:
+        return HttpResponseNotFound("<h1>Page not found!</h1>")
+    request.session['bill'] = pk
+    request.session["tables"] = [t.pk for t in bill.table.all()]
+    request.session["waiter"] = str(bill.service.pk)
+    return redirect("service:items-waiter")

@@ -41,7 +41,7 @@
                 </a>
                 <!-- Złóż zamówienie -->
                 <a href="{% url 'service:summary-waiter' %}"
-                   class="btn btn-success w-50">✅ Złóż zamówienie</a>
+                   class="btn btn-success w-50">{% if request.session.bill %}Dodaj do zamówienia{% else %} ✅ Złóż zamówienie{% endif %}</a>
             </div>
         {% else %}
             <div class="alert alert-info">Nie dodałeś jeszcze zamówienia.</div>

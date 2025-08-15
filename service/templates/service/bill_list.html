@@ -21,8 +21,13 @@
                                 <p class="card-text mb-1">
                                     <strong>Created:</strong> {{ bill.created_at }}
                                 </p>
+                                {% if action == 'bill' %}
                                 <a href="{% url 'service:bill-detail' bill.id %}"
-                                   class="btn btn-primary w-100">View Details</a>
+                                   class="btn btn-primary w-100">Szczegóły</a>
+                                {% else %}
+                                <a href="{% url 'service:table-settle-add-order' bill.id %}"
+                                   class="btn btn-primary w-100">Domów</a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
