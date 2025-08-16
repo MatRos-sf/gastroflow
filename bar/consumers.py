@@ -2,9 +2,12 @@ import json
 
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.layers import get_channel_layer
+from django.contrib.auth.models import User
 from django.utils import timezone
 
-from order.models import Location, Order, StatusOrder
+from order.models import Location, NotificationStatus, Order, OrderItem, StatusOrder
+from worker.models import Worker
 
 
 class OrderConsumer(AsyncWebsocketConsumer):
@@ -46,7 +49,11 @@ class OrderConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         action = data.get("action")
         order_id = data.get("order_id")
-
+        if action == "item_done":
+            item_id = data.get("item_id")
+            username = data.get("username")
+            if item_id and username:
+                await self.send_notification(order_id, item_id)
         if order_id and action:
             new_status = None
             if action == "preparing":
@@ -142,3 +149,45 @@ class OrderConsumer(AsyncWebsocketConsumer):
             )
 
         return orders_list
+
+    async def send_notification(self, order_id, item_id):
+        """
+        Tworzy notyfikację w bazie danych, a następnie wysyła ją
+        do grupy 'notifications'.
+        """
+        notification_data = await self.get_notification_data(order_id, item_id)
+        if notification_data:
+            channel_layer = get_channel_layer()
+            await channel_layer.group_send(
+                "notifications",
+                {
+                    "type": "new_notification",
+                    **notification_data,
+                },
+            )
+            print(f"Notification for item {item_id} sent to 'notifications' group.")
+        else:
+            print(f"Notification already exists for item {item_id}.")
+
+    @sync_to_async
+    def get_notification_data(self, order_id, item_id):
+        """
+        Synchroniczna metoda do tworzenia notyfikacji w bazie danych.
+        Zwraca dane notyfikacji, które można przesłać dalej.
+        """
+        try:
+            order_item = OrderItem.objects.get(id=item_id, order_id=order_id)
+            notification = order_item.notification
+            notification.status = NotificationStatus.WAIT
+            notification.save()
+
+            return {
+                "id": notification.id,
+                "worker": str(notification.worker),
+                "order_item": notification.order_item.name_snapshot,
+                "table": notification.order_item.order.bill.str_tables(),
+                "created_at": notification.last_update.isoformat(),
+            }
+        except (OrderItem.DoesNotExist, User.DoesNotExist, Worker.DoesNotExist) as e:
+            print(f"Error creating notification: {e}")
+            return None

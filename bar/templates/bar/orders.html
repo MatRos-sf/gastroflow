@@ -96,7 +96,7 @@
 
             let orderItemsHtml = '';
             order.order_items.forEach(item => {
-                orderItemsHtml += `<li class="list-group-item" id="order-${order.id}-item-${item.id}" onclick="toggleItemDone(${order.id}, ${item.id})">
+                orderItemsHtml += `<li class="list-group-item" id="order-${order.id}-item-${item.id}" onclick="toggleItemDone(${order.id}, ${item.id}, '${order.sender }')">
                     ${item.name_snapshot} ×${item.quantity}
                     ${item.note ? `<small class="text-muted">(${item.note})</small>` : ''}
                 </li>`;
@@ -127,17 +127,17 @@
             ordersContainer.append(orderElement);
         }
 
-        function toggleItemDone(orderId, itemId) {
+        function toggleItemDone(orderId, itemId, senderUsername) {
             const el = document.getElementById(`order-${orderId}-item-${itemId}`);
             el.classList.toggle('text-decoration-line-through');
             el.classList.toggle('text-muted');
 
-            // w przyszłości: wysyłanie powiadomienia do serwera
-            // barSocket.send(JSON.stringify({
-            //     action: 'item_done',
-            //     order_id: orderId,
-            //     item_id: itemId
-            // }));
+            barSocket.send(JSON.stringify({
+                action: 'item_done',
+                order_id: orderId,
+                item_id: itemId,
+                username: senderUsername
+            }));
         }
     </script>
 {% endblock content %}
