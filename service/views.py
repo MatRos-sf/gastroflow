@@ -121,12 +121,18 @@ def do_order(request):
     tables = request.session.get("tables", [])
     waiter = request.session.get("waiter")
     bill_pk = request.session.get("bill")
+
+    note = ""
+    if request.method == "POST":
+        note = request.POST.get("note", "")
+        print(f"{note = }")
+
     # tables = [table for table in tables]
     if cart and waiter:
         if bill_pk:
             bill = Bill.objects.get(pk=bill_pk)
         else:
-            bill = Bill.objects.create(service_id=waiter)
+            bill = Bill.objects.create(service_id=waiter, note=note)
             bill.table.add(*tables)
 
         print(

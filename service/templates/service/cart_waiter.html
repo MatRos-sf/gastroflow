@@ -1,58 +1,76 @@
 {% extends "menu/base.html" %}
 {% block content %}
-    <div class="container my-5">
-        <h2 class="mb-4">🧾 Zamówienie</h2>
+    <div class="container py-5">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h2 class="fw-bold mb-0">🧾 Twoje zamówienie</h2>
+            <span class="badge bg-secondary fs-6">{{ cart|length }} pozycji</span>
+        </div>
         {% if cart %}
-            <div class="row">
+            <div class="row g-4">
                 {% for item in cart %}
-                    <div class="col-md-6 col-lg-4 col-xl-3 mb-4">
-                        <div class="card h-100 shadow-sm">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ item.name }}</h5>
-                                <p class="card-text">{{ item.note }}</p>
-                                <p class="mb-1">
-                                    <strong>Price:</strong> {{ item.price }} zł
-                                </p>
-                                <p class="mb-3">
-                                    <strong>Quantity:</strong> {{ item.quantity }}
-                                </p>
-                                {% if item.additions %}
+                    <div class="col-md-6 col-lg-4 col-xl-3">
+                        <div class="card h-100 border-0 shadow-sm rounded-4">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title fw-semibold text-primary">{{ item.name }}</h5>
+                                {% if item.note %}<p class="card-text text-muted small mb-2">{{ item.note }}</p>{% endif %}
+                                <div class="mt-auto">
                                     <p class="mb-1">
-                                        <strong>Additions:</strong>
+                                        <strong>Cena:</strong> {{ item.price }} zł
                                     </p>
-                                    <ul class="list-group mb-3">
-                                        {% for add in item.additions %}<li class="list-group-item py-1">{{ add.name }} (+{{ add.price }} zł)</li>{% endfor %}
-                                    </ul>
-                                {% endif %}
-                                <a href="{% url 'service:remove-from-cart' forloop.counter0 %}"
-                                   class="btn btn-outline-danger w-100">❌ Usuń</a>
+                                    <p class="mb-1">
+                                        <strong>Ilość:</strong> {{ item.quantity }}
+                                    </p>
+                                    {% if item.additions %}
+                                        <p class="mt-2 mb-1">
+                                            <strong>Dodatki:</strong>
+                                        </p>
+                                        <ul class="list-group list-group-flush border rounded-3 small mb-3">
+                                            {% for add in item.additions %}
+                                                <li class="list-group-item py-1">
+                                                    {{ add.name }} <span class="text-success">(+{{ add.price }} zł)</span>
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                    <a href="{% url 'service:remove-from-cart' forloop.counter0 %}"
+                                       class="btn btn-outline-danger w-100 rounded-pill">❌ Usuń z koszyka</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
             </div>
-            <hr class="my-4">
-            <div class="d-flex justify-content-between gap-2">
-                <!-- Anuluj zamówienie -->
-                <a href="{% url 'service:clear-cart' %}"
-                   class="btn btn-outline-danger w-50"
-                   onclick="return confirm('Are you sure you want to cancel and clear the cart?');">
-                    ❌ Anuluj zamówienie
-                </a>
-                <!-- Złóż zamówienie -->
-                <a href="{% url 'service:summary-waiter' %}"
-                   class="btn btn-success w-50">{% if request.session.bill %}Dodaj do zamówienia{% else %} ✅ Złóż zamówienie{% endif %}</a>
+            <hr class="my-5">
+            <div class="row g-3">
+                <div class="col-12 col-md-6">
+                    <a href="{% url 'service:clear-cart' %}"
+                       class="btn btn-outline-danger w-100 py-3 rounded-pill"
+                       onclick="return confirm('Czy na pewno chcesz anulować zamówienie i wyczyścić koszyk?');">
+                        ❌ Anuluj zamówienie
+                    </a>
+                </div>
+                <div class="col-12 col-md-6">
+                    {% if request.session.bill %}
+                        <a href="{% url 'service:summary-waiter' %}"
+                           class="btn btn-success w-100 py-3 rounded-pill">➕ Dodaj do zamówienia</a>
+                    {% else %}
+                        <form method="post" action="{% url 'service:summary-waiter' %}">
+                            {% csrf_token %}
+                            <input type="text"
+                                   class="form-control mb-3 rounded-pill px-3"
+                                   name="note"
+                                   placeholder="Dodatkowa uwaga (opcjonalne)">
+                            <button class="btn btn-success w-100 py-3 rounded-pill" type="submit">✅ Złóż zamówienie</button>
+                        </form>
+                    {% endif %}
+                </div>
             </div>
         {% else %}
-            <div class="alert alert-info">Nie dodałeś jeszcze zamówienia.</div>
-            <div class="d-flex justify-content-between gap-2">
-                <!-- Anuluj zamówienie -->
+            <div class="alert alert-info text-center rounded-4 py-4">📭 Twój koszyk jest pusty</div>
+            <div class="mt-4 text-center">
                 <a href="{% url 'service:clear-cart' %}"
-                   class="btn btn-outline-danger w-50"
-                   onclick="return confirm('Are you sure you want to cancel and clear the cart?');">
-                    ❌ Anuluj zamówienie
-                </a>
-            {% endif %}
-        </div>
+                   class="btn btn-outline-danger rounded-pill px-4">❌ Wyczyść koszyk</a>
+            </div>
+        {% endif %}
     </div>
 {% endblock content %}

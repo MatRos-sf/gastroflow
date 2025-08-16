@@ -42,6 +42,7 @@ class Bill(models.Model):
         null=True,
         help_text="Person who served the customer",
     )
+    note = models.CharField(max_length=200, blank=True, null=True)
 
     # Payment additional
     # is_cash
