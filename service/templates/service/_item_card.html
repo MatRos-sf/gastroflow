@@ -3,7 +3,8 @@
         <h5 class="card-title">{{ item.name }}</h5>
         <p class="fw-bold">{{ item.price }} zł</p>
         {% if item.is_available %}
-            <form method="post" action="{% url 'service:add-to-cart' %}">
+            <form method="post"
+                  action="{% url 'service:add-to-cart' %}?category={{ item.menu }}">
                 {% csrf_token %}
                 <input type="hidden" name="item_id" value="{{ item.id }}">
                 <!-- Ilość -->

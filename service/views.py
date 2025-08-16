@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.http import HttpResponseNotFound
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import DetailView, ListView
 
@@ -72,7 +73,8 @@ def add_to_cart(request):
         request.session.modified = True
     else:
         return HttpResponseNotFound()
-    return redirect("service:items-waiter")
+    category = request.GET.get("category", MenuType.MAIN)
+    return redirect(f"{reverse('service:items-waiter')}?category={category}")
 
 
 def api_remove_from_cart(request, index):
@@ -118,7 +120,7 @@ def do_order(request):
     cart = request.session.get("cart", [])
     tables = request.session.get("tables", [])
     waiter = request.session.get("waiter")
-    bill_pk = request.session.get('bill')
+    bill_pk = request.session.get("bill")
     # tables = [table for table in tables]
     if cart and waiter:
         if bill_pk:
@@ -143,7 +145,7 @@ def do_order(request):
         request.session["tables"] = []
         del request.session["waiter"]
         if bill_pk:
-            del request.session['bill']
+            del request.session["bill"]
         return redirect("service:menu-waiter")
     return HttpResponseNotFound("<h1>Page not found</h1>")
 
@@ -206,7 +208,7 @@ def clear_cart(request):
             f"Stoliki {', '.join(str(table) for table in tables)} zostały wyczyszczone",
         )
     if "bill" in request.session:
-        del request.session['bill']
+        del request.session["bill"]
 
     return redirect("service:menu-waiter")
 
@@ -226,10 +228,11 @@ class BillListView(ListView):
         data = super().get_context_data(**kwargs)
         action = self.request.GET.get("action", "").lower()
         if not action or action not in ["bill", "order"]:
-            data['action'] = "bill"
+            data["action"] = "bill"
         else:
-            data['action'] = action
+            data["action"] = action
         return data
+
 
 class BillDetailView(DetailView):
     model = Bill
@@ -292,7 +295,7 @@ def table_settle_view(request):
     """
     View for tables where are only tables booking.
     """
-    action = request.GET.get('action', "").lower()
+    action = request.GET.get("action", "").lower()
     if not action or action not in ["bill", "order"]:
         action = "bill"
 
@@ -306,11 +309,12 @@ def table_settle_view(request):
 def waiter_notification(request):
     return render(request, "service/waiter_notifications.html")
 
+
 def add_order_to_bill(request, pk: int):
     bill = Bill.objects.get(pk=pk)
     if not bill:
         return HttpResponseNotFound("<h1>Page not found!</h1>")
-    request.session['bill'] = pk
+    request.session["bill"] = pk
     request.session["tables"] = [t.pk for t in bill.table.all()]
     request.session["waiter"] = str(bill.service.pk)
     return redirect("service:items-waiter")
