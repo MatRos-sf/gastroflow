@@ -38,6 +38,24 @@
             'ws://' + window.location.host + '/ws/bar/orders/'
         );
 
+
+        const pingInterval = 30000;
+
+        function setupPing() {
+            setInterval(() => {
+                if (barSocket.readyState === WebSocket.OPEN) {
+                    barSocket.send(JSON.stringify({
+                        'action': 'ping'
+                    }));
+                    console.log('Ping sent to keep connection alive.');
+                }
+            }, pingInterval);
+        }
+
+        barSocket.onopen = function(e) {
+            console.log('WebSocket connection opened.');
+            setupPing(); // Rozpocznij wysyłanie pingów po nawiązaniu połączenia
+        };
         barSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             console.log("Message received:", data);

@@ -41,6 +41,24 @@ const notificationSocket = new WebSocket(
 
 let notifications = {};
 
+const pingInterval = 30000;
+
+function setupPing() {
+    setInterval(() => {
+        if (notificationSocket.readyState === WebSocket.OPEN) {
+            notificationSocket.send(JSON.stringify({
+                'action': 'ping'
+            }));
+            console.log('Ping sent to keep connection alive.');
+        }
+    }, pingInterval);
+}
+
+notificationSocket.onopen = function(e) {
+    console.log('WebSocket connection opened.');
+    setupPing(); // Rozpocznij wysyłanie pingów po nawiązaniu połączenia
+};
+
 // Funkcja licząca różnicę czasu w sekundach
 function timeDiffFromNow(createdAt) {
     const created = new Date(createdAt);

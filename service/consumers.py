@@ -28,6 +28,12 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         data = json.loads(text_data)
+        action = data.get("action")
+
+        if action == "ping":
+            print("[WAITER] Received ping, connection is active.")
+            return
+
         if data.get("action") == "notification_seen" and data.get("notification_id"):
             await sync_to_async(self.mark_notification_seen)(data["notification_id"])
             await self.channel_layer.group_send(

@@ -48,6 +48,24 @@
         const kitchenSocket = new WebSocket(
             'ws://' + window.location.host + '/ws/kitchen/orders/'
         );
+        const pingInterval = 30000;
+
+        function setupPing() {
+            setInterval(() => {
+                if (kitchenSocket.readyState === WebSocket.OPEN) {
+                    kitchenSocket.send(JSON.stringify({
+                        'action': 'ping'
+                    }));
+                    console.log('Ping sent to keep connection alive.');
+                }
+            }, pingInterval);
+        }
+
+        kitchenSocket.onopen = function(e) {
+            console.log('WebSocket connection opened.');
+            setupPing(); // Rozpocznij wysyłanie pingów po nawiązaniu połączenia
+        };
+
 
         kitchenSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);

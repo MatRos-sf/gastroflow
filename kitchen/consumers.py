@@ -57,7 +57,11 @@ class OrderConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data)
         action = data.get("action")
         order_id = data.get("order_id")
-        if action == "item_done":
+        if action == "ping":
+            print("[KITCHEN] Received ping, connection is active.")
+            return
+
+        elif action == "item_done":
             item_id = data.get("item_id")
             username = data.get("username")
             if item_id and username:
