@@ -1,0 +1,112 @@
+{% extends "menu/base.html" %}
+{% load duration_extras %}
+{% block title %}
+    Raport dzienny
+{% endblock title %}
+{% block content %}
+    <div class="container my-4">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <h1 class="h3 mb-0">Raport dzienny</h1>
+            <form method="get" class="d-flex align-items-center gap-2">
+                <input type="date"
+                       class="form-control"
+                       name="date"
+                       value="{{ date|date:'Y-m-d' }}"
+                       aria-label="Data raportu">
+                <button class="btn btn-primary" type="submit">Pokaż</button>
+            </form>
+        </div>
+        <p class="text-muted mt-2 mb-4">
+            Dzień: <strong>{{ date|date:"Y-m-d" }}</strong>
+        </p>
+        <!-- KPI karty -->
+        <div class="row g-3">
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="fw-semibold text-secondary">Rachunki otwarte</div>
+                        <div class="display-6">{{ report.bills.opened }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="fw-semibold text-secondary">Rachunki zamknięte</div>
+                        <div class="display-6">{{ report.bills.closed }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="fw-semibold text-secondary">Sprzedane pozycje</div>
+                        <div class="display-6">{{ report.items.total_sold|default:0 }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body">
+                        <div class="fw-semibold text-secondary">Przychód (PLN)</div>
+                        <div class="display-6">{{ report.revenue|floatformat:2 }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Kuchnia / Bar -->
+        <div class="row g-3 mt-1">
+            <div class="col-12 col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">Sprzedaż wg kategorii</div>
+                    <div class="card-body">
+                        <table class="table table-sm align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Kategoria</th>
+                                    <th class="text-end">Liczba pozycji</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% if report.items.by_category %}
+                                    {% for category, qty in report.items.by_category.items %}
+                                        <tr>
+                                            <td class="text-capitalize">{{ category }}</td>
+                                            <td class="text-end">{{ qty }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="2" class="text-center text-muted">Brak sprzedaży</td>
+                                    </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- Średni czas przygotowania -->
+            <div class="col-12 col-lg-6">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">Czas przygotowania</div>
+                    <div class="card-body">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div class="fw-semibold">Średni czas przygotowania pozycji</div>
+                            <div class="fs-4">{{ report.kitchen_metrics.avg_prep_time|duration_hhmmss }}</div>
+                        </div>
+                        <p class="text-muted mb-0 mt-2">
+                            Liczone tylko dla pozycji, które mają uzupełnione <code>started_at</code> i <code>finished_at</code>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Wskazówki -->
+        <div class="alert alert-info mt-3">
+            <div class="fw-semibold mb-1">Uwaga</div>
+            <ul class="mb-0">
+                <li>Wartości przychodu liczone są na snapshotach cen (pozycja + dodatki).</li>
+            </ul>
+        </div>
+    </div>
+{% endblock content %}

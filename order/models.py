@@ -1,7 +1,8 @@
-from decimal import Decimal
+from decimal import Decimal, InvalidOperation
 
 from django.db import models
-from django.db.models import Sum
+from django.db.models import DecimalField, ExpressionWrapper, F, Sum, Value
+from django.db.models.functions import Coalesce
 from django.utils import timezone
 
 from menu.models import Addition, Item, Location
@@ -116,9 +117,22 @@ class Order(models.Model):
     def __str__(self):
         return f"Order {self.id}"
 
-    @property
+    # @property
+    # def total(self):
+    #     return self.order_items.aggregate(total=Sum("total_cost"))["total"]
     def total(self):
-        return self.order_items.aggregate(total=Sum("total_cost"))["total"]
+        return (
+            self.order_items.annotate(
+                additions_total=Coalesce(Sum("order_item_additions__price_snapshot"), 0)
+            )
+            .annotate(
+                line=ExpressionWrapper(
+                    F("price_snapshot") * F("quantity") + F("additions_total"),
+                    output_field=DecimalField(max_digits=12, decimal_places=2),
+                )
+            )
+            .aggregate(total=Coalesce(Sum("line"), 0))["total"]
+        )
 
 
 class NotificationStatus(models.TextChoices):
@@ -182,7 +196,10 @@ class OrderItem(models.Model):
 
     @property
     def total_cost(self):
-        return (self.menu_item.price + self.additions_cost) * self.quantity
+        additions = self.order_item_additions.aggregate(
+            total=Coalesce(Sum("price_snapshot"), 0)
+        )["total"]
+        return (self.price_snapshot + additions) * self.quantity
 
     @property
     def raw_cost(self):
@@ -196,17 +213,95 @@ class OrderItem(models.Model):
             return f"{self.name_snapshot} ({additions_names})"
         return self.name_snapshot
 
-    def save(self, *args, **kwargs):
-        is_init = not self.pk
-        if is_init:
-            self.cost = Decimal("0.00")
-            super().save(*args, **kwargs)
-        else:
-            self.cost = self.total_cost
-            super().save(*args, **kwargs)
+    # def recompute_cost(self, save=True):
+    #     additions = self.order_item_additions.aggregate(
+    #         total=Coalesce(Sum("price_snapshot"), Value(0, output_field=models.DecimalField()))
+    #     )["total"] or Decimal("0.00")
+    #
+    #     new_cost = (self.price_snapshot + additions) * Decimal(self.quantity)
+    #     self.cost = new_cost
+    #
+    #     if save:
+    #         OrderItem.objects.filter(pk=self.pk).update(cost=new_cost)
 
+    # def save(self, *args, **kwargs):
+    #     is_init = not self.pk
+    #     additions = self.order_item_additions.aggregate(
+    #         total=Coalesce(Sum("price_snapshot"), 0)
+    #     )["total"] or Decimal("0.00")
+    #     self.cost = (self.price_snapshot + additions) * self.quantity
+    #     super().save(*args, **kwargs)
+    #
+    #     if is_init:
+    #         Notification.objects.create(worker=self.order.bill.service, order_item=self)
+
+    # def save(self, *args, **kwargs):
+    #     is_init = self.pk is None
+    #
+    #     # 1) najpierw zapisz, żeby mieć PK
+    #     super().save(*args, **kwargs)
+    #
+    #     # 2) teraz mamy PK -> możemy agregować dodatki i ustawić koszt
+    #     self.recompute_cost(save=True)
+    #
+    #     # 3) tylko przy utworzeniu – utwórz Notification, jeśli mamy przypisanego worker-a
+    #     if is_init:
+    #         service_worker = getattr(self.order.bill, "service", None)
+    #         if service_worker is not None:
+    #             Notification.objects.create(
+    #                 worker=service_worker,
+    #                 order_item=self
+    #             )
+
+    @staticmethod
+    def _to_decimal(val, default="0.00") -> Decimal:
+        """Bezpieczna konwersja na Decimal niezależnie czy wejdzie str/int/None."""
+        if isinstance(val, Decimal):
+            return val
+        if val is None:
+            return Decimal(default)
+        try:
+            # str() chroni np. przed typem int/float; waluty z przecinkiem trzeba oczyścić wcześniej.
+            return Decimal(str(val))
+        except (InvalidOperation, ValueError, TypeError):
+            return Decimal(default)
+
+    def recompute_cost(self, save=True):
+        # Zwracaj 0 jako Decimal, a nie int/str
+        zero = Value(
+            Decimal("0.00"),
+            output_field=models.DecimalField(max_digits=12, decimal_places=2),
+        )
+
+        additions_total = self.order_item_additions.aggregate(
+            total=Coalesce(Sum("price_snapshot"), zero)
+        )["total"]
+
+        price = self._to_decimal(self.price_snapshot)
+        adds = self._to_decimal(additions_total)
+        qty = self._to_decimal(self.quantity)
+
+        new_cost = (price + adds) * qty
+        self.cost = new_cost
+
+        if save and self.pk:
+            # update -> nie wywołujemy z powrotem save()
+            OrderItem.objects.filter(pk=self.pk).update(cost=new_cost)
+
+    def save(self, *args, **kwargs):
+        is_init = self.pk is None
+
+        # 1) Zapisz najpierw, żeby mieć PK (reverse relacje potrzebują PK)
+        super().save(*args, **kwargs)
+
+        # 2) Przelicz koszt już po tym, jak obiekt istnieje w DB
+        self.recompute_cost(save=True)
+
+        # 3) Notification tylko przy utworzeniu i tylko jeśli jest przypisany worker
         if is_init:
-            Notification.objects.create(worker=self.order.bill.service, order_item=self)
+            service_worker = getattr(self.order.bill, "service", None)
+            if service_worker is not None:
+                Notification.objects.create(worker=service_worker, order_item=self)
 
 
 class OrderItemAddition(models.Model):
