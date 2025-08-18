@@ -10,7 +10,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import DetailView, ListView
 
-from menu.models import Addition, Item, Location, MenuType
+from menu.models import Item, Location, MenuType
 from order.models import Bill, Order, OrderItem, OrderItemAddition, StatusBill
 from worker.models import Position, Worker
 
@@ -52,7 +52,7 @@ def add_to_cart(request):
         note = request.POST.get("note", "")
         additions_ids = request.POST.getlist("additions")
         item = get_object_or_404(Item, pk=item_id)
-        additions = Addition.objects.filter(id__in=additions_ids)
+        additions = Item.objects.filter(id__in=additions_ids)
 
         cart = request.session.get("cart", [])
         cart.append(

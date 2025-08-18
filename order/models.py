@@ -5,7 +5,7 @@ from django.db.models import DecimalField, ExpressionWrapper, F, Sum, Value
 from django.db.models.functions import Coalesce
 from django.utils import timezone
 
-from menu.models import Addition, Item, Location
+from menu.models import Item, Location
 from service.models import Table
 from worker.models import Worker
 
@@ -213,46 +213,6 @@ class OrderItem(models.Model):
             return f"{self.name_snapshot} ({additions_names})"
         return self.name_snapshot
 
-    # def recompute_cost(self, save=True):
-    #     additions = self.order_item_additions.aggregate(
-    #         total=Coalesce(Sum("price_snapshot"), Value(0, output_field=models.DecimalField()))
-    #     )["total"] or Decimal("0.00")
-    #
-    #     new_cost = (self.price_snapshot + additions) * Decimal(self.quantity)
-    #     self.cost = new_cost
-    #
-    #     if save:
-    #         OrderItem.objects.filter(pk=self.pk).update(cost=new_cost)
-
-    # def save(self, *args, **kwargs):
-    #     is_init = not self.pk
-    #     additions = self.order_item_additions.aggregate(
-    #         total=Coalesce(Sum("price_snapshot"), 0)
-    #     )["total"] or Decimal("0.00")
-    #     self.cost = (self.price_snapshot + additions) * self.quantity
-    #     super().save(*args, **kwargs)
-    #
-    #     if is_init:
-    #         Notification.objects.create(worker=self.order.bill.service, order_item=self)
-
-    # def save(self, *args, **kwargs):
-    #     is_init = self.pk is None
-    #
-    #     # 1) najpierw zapisz, żeby mieć PK
-    #     super().save(*args, **kwargs)
-    #
-    #     # 2) teraz mamy PK -> możemy agregować dodatki i ustawić koszt
-    #     self.recompute_cost(save=True)
-    #
-    #     # 3) tylko przy utworzeniu – utwórz Notification, jeśli mamy przypisanego worker-a
-    #     if is_init:
-    #         service_worker = getattr(self.order.bill, "service", None)
-    #         if service_worker is not None:
-    #             Notification.objects.create(
-    #                 worker=service_worker,
-    #                 order_item=self
-    #             )
-
     @staticmethod
     def _to_decimal(val, default="0.00") -> Decimal:
         """Bezpieczna konwersja na Decimal niezależnie czy wejdzie str/int/None."""
@@ -308,6 +268,6 @@ class OrderItemAddition(models.Model):
     order_item = models.ForeignKey(
         OrderItem, on_delete=models.CASCADE, related_name="order_item_additions"
     )
-    addition = models.ForeignKey(Addition, on_delete=models.CASCADE)
+    addition = models.ForeignKey(Item, on_delete=models.CASCADE)
     name_snapshot = models.CharField(max_length=100)
     price_snapshot = models.DecimalField(max_digits=7, decimal_places=2)
