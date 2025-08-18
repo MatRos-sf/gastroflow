@@ -1,30 +1,32 @@
 {% extends "menu/base.html" %}
 {% block content %}
-    <h2 class="mb-4 text-center">Menu</h2>
-    <!-- Pasek kategorii -->
-    <div class="d-flex justify-content-center mb-4 flex-wrap">
-        {% for value, label in categories %}
-            <a href="?category={{ value }}"
-               class="btn {% if selected_category == value %}btn-primary{% else %}btn-outline-primary{% endif %} m-1">
-                {{ label }}
-            </a>
+    <div class="container container-menu py-3">
+        <h2 class="mb-4 text-center">Menu</h2>
+        <!-- Pasek kategorii -->
+        <div class="d-flex justify-content-center mb-4 flex-wrap">
+            {% for value, label in categories %}
+                <a href="?category={{ value }}"
+                   class="btn {% if selected_category == value %}btn-primary{% else %}btn-outline-primary{% endif %} m-1">
+                    {{ label }}
+                </a>
+            {% endfor %}
+        </div>
+        <!-- Pozycje bez sub_menu -->
+        {% if items_no_sub %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-4">
+                {% for item in items_no_sub %}
+                    <div class="col">{% include "service/_item_card.html" with item=item %}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <!-- Pozycje z sub_menu -->
+        {% for sub_menu, group_items in sub_menu_groups.items %}
+            <h3 class="mt-4">{{ sub_menu|capfirst }}</h3>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-4">
+                {% for item in group_items %}
+                    <div class="col">{% include "service/_item_card.html" with item=item %}</div>
+                {% endfor %}
+            </div>
         {% endfor %}
     </div>
-    <!-- Pozycje bez sub_menu -->
-    {% if items_no_sub %}
-        <div class="row mb-4">
-            {% for item in items_no_sub %}
-                <div class="col-12 col-sm-6 col-lg-3 mb-4 px-2">{% include "service/_item_card.html" with item=item %}</div>
-            {% endfor %}
-        </div>
-    {% endif %}
-    <!-- Pozycje z sub_menu -->
-    {% for sub_menu, group_items in sub_menu_groups.items %}
-        <h3 class="mt-4">{{ sub_menu|capfirst }}</h3>
-        <div class="row mb-4">
-            {% for item in group_items %}
-                <div class="col-12 col-sm-6 col-lg-3 mb-4 px-2">{% include "service/_item_card.html" with item=item %}</div>
-            {% endfor %}
-        </div>
-    {% endfor %}
 {% endblock content %}
