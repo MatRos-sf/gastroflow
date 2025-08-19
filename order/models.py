@@ -1,5 +1,6 @@
 from decimal import Decimal, InvalidOperation
 
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import DecimalField, ExpressionWrapper, F, Sum, Value
 from django.db.models.functions import Coalesce
@@ -44,6 +45,9 @@ class Bill(models.Model):
         help_text="Person who served the customer",
     )
     note = models.CharField(max_length=200, blank=True, null=True)
+    discount = models.PositiveIntegerField(
+        default=0, validators=[MinValueValidator(0), MaxValueValidator(100)]
+    )
 
     # Payment additional
     # is_cash
