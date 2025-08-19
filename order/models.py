@@ -1,8 +1,8 @@
-from decimal import Decimal, InvalidOperation
+from decimal import Decimal
 
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.db.models import DecimalField, ExpressionWrapper, F, Sum, Value
+from django.db.models import DecimalField, ExpressionWrapper, F, Sum
 from django.db.models.functions import Coalesce
 from django.utils import timezone
 
@@ -71,37 +71,42 @@ class Bill(models.Model):
     def bill_summary_view(self):
         summary = {}
         total = Decimal("0.00")
-        for order in self.orders.all():
+
+        orders = self.orders.prefetch_related("order_items__order_item_additions")
+        for order in orders:
             for item in order.order_items.all():
-                name_item = summary.get(item.name_snapshot, None)
-                cost = item.raw_cost
-                if not name_item:
-                    summary[item.name_snapshot] = {
+                # main dish
+                summary.setdefault(
+                    item.name_snapshot,
+                    {
                         "id": item.menu_item.id_checkout,
-                        "quantity": item.quantity,
-                        "total_cost": cost,
-                    }
-                else:
-                    name_item["quantity"] += item.quantity
-                    name_item["total_cost"] += cost
-                total += cost
+                        "quantity": 0,
+                        "total_cost": Decimal("0.00"),
+                    },
+                )
+                summary[item.name_snapshot]["quantity"] += item.quantity
+                summary[item.name_snapshot]["total_cost"] += item.raw_cost
+
+                total += item.raw_cost
+
                 # check additions
-                additions = item.order_item_additions.all()
-                if additions:
-                    for addition in additions:
-                        name_addition = summary.get(addition.name_snapshot, None)
-                        cost = addition.price_snapshot
-                        if not name_addition:
-                            summary[addition.name_snapshot] = {
-                                "id": addition.addition.id_checkout,
-                                "quantity": 1,
-                                "total_cost": cost,
-                            }
-                        else:
-                            name_addition["quantity"] += 1
-                            name_addition["total_cost"] += cost
-                        total += cost
-        return {"total": total, "summary": summary}
+                for addition in item.order_item_additions.all():
+                    summary.setdefault(
+                        addition.name_snapshot,
+                        {
+                            "id": addition.addition.id_checkout,
+                            "quantity": 0,
+                            "total_cost": Decimal("0.00"),
+                        },
+                    )
+                    summary[addition.name_snapshot]["quantity"] += item.quantity
+                    summary[addition.name_snapshot]["total_cost"] += (
+                        addition.price_snapshot * item.quantity
+                    )
+                    total += addition.price_snapshot * item.quantity
+        cost_discount = (total * self.discount) / 100
+
+        return {"total": total, "summary": summary, "cost_discount": cost_discount}
 
 
 class Order(models.Model):
@@ -186,28 +191,21 @@ class OrderItem(models.Model):
     )
     quantity = models.PositiveIntegerField(default=1)
 
-    cost = models.DecimalField(max_digits=7, decimal_places=2, null=True, blank=True)
-
     def __str__(self):
         return f"{self.name_snapshot} x{self.quantity}"
 
     @property
-    def additions_cost(self):
-        total = self.order_item_additions.aggregate(total=Sum("price_snapshot"))[
-            "total"
-        ]
-        return total or Decimal("0.00")
+    def raw_cost(self):
+        """Cost without additions"""
+        return self.price_snapshot * self.quantity
 
     @property
     def total_cost(self):
+        """Cost with additions"""
         additions = self.order_item_additions.aggregate(
-            total=Coalesce(Sum("price_snapshot"), 0)
-        )["total"]
+            additions_sum=Coalesce(Sum("price_snapshot"), 0)
+        )["additions_sum"]
         return (self.price_snapshot + additions) * self.quantity
-
-    @property
-    def raw_cost(self):
-        return self.menu_item.price * self.quantity
 
     @property
     def full_name_snapshot(self):
@@ -217,51 +215,12 @@ class OrderItem(models.Model):
             return f"{self.name_snapshot} ({additions_names})"
         return self.name_snapshot
 
-    @staticmethod
-    def _to_decimal(val, default="0.00") -> Decimal:
-        """Bezpieczna konwersja na Decimal niezależnie czy wejdzie str/int/None."""
-        if isinstance(val, Decimal):
-            return val
-        if val is None:
-            return Decimal(default)
-        try:
-            # str() chroni np. przed typem int/float; waluty z przecinkiem trzeba oczyścić wcześniej.
-            return Decimal(str(val))
-        except (InvalidOperation, ValueError, TypeError):
-            return Decimal(default)
-
-    def recompute_cost(self, save=True):
-        # Zwracaj 0 jako Decimal, a nie int/str
-        zero = Value(
-            Decimal("0.00"),
-            output_field=models.DecimalField(max_digits=12, decimal_places=2),
-        )
-
-        additions_total = self.order_item_additions.aggregate(
-            total=Coalesce(Sum("price_snapshot"), zero)
-        )["total"]
-
-        price = self._to_decimal(self.price_snapshot)
-        adds = self._to_decimal(additions_total)
-        qty = self._to_decimal(self.quantity)
-
-        new_cost = (price + adds) * qty
-        self.cost = new_cost
-
-        if save and self.pk:
-            # update -> nie wywołujemy z powrotem save()
-            OrderItem.objects.filter(pk=self.pk).update(cost=new_cost)
-
     def save(self, *args, **kwargs):
         is_init = self.pk is None
 
-        # 1) Zapisz najpierw, żeby mieć PK (reverse relacje potrzebują PK)
         super().save(*args, **kwargs)
 
-        # 2) Przelicz koszt już po tym, jak obiekt istnieje w DB
-        self.recompute_cost(save=True)
-
-        # 3) Notification tylko przy utworzeniu i tylko jeśli jest przypisany worker
+        # create notification only for new order items
         if is_init:
             service_worker = getattr(self.order.bill, "service", None)
             if service_worker is not None:

@@ -249,6 +249,9 @@ class BillDetailView(DetailView):
         payoff = self.object.bill_summary_view()
         context["summary"] = payoff["summary"]
         context["total"] = payoff["total"]
+        context["cost_discount"] = payoff["cost_discount"]
+        context["discount"] = self.object.discount
+        context["total_with_discount"] = payoff["total"] - payoff["cost_discount"]
         return context
 
 

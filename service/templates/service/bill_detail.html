@@ -35,58 +35,69 @@
                                 </tr>
                             {% endif %}
                         {% endfor %}
-                        <tr class="table-secondary fw-bold">
-                            <td colspan="2" class="text-end">Razem do zapłaty:</td>
-                            <td class="text-end">{{ total }}</td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        {% else %}
-            <div class="alert alert-secondary">Nic nie ma.</div>
-        {% endif %}
-        <div class="d-flex justify-content-between mt-4">
-            <a href="{% url 'service:table-settle' %}"
-               class="btn btn-outline-secondary btn-lg">← Powrót</a>
-            <a href="{% url 'service:table-settle' %}"
-               class="btn btn-outline-secondary btn-lg"
-               data-bs-toggle="modal"
-               data-bs-target="#exampleModal"
-               data-bs-whatever="@fat">Dodaj Rabat</a>
-            <a href="{% url 'service:close-bill' object.id %}"
-               class="btn btn-success btn-lg">✅ Zamknij Rachunek</a>
-        </div>
-    </div>
-    <!-- Popup windows with discount -->
-    <div class="modal fade"
-         id="exampleModal"
-         tabindex="-1"
-         aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Dodaj zniżkę</h1>
-                    <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"></button>
+                        <tbody class="fs-5">
+                            <tr class="table-secondary fw-bold">
+                                <td colspan="2" class="text-end">Razem do zapłaty:</td>
+                                <td class="text-end">
+                                    {% if discount > 0 %}
+                                        <span class="text-muted text-decoration-line-through">{{ total|floatformat:2 }}</span>
+                                        <br>
+                                        <span class="fw-bold">{{ total_with_discount|floatformat:2 }}</span>
+                                        <br>
+                                        <small class="text-success">Zniżka: {{ discount }}% ({{ cost_discount|floatformat:2 }})</small>
+                                    {% else %}
+                                        {{ total|floatformat:2 }}
+                                    {% endif %}
+                                </td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="modal-body">
-                    <form method="post" action="{% url 'update-discount' object.pk %}">
-                        {% csrf_token %}
-                        <div class="mb-3">
-                            <label for="discount" class="col-form-label">Zniżka:</label>
-                            <input type="number" class="form-control" id="discount" name="discount">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Wyjdź</button>
-                            <button type="submit" class="btn btn-primary">Dodaj</button>
-                        </div>
-                    </form>
-                </div>
+            {% else %}
+                <div class="alert alert-secondary">Nic nie ma.</div>
+            {% endif %}
+            <div class="d-flex justify-content-between mt-4">
+                <a href="{% url 'service:table-settle' %}"
+                   class="btn btn-outline-secondary btn-lg">← Powrót</a>
+                <a href="{% url 'service:table-settle' %}"
+                   class="btn btn-outline-secondary btn-lg"
+                   data-bs-toggle="modal"
+                   data-bs-target="#exampleModal"
+                   data-bs-whatever="@fat">Dodaj Rabat</a>
+                <a href="{% url 'service:close-bill' object.id %}"
+                   class="btn btn-success btn-lg">✅ Zamknij Rachunek</a>
             </div>
         </div>
-    </div>
-{% endblock content %}
+        <!-- Popup windows with discount -->
+        <div class="modal fade"
+             id="exampleModal"
+             tabindex="-1"
+             aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Dodaj zniżkę</h1>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" action="{% url 'update-discount' object.pk %}">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="discount" class="col-form-label">Zniżka:</label>
+                                <input type="number" class="form-control" id="discount" name="discount">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Wyjdź</button>
+                                <button type="submit" class="btn btn-primary">Dodaj</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endblock content %}
