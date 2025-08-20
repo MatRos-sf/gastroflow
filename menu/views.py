@@ -11,9 +11,13 @@ class ItemCreateView(CreateView):
     model = Item
     form_class = ItemForm
     template_name = "menu/add.html"
+    extra_context = {"action_type": "Dodaj"}
 
     def get_success_url(self):
-        return reverse("item-detail", kwargs={"pk": self.object.pk})
+        messages.success(
+            self.request, f"Pozycja została zaktualizowana: '{self.object.name}'"
+        )
+        return reverse("item-list")
 
 
 class ItemListView(ListView):
