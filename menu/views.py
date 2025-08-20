@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from .forms import ItemForm
-from .models import Item
+from .models import Item, MenuType
 
 
 class ItemCreateView(CreateView):
@@ -19,6 +19,16 @@ class ItemListView(ListView):
     model = Item
     form_class = ItemForm
     template_name = "menu/list.html"
+
+    def get_queryset(self):
+        category = self.request.GET.get("category", MenuType.MAIN)
+        return Item.objects.filter(menu=category).order_by("id_checkout")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = [(value, label) for value, label in MenuType.choices]
+        context["selected_category"] = self.request.GET.get("category", MenuType.MAIN)
+        return context
 
 
 class ItemDetailView(DetailView):
