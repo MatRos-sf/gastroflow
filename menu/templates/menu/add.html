@@ -1,11 +1,15 @@
 {% extends "menu/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-    <form method="post" enctype="multipart/form-data">
-        <!-- Security token -->
+    <h1 class="text-center">
+        {{ action_type }} pozycje <strong class="text-success">{{ object.name }}</strong>
+    </h1>
+    <form method="post" enctype="multipart/form-data" class="container mt-4">
         {% csrf_token %}
-        <!-- Using the formset -->
-        {{ form.as_p }}
-        <input type="submit" value="Submit">
+        {{ form|crispy }}
+        <div class="d-flex justify-content-center mt-2 gap-2">
+            <button type="submit" class="btn btn-primary btn-lg">Zapisz</button>
+            <a href="{% url 'item-list' %}" class="btn btn-secondary btn-lg">Anuluj</a>
+        </div>
     </form>
 {% endblock content %}

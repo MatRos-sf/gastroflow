@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
@@ -40,6 +41,13 @@ class ItemUpdateView(UpdateView):
     model = Item
     form_class = ItemForm
     template_name = "menu/add.html"
+    extra_context = {"action_type": "Edytuj"}
+
+    def get_success_url(self):
+        messages.success(
+            self.request, f"Pozycja została zaktualizowana: '{self.object.name}'"
+        )
+        return reverse("item-list")
 
 
 class AvailableListView(ListView):
