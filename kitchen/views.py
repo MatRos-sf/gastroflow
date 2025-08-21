@@ -30,6 +30,10 @@ class HistoryOrderKitchen(ListView):
                 )
             except ValueError:
                 pass  # jeśli ktoś wpisze zły format, ignorujemy
+        else:
+            # Domyslnie wyswietlaj dzien dzisiejszy
+            today = datetime.now().date()
+            queryset = queryset.filter(created_at__date=today)
 
         return queryset.order_by("-created_at")  # najnowsze na górze
 

@@ -2,11 +2,18 @@ import json
 
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
-from channels.layers import get_channel_layer
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.utils import timezone
 
-from order.models import Location, NotificationStatus, Order, OrderItem, StatusOrder
+from order.models import (
+    Location,
+    NotificationStatus,
+    Order,
+    OrderItem,
+    OrderItemStatus,
+    StatusOrder,
+)
 from worker.models import Worker
 
 
@@ -87,6 +94,26 @@ class OrderConsumer(AsyncWebsocketConsumer):
         try:
             order = Order.objects.get(id=order_id)
             order.status = new_status
+            if new_status == StatusOrder.PREPARING:
+                OrderItem.objects.filter(
+                    Q(order=order) & Q(status=OrderItemStatus.WAITING)
+                ).update(
+                    status=OrderItemStatus.PREPARING,
+                    started_at=timezone.now(),
+                )
+                order.preparing_at = timezone.now()
+            elif new_status == StatusOrder.READY:
+                # TODO: if start_at doesn't exist set finished time
+                OrderItem.objects.filter(order=order).update(
+                    status=OrderItemStatus.READY,
+                    finished_at=timezone.now(),
+                )
+                # when start_ad is null set started_at to current time
+                OrderItem.objects.filter(order=order, started_at__isnull=True).update(
+                    started_at=timezone.now(),
+                )
+                order.finished_at = timezone.now()
+
             if new_status == StatusOrder.READY:
                 order.readied_at = timezone.now()
             order.save()
@@ -132,12 +159,20 @@ class OrderConsumer(AsyncWebsocketConsumer):
         for order in orders:
             order_items = []
             for item in order.order_items.order_by("name_snapshot").all():
+                notification_status = None
+                try:
+                    notification_status = item.notification.status
+                except OrderItem.notification.RelatedObjectDoesNotExist:
+                    pass
+
                 order_items.append(
                     {
                         "id": item.id,
                         "name_snapshot": item.full_name_snapshot,
                         "quantity": item.quantity,
                         "note": item.note,
+                        "is_done": notification_status
+                        in [NotificationStatus.WAIT, NotificationStatus.SERVE],
                     }
                 )
 
@@ -145,10 +180,12 @@ class OrderConsumer(AsyncWebsocketConsumer):
                 {
                     "id": order.id,
                     "sender": order.bill.service.user.username,
-                    "table": None,
+                    "table": order.bill.str_tables(),
                     "status": order.status,
                     "order_items": order_items,
-                    "created_at": order.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                    "created_at": timezone.localtime(order.created_at).strftime(
+                        "%Y-%m-%d %H:%M:%S"
+                    ),
                 }
             )
 
@@ -159,19 +196,28 @@ class OrderConsumer(AsyncWebsocketConsumer):
         Tworzy notyfikację w bazie danych, a następnie wysyła ją
         do grupy 'notifications'.
         """
-        notification_data = await self.get_notification_data(order_id, item_id)
-        if notification_data:
-            channel_layer = get_channel_layer()
-            await channel_layer.group_send(
-                "notifications",
-                {
-                    "type": "new_notification",
-                    **notification_data,
-                },
-            )
-            print(f"Notification for item {item_id} sent to 'notifications' group.")
-        else:
-            print(f"Notification already exists for item {item_id}.")
+        try:
+            order_item = OrderItem.objects.get(id=item_id, order_id=order_id)
+            notification = order_item.notification
+            if notification.status in [
+                NotificationStatus.WAIT,
+                NotificationStatus.SERVE,
+            ]:
+                return None
+
+            notification.status = NotificationStatus.WAIT
+            notification.save()
+
+            return {
+                "id": notification.id,
+                "worker": str(notification.worker),
+                "order_item": notification.order_item.name_snapshot,
+                "table": notification.order_item.order.bill.str_tables(),
+                "created_at": notification.last_update.isoformat(),
+            }
+        except (OrderItem.DoesNotExist, User.DoesNotExist, Worker.DoesNotExist) as e:
+            print(f"Error creating notification: {e}")
+            return None
 
     @sync_to_async
     def get_notification_data(self, order_id, item_id):
@@ -182,6 +228,12 @@ class OrderConsumer(AsyncWebsocketConsumer):
         try:
             order_item = OrderItem.objects.get(id=item_id, order_id=order_id)
             notification = order_item.notification
+            if notification.status in [
+                NotificationStatus.WAIT,
+                NotificationStatus.SERVE,
+            ]:
+                return None
+
             notification.status = NotificationStatus.WAIT
             notification.save()
 

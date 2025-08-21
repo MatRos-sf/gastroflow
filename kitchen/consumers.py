@@ -32,7 +32,7 @@ class OrderConsumer(AsyncWebsocketConsumer):
 
         print(f"Connected to kitchen orders group: {self.kitchen_group_name}")
 
-        # Pobieranie i wysyłanie istniejących zamówień
+        # Capture the existing orders
         orders = await self.get_initial_orders()
         await self.send(
             text_data=json.dumps({"type": "initial_orders", "orders": orders})
@@ -104,6 +104,7 @@ class OrderConsumer(AsyncWebsocketConsumer):
                     status=OrderItemStatus.PREPARING,
                     started_at=timezone.now(),
                 )
+                order.preparing_at = timezone.now()
             elif new_status == StatusOrder.READY:
                 # TODO: if start_at doesn't exist set finished time
                 OrderItem.objects.filter(order=order).update(
@@ -114,6 +115,7 @@ class OrderConsumer(AsyncWebsocketConsumer):
                 OrderItem.objects.filter(order=order, started_at__isnull=True).update(
                     started_at=timezone.now(),
                 )
+                order.finished_at = timezone.now()
 
             if new_status == StatusOrder.READY:
                 order.readied_at = timezone.now()
@@ -142,7 +144,6 @@ class OrderConsumer(AsyncWebsocketConsumer):
         Obsługuje wiadomości z grupy dotyczące nowych zamówień.
         Wysyła wiadomość do klienta, aby dodać nowe zamówienie do widoku.
         """
-        print("Sending new order to client:", event["order_data"])
         order_data = event["order_data"]
         await self.send(
             text_data=json.dumps({"type": "new_order", "order": order_data})
@@ -162,13 +163,20 @@ class OrderConsumer(AsyncWebsocketConsumer):
         for order in orders:
             order_items = []
             for item in order.order_items.order_by("name_snapshot").all():
-                print(order.bill.service.user.username)
+                notification_status = None
+                try:
+                    notification_status = item.notification.status
+                except OrderItem.notification.RelatedObjectDoesNotExist:
+                    pass
+
                 order_items.append(
                     {
                         "id": item.id,
                         "name_snapshot": item.full_name_snapshot,
                         "quantity": item.quantity,
                         "note": item.note,
+                        "is_done": notification_status
+                        in [NotificationStatus.WAIT, NotificationStatus.SERVE],
                     }
                 )
             orders_list.append(
@@ -195,6 +203,12 @@ class OrderConsumer(AsyncWebsocketConsumer):
         try:
             order_item = OrderItem.objects.get(id=item_id, order_id=order_id)
             notification = order_item.notification
+            if notification.status in [
+                NotificationStatus.WAIT,
+                NotificationStatus.SERVE,
+            ]:
+                return None
+
             notification.status = NotificationStatus.WAIT
             notification.save()
 

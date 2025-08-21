@@ -27,15 +27,7 @@
         <div class="top-actions d-flex flex-wrap gap-2 justify-content-center">
             <a href="{% url 'kitchen-orders' %}"
                class="btn btn-outline-dark btn-lg {% if request.resolver_match.url_name == 'kitchen-orders' %}active{% endif %}">
-                Zamówienia
-            </a>
-            <a href="{% url 'available' %}"
-               class="btn btn-outline-dark btn-lg {% if request.resolver_match.url_name == 'available' %}active{% endif %}">
-                Zmień status
-            </a>
-            <a href="{% url 'orders-history' %}"
-               class="btn btn-outline-dark btn-lg {% if request.resolver_match.url_name == 'orders-history' %}active{% endif %}">
-                Historia zamówień
+                Do Kuchni
             </a>
         </div>
     </div>
@@ -51,6 +43,7 @@
                        aria-label="Szukaj pozycji po nazwie">
             </div>
         </div>
+        <p>Kliknij na pozycje, aby zmienić dostępność</p>
         <div class="list-group" id="items-list">
             {% for item in object_list %}
                 <a href="{% url 'toggle-availability' item.id %}"

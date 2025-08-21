@@ -3,44 +3,43 @@
     Kitchen Orders
 {% endblock title %}
 {% block content %}
+    <div class="container mt-3">
+        <div class="top-actions d-flex flex-wrap gap-2 justify-content-center">
+            <a href="{% url 'kitchen-orders' %}"
+               class="btn btn-outline-dark btn-lg {% if request.resolver_match.url_name == 'kitchen-orders' %}active{% endif %}">
+                Zamówienia
+            </a>
+            <a href="{% url 'available' %}"
+               class="btn btn-outline-dark btn-lg {% if request.resolver_match.url_name == 'available' %}active{% endif %}">
+                Zmień status
+            </a>
+            <a href="{% url 'orders-history' %}"
+               class="btn btn-outline-dark btn-lg {% if request.resolver_match.url_name == 'orders-history' %}active{% endif %}">
+                Historia zamówień
+            </a>
+        </div>
+    </div>
     <div class="container-fluid p-0">
-        <!-- MENU TYLKO DLA KITCHEN -->
-        <ul class="nav nav-tabs bg-dark rounded-0 border-0 px-2">
-            <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'kitchen-orders' %}active bg-warning text-dark fw-bold{% else %}text-white{% endif %}"
-                   href="{% url 'kitchen-orders' %}">Zamówienia</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'available' %}active bg-warning text-dark fw-bold{% else %}text-white{% endif %}"
-                   href="{% url 'available' %}">Zmień status</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'orders-history-kitchen' %}active bg-warning text-dark fw-bold{% else %}text-white{% endif %}"
-                   href="{% url 'orders-history' %}">Historia zamówień</a>
-            </li>
-        </ul>
-        <!-- TREŚĆ -->
         <div class="container py-4">
             <h1 class="text-center text-dark mb-4">Kuchnia Zamówienia:</h1>
-            <!-- FLEXBOX do kart -->
             <div id="orders-container" class="d-flex flex-wrap gap-3"></div>
         </div>
     </div>
     <style>
-        /* Większa czcionka dla całej sekcji zamówień */
+        /* Zwiększona czcionka dla całej sekcji zamówień */
         #orders-container {
-            font-size: 1.1rem; /* ~17-18px */
+            font-size: 1.2rem; /* Zwiększona czcionka */
         }
-        /* Szerokość kart i wyrównanie */
+        /* Zwiększona szerokość kart i wyrównanie */
         .order-card {
-            flex: 1 1 300px; /* min 300px, reszta dopasowana */
-            max-width: 350px;
+            flex: 1 1 350px; /* min 350px, reszta dopasowana */
+            max-width: 400px; /* Zwiększona szerokość */
         }
         .card-header h5 {
-            font-size: 1.25rem; /* większy tytuł */
+            font-size: 1.4rem; /* Zwiększony tytuł */
         }
         .list-group-item {
-            font-size: 1rem;
+            font-size: 1.1rem; /* Zwiększona czcionka elementów listy */
         }
     </style>
     <script>
@@ -128,8 +127,11 @@
 
             let orderItemsHtml = '';
             order.order_items.forEach(item => {
+                // Nowa linia: Ustalenie klas CSS na podstawie is_done
+                const doneClass = item.is_done ? 'text-decoration-line-through text-muted' : '';
+
                 orderItemsHtml += `
-                    <li class="list-group-item" id="order-${order.id}-item-${item.id}" onclick="toggleItemDone(${order.id}, ${item.id}, '${order.sender}')">
+                    <li class="list-group-item ${doneClass}" id="order-${order.id}-item-${item.id}" onclick="toggleItemDone(${order.id}, ${item.id}, '${order.sender}')">
                         ${item.name_snapshot} ×${item.quantity}
                         ${item.note ? `<small class="text-muted">(${item.note})</small>` : ''}
                     </li>
