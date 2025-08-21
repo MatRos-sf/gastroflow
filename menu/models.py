@@ -26,20 +26,6 @@ class Location(models.TextChoices):
     KITCHEN = "kitchen", "KITCHEN"
 
 
-class Addition(models.Model):
-    """
-    Some of a dish has additional ingredient. This class allow to add it.
-    """
-
-    name = models.CharField(max_length=100)
-    id_checkout = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=5, decimal_places=2)
-    is_available = models.BooleanField(default=True)
-
-    def __str__(self):
-        return self.name
-
-
 class Item(models.Model):
     menu = models.CharField(
         max_length=20,
@@ -68,7 +54,7 @@ class Item(models.Model):
         help_text="Description of dish", blank=True, null=True
     )
     additions = models.ManyToManyField(
-        Addition, blank=True, related_name="addition_items"
+        "self", blank=True, symmetrical=False, related_name="is_addition_to"
     )
     is_available = models.BooleanField(default=True)
     id_checkout = models.PositiveIntegerField()

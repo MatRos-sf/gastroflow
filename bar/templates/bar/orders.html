@@ -4,32 +4,26 @@
 {% endblock title %}
 {% block content %}
     <div class="container-fluid p-0">
-        <!-- MENU TYLKO DLA BAR -->
-        <ul class="nav nav-tabs bg-dark rounded-0 border-0 px-2">
-            <li class="nav-item">
-                <a class="nav-link {% if request.resolver_match.url_name == 'bar-orders' %}active bg-warning text-dark fw-bold{% else %}text-white{% endif %}"
-                   href="{% url 'bar-orders' %}">Zamówienia</a>
-            </li>
-        </ul>
-        <!-- TREŚĆ -->
         <div class="container py-4">
-            <h1 class="text-center text-dark mb-4">Bar Zamówienia:</h1>
+            <h1 class="text-center text-dark mb-4">Bar Powiadomienia:</h1>
             <div id="orders-container" class="d-flex flex-wrap gap-3"></div>
         </div>
     </div>
     <style>
+        /* Zwiększona czcionka dla całej sekcji zamówień */
         #orders-container {
-            font-size: 1.1rem;
+            font-size: 1.2rem; /* Zwiększona czcionka */
         }
+        /* Zwiększona szerokość kart i wyrównanie */
         .order-card {
-            flex: 1 1 300px;
-            max-width: 350px;
+            flex: 1 1 350px; /* min 350px, reszta dopasowana */
+            max-width: 400px; /* Zwiększona szerokość */
         }
         .card-header h5 {
-            font-size: 1.25rem;
+            font-size: 1.4rem; /* Zwiększony tytuł */
         }
         .list-group-item {
-            font-size: 1rem;
+            font-size: 1.1rem; /* Zwiększona czcionka elementów listy */
         }
     </style>
     <script>
@@ -56,15 +50,20 @@
             console.log('WebSocket connection opened.');
             setupPing(); // Rozpocznij wysyłanie pingów po nawiązaniu połączenia
         };
+
+
         barSocket.onmessage = function(e) {
             const data = JSON.parse(e.data);
             console.log("Message received:", data);
 
             if (data.type === 'initial_orders') {
                 ordersContainer.innerHTML = '';
-                data.orders.forEach(order => addOrderToView(order));
+                data.orders.forEach(order => {
+                    addOrderToView(order);
+                });
             } else if (data.type === 'new_order') {
-                addOrderToView(data.order);
+                const order = data.order;
+                addOrderToView(order);
             } else if (data.type === 'order_status_update') {
                 const orderId = data.order_id;
                 const newStatus = data.new_status;
@@ -73,7 +72,7 @@
                     const orderElement = document.getElementById(`order-${orderId}`);
                     if (orderElement) {
                         orderElement.remove();
-                        console.log(`Order ${orderId} removed.`);
+                        console.log(`Order ${orderId} has been removed.`);
                     }
                 } else {
                     const statusSpan = document.getElementById(`status-${orderId}`);
@@ -86,7 +85,7 @@
         };
 
         barSocket.onclose = function(e) {
-            console.error('Bar socket closed unexpectedly');
+            console.error('Kitchen socket closed unexpectedly');
         };
 
         function getStatusClass(status) {
@@ -114,10 +113,15 @@
 
             let orderItemsHtml = '';
             order.order_items.forEach(item => {
-                orderItemsHtml += `<li class="list-group-item" id="order-${order.id}-item-${item.id}" onclick="toggleItemDone(${order.id}, ${item.id}, '${order.sender }')">
-                    ${item.name_snapshot} ×${item.quantity}
-                    ${item.note ? `<small class="text-muted">(${item.note})</small>` : ''}
-                </li>`;
+                // Nowa linia: Ustalenie klas CSS na podstawie is_done
+                const doneClass = item.is_done ? 'text-decoration-line-through text-muted' : '';
+
+                orderItemsHtml += `
+                    <li class="list-group-item ${doneClass}" id="order-${order.id}-item-${item.id}" onclick="toggleItemDone(${order.id}, ${item.id}, '${order.sender}')">
+                        ${item.name_snapshot} ×${item.quantity}
+                        ${item.note ? `<small class="text-muted">(${item.note})</small>` : ''}
+                    </li>
+                `;
             });
 
             const orderElement = document.createElement('div');
@@ -132,8 +136,11 @@
                     <span id="status-${order.id}" class="badge bg-${statusClass}">${order.status}</span>
                 </div>
                 <div class="card-body">
-                    <p class="mb-1"><strong>Table:</strong> ${order.table}</p>
-                    <p class="mb-2"><strong>Created At:</strong> ${order.created_at}</p>
+                    <p class="mb-1"><strong>Stół:</strong> ${order.table}</p>
+                    <p class="mb-2">
+                        <strong>Czas oczekiwania:</strong>
+                        <span class="waiting-time" data-created-at="${order.created_at}" id="waiting-${order.id}">0m 0s</span>
+                    </p>
                     <ul class="list-group mb-3">${orderItemsHtml}</ul>
                     <div class="d-flex gap-2">
                         <button class="btn btn-warning text-dark" onclick="changeStatus(${order.id}, 'preparing')">Preparing</button>
@@ -157,5 +164,21 @@
                 username: senderUsername
             }));
         }
+        function updateWaitingTimes() {
+            document.querySelectorAll('.waiting-time').forEach(span => {
+                const createdAt = new Date(span.dataset.createdAt); // parsujemy timestamp
+                const now = new Date();
+                const diffMs = now - createdAt;
+                const diffSec = Math.floor(diffMs / 1000);
+
+                const minutes = Math.floor(diffSec / 60);
+                const seconds = diffSec % 60;
+
+                span.textContent = `${minutes}m ${seconds}s`;
+            });
+        }
+
+        // aktualizuj co 1 sek
+        setInterval(updateWaitingTimes, 1000);
     </script>
 {% endblock content %}

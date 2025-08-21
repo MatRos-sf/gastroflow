@@ -2,15 +2,7 @@
 from datetime import datetime, time
 from decimal import Decimal
 
-from django.db.models import (
-    Avg,
-    DecimalField,
-    DurationField,
-    ExpressionWrapper,
-    F,
-    Sum,
-    Value,
-)
+from django.db.models import Avg, DurationField, ExpressionWrapper, F, Sum
 from django.db.models.functions import Coalesce
 from django.utils import timezone
 
@@ -72,20 +64,17 @@ def daily_summary(date=None):
         started_at__isnull=False, finished_at__isnull=False
     ).aggregate(avg=Avg(prep_delta))["avg"]
 
-    # 6) Przychód dnia z cen snapshot
-    #    Najpierw suma dodatków per item, potem cena pozycji: (price_snapshot * quantity) + additions_total
-    items_with_add = items_qs.annotate(
-        additions_total=Coalesce(Sum("order_item_additions__price_snapshot"), Value(0))
-    ).annotate(
-        line_revenue=ExpressionWrapper(
-            F("price_snapshot") * F("quantity") + F("additions_total"),
-            output_field=DecimalField(max_digits=12, decimal_places=2),
-        )
+    # 6) revenue
+    revenue = Decimal("0.00")
+    daily_bills = Bill.objects.filter(created_at__range=(start, end)).prefetch_related(
+        "orders__order_items__order_item_additions"
     )
-
-    revenue = items_with_add.aggregate(
-        total=Coalesce(Sum("line_revenue"), Value(Decimal("0.00")))
-    )["total"]
+    for bill in daily_bills:
+        summary = bill.bill_summary_view()
+        total = summary["total"]
+        discount = summary["cost_discount"]
+        print(total, discount)
+        revenue += total - discount
 
     return {
         "date": date.isoformat(),

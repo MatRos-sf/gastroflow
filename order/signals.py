@@ -1,16 +1,24 @@
-from django.db.models.signals import post_delete, post_save
+from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
-from .models import OrderItemAddition
+from order.models import Order, StatusOrder
 
 
-@receiver(post_save, sender=OrderItemAddition)
-def addition_saved(sender, instance, **kwargs):
-    if instance.order_item_id:
-        instance.order_item.recompute_cost(save=True)
+@receiver(pre_save, sender=Order)
+def update_time_field(sender, instance, **kwargs):
+    if not instance.pk:
+        return
 
+    old_order = Order.objects.get(pk=instance.pk)
 
-@receiver(post_delete, sender=OrderItemAddition)
-def addition_deleted(sender, instance, **kwargs):
-    if instance.order_item_id:
-        instance.order_item.recompute_cost(save=True)
+    if old_order.status == instance.status:
+        return
+
+    preparing_at = instance.preparing_at
+
+    if (
+        old_order.status == StatusOrder.ORDER
+        and instance.status == StatusOrder.READY
+        and not preparing_at
+    ):
+        instance.preparing_at = instance.readied_at
