@@ -119,6 +119,7 @@ class Order(models.Model):
     category = models.CharField(default=Location.KITCHEN, choices=Location.choices)
     # Date time fields
     created_at = models.DateTimeField(auto_now_add=True)
+    preparing_at = models.DateTimeField(null=True, blank=True)
     readied_at = models.DateTimeField(null=True, blank=True)
     paid_at = models.DateTimeField(null=True, blank=True)
     canceled_at = models.DateTimeField(null=True, blank=True)

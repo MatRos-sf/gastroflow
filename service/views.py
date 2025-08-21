@@ -178,10 +178,12 @@ def get_order_details(order_id, sender: str) -> Optional[dict]:
     return {
         "id": order.id,
         "sender": sender,
-        "table": None,
+        "table": order.bill.str_tables(),
         "status": order.status,
         "order_items": order_items,
-        "created_at": order.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+        "created_at": timezone.localtime(order.created_at).strftime(
+            "%Y-%m-%d %H:%M:%S"
+        ),
     }
 
 
@@ -189,11 +191,10 @@ def send_payload_to_recipient(pk: int, group_name: str, sender: str):
     order_detail = get_order_details(pk, sender)
     if order_detail is None:
         return None
-
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
         group_name,
-        {"type": "new_order", "table": None, "order_data": order_detail},
+        {"type": "new_order", "order_data": order_detail},
     )
 
 

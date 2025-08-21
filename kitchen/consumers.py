@@ -96,6 +96,7 @@ class OrderConsumer(AsyncWebsocketConsumer):
         try:
             order = Order.objects.get(id=order_id)
             order.status = new_status
+            # change all order items status to PREPARING and set started_at
             if new_status == StatusOrder.PREPARING:
                 OrderItem.objects.filter(
                     Q(order=order) & Q(status=OrderItemStatus.WAITING)
@@ -108,6 +109,10 @@ class OrderConsumer(AsyncWebsocketConsumer):
                 OrderItem.objects.filter(order=order).update(
                     status=OrderItemStatus.READY,
                     finished_at=timezone.now(),
+                )
+                # when start_ad is null set started_at to current time
+                OrderItem.objects.filter(order=order, started_at__isnull=True).update(
+                    started_at=timezone.now(),
                 )
 
             if new_status == StatusOrder.READY:
@@ -166,15 +171,16 @@ class OrderConsumer(AsyncWebsocketConsumer):
                         "note": item.note,
                     }
                 )
-
             orders_list.append(
                 {
                     "id": order.id,
                     "sender": order.bill.service.user.username,
-                    "table": None,
+                    "table": order.bill.str_tables(),
                     "status": order.status,
                     "order_items": order_items,
-                    "created_at": order.created_at.strftime("%Y-%m-%d %H:%M:%S"),
+                    "created_at": timezone.localtime(order.created_at).strftime(
+                        "%Y-%m-%d %H:%M:%S"
+                    ),
                 }
             )
 

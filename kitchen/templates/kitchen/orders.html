@@ -148,8 +148,11 @@
                     <span id="status-${order.id}" class="badge bg-${statusClass}">${order.status}</span>
                 </div>
                 <div class="card-body">
-                    <p class="mb-1"><strong>Table:</strong> ${order.table}</p>
-                    <p class="mb-2"><strong>Created At:</strong> ${order.last_update}</p>
+                    <p class="mb-1"><strong>Stół:</strong> ${order.table}</p>
+                    <p class="mb-2">
+                        <strong>Czas oczekiwania:</strong>
+                        <span class="waiting-time" data-created-at="${order.created_at}" id="waiting-${order.id}">0m 0s</span>
+                    </p>
                     <ul class="list-group mb-3">${orderItemsHtml}</ul>
                     <div class="d-flex gap-2">
                         <button class="btn btn-warning text-dark" onclick="changeStatus(${order.id}, 'preparing')">Preparing</button>
@@ -160,6 +163,7 @@
 
             ordersContainer.append(orderElement);
         }
+
         function toggleItemDone(orderId, itemId, senderUsername) {
             const el = document.getElementById(`order-${orderId}-item-${itemId}`);
             el.classList.toggle('text-decoration-line-through');
@@ -172,6 +176,22 @@
                 username: senderUsername
             }));
         }
+        function updateWaitingTimes() {
+            document.querySelectorAll('.waiting-time').forEach(span => {
+                const createdAt = new Date(span.dataset.createdAt); // parsujemy timestamp
+                const now = new Date();
+                const diffMs = now - createdAt;
+                const diffSec = Math.floor(diffMs / 1000);
+
+                const minutes = Math.floor(diffSec / 60);
+                const seconds = diffSec % 60;
+
+                span.textContent = `${minutes}m ${seconds}s`;
+            });
+        }
+
+        // aktualizuj co 1 sek
+        setInterval(updateWaitingTimes, 1000);
 
     </script>
 {% endblock content %}
