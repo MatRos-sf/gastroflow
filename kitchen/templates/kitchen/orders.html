@@ -13,10 +13,6 @@
                class="btn btn-outline-dark btn-lg {% if request.resolver_match.url_name == 'available' %}active{% endif %}">
                 Zmień status
             </a>
-            <a href="{% url 'orders-history' %}"
-               class="btn btn-outline-dark btn-lg {% if request.resolver_match.url_name == 'orders-history' %}active{% endif %}">
-                Historia zamówień
-            </a>
         </div>
     </div>
     <div class="container-fluid p-0">

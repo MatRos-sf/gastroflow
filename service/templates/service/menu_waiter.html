@@ -19,12 +19,15 @@
             border-color: #b0b0b0 !important;
         }
     </style>
+    <h1>New version</h1>
     <div class="container">
         <div class="d-grid gap-3 col-8 mx-auto pt-5">
             <a href="{% url 'service:order-table' %}"
                class="btn btn-primary waiter-btn"
                type="button">Stwórz zamówienie</a>
-            <a class="btn btn-primary waiter-btn" type="button" href="{% url 'service:table-settle' %}?action=order">Dodaj do zamówienia</a>
+            <a class="btn btn-primary waiter-btn"
+               type="button"
+               href="{% url 'service:table-settle' %}?action=order">Dodaj do zamówienia</a>
             <button class="btn btn-primary waiter-btn" type="button" disabled>Edytuj zamówienie</button>
             <a href="{% url 'service:table-settle' %}"
                class="btn btn-primary waiter-btn"
