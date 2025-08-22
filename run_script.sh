@@ -11,6 +11,6 @@ git pull
 . venv/bin/activate
 pip install -r requirements.txt
 
-sudo docker start redis
+docker start redis
 
 python3 manage.py runserver 0.0.0.0:8000

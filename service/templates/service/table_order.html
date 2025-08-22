@@ -36,7 +36,7 @@
         <div class="floor-plan">
             {% for t in tables %}
                 <button type="button"
-                        class="btn btn-success table-btn"
+                        class="btn btn-success table-btn "
                         style="left: {{ t.x }}px;
                                top: {{ t.y }}px"
                         data-pk="{{ t.pk }}">{{ t.name }}</button>
@@ -47,7 +47,7 @@
             <h4>Wybierz kelnera</h4>
             {% for w in waiters %}
                 <button type="button"
-                        class="btn btn-outline-primary waiter-btn"
+                        class="btn btn-outline-primary waiter-btn btn-lg"
                         data-pk="{{ w.pk }}">{{ w.user__username }}</button>
             {% endfor %}
         </div>

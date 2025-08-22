@@ -5,31 +5,35 @@
 {% block content %}
     <div class="container py-4">
         <h1 class="text-center text-dark mb-4">Powiadomienia</h1>
-        <div id="notifications-container" class="d-flex flex-column gap-2"></div>
+        <!-- zwiększony odstęp między kafelkami -->
+        <div id="notifications-container" class="d-flex flex-column gap-4"></div>
     </div>
     <style>
+    /* 2x większa typografia dla listy powiadomień */
     #notifications-container {
-        font-size: 1.1rem;
+        font-size: 2.2rem; /* było 1.1rem */
     }
+
     .notification-card {
         display: flex;
         justify-content: flex-start;
         align-items: center;
-        padding: 10px;
-        border-radius: 8px;
+        padding: 20px;           /* było 10px */
+        border-radius: 12px;     /* było 8px */
         background-color: #f8f9fa;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12); /* delikatnie mocniejszy cień */
         cursor: pointer;
-        transition: background-color 0.2s;
+        transition: background-color 0.2s, transform 0.05s;
     }
     .notification-card:hover {
         background-color: #e2e6ea;
     }
+
     .notification-time {
-        font-size: 0.9rem;
+        font-size: 0.82em;   /* proporcjonalnie do #notifications-container (≈ 0.9/1.1) */
         color: #6c757d;
-        margin-right: 10px;
-        min-width: 50px;
+        margin-right: 20px;  /* było 10px */
+        min-width: 100px;    /* było 50px — lepsze wyrównanie */
         text-align: right;
     }
     </style>
@@ -56,7 +60,7 @@ function setupPing() {
 
 notificationSocket.onopen = function(e) {
     console.log('WebSocket connection opened.');
-    setupPing(); // Rozpocznij wysyłanie pingów po nawiązaniu połączenia
+    setupPing();
 };
 
 // Funkcja licząca różnicę czasu w sekundach
@@ -89,7 +93,6 @@ notificationSocket.onmessage = function(e) {
             addNotificationToView(n);
         });
     } else if (data.type === 'new_notification') {
-        // Dodaj tę sekcję, aby obsłużyć nowe powiadomienia
         notifications[data.id] = data;
         addNotificationToView(data);
     } else if (data.type === 'notification_seen') {
@@ -111,7 +114,7 @@ function addNotificationToView(notification) {
             ${timeDiffFromNow(notification.created_at)}
         </span>
         <div>
-            <strong>@${notification.worker}</strong>: ${notification.order_item} (Table: ${notification.table})
+            <strong>@${notification.worker}</strong>: ${notification.order_item} (Stół: ${notification.table})
         </div>
     `;
 
