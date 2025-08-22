@@ -38,13 +38,19 @@
                     {% endif %}
                 </div>
                 <!-- Prawa strona: Hamburger -->
-                <button class="navbar-toggler"
+                <button class="navbar-toggler position-relative"
                         type="button"
                         data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasNavbar"
                         aria-controls="offcanvasNavbar"
                         aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
+                    <!-- Czerwona kropka -->
+                    <span id="menu-dot"
+                          class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"
+                          style="display:none">
+                        <span class="visually-hidden">New alerts</span>
+                    </span>
                 </button>
             </div>
             <!-- Offcanvas menu -->
@@ -134,5 +140,29 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
                 crossorigin="anonymous"></script>
+        <script>
+  async function checkNotifications() {
+    try {
+      const response = await fetch("{% url 'service:check-notifications' %}", {
+        headers: { "X-Requested-With": "XMLHttpRequest" }
+      });
+      if (!response.ok) return;
+
+      const data = await response.json();
+      const dot = document.getElementById("menu-dot");
+
+      if (data.has_new) {   // albo data.has_notifications, zależy co zwracasz
+        dot.style.display = "block";
+      } else {
+        dot.style.display = "none";
+      }
+    } catch (error) {
+      console.error("Błąd sprawdzania powiadomień:", error);
+    }
+  }
+
+  checkNotifications();
+  setInterval(checkNotifications, 15000);
+        </script>
     </body>
 </html>

@@ -24,5 +24,14 @@ urlpatterns = [
     path(
         "service/notifications/", views.waiter_notification, name="waiter-notifications"
     ),
-    path("order/table/settle/bill/<int:pk>", views.add_order_to_bill, name="table-settle-add-order")
+    path(
+        "order/table/settle/bill/<int:pk>",
+        views.add_order_to_bill,
+        name="table-settle-add-order",
+    ),
+    path(
+        "api/notifications/check/",
+        views.check_notifications,
+        name="check-notifications",
+    ),
 ]

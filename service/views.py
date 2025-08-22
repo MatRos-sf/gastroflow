@@ -4,14 +4,22 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib import messages
 from django.db.models import Q
-from django.http import HttpResponseNotFound
+from django.http import HttpResponseNotFound, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import DetailView, ListView
 
 from menu.models import Item, Location, MenuType
-from order.models import Bill, Order, OrderItem, OrderItemAddition, StatusBill
+from order.models import (
+    Bill,
+    Notification,
+    NotificationStatus,
+    Order,
+    OrderItem,
+    OrderItemAddition,
+    StatusBill,
+)
 from worker.models import Position, Worker
 
 from .models import Table
@@ -328,3 +336,8 @@ def add_order_to_bill(request, pk: int):
     request.session["tables"] = [t.pk for t in bill.table.all()]
     request.session["waiter"] = str(bill.service.pk)
     return redirect("service:items-waiter")
+
+
+def check_notifications(request):
+    has_new = Notification.objects.filter(status=NotificationStatus.WAIT).exists()
+    return JsonResponse({"has_new": has_new})
