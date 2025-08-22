@@ -17,10 +17,10 @@ import bar.routing
 import kitchen.routing
 import service.routing
 
-# from kitchen.routing import websocket_urlpatterns
-
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gastroflow.settings")
 
+
+django_asgi_app = get_asgi_application()
 
 application = ProtocolTypeRouter(
     {
