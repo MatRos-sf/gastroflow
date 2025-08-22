@@ -13,4 +13,4 @@ pip install -r requirements.txt
 
 sudo docker start redis
 
-daphne -p 8000 gastroflow.asgi:application
+python3 manage.py runserver 0.0.0.0:8000
