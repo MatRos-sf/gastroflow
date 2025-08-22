@@ -11,6 +11,6 @@ git pull
 . venv/bin/activate
 pip install -r requirements.txt
 
-sudo docker start redis
+docker start redis
 
 daphne -p 8000 gastroflow.asgi:application
