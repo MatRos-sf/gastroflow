@@ -1,3 +1,4 @@
+import os
 from datetime import date as date_cls
 
 from django.contrib import messages
@@ -18,6 +19,21 @@ def home(request):
     return HttpResponse("Hello, world. You're at the order home.")
 
 
+def pin_required(view_func):
+    def wrapper(request, *args, **kwargs):
+        pin = os.getenv("PIN")
+        if request.method == "POST":
+            provided_pin = request.POST.get("pin")
+            if provided_pin == pin:
+                return view_func(request, *args, **kwargs)
+            else:
+                messages.error(request, "Niepoprawny PIN!")
+                return redirect("service:menu-waiter")
+        return render(request, "order/pin_form.html")
+
+    return wrapper
+
+
 # class OrderMenuView(ListView):
 #     model = Item
 #     template_name = "order/order_menu.html"
@@ -28,6 +44,7 @@ def item_list(request):
     return render(request, "order/order_menu.html", {"object_list": items})
 
 
+@pin_required
 def daily_report(request):
     date_str = request.GET.get("date")
     if date_str:
