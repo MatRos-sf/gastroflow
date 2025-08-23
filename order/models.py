@@ -31,6 +31,11 @@ class StatusBill(models.TextChoices):
     CLOSED = "closed", "CLOSED"
 
 
+class PaymentMethod(models.TextChoices):
+    CARD = "karta", "KARTA"
+    CASH = "gotówka", "GOTÓWKA"
+
+
 class Bill(models.Model):
     table = models.ManyToManyField(Table, blank=True)
     status = models.CharField(
@@ -47,6 +52,9 @@ class Bill(models.Model):
     note = models.CharField(max_length=200, blank=True, null=True)
     discount = models.PositiveIntegerField(
         default=0, validators=[MinValueValidator(0), MaxValueValidator(100)]
+    )
+    payment_method = models.CharField(
+        max_length=10, choices=PaymentMethod.choices, default=PaymentMethod.CARD
     )
 
     # Payment additional
