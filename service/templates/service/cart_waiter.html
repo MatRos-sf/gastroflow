@@ -73,4 +73,17 @@
             </div>
         {% endif %}
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const submitButton = document.querySelector('button[type="submit"]');
+
+            if (form && submitButton) {
+                form.addEventListener('submit', function() {
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Trwa składanie zamówienia...';
+                });
+            }
+        });
+    </script>
 {% endblock content %}

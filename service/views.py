@@ -158,6 +158,9 @@ def do_order(request):
         request.session["cart"] = []
         request.session["tables"] = []
         del request.session["waiter"]
+        messages.success(
+            request, f"Zamówienie na rachunek #{bill.pk} zostało ukończone."
+        )
         if bill_pk:
             del request.session["bill"]
         return redirect("service:menu-waiter")
