@@ -25,7 +25,8 @@
             <div class="card mb-3 border-success">
                 <div class="card-header bg-success text-white">
                     <strong>Zamówienie #{{ order.id }}</strong>
-                    <span class="float-end">{{ order.created_at|date:"H:i" }}</span>
+                    <!--                    <span class="float-end">{{ order.created_at|date:"H:i" }}</span>-->
+                    <span class="float-end">Stolik: {{ order.bill.str_tables }}</span>
                 </div>
                 <div class="card-body">
                     <ul class="list-group list-group-flush">

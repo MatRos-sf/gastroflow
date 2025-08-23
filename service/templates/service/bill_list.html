@@ -15,6 +15,11 @@
                                 <p class="card-text mb-1">
                                     <strong>Status:</strong> {{ bill.status }}
                                 </p>
+                                {% if bill.note %}
+                                    <p class="card-text mb-1">
+                                        <strong>Note:</strong> {{ bill.note }}
+                                    </p>
+                                {% endif %}
                                 <p class="card-text mb-1">
                                     <strong>Kelner:</strong> {{ bill.service.user.username }}
                                 </p>
@@ -22,11 +27,11 @@
                                     <strong>Created:</strong> {{ bill.created_at }}
                                 </p>
                                 {% if action == 'bill' %}
-                                <a href="{% url 'service:bill-detail' bill.id %}"
-                                   class="btn btn-primary w-100">Szczegóły</a>
+                                    <a href="{% url 'service:bill-detail' bill.id %}"
+                                       class="btn btn-primary w-100">Szczegóły</a>
                                 {% else %}
-                                <a href="{% url 'service:table-settle-add-order' bill.id %}"
-                                   class="btn btn-primary w-100">Domów</a>
+                                    <a href="{% url 'service:table-settle-add-order' bill.id %}"
+                                       class="btn btn-primary w-100">Domów</a>
                                 {% endif %}
                             </div>
                         </div>
