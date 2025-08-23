@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="keywords" content="foo,bar" />
+        <meta name="description" content="foo" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>
+            {% block title %}
+            {% endblock title %}
+        </title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+              rel="stylesheet"
+              integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
+              crossorigin="anonymous">
+        <style>
+        body {
+            padding-top: 70px; /* odstęp, żeby navbar nie nachodził na treść */
+        }
+        </style>
+    </head>
+    <body>
+        <!-- Navbar -->
+        <nav class="navbar navbar-dark bg-dark fixed-top">
+            <div class="container-fluid d-flex justify-content-between align-items-center">
+                <!-- Lewa strona: Logo -->
+                <a class="navbar-brand fw-bold" href="{% url 'service:menu-waiter' %}">Frisztek</a>
+                <!-- Prawa strona: Hamburger -->
+                <button class="navbar-toggler"
+                        type="button"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#offcanvasNavbar"
+                        aria-controls="offcanvasNavbar"
+                        aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <!-- Offcanvas menu -->
+            <div class="offcanvas offcanvas-end text-bg-dark"
+                 tabindex="-1"
+                 id="offcanvasNavbar"
+                 aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+                    <button type="button"
+                            class="btn-close btn-close-white"
+                            data-bs-dismiss="offcanvas"
+                            aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav flex-grow-1 pe-3">
+                        <!-- Główne linki -->
+                        <li class="nav-item">
+                            <a href="{% url 'service:menu-waiter' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'menu-waiter' %}text-warning fw-bold{% endif %}">
+                                Sala
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'kitchen-orders' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'kitchen-orders' %}text-warning fw-bold{% endif %}">
+                                Kuchnia
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'bar-orders' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'bar-orders' %}text-warning fw-bold{% endif %}">
+                                Bar
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'service:waiter-notifications' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'service:waiter-notifications' %}text-warning fw-bold{% endif %}">
+                                Powiadomienia
+                            </a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <hr>
+                        <!-- Admin / dodatkowe -->
+                        <li class="nav-item">
+                            <a href="{% url 'item-list' %}" class="nav-link">Edytuj menu</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'available' %}" class="nav-link">Zmień status</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'orders-bar-history' %}" class="nav-link">Historia Bar</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'orders-history' %}" class="nav-link">Historia Kuchnia</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'summary-bill' %}" class="nav-link">Usuń Rachunek</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Messages -->
+        <div class="container mt-3">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show"
+                         role="alert">
+                        {{ message }}
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <!-- Content -->
+        <main class="container py-3">
+            {% block content %}
+            {% endblock content %}
+        </main>
+        <!-- Bootstrap JS -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+                crossorigin="anonymous"></script>
+    </body>
+</html>
