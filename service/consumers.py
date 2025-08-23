@@ -74,7 +74,8 @@ class NotificationConsumer(AsyncWebsocketConsumer):
             {
                 "id": n.id,
                 "worker": str(n.worker),
-                "order_item": n.order_item.name_snapshot,
+                "order_item": n.order_item.full_name_snapshot
+                + (f" ({n.order_item.note})" if n.order_item.note else ""),
                 "table": n.order_item.order.bill.str_tables(),
                 "created_at": n.last_update.isoformat(),
             }

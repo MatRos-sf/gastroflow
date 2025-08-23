@@ -212,7 +212,12 @@ class BaseConsumer(AsyncWebsocketConsumer):
             return {
                 "id": notification.id,
                 "worker": str(notification.worker),
-                "order_item": notification.order_item.name_snapshot,
+                "order_item": notification.order_item.full_name_snapshot
+                + (
+                    f" ({notification.order_item.note})"
+                    if notification.order_item.note
+                    else ""
+                ),
                 "table": notification.order_item.order.bill.str_tables(),
                 "created_at": notification.last_update.isoformat(),
             }
