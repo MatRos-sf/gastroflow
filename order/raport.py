@@ -2,11 +2,12 @@
 from datetime import datetime, time
 from decimal import Decimal
 
-from django.db.models import Avg, DurationField, ExpressionWrapper, F, Sum
+from django.db.models import Avg, Count, DurationField, ExpressionWrapper, F, Sum
 from django.db.models.functions import Coalesce
 from django.utils import timezone
 
-from order.models import Bill, OrderItem, StatusBill
+from menu.models import MenuType
+from order.models import Bill, Location, Order, OrderItem, StatusBill
 
 
 def day_bounds_local(date):
@@ -56,14 +57,31 @@ def daily_summary(date=None):
     items_by_category = {row["order__category"]: row["sold"] for row in by_category}
 
     # 5) Średni czas przygotowania (tylko tam, gdzie mamy oba timestampy)
+    # prep_delta = ExpressionWrapper(
+    #     F("finished_at") - F("created_at"),
+    #     output_field=DurationField(),
+    # )
+    # avg_prep = items_qs.filter(
+    #     started_at__isnull=False, finished_at__isnull=False
+    # ).aggregate(avg=Avg(prep_delta))["avg"]
+    orders_qs = (
+        Order.objects.filter(
+            category=Location.KITCHEN,
+            created_at__range=(start, end),
+            preparing_at__isnull=False,
+            readied_at__isnull=False,
+        )
+    ).exclude(order_items__menu_item__menu=MenuType.OTHER)
+
     prep_delta = ExpressionWrapper(
-        F("finished_at") - F("started_at"),
+        F("readied_at") - F("created_at"),
         output_field=DurationField(),
     )
-    avg_prep = items_qs.filter(
-        started_at__isnull=False, finished_at__isnull=False
-    ).aggregate(avg=Avg(prep_delta))["avg"]
 
+    avg_prep = orders_qs.aggregate(
+        avg=Avg(prep_delta),
+        count=Count("id"),
+    )["avg"]
     # 6) revenue
     revenue = Decimal("0.00")
     daily_bills = Bill.objects.filter(created_at__range=(start, end)).prefetch_related(
