@@ -1,4 +1,5 @@
 {% extends "menu/base.html" %}
+{% load static %}
 {% block title %}
     Kitchen Orders
 {% endblock title %}
@@ -21,6 +22,9 @@
             <div id="orders-container" class="d-flex flex-wrap gap-3"></div>
         </div>
     </div>
+    <audio id="notification-sound"
+           src="{% static 'sounds/notification.mp3' %}"
+           preload="auto"></audio>
     <style>
         /* Zwiększona czcionka dla całej sekcji zamówień */
         #orders-container {
@@ -74,6 +78,13 @@
             } else if (data.type === 'new_order') {
                 const order = data.order;
                 addOrderToView(order);
+                // add sound
+                const sound = document.getElementById("notification-sound");
+                if (sound) {
+                    sound.play().catch(err => {
+                        console.warn("Audio play blocked (autoplay policy):", err);
+                    });
+                }
             } else if (data.type === 'order_status_update') {
                 const orderId = data.order_id;
                 const newStatus = data.new_status;
