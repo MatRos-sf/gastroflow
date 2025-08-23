@@ -4,8 +4,10 @@ from django.contrib import messages
 from django.db.utils import IntegrityError
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.decorators.http import require_POST
+from django.views.generic import DeleteView, ListView
 
 from .models import Bill, Item
 from .raport import daily_summary
@@ -62,3 +64,34 @@ def update_discount(request, pk: int):
     except Http404:
         messages.add_message(request, messages.ERROR, "Bill doesn't exists")
     return redirect("service:bill-detail", pk=pk)
+
+
+class BillListView(ListView):
+    model = Bill
+    template_name = "order/bill_summary_list.html"
+    paginate_by = 24  # opcjonalnie
+
+    def get_queryset(self):
+        # prefetch: orders -> order_items -> order_item_additions
+        return (
+            Bill.objects.select_related("service")
+            .prefetch_related("table", "orders__order_items__order_item_additions")
+            .order_by("-created_at")
+        )
+
+
+class BillDeleteView(DeleteView):
+    model = Bill
+    template_name = "order/bill_confirm_delete.html"  # nieużywane, bo mamy modal
+    success_url = reverse_lazy("summary-bill")
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        note = request.POST.get("delete_note", "").strip()
+        if note:
+            messages.info(request, f"Usunięto Bill #{self.object.pk}. Notatka: {note}")
+        else:
+            messages.info(request, f"Usunięto Bill #{self.object.pk}.")
+
+        # TODO: check and release tables
+        return super().post(request, *args, **kwargs)

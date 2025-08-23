@@ -1,0 +1,160 @@
+{% extends "menu/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container mt-4">
+        <div class="row g-4">
+            {% for bill in object_list %}
+                {% with s=bill.bill_summary_view %}
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <h5 class="card-title mb-0">Rachunek #{{ bill.id }}</h5>
+                                    {# PRZYCISK KOSZA #}
+                                    <button type="button"
+                                            class="btn btn-outline-danger btn-sm"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteBillModal"
+                                            data-bill-id="{{ bill.id }}"
+                                            data-delete-url="{% url 'bill-delete' bill.id %}">🗑️</button>
+                                </div>
+                                <p class="text-muted mb-1">
+                                    Zamówienia:
+                                    {% for order in bill.orders.all %}
+                                        #{{ order.id }}
+                                        {% if not forloop.last %},{% endif %}
+                                    {% empty %}
+                                        brak
+                                    {% endfor %}
+                                </p>
+                                <p class="text-muted mb-1">{{ bill.created_at|date:"Y-m-d H:i" }}</p>
+                                <p class="mb-2">
+                                    <strong>Stolik(i):</strong> {{ bill.str_tables|default:"take-away" }}
+                                </p>
+                                <ul class="list-group mb-3">
+                                    {% for name, data in s.summary.items %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div class="me-2">
+                                                <div class="fw-semibold">{{ name }}</div>
+                                                <small class="text-muted">ID: {{ data.id }}</small>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <span class="badge text-bg-secondary">{{ data.quantity }}×</span>
+                                                <span>{{ data.total_cost }} zł</span>
+                                            </div>
+                                        </li>
+                                    {% empty %}
+                                        <li class="list-group-item">Brak pozycji.</li>
+                                    {% endfor %}
+                                </ul>
+                                <div class="mt-auto">
+                                    <div class="d-flex justify-content-between">
+                                        <span>Suma pozycji</span>
+                                        <strong>{{ s.total }} zł</strong>
+                                    </div>
+                                    {% if bill.discount %}
+                                        <div class="d-flex justify-content-between">
+                                            <span>Rabat ({{ bill.discount }}%)</span>
+                                            <strong>-{{ s.cost_discount }} zł</strong>
+                                        </div>
+                                    {% endif %}
+                                    <hr class="my-2">
+                                    <div class="d-flex justify-content-between">
+                                        <span class="fw-semibold">Do zapłaty</span>
+                                        <span class="fw-bold">{{ bill.total }} zł</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endwith %}
+            {% empty %}
+                <p>Brak rachunków.</p>
+            {% endfor %}
+        </div>
+        {# paginacja #}
+        {% if is_paginated %}
+            <nav class="mt-3">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">«</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">«</span>
+                        </li>
+                    {% endif %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Strona {{ page_obj.number }} z {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">»</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <span class="page-link">»</span>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        {% endif %}
+    </div>
+    {# ========= MODAL USUWANIA ========= #}
+    <div class="modal fade"
+         id="deleteBillModal"
+         tabindex="-1"
+         aria-labelledby="deleteBillModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post" class="modal-content" id="deleteBillForm">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteBillModalLabel">Usuń rachunek</h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Zamknij"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="deleteBillText" class="mb-2"></p>
+                    <div class="mb-3">
+                        <label for="delete_note" class="form-label">Notatka (opcjonalnie)</label>
+                        <textarea name="delete_note"
+                                  id="delete_note"
+                                  class="form-control"
+                                  rows="3"
+                                  placeholder="Dlaczego usuwasz?"></textarea>
+                    </div>
+                    <div class="alert alert-warning mb-0">
+                        Tej operacji nie można cofnąć. Wszystkie powiązane zamówienia i pozycje zostaną usunięte.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            data-bs-dismiss="modal">Anuluj</button>
+                    <button type="submit" class="btn btn-danger">Usuń</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {# JS do podmiany akcji formularza i treści modala #}
+    <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var deleteModal = document.getElementById('deleteBillModal');
+  deleteModal.addEventListener('show.bs.modal', function (event) {
+    var button = event.relatedTarget;
+    var billId = button.getAttribute('data-bill-id');
+    var deleteUrl = button.getAttribute('data-delete-url');
+
+    var form = document.getElementById('deleteBillForm');
+    form.setAttribute('action', deleteUrl);
+
+    var text = document.getElementById('deleteBillText');
+    text.textContent = "Czy na pewno chcesz usunąć rachunek #" + billId + "?";
+  });
+});
+    </script>
+{% endblock content %}

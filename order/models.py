@@ -61,7 +61,8 @@ class Bill(models.Model):
 
     @property
     def total(self):
-        raise NotImplementedError
+        s = self.bill_summary_view()
+        return s["total"] - s["cost_discount"]
 
     def close(self):
         self.status = StatusBill.CLOSED
