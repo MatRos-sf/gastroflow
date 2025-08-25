@@ -220,7 +220,7 @@ class OrderItem(models.Model):
     @property
     def full_name_snapshot(self):
         additions = self.order_item_additions.all()
-        if additions:
+        if additions.exists():
             additions_names = ", ".join(a.name_snapshot for a in additions)
             return f"{self.name_snapshot} ({additions_names})"
         return self.name_snapshot

@@ -8,7 +8,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-from django.views.generic import DeleteView, ListView
+from django.views.generic import DeleteView, DetailView, ListView
 
 from .models import Bill, Item
 from .raport import daily_summary
@@ -95,6 +95,32 @@ class BillListView(ListView):
             .prefetch_related("table", "orders__order_items__order_item_additions")
             .order_by("-created_at")
         )
+
+
+class BillDetailView(DetailView):
+    model = Bill
+    template_name = "order/bill_detail.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        obj = context["object"]
+        order_items = obj.orders.prefetch_related("order_items__order_item_additions")
+        items = []
+        for order in order_items:
+            for order_item in order.order_items.all():
+                name = order_item.full_name_snapshot
+                if order_item.note:
+                    name += f" ({order_item.note})"
+                items.append(
+                    {
+                        "pk": order_item.pk,
+                        "name": name,
+                        "quantity": order_item.quantity,
+                    }
+                )
+
+        context["items"] = items
+        return context
 
 
 class BillDeleteView(DeleteView):
