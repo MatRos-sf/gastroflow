@@ -1,16 +1,20 @@
 import os
 from datetime import date as date_cls
 
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.contrib import messages
 from django.db.utils import IntegrityError
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 from django.views.generic import DeleteView, DetailView, ListView
 
-from .models import Bill, Item
+from menu.models import Location
+
+from .models import Bill, Item, OrderItem
 from .raport import daily_summary
 
 
@@ -138,3 +142,35 @@ class BillDeleteView(DeleteView):
 
         # TODO: check and release tables
         return super().post(request, *args, **kwargs)
+
+
+def send_delete_order_item_to_kitchen(pk_order, pk_item):
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        "kitchen_orders",
+        {
+            "type": "delete_item",
+            "order_data": {"order_id": pk_order, "item_id": pk_item},
+        },
+    )
+
+
+def delete_order_item(request: HttpRequest, pk_order: int, pk_item: int):
+    object_item = OrderItem.objects.get(pk=pk_item)
+    object_name = object_item.full_name_snapshot
+    object_location = object_item.menu_item.preparation_location
+    object_item.delete()
+    messages.success(
+        request,
+        f"Usunięto {object_name}."
+        + (
+            "Poproś kuchnię o odświerzenie strony"
+            if object_location == Location.KITCHEN
+            else ""
+        ),
+    )
+    # TODO: should inform about deleted Kitchen
+    # if object_location == Location.KITCHEN:
+    #     print("Try to send")
+    #     send_delete_order_item_to_kitchen(pk_order, pk_item)
+    return redirect("bill-detail", pk=pk_order)

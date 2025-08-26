@@ -64,6 +64,11 @@
                                         <span class="fw-bold">{{ bill.total }} zł</span>
                                     </div>
                                 </div>
+                                <div class="d-grid gap-2 col-6 mx-auto p-2">
+                                    <a href="{% url 'bill-detail' bill.id %}"
+                                       type="button"
+                                       class="btn btn-outline-secondary">Szczegóły</a>
+                                </div>
                             </div>
                         </div>
                     </div>
