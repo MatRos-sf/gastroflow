@@ -65,11 +65,13 @@
                    data-bs-toggle="modal"
                    data-bs-target="#exampleModal"
                    data-bs-whatever="@fat">Dodaj Rabat</a>
-                <a href="{% url 'service:close-bill' object.id %}"
-                   class="btn btn-success btn-lg">✅ Zamknij Rachunek</a>
+                <button type="button"
+                        class="btn btn-success btn-lg"
+                        data-bs-toggle="modal"
+                        data-bs-target="#closeBillModal">✅ Zamknij Rachunek</button>
             </div>
         </div>
-        <!-- Popup windows with discount -->
+        <!-- Modal with discount -->
         <div class="modal fade"
              id="exampleModal"
              tabindex="-1"
@@ -98,6 +100,45 @@
                         </form>
                     </div>
                 </div>
+            </div>
+        </div>
+        <!-- Modal close bill -->
+        <div class="modal fade"
+             id="closeBillModal"
+             tabindex="-1"
+             aria-labelledby="closeBillModalLabel"
+             data-bill-id="{{ bill.id }}"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <form method="post"
+                      class="modal-content"
+                      id="deleteOrderItemForm"
+                      action="{% url 'service:close-bill' object.id %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="closeBillModalLabel">Wybierz metode płatności</h5>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Zamknij"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="deleteItemText" class="mb-2"></p>
+                        <div class="alert alert-warning mb-0">
+                            Po kliknięciu opcji płatności rachunek zostanie automatycznie zamknięty. Nie będzie można go otworzyć ponownie.
+                        </div>
+                    </div>
+                    <div class="modal-footer justify-content-around">
+                        <button type="submit"
+                                class="btn btn-success"
+                                value="{{ payment_methods.CARD }}"
+                                name="payment_method">{{ payment_methods.CARD.title }}</button>
+                        <button type="submit"
+                                class="btn btn-success"
+                                value="{{ payment_methods.CASH }}"
+                                name="payment_method">{{ payment_methods.CASH.title }}</button>
+                    </div>
+                </form>
             </div>
         </div>
     {% endblock content %}

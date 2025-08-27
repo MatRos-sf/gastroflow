@@ -7,7 +7,7 @@ from django.db.models.functions import Coalesce
 from django.utils import timezone
 
 from menu.models import MenuType
-from order.models import Bill, Location, Order, OrderItem, StatusBill
+from order.models import Bill, Location, Order, OrderItem, PaymentMethod, StatusBill
 
 
 def day_bounds_local(date):
@@ -84,6 +84,9 @@ def daily_summary(date=None):
     )["avg"]
     # 6) revenue
     revenue = Decimal("0.00")
+    revenue_cash = Decimal("0.00")
+    revenue_card = Decimal("0.00")
+
     daily_bills = Bill.objects.filter(created_at__range=(start, end)).prefetch_related(
         "orders__order_items__order_item_additions"
     )
@@ -91,8 +94,12 @@ def daily_summary(date=None):
         summary = bill.bill_summary_view()
         total = summary["total"]
         discount = summary["cost_discount"]
-        print(total, discount)
+        print(total, discount, bill.payment_method)
         revenue += total - discount
+        if bill.payment_method == PaymentMethod.CASH:
+            revenue_cash += total - discount
+        elif bill.payment_method == PaymentMethod.CARD:
+            revenue_card += total - discount
 
     return {
         "date": date.isoformat(),
@@ -108,4 +115,6 @@ def daily_summary(date=None):
             "avg_prep_time": avg_prep,  # timedelta lub None
         },
         "revenue": revenue,
+        "revenue_cash": revenue_cash,
+        "revenue_card": revenue_card,
     }
