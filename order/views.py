@@ -11,10 +11,12 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 from django.views.generic import DeleteView, DetailView, ListView
+from django_filters.views import FilterView
 
 from menu.models import Location
 
-from .models import Bill, Item, OrderItem
+from .filters import OrderFilter
+from .models import Bill, Item, Order, OrderItem, OrderItemStatus
 from .raport import daily_summary
 
 
@@ -174,3 +176,21 @@ def delete_order_item(request: HttpRequest, pk_order: int, pk_item: int):
     #     print("Try to send")
     #     send_delete_order_item_to_kitchen(pk_order, pk_item)
     return redirect("bill-detail", pk=pk_order)
+
+
+class ReadyOrderListView(FilterView):
+    model = Order
+    template_name = "order/order_history.html"
+    context_object_name = "items"
+    filterset_class = OrderFilter
+    paginate_by = 20
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        return qs.filter(status=OrderItemStatus.READY).order_by("-created_at")
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["categories"] = Location.values
+        ctx["today"] = timezone.localdate().strftime("%Y-%m-%d")
+        return ctx
