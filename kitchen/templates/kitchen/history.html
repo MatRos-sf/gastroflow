@@ -4,14 +4,23 @@
         <!-- Filtr po dniach -->
         <div class="mb-3">
             <h4>Historia zamówień - Kuchnia</h4>
-            <div class="btn-group" role="group">
-                {% for day in available_days %}
-                    <a href="?day={{ day|date:'Y-m-d' }}"
-                       class="btn btn-sm {% if selected_day == day|date:'Y-m-d' %}btn-primary{% else %}btn-outline-primary{% endif %}">
-                        {{ day|date:"d.m.Y" }}
-                    </a>
-                {% endfor %}
-            </div>
+            <form method="get" class="d-inline">
+                <label for="day" class="form-label me-2">Wybierz dzień:</label>
+                <select name="day"
+                        id="day"
+                        class="form-select d-inline w-auto"
+                        onchange="this.form.submit()"
+                        size="1"
+                        style="max-height: 200px;
+                               overflow-y: auto">
+                    {% for day in available_days %}
+                        <option value="{{ day|date:'Y-m-d' }}"
+                                {% if selected_day == day|date:'Y-m-d' %} selected {% elif not selected_day and forloop.first %} selected {% endif %}>
+                            {{ day|date:"d.m.Y" }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </form>
             <!-- Podsumowanie dnia -->
             {% if selected_day %}
                 <div class="mt-3">
