@@ -1,0 +1,3 @@
+Historia wydań /order/ready
+Stworzony tylko po to aby kelnerka, mogła zobaczyć gdzie zanieść jedzenie jeżeli omyłkowo kuchnia wcisnęłą ready
+oraz kelnerka wcisnęła powiadomienie ale nie zapmiętała.
