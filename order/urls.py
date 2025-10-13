@@ -4,6 +4,7 @@ from .views import (
     BillDeleteView,
     BillDetailView,
     BillListView,
+    ReadyOrderListView,
     daily_report,
     delete_order_item,
     update_discount,
@@ -20,4 +21,5 @@ urlpatterns = [
         delete_order_item,
         name="delete-order-item",
     ),
+    path("ready/", ReadyOrderListView.as_view(), name="ready-order-list"),
 ]
