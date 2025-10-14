@@ -21,6 +21,12 @@ class SubMenuType(models.TextChoices):
     CAKE = "ciasto", "Ciasto"
 
 
+class Availability(models.IntegerChoices):
+    AVAILABLE = 1, "Available"
+    SMALL_AMOUNT = 2, "Small amount"
+    UNAVAILABLE = 3, "Unavailable"
+
+
 class Location(models.TextChoices):
     BAR = "bar", "BAR"
     KITCHEN = "kitchen", "KITCHEN"
@@ -56,7 +62,9 @@ class Item(models.Model):
     additions = models.ManyToManyField(
         "self", blank=True, symmetrical=False, related_name="is_addition_to"
     )
-    is_available = models.BooleanField(default=True)
+    available = models.SmallIntegerField(
+        choices=Availability.choices, default=Availability.AVAILABLE
+    )
     id_checkout = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=5, decimal_places=2)
     created_at = models.DateTimeField(auto_now_add=True)
