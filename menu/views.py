@@ -83,3 +83,11 @@ def toggle_availability(request, pk: int):
         return JsonResponse({"available": item.available})
 
     return redirect("available")
+
+
+def delivery_items(request):
+    updated_fields = Item.objects.filter(available__gt=Availability.AVAILABLE).update(
+        available=Availability.AVAILABLE
+    )
+    messages.success(request, f"{updated_fields} pozycji zostały przywrócone")
+    return redirect("available")
