@@ -2,7 +2,7 @@ from decimal import Decimal
 
 from django.core.management.base import BaseCommand
 
-from menu.models import Item, Location, MenuType, SubMenuType
+from menu.models import Availability, Item, Location, MenuType, SubMenuType
 
 additions = {
     "Szczypiorek": {
@@ -452,7 +452,7 @@ default_menu = [value for value in additions.values()] + [
         "additions": [],
         "id_checkout": 35,
         "price": Decimal("9.00"),
-        "is_available": False,
+        "available": Availability.UNAVAILABLE,
     },
     {
         "menu": MenuType.COLD_DRINK,
@@ -462,7 +462,7 @@ default_menu = [value for value in additions.values()] + [
         "additions": [],
         "id_checkout": 35,
         "price": Decimal("9.00"),
-        "is_available": False,
+        "available": Availability.UNAVAILABLE,
     },
     {
         "menu": MenuType.COLD_DRINK,
@@ -472,7 +472,7 @@ default_menu = [value for value in additions.values()] + [
         "additions": [],
         "id_checkout": 35,
         "price": Decimal("9.00"),
-        "is_available": False,
+        "available": Availability.UNAVAILABLE,
     },
     {
         "menu": MenuType.COLD_DRINK,
@@ -482,7 +482,7 @@ default_menu = [value for value in additions.values()] + [
         "additions": [],
         "id_checkout": 100,
         "price": Decimal("9.00"),
-        "is_available": False,
+        "available": Availability.UNAVAILABLE,
     },
     {
         "menu": MenuType.COLD_DRINK,
@@ -492,7 +492,7 @@ default_menu = [value for value in additions.values()] + [
         "additions": [],
         "id_checkout": 100,
         "price": Decimal("9.00"),
-        "is_available": False,
+        "available": Availability.UNAVAILABLE,
     },
     {
         "menu": MenuType.COLD_DRINK,
@@ -502,7 +502,7 @@ default_menu = [value for value in additions.values()] + [
         "additions": [],
         "id_checkout": 52,
         "price": Decimal("10.00"),
-        "is_available": False,
+        "available": Availability.UNAVAILABLE,
     },
     {
         "menu": MenuType.COLD_DRINK,
@@ -539,7 +539,7 @@ default_menu = [value for value in additions.values()] + [
         "additions": [],
         "id_checkout": 37,
         "price": Decimal("15.00"),
-        "is_available": False,
+        "available": Availability.UNAVAILABLE,
     },
     {
         "menu": MenuType.COLD_DRINK,

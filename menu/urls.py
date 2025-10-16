@@ -6,6 +6,7 @@ from .views import (
     ItemDetailView,
     ItemListView,
     ItemUpdateView,
+    delivery_items,
     toggle_availability,
 )
 
@@ -17,4 +18,5 @@ urlpatterns = [
     path("update/<int:pk>/", ItemUpdateView.as_view(), name="item-update"),
     path("changer/", AvailableListView.as_view(), name="available"),
     path("toggle/<int:pk>/", toggle_availability, name="toggle-availability"),
+    path("delivery-product/", delivery_items, name="delivery-product"),
 ]
