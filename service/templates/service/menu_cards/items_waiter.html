@@ -1,0 +1,35 @@
+{% extends "menu/base.html" %}
+{% block title %}
+    Menu
+{% endblock title %}
+{% block content %}
+    <div class="container container-menu py-3">
+        <h1 class="mb-4 text-center">Menu</h1>
+        <!-- Navibar with category -->
+        <div class="d-flex justify-content-center mb-4 flex-wrap pb-3">
+            {% for value, label in categories %}
+                <a href="?category={{ value }}"
+                   class="btn {% if selected_category == value %}btn-primary{% else %}btn-outline-primary{% endif %} m-1">
+                    {{ label }}
+                </a>
+            {% endfor %}
+        </div>
+        <!-- Items with sub_menu -->
+        {% if items_no_sub %}
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-2 mb-4">
+                {% for item in items_no_sub %}
+                    <div class="col d-grid gap-2">{% include "service/menu_cards/_modal_view.html" with item=item %}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <!-- Items with sub_menu -->
+        {% for sub_menu, group_items in sub_menu_groups.items %}
+            <h3 class="mt-4">{{ sub_menu|capfirst }}</h3>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-2 mb-4">
+                {% for item in group_items %}
+                    <div class="col d-grid gap-2">{% include "service/menu_cards/_modal_view.html" with item=item %}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}
