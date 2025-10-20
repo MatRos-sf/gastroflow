@@ -3,7 +3,7 @@ from typing import Iterable, Optional
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q, QuerySet
 from django.http import HttpResponseNotFound, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -31,28 +31,58 @@ def menu_waiter(request):
     return render(request, "service/menu_waiter.html")
 
 
-def item_list(request):
-    category = request.GET.get("category", MenuType.MAIN)
+class MenuWaiterView(ListView):
+    model = Item
+    template_name = "service/menu_cards/items_waiter.html"
 
-    items = Item.objects.exclude(menu=MenuType.UNAVAILABLE).filter(menu=category)
+    def get_queryset(self):
+        raw_category = self.request.GET.get("category", MenuType.MAIN)
+        category = self._validated_category(raw_category)
+        return Item.objects.exclude(menu=MenuType.UNAVAILABLE).filter(menu=category)
 
-    items_no_sub = items.filter(sub_menu__isnull=True)
-    items_with_sub = items.exclude(sub_menu__isnull=True)
+    def get_template_names(self):
+        """
+        Return list of template names. Kept as hook for future template selection (e.g. user preferences).
+        """
+        # TODO: If in future you want multiple fallbacks, return a list here.
+        return [self.template_name]
 
-    sub_menu_groups = {}
-    for sub in items_with_sub.values_list("sub_menu", flat=True).distinct():
-        sub_menu_groups[sub] = items_with_sub.filter(sub_menu=sub)
-    context = {
-        "categories": [
+    def get_context_data(self, **kwargs):
+        """
+        Build extra context:
+            * selected_category: currently selected category
+            * items_no_sub: items without sub_menu
+            * sub_menu_groups: dict mapping sub_menu -> list of items
+            * categories: list of (value,label) for nav
+        """
+        category = self.request.GET.get("category", MenuType.MAIN)
+        context = super().get_context_data(**kwargs)
+        context["selected_category"] = category
+
+        qs = context["object_list"]
+        items_no_sub = qs.filter(sub_menu__isnull=True)
+        items_with_sub = qs.exclude(sub_menu__isnull=True).order_by("sub_menu")
+
+        sub_menu_groups: dict[str, QuerySet] = dict()
+        for sub in items_with_sub.values_list("sub_menu", flat=True).distinct():
+            sub_menu_groups[sub] = items_with_sub.filter(sub_menu=sub)
+
+        context["categories"] = [
             (value, label)
             for value, label in MenuType.choices
             if value != MenuType.UNAVAILABLE
-        ],
-        "selected_category": category,
-        "items_no_sub": items_no_sub,
-        "sub_menu_groups": sub_menu_groups,
-    }
-    return render(request, "service/items_waiter.html", context)
+        ]
+        context["items_no_sub"] = items_no_sub
+        context["sub_menu_groups"] = sub_menu_groups
+
+        return context
+
+    def _validated_category(self, category: str) -> str:
+        """Return a valid category value - if provided category isn't valid, return the default MenuType.Main and error message"""
+        if category not in MenuType.values:
+            messages.error(self.request, f"Invalid category: {category}")
+            return MenuType.MAIN
+        return category
 
 
 def add_to_cart(request):
