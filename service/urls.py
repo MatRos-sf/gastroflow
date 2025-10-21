@@ -7,7 +7,7 @@ app_name = "service"
 urlpatterns = [
     path("", views.menu_waiter, name="menu-waiter"),
     path("items/", views.MenuWaiterView.as_view(), name="items-waiter"),
-    path("api/add-to-cart/", views.add_to_cart, name="add-to-cart"),
+    path("cart/add/", views.CartAddView.as_view(), name="cart-add"),
     path("cart/", views.cart, name="cart-waiter"),
     path(
         "api/remove-from-cart/<int:index>/",

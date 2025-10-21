@@ -13,50 +13,48 @@
                                 <strong>Price:</strong> {{ item.price }} zł
                             </p>
                             {% if item.is_available %}
-                            <form method="post"
-                                  action="{% url 'add-to-cart' item.id %}"
-                                  class="mt-auto">
-                                {% csrf_token %}
-                                <div class="mb-3">
-                                    <label for="quantity_{{ item.id }}" class="form-label">Quantity:</label>
-                                    <input type="number"
-                                           class="form-control"
-                                           name="quantity"
-                                           id="quantity_{{ item.id }}"
-                                           min="1"
-                                           value="1"
-                                           required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="note_{{ item.id }}" class="form-label">Note:</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           name="note"
-                                           id="note_{{ item.id }}"
-                                           placeholder="Optional note">
-                                </div>
-                                {% if item.additions.all %}
+                                <form method="post" action="{% url 'cart-add' item.id %}" class="mt-auto">
+                                    {% csrf_token %}
                                     <div class="mb-3">
-                                        <strong>Additions:</strong>
-                                        <div>
-                                            {% for add in item.additions.all %}
-                                                <div class="form-check">
-                                                    <input class="form-check-input"
-                                                           type="checkbox"
-                                                           name="additions"
-                                                           value="{{ add.id }}"
-                                                           id="addition_{{ add.id }}_item_{{ item.id }}">
-                                                    <label class="form-check-label"
-                                                           for="addition_{{ add.id }}_item_{{ item.id }}">
-                                                        {{ add.name }} (+{{ add.price }} zł)
-                                                    </label>
-                                                </div>
-                                            {% endfor %}
-                                        </div>
+                                        <label for="quantity_{{ item.id }}" class="form-label">Quantity:</label>
+                                        <input type="number"
+                                               class="form-control"
+                                               name="quantity"
+                                               id="quantity_{{ item.id }}"
+                                               min="1"
+                                               value="1"
+                                               required>
                                     </div>
-                                {% endif %}
-                                <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
-                            </form>
+                                    <div class="mb-3">
+                                        <label for="note_{{ item.id }}" class="form-label">Note:</label>
+                                        <input type="text"
+                                               class="form-control"
+                                               name="note"
+                                               id="note_{{ item.id }}"
+                                               placeholder="Optional note">
+                                    </div>
+                                    {% if item.additions.all %}
+                                        <div class="mb-3">
+                                            <strong>Additions:</strong>
+                                            <div>
+                                                {% for add in item.additions.all %}
+                                                    <div class="form-check">
+                                                        <input class="form-check-input"
+                                                               type="checkbox"
+                                                               name="additions"
+                                                               value="{{ add.id }}"
+                                                               id="addition_{{ add.id }}_item_{{ item.id }}">
+                                                        <label class="form-check-label"
+                                                               for="addition_{{ add.id }}_item_{{ item.id }}">
+                                                            {{ add.name }} (+{{ add.price }} zł)
+                                                        </label>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    <button type="submit" class="btn btn-primary w-100">Add to Cart</button>
+                                </form>
                             {% else %}
                                 <p class="text-danger fw-semibold">Danie niedostępne</p>
                             {% endif %}

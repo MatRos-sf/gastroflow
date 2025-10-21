@@ -9,7 +9,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, View
 
 from menu.models import Item, Location, MenuType
 from order.models import (
@@ -25,6 +25,15 @@ from order.models import (
 from worker.models import Position, Worker
 
 from .models import Table
+
+
+class ValidatorError(Exception):
+    """Raised when the validator fails"""
+
+    def __init__(self, message: str, **kwargs):
+        super().__init__(message)
+        self.more_data = kwargs
+        self.message = message
 
 
 def menu_waiter(request):
@@ -85,16 +94,11 @@ class MenuWaiterView(ListView):
         return category
 
 
-def add_to_cart(request):
-    if request.method == "POST":
-        item_id = request.POST.get("item_id")
-        quantity = int(request.POST.get("quantity", 1))
-        note = request.POST.get("note", "")
-        additions_ids = request.POST.getlist("additions")
-        item = get_object_or_404(Item, pk=item_id)
-        additions = Item.objects.filter(id__in=additions_ids)
-
-        cart = request.session.get("cart", [])
+class CartAddView(View):
+    def _add_item_to_cart(
+        self, item: Item, quantity: int, note: str, additions: list[Item]
+    ):
+        cart = self.request.session.get("cart", [])
         cart.append(
             {
                 "item_id": item.id,
@@ -106,15 +110,60 @@ def add_to_cart(request):
                     {"id": a.id, "name": a.name, "price": str(a.price)}
                     for a in additions
                 ],
-                "category": item.preparation_location,
+                "preparation_location": item.preparation_location,
             }
         )
-        request.session["cart"] = cart
-        request.session.modified = True
-    else:
-        return HttpResponseNotFound()
-    category = request.GET.get("category", MenuType.MAIN)
-    return redirect(f"{reverse('service:items-waiter')}?category={category}")
+        self.request.session["cart"] = cart
+        self.request.session.modified = True
+
+    def _quantity_validator(self) -> int:
+        try:
+            quantity = int(self.request.POST.get("quantity", 1))
+        except ValueError:
+            raise ValidatorError("Ilość musi być liczbą całkowitą!")
+
+        if quantity < 1:
+            raise ValidatorError("Ilość musi być większa niż 0")
+        return quantity
+
+    def _additions_validator(self) -> list[Item]:
+        additions_ids = self.request.POST.getlist("additions")
+        additions = Item.objects.filter(id__in=additions_ids)
+        if len(additions) != len(additions_ids):
+            # capture missing additions
+            missing_additions = set(additions_ids) - set(
+                additions.values_list("id", flat=True)
+            )
+            raise ValidatorError(
+                f"Nie znaleziono wszystkich dodatków, o id: {missing_additions}",
+                missing_additions=missing_additions,
+            )
+        return additions
+
+    def post(self, request):
+        # capture data
+        item_id = request.POST.get("item_id")
+        note = request.POST.get("note", "")
+        category = request.GET.get("category", MenuType.MAIN)
+
+        try:
+            quantity = self._quantity_validator()
+            additions = self._additions_validator()
+        except ValidatorError as e:
+            messages.error(request, e.message)
+            return redirect("service:items-waiter")
+
+        try:
+            item = Item.objects.get(pk=item_id)
+        except Item.DoesNotExist:
+            messages.error(request, "Nie znaleziono produktu")
+            return redirect("service:items-waiter")
+
+        self._add_item_to_cart(item, quantity, note, additions)
+
+        messages.success(request, "Dodano danie do zamówienia")
+
+        return redirect(f"{reverse('service:items-waiter')}?category={category}")
 
 
 def api_remove_from_cart(request, index):
