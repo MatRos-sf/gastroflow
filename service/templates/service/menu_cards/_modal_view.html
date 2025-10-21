@@ -1,0 +1,68 @@
+<!-- Button trigger modal -->
+<button type="button"
+        class="btn btn-primary btn-lg {% if item.available == 1 %} bg-success {% elif item.available == 2 %} bg-warning {% else %} bg-danger {% endif %}"
+        data-bs-toggle="modal"
+        data-bs-target="#modal-{{ item.id }}"
+        data-bs-id="{{ item.id }}"
+        {% if item.available == 3 %}disabled{% endif %}>{{ item.name }}</button>
+<!-- Modal -->
+<div class="modal fade"
+     id="modal-{{ item.id }}"
+     tabindex="-1"
+     aria-labelledby="modalLabel-{{ item.id }}"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="modalLabel-{{ item.id }}">{{ item.name }}</h1>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post"
+                      action="{% url 'service:add-to-cart' %}?category={{ item.menu }}">
+                    {% csrf_token %}
+                    <input type="hidden" name="item_id" value="{{ item.id }}">
+                    <div class="mb-3">
+                        <label class="col-form-label">Ilość:</label>
+                        <input type="number"
+                               class="form-control"
+                               id="quantity-{{ item.id }}"
+                               name="quantity"
+                               value="1">
+                    </div>
+                    <div class="mb-3">
+                        <label class="col-form-label">Notatka:</label>
+                        <input type="text" class="form-control" id="note-{{ item.id }}" name="note">
+                    </div>
+                    {% with adds=item.additions.all %}
+                        {% if adds %}
+                            <label class="col-form-label">Dodatki:</label>
+                            <div class="mb-3">
+                                {% for add in adds %}
+                                    <div class="form-check py-1">
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               name="additions"
+                                               value="{{ add.id }}"
+                                               id="add-{{ item.id }}-{{ add.id }}">
+                                        <label class="form-check-label {% if add.available == 2 %}text-warning fw-bold{% endif %}"
+                                               for="add-{{ item.id }}-{{ add.id }}">
+                                            {{ add.name }} (+{{ add.price }} zł)
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    {% endwith %}
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Powrót</button>
+                        <button type="submit" class="btn btn-primary">Dodaj</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

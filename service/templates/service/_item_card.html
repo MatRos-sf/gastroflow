@@ -2,7 +2,7 @@
     <div class="card-body">
         <h5 class="card-title fs-3">{{ item.name }}</h5>
         <p class="fw-bold fs-5 mb-3">{{ item.price }} zł</p>
-        {% if item.is_available %}
+        {% if item.available != 3 %}
             <form method="post"
                   action="{% url 'service:add-to-cart' %}?category={{ item.menu }}">
                 {% csrf_token %}

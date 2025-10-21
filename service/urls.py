@@ -2,11 +2,11 @@ from django.urls import path
 
 from . import views
 
-app_name = "service"  # dodajemy namespace!
+app_name = "service"
 
 urlpatterns = [
     path("", views.menu_waiter, name="menu-waiter"),
-    path("items/", views.item_list, name="items-waiter"),
+    path("items/", views.MenuWaiterView.as_view(), name="items-waiter"),
     path("api/add-to-cart/", views.add_to_cart, name="add-to-cart"),
     path("cart/", views.cart, name="cart-waiter"),
     path(
