@@ -1,3 +1,5 @@
+import logging
+from dataclasses import dataclass
 from typing import Iterable, Optional
 
 from asgiref.sync import async_to_sync
@@ -26,9 +28,11 @@ from worker.models import Position, Worker
 
 from .models import Table
 
+logger = logging.getLogger(__name__)
+
 
 class ValidatorError(Exception):
-    """Raised when the validator fails"""
+    """Custom validation error for invalid or missing session/bill data"""
 
     def __init__(self, message: str, **kwargs):
         super().__init__(message)
@@ -166,8 +170,123 @@ class CartAddView(View):
         return redirect(f"{reverse('service:items-waiter')}?category={category}")
 
 
+@dataclass
+class SessionInfo:
+    cart: list
+    tables: list
+    waiter: int
+    bill: int
+
+
+def split_items_by_location(cart_items: list[dict]) -> tuple[list[dict], list[dict]]:
+    """Seperate cart_items to diffrent location"""
+    kitchen_items = [
+        i for i in cart_items if i["preparation_location"] == Location.KITCHEN
+    ]
+    bar_items = [i for i in cart_items if i["preparation_location"] == Location.BAR]
+    return kitchen_items, bar_items
+
+
+class CardView(View):
+    # TODO: test this class
+    def get(self, request):
+        cart = request.session.get("cart", [])
+        return render(request, "service/cart.html", {"cart": cart})
+
+    def _get_session_info(self) -> SessionInfo:
+        """Capture all information from user session"""
+        return SessionInfo(
+            self.request.session.get("cart", []),
+            self.request.session.get("tables", []),
+            self.request.session.get("waiter"),
+            self.request.session.get("bill"),
+        )
+
+    def _missing_required_session_data(
+        self, cart: None | list, waiter: None | str, tables: None | list
+    ) -> bool:
+        """Return True when missing required session data"""
+        return not (cart and waiter and tables)
+
+    def _capture_bill_model(
+        self, bill: int, tables: list, waiter: int, note: str
+    ) -> Bill:
+        if bill:
+            try:
+                bill_instance = Bill.objects.get(pk=bill)
+            except Bill.DoesNotExist:
+                messages.error(self.request, "Nie znaleziono rachunku")
+                raise ValidatorError("Nie znaleziono rachunku")
+        else:
+            bill_instance = Bill.objects.create(service_id=waiter, note=note)
+            bill_instance.table.add(*tables)
+        return bill_instance
+
+    def _delegate_orders(self, bill: Bill, cart: list):
+        """Delegate orders to kitchen and bar"""
+        # TODO: here should be something like choose option in db user if user has accept bar and kitchen do all
+        kitchen, bar = split_items_by_location(cart)
+        create_order(bill, list(kitchen), preparation_location=Location.KITCHEN)
+        create_order(bill, list(bar), preparation_location=Location.BAR)
+
+        # TODO: Send real-time notification to kitchen and bar via Django Channels
+
+    def _change_tables_status(self, tables: list):
+        Table.objects.filter(pk__in=tables).update(is_occupied=True)
+
+    def _clear_session(self, session_field: Iterable):
+        for name in session_field:
+            self.request.session.pop(name, None)
+
+    def post(self, request):
+        """
+        After press submit button, there are following step:
+            1. Import session data
+            2. Check requirements
+            3. Capture bill model
+            4. Delegate orders to kitchen and bar
+            5. Change tables status to occurred
+            6. Clear session
+        """
+        session_info = self._get_session_info()
+        note = request.POST.get("note", "")
+
+        if self._missing_required_session_data(
+            session_info.cart, session_info.waiter, session_info.tables
+        ):
+            messages.error(request, "Brak wymaganych danych w sesji")
+            return redirect("service:cart-waiter")
+
+        try:
+            bill = self._capture_bill_model(
+                session_info.bill, session_info.tables, session_info.waiter, note
+            )
+        except ValidatorError:
+            return redirect("service:cart-waiter")
+
+        # split into 2 orders if exists!
+        try:
+            self._delegate_orders(bill, session_info.cart)
+        except Exception:
+            # I don't know wiche error can accured here!
+            logger.exception("Failed to delegate orders")
+            messages.error(request, "Wystąpił błąd podczas tworzenia zamówienia")
+            return redirect("service:cart-waiter")
+
+        # change tables status
+        self._change_tables_status(session_info.tables)
+
+        messages.success(
+            request, f"Zamówienie na rachunek #{bill.pk} zostało ukończone."
+        )
+        logger.info(f"Bill #{bill.pk} created by waiter {session_info.waiter}")
+
+        self._clear_session(["cart", "tables", "waiter", "bill"])
+
+        return redirect("service:menu-waiter")
+
+
 def api_remove_from_cart(request, index):
-    print(f"Hello {index}")
     cart = request.session.get("cart", [])
     if cart:
         del_item = cart.pop(index)
@@ -181,6 +300,7 @@ def create_order(bill: Bill, items: Iterable[dict], **kwargs):
     if not items:
         return
     order = Order.objects.create(bill=bill, **kwargs)
+    # TODO: here we should check is the product is available!
     for item in items:
         payload = {
             "order": order,
@@ -198,7 +318,8 @@ def create_order(bill: Bill, items: Iterable[dict], **kwargs):
                 name_snapshot=addition["name"],
                 price_snapshot=addition["price"],
             )
-    if kwargs["category"] == Location.KITCHEN:
+
+    if kwargs["preparation_location"] == Location.KITCHEN:
         group_name = "kitchen_orders"
     else:
         group_name = "bar_orders"
