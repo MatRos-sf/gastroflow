@@ -4,6 +4,7 @@ from datetime import date as date_cls
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib import messages
+from django.db.models import Q
 from django.db.utils import IntegrityError
 from django.http import Http404, HttpRequest
 from django.shortcuts import get_object_or_404, redirect, render
@@ -186,6 +187,33 @@ class BillDeleteView(DeleteView):
 
         # TODO: check and release tables
         return super().post(request, *args, **kwargs)
+
+
+@require_POST
+def close_bill(request, pk):
+    payment_method = request.POST.get("payment_method")
+    bill = get_object_or_404(Bill, pk=pk)
+    if bill.status != StatusBill.OPEN:
+        messages.error(request, "Nie można zamknąć, zamkniętego rachunku!")
+        return redirect("extend-bill-detail", pk=pk)
+    # update fields
+    bill.status = StatusBill.CLOSED
+    bill.payment_method = PaymentMethod(
+        payment_method
+    )  # ValueError when somethind, was wrong
+    bill.closed_at = timezone.now()
+    bill.save(update_fields=["status", "payment_method", "closed_at"])
+
+    bill_tables = bill.table.all()
+    for table in bill_tables:
+        _number_of_open_bills = Bill.objects.filter(
+            Q(table=table) & Q(status=StatusBill.OPEN)
+        ).count()
+        if _number_of_open_bills == 0:
+            table.is_occupied = False
+            table.save()
+    messages.success(request, f"Rachunek #{bill.pk} został zamknięty.")
+    return redirect("service:menu-waiter")
 
 
 def send_delete_order_item_to_kitchen(pk_order, pk_item):

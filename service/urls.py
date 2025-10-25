@@ -15,7 +15,6 @@ urlpatterns = [
         name="remove-from-cart",
     ),
     path("cart/clear", views.clear_cart, name="cart-clear"),
-    path("bill/<int:pk>/close/", views.close_bill, name="close-bill"),
     path("order/table", views.tables_view, name="order-table"),  # TODO: table/select
     path("order/table/settle", views.table_settle_view, name="table-settle"),
     path(
