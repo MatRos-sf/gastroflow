@@ -171,10 +171,12 @@ class CartAddView(View):
 
 
 class CardView(View):
+    template_name = "service/cart_waiter.html"
+
     # TODO: test this class
     def get(self, request):
         cart = request.session.get("cart", [])
-        return render(request, "service/cart.html", {"cart": cart})
+        return render(request, self.template_name, {"cart": cart})
 
     def _get_session_info(self) -> SessionInfo:
         """Capture all information from user session"""
@@ -209,8 +211,10 @@ class CardView(View):
         """Delegate orders to kitchen and bar"""
         # TODO: here should be something like choose option in db user if user has accept bar and kitchen do all
         kitchen, bar = split_items_by_location(cart)
-        create_order(bill, list(kitchen), preparation_location=Location.KITCHEN)
-        create_order(bill, list(bar), preparation_location=Location.BAR)
+        create_order(
+            bill, list(kitchen), category=Location.KITCHEN
+        )  # TODO: Change category to preparation_location
+        create_order(bill, list(bar), category=Location.BAR)
 
         # TODO: Send real-time notification to kitchen and bar via Django Channels
 
@@ -302,54 +306,11 @@ def create_order(bill: Bill, items: Iterable[dict], **kwargs):
                 price_snapshot=addition["price"],
             )
 
-    if kwargs["preparation_location"] == Location.KITCHEN:
+    if kwargs["category"] == Location.KITCHEN:
         group_name = "kitchen_orders"
     else:
         group_name = "bar_orders"
     send_payload_to_recipient(order.pk, group_name, bill.service.user.username)
-
-
-def do_order(request):
-    cart = request.session.get("cart", [])
-    tables = request.session.get("tables", [])
-    waiter = request.session.get("waiter")
-    bill_pk = request.session.get("bill")
-
-    note = ""
-    if request.method == "POST":
-        note = request.POST.get("note", "")
-        print(f"{note = }")
-
-    # tables = [table for table in tables]
-    if cart and waiter:
-        if bill_pk:
-            bill = Bill.objects.get(pk=bill_pk)
-        else:
-            bill = Bill.objects.create(service_id=waiter, note=note)
-            bill.table.add(*tables)
-
-        print(
-            f"Saved bill: {bill}, table from db: {Bill.objects.get(pk=bill.pk).table}"
-        )
-        # split into 2 orders if exists!
-        kitchen = filter(lambda data: data["category"] == Location.KITCHEN, cart)
-        bar = filter(lambda data: data["category"] == Location.BAR, cart)
-        create_order(bill, list(kitchen), category=Location.KITCHEN)
-        create_order(bill, list(bar), category=Location.BAR)
-
-        # change tables status
-        print(f"{tables = }")
-        Table.objects.filter(pk__in=tables).update(is_occupied=True)
-        request.session["cart"] = []
-        request.session["tables"] = []
-        del request.session["waiter"]
-        messages.success(
-            request, f"Zamówienie na rachunek #{bill.pk} zostało ukończone."
-        )
-        if bill_pk:
-            del request.session["bill"]
-        return redirect("service:menu-waiter")
-    return HttpResponseNotFound("<h1>Page not found</h1>")
 
 
 def get_order_details(order_id, sender: str) -> Optional[dict]:
@@ -394,11 +355,7 @@ def send_payload_to_recipient(pk: int, group_name: str, sender: str):
     )
 
 
-def cart(request):
-    cart = request.session.get("cart", [])
-    return render(request, "service/cart_waiter.html", {"cart": cart})
-
-
+# TODO: delete()
 def clear_cart(request):
     if "cart" in request.session:
         del request.session["cart"]
