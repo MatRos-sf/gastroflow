@@ -5,7 +5,7 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib import messages
 from django.db.utils import IntegrityError
-from django.http import Http404, HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -16,13 +16,16 @@ from django_filters.views import FilterView
 from menu.models import Location
 
 from .filters import OrderFilter
-from .models import Bill, Item, Order, OrderItem, OrderItemStatus, StatusBill
+from .models import (
+    Bill,
+    Item,
+    Order,
+    OrderItem,
+    OrderItemStatus,
+    PaymentMethod,
+    StatusBill,
+)
 from .raport import daily_summary
-
-
-# Create your views here.
-def home(request):
-    return HttpResponse("Hello, world. You're at the order home.")
 
 
 def pin_required(view_func):
@@ -86,10 +89,10 @@ def update_discount(request, pk: int):
         )
     except Http404:
         messages.add_message(request, messages.ERROR, "Bill doesn't exists")
-    return redirect("service:bill-detail", pk=pk)
+    return redirect("extend-bill-detail", pk=pk)
 
 
-# TODO: BillListView and BillListExtendView look the same
+# TODO: BillListView and OpenBillListView look the same
 class BillListView(ListView):
     model = Bill
     template_name = "order/bill_summary_list.html"
@@ -125,6 +128,7 @@ class OpenBillListView(ListView):
         return data
 
 
+# TODO: BillDetailView and ExtendBillDetailView look the same, it should be refactored
 class BillDetailView(DetailView):
     model = Bill
     template_name = "order/bill_detail.html"
@@ -148,6 +152,22 @@ class BillDetailView(DetailView):
                 )
 
         context["items"] = items
+        return context
+
+
+class ExtendBillDetailView(DetailView):
+    model = Bill
+    template_name = "service/bill_detail.html"
+    extra_context = {"payment_methods": PaymentMethod}
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        payoff = self.object.bill_summary_view()
+        context["summary"] = payoff["summary"]
+        context["total"] = payoff["total"]
+        context["cost_discount"] = payoff["cost_discount"]
+        context["discount"] = self.object.discount
+        context["total_with_discount"] = payoff["total"] - payoff["cost_discount"]
         return context
 
 

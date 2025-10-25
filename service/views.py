@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-from django.views.generic import DetailView, ListView, View
+from django.views.generic import ListView, View
 
 from menu.models import Item, Location, MenuType
 from order.models import (
@@ -358,29 +358,13 @@ def clear_cart(request):
     return redirect("service:menu-waiter")
 
 
-class BillDetailView(DetailView):
-    model = Bill
-    template_name = "service/bill_detail.html"
-    extra_context = {"payment_methods": PaymentMethod}
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        payoff = self.object.bill_summary_view()
-        context["summary"] = payoff["summary"]
-        context["total"] = payoff["total"]
-        context["cost_discount"] = payoff["cost_discount"]
-        context["discount"] = self.object.discount
-        context["total_with_discount"] = payoff["total"] - payoff["cost_discount"]
-        return context
-
-
 @require_POST
 def close_bill(request, pk):
     payment_method = request.POST.get("payment_method")
     bill = get_object_or_404(Bill, pk=pk)
     if bill.status != StatusBill.OPEN:
         messages.error(request, "Nie można zamknąć, zamkniętego rachunku!")
-        return redirect("service:bill-detail", pk=pk)
+        return redirect("extend-bill-detail", pk=pk)
     # update fields
     bill.status = StatusBill.CLOSED
     bill.payment_method = PaymentMethod(

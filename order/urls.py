@@ -4,6 +4,7 @@ from .views import (
     BillDeleteView,
     BillDetailView,
     BillListView,
+    ExtendBillDetailView,
     OpenBillListView,
     ReadyOrderListView,
     daily_report,
@@ -19,6 +20,7 @@ urlpatterns = [
     path("summary", BillListView.as_view(), name="summary-bill"),
     path("<int:pk>/delete/", BillDeleteView.as_view(), name="bill-delete"),
     path("<int:pk>/detail", BillDetailView.as_view(), name="bill-detail"),
+    path("<int:pk>/extend", ExtendBillDetailView.as_view(), name="extend-bill-detail"),
     path(
         "<int:pk_order>/delete/<int:pk_item>",
         delete_order_item,
