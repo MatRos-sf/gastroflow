@@ -28,7 +28,7 @@
                 <!-- Środek: Koszyk -->
                 <div class="d-flex justify-content-center flex-grow-1">
                     {% if request.session.cart %}
-                        <a href="{% url 'service:cart-waiter' %}"
+                        <a href="{% url 'service:cart' %}"
                            class="btn btn-outline-light position-relative">
                             🛒
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">

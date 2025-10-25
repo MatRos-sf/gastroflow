@@ -23,7 +23,7 @@ from order.models import (
     PaymentMethod,
     StatusBill,
 )
-from tools.session import SessionInfo, split_items_by_location
+from tools.session import SessionInfo, clear_session, split_items_by_location
 from worker.models import Position, Worker
 
 from .models import Table
@@ -221,10 +221,6 @@ class CardView(View):
     def _change_tables_status(self, tables: list):
         Table.objects.filter(pk__in=tables).update(is_occupied=True)
 
-    def _clear_session(self, session_field: Iterable):
-        for name in session_field:
-            self.request.session.pop(name, None)
-
     def post(self, request):
         """
         After press submit button, there are following step:
@@ -242,23 +238,23 @@ class CardView(View):
             session_info.cart, session_info.waiter, session_info.tables
         ):
             messages.error(request, "Brak wymaganych danych w sesji")
-            return redirect("service:cart-waiter")
+            return redirect("service:cart")
 
         try:
             bill = self._capture_bill_model(
                 session_info.bill, session_info.tables, session_info.waiter, note
             )
         except ValidatorError:
-            return redirect("service:cart-waiter")
+            return redirect("service:cart")
 
         # split into 2 orders if exists!
         try:
             self._delegate_orders(bill, session_info.cart)
         except Exception:
-            # I don't know which error can occurred here!
+            # I don't know which error can occur here!
             logger.exception("Failed to delegate orders")
             messages.error(request, "Wystąpił błąd podczas tworzenia zamówienia")
-            return redirect("service:cart-waiter")
+            return redirect("service:cart")
 
         # change tables status
         self._change_tables_status(session_info.tables)
@@ -268,7 +264,7 @@ class CardView(View):
         )
         logger.info(f"Bill #{bill.pk} created by waiter {session_info.waiter}")
 
-        self._clear_session(["cart", "tables", "waiter", "bill"])
+        clear_session(self.request, ["cart", "tables", "waiter", "bill"])
 
         return redirect("service:menu-waiter")
 
@@ -280,7 +276,7 @@ def api_remove_from_cart(request, index):
         request.session["cart"] = cart
         request.session.modified = True
         print("Deleted item:", del_item)
-    return redirect("service:cart-waiter")
+    return redirect("service:cart")
 
 
 def create_order(bill: Bill, items: Iterable[dict], **kwargs):
@@ -355,20 +351,9 @@ def send_payload_to_recipient(pk: int, group_name: str, sender: str):
     )
 
 
-# TODO: delete()
 def clear_cart(request):
-    if "cart" in request.session:
-        del request.session["cart"]
-        messages.success(request, "Zamówienie został wyczyszczone")
-
-    if "tables" in request.session:
-        tables = request.session.pop("tables")
-        messages.success(
-            request,
-            f"Stoliki {', '.join(str(table) for table in tables)} zostały wyczyszczone",
-        )
-    if "bill" in request.session:
-        del request.session["bill"]
+    clear_session(request, ["cart", "tables", "waiter", "bill"])
+    messages.success(request, "Zamówienie zostało anulowane!")
 
     return redirect("service:menu-waiter")
 

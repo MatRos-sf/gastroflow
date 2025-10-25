@@ -43,7 +43,7 @@
             <hr class="my-5">
             <div class="row g-3">
                 <div class="col-12 col-md-6">
-                    <a href="{% url 'service:clear-cart' %}"
+                    <a href="{% url 'service:cart-clear' %}"
                        class="btn btn-outline-danger w-100 py-3 rounded-pill"
                        onclick="return confirm('Czy na pewno chcesz anulować zamówienie i wyczyścić koszyk?');">
                         ❌ Anuluj zamówienie
@@ -68,7 +68,7 @@
         {% else %}
             <div class="alert alert-info text-center rounded-4 py-4">📭 Twój koszyk jest pusty</div>
             <div class="mt-4 text-center">
-                <a href="{% url 'service:clear-cart' %}"
+                <a href="{% url 'service:cart-clear' %}"
                    class="btn btn-outline-danger rounded-pill px-4">❌ Wyczyść koszyk</a>
             </div>
         {% endif %}
