@@ -1,5 +1,4 @@
 import logging
-from dataclasses import dataclass
 from typing import Iterable, Optional
 
 from asgiref.sync import async_to_sync
@@ -24,6 +23,7 @@ from order.models import (
     PaymentMethod,
     StatusBill,
 )
+from tools.session import SessionInfo, split_items_by_location
 from worker.models import Position, Worker
 
 from .models import Table
@@ -170,23 +170,6 @@ class CartAddView(View):
         return redirect(f"{reverse('service:items-waiter')}?category={category}")
 
 
-@dataclass
-class SessionInfo:
-    cart: list
-    tables: list
-    waiter: int
-    bill: int
-
-
-def split_items_by_location(cart_items: list[dict]) -> tuple[list[dict], list[dict]]:
-    """Seperate cart_items to diffrent location"""
-    kitchen_items = [
-        i for i in cart_items if i["preparation_location"] == Location.KITCHEN
-    ]
-    bar_items = [i for i in cart_items if i["preparation_location"] == Location.BAR]
-    return kitchen_items, bar_items
-
-
 class CardView(View):
     # TODO: test this class
     def get(self, request):
@@ -268,7 +251,7 @@ class CardView(View):
         try:
             self._delegate_orders(bill, session_info.cart)
         except Exception:
-            # I don't know wiche error can accured here!
+            # I don't know which error can occurred here!
             logger.exception("Failed to delegate orders")
             messages.error(request, "Wystąpił błąd podczas tworzenia zamówienia")
             return redirect("service:cart-waiter")
