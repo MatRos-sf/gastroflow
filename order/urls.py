@@ -4,11 +4,14 @@ from .views import (
     BillDeleteView,
     BillDetailView,
     BillListView,
+    OpenBillListView,
     ReadyOrderListView,
     daily_report,
     delete_order_item,
     update_discount,
 )
+
+# TODO: name app "order"
 
 urlpatterns = [
     path("", daily_report, name="daily-report"),
@@ -22,4 +25,5 @@ urlpatterns = [
         name="delete-order-item",
     ),
     path("ready/", ReadyOrderListView.as_view(), name="ready-order-list"),
+    path("bill/open/", OpenBillListView.as_view(), name="open-bill-list"),
 ]

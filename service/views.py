@@ -358,27 +358,6 @@ def clear_cart(request):
     return redirect("service:menu-waiter")
 
 
-class BillListView(ListView):
-    model = Bill
-    template_name = "service/bill_list.html"
-
-    def get_queryset(self):
-        queryset = Bill.objects.filter(status=StatusBill.OPEN)
-        table_pk = self.request.GET.get("table")
-        if table_pk:
-            queryset = queryset.filter(table__pk=table_pk)
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        action = self.request.GET.get("action", "").lower()
-        if not action or action not in ["bill", "order"]:
-            data["action"] = "bill"
-        else:
-            data["action"] = action
-        return data
-
-
 class BillDetailView(DetailView):
     model = Bill
     template_name = "service/bill_detail.html"

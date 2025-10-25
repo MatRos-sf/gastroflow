@@ -38,7 +38,7 @@
     document.querySelectorAll(".table-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             let pk = btn.dataset.pk;
-            window.location.href = `{% url 'service:bill' %}?table=${pk}&action={{ action }}`;
+            window.location.href = `{% url 'open-bill-list' %}?table=${pk}&action={{ action }}`;
         });
     });
     </script>
