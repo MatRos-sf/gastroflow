@@ -7,15 +7,14 @@ app_name = "service"
 urlpatterns = [
     path("", views.menu_waiter, name="menu-waiter"),
     path("items/", views.MenuWaiterView.as_view(), name="items-waiter"),
-    path("api/add-to-cart/", views.add_to_cart, name="add-to-cart"),
-    path("cart/", views.cart, name="cart-waiter"),
+    path("cart/add/", views.CartAddView.as_view(), name="cart-add"),
+    path("cart/", views.CardView.as_view(), name="cart"),
     path(
         "api/remove-from-cart/<int:index>/",
         views.api_remove_from_cart,
         name="remove-from-cart",
     ),
-    path("cart/summary/", views.do_order, name="summary-waiter"),
-    path("clear-cart/", views.clear_cart, name="clear-cart"),
+    path("cart/clear", views.clear_cart, name="cart-clear"),
     path("bill/", views.BillListView.as_view(), name="bill"),
     path("bill/<int:pk>/", views.BillDetailView.as_view(), name="bill-detail"),
     path("bill/<int:pk>/close/", views.close_bill, name="close-bill"),

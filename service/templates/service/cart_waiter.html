@@ -43,7 +43,7 @@
             <hr class="my-5">
             <div class="row g-3">
                 <div class="col-12 col-md-6">
-                    <a href="{% url 'service:clear-cart' %}"
+                    <a href="{% url 'service:cart-clear' %}"
                        class="btn btn-outline-danger w-100 py-3 rounded-pill"
                        onclick="return confirm('Czy na pewno chcesz anulować zamówienie i wyczyścić koszyk?');">
                         ❌ Anuluj zamówienie
@@ -54,13 +54,13 @@
                         <a href="{% url 'service:summary-waiter' %}"
                            class="btn btn-success w-100 py-3 rounded-pill">➕ Dodaj do zamówienia</a>
                     {% else %}
-                        <form method="post" action="{% url 'service:summary-waiter' %}">
+                        <form method="post" id="order-form">
                             {% csrf_token %}
                             <input type="text"
                                    class="form-control mb-3 rounded-pill px-3"
                                    name="note"
                                    placeholder="Dodatkowa uwaga (opcjonalne)">
-                            <button class="btn btn-success w-100 py-3 rounded-pill" type="submit">✅ Złóż zamówienie</button>
+                            <button class="btn btn-success w-100 py-3 rounded-pill" type="submit">Złóż zamówienie</button>
                         </form>
                     {% endif %}
                 </div>
@@ -68,7 +68,7 @@
         {% else %}
             <div class="alert alert-info text-center rounded-4 py-4">📭 Twój koszyk jest pusty</div>
             <div class="mt-4 text-center">
-                <a href="{% url 'service:clear-cart' %}"
+                <a href="{% url 'service:cart-clear' %}"
                    class="btn btn-outline-danger rounded-pill px-4">❌ Wyczyść koszyk</a>
             </div>
         {% endif %}

@@ -1,3 +1,4 @@
+import logging
 from typing import Iterable, Optional
 
 from asgiref.sync import async_to_sync
@@ -9,7 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, ListView, View
 
 from menu.models import Item, Location, MenuType
 from order.models import (
@@ -22,9 +23,21 @@ from order.models import (
     PaymentMethod,
     StatusBill,
 )
+from tools.session import SessionInfo, clear_session, split_items_by_location
 from worker.models import Position, Worker
 
 from .models import Table
+
+logger = logging.getLogger(__name__)
+
+
+class ValidatorError(Exception):
+    """Custom validation error for invalid or missing session/bill data"""
+
+    def __init__(self, message: str, **kwargs):
+        super().__init__(message)
+        self.more_data = kwargs
+        self.message = message
 
 
 def menu_waiter(request):
@@ -85,16 +98,11 @@ class MenuWaiterView(ListView):
         return category
 
 
-def add_to_cart(request):
-    if request.method == "POST":
-        item_id = request.POST.get("item_id")
-        quantity = int(request.POST.get("quantity", 1))
-        note = request.POST.get("note", "")
-        additions_ids = request.POST.getlist("additions")
-        item = get_object_or_404(Item, pk=item_id)
-        additions = Item.objects.filter(id__in=additions_ids)
-
-        cart = request.session.get("cart", [])
+class CartAddView(View):
+    def _add_item_to_cart(
+        self, item: Item, quantity: int, note: str, additions: list[Item]
+    ):
+        cart = self.request.session.get("cart", [])
         cart.append(
             {
                 "item_id": item.id,
@@ -106,32 +114,176 @@ def add_to_cart(request):
                     {"id": a.id, "name": a.name, "price": str(a.price)}
                     for a in additions
                 ],
-                "category": item.preparation_location,
+                "preparation_location": item.preparation_location,
             }
         )
-        request.session["cart"] = cart
-        request.session.modified = True
-    else:
-        return HttpResponseNotFound()
-    category = request.GET.get("category", MenuType.MAIN)
-    return redirect(f"{reverse('service:items-waiter')}?category={category}")
+        self.request.session["cart"] = cart
+        self.request.session.modified = True
+
+    def _quantity_validator(self) -> int:
+        try:
+            quantity = int(self.request.POST.get("quantity", 1))
+        except ValueError:
+            raise ValidatorError("Ilość musi być liczbą całkowitą!")
+
+        if quantity < 1:
+            raise ValidatorError("Ilość musi być większa niż 0")
+        return quantity
+
+    def _additions_validator(self) -> list[Item]:
+        additions_ids = self.request.POST.getlist("additions")
+        additions = Item.objects.filter(id__in=additions_ids)
+        if len(additions) != len(additions_ids):
+            # capture missing additions
+            missing_additions = set(additions_ids) - set(
+                additions.values_list("id", flat=True)
+            )
+            raise ValidatorError(
+                f"Nie znaleziono wszystkich dodatków, o id: {missing_additions}",
+                missing_additions=missing_additions,
+            )
+        return additions
+
+    def post(self, request):
+        # capture data
+        item_id = request.POST.get("item_id")
+        note = request.POST.get("note", "")
+        category = request.GET.get("category", MenuType.MAIN)
+
+        try:
+            quantity = self._quantity_validator()
+            additions = self._additions_validator()
+        except ValidatorError as e:
+            messages.error(request, e.message)
+            return redirect("service:items-waiter")
+
+        try:
+            item = Item.objects.get(pk=item_id)
+        except Item.DoesNotExist:
+            messages.error(request, "Nie znaleziono produktu")
+            return redirect("service:items-waiter")
+
+        self._add_item_to_cart(item, quantity, note, additions)
+
+        messages.success(request, "Dodano danie do zamówienia")
+
+        return redirect(f"{reverse('service:items-waiter')}?category={category}")
+
+
+class CardView(View):
+    template_name = "service/cart_waiter.html"
+
+    # TODO: test this class
+    def get(self, request):
+        cart = request.session.get("cart", [])
+        return render(request, self.template_name, {"cart": cart})
+
+    def _get_session_info(self) -> SessionInfo:
+        """Capture all information from user session"""
+        return SessionInfo(
+            self.request.session.get("cart", []),
+            self.request.session.get("tables", []),
+            self.request.session.get("waiter"),
+            self.request.session.get("bill"),
+        )
+
+    def _missing_required_session_data(
+        self, cart: None | list, waiter: None | str, tables: None | list
+    ) -> bool:
+        """Return True when missing required session data"""
+        return not (cart and waiter and tables)
+
+    def _capture_bill_model(
+        self, bill: int, tables: list, waiter: int, note: str
+    ) -> Bill:
+        if bill:
+            try:
+                bill_instance = Bill.objects.get(pk=bill)
+            except Bill.DoesNotExist:
+                messages.error(self.request, "Nie znaleziono rachunku")
+                raise ValidatorError("Nie znaleziono rachunku")
+        else:
+            bill_instance = Bill.objects.create(service_id=waiter, note=note)
+            bill_instance.table.add(*tables)
+        return bill_instance
+
+    def _delegate_orders(self, bill: Bill, cart: list):
+        """Delegate orders to kitchen and bar"""
+        # TODO: here should be something like choose option in db user if user has accept bar and kitchen do all
+        kitchen, bar = split_items_by_location(cart)
+        create_order(
+            bill, list(kitchen), category=Location.KITCHEN
+        )  # TODO: Change category to preparation_location
+        create_order(bill, list(bar), category=Location.BAR)
+
+        # TODO: Send real-time notification to kitchen and bar via Django Channels
+
+    def _change_tables_status(self, tables: list):
+        Table.objects.filter(pk__in=tables).update(is_occupied=True)
+
+    def post(self, request):
+        """
+        After press submit button, there are following step:
+            1. Import session data
+            2. Check requirements
+            3. Capture bill model
+            4. Delegate orders to kitchen and bar
+            5. Change tables status to occurred
+            6. Clear session
+        """
+        session_info = self._get_session_info()
+        note = request.POST.get("note", "")
+
+        if self._missing_required_session_data(
+            session_info.cart, session_info.waiter, session_info.tables
+        ):
+            messages.error(request, "Brak wymaganych danych w sesji")
+            return redirect("service:cart")
+
+        try:
+            bill = self._capture_bill_model(
+                session_info.bill, session_info.tables, session_info.waiter, note
+            )
+        except ValidatorError:
+            return redirect("service:cart")
+
+        # split into 2 orders if exists!
+        try:
+            self._delegate_orders(bill, session_info.cart)
+        except Exception:
+            # I don't know which error can occur here!
+            logger.exception("Failed to delegate orders")
+            messages.error(request, "Wystąpił błąd podczas tworzenia zamówienia")
+            return redirect("service:cart")
+
+        # change tables status
+        self._change_tables_status(session_info.tables)
+
+        messages.success(
+            request, f"Zamówienie na rachunek #{bill.pk} zostało ukończone."
+        )
+        logger.info(f"Bill #{bill.pk} created by waiter {session_info.waiter}")
+
+        clear_session(self.request, ["cart", "tables", "waiter", "bill"])
+
+        return redirect("service:menu-waiter")
 
 
 def api_remove_from_cart(request, index):
-    print(f"Hello {index}")
     cart = request.session.get("cart", [])
     if cart:
         del_item = cart.pop(index)
         request.session["cart"] = cart
         request.session.modified = True
         print("Deleted item:", del_item)
-    return redirect("service:cart-waiter")
+    return redirect("service:cart")
 
 
 def create_order(bill: Bill, items: Iterable[dict], **kwargs):
     if not items:
         return
     order = Order.objects.create(bill=bill, **kwargs)
+    # TODO: here we should check is the product is available!
     for item in items:
         payload = {
             "order": order,
@@ -149,54 +301,12 @@ def create_order(bill: Bill, items: Iterable[dict], **kwargs):
                 name_snapshot=addition["name"],
                 price_snapshot=addition["price"],
             )
+
     if kwargs["category"] == Location.KITCHEN:
         group_name = "kitchen_orders"
     else:
         group_name = "bar_orders"
     send_payload_to_recipient(order.pk, group_name, bill.service.user.username)
-
-
-def do_order(request):
-    cart = request.session.get("cart", [])
-    tables = request.session.get("tables", [])
-    waiter = request.session.get("waiter")
-    bill_pk = request.session.get("bill")
-
-    note = ""
-    if request.method == "POST":
-        note = request.POST.get("note", "")
-        print(f"{note = }")
-
-    # tables = [table for table in tables]
-    if cart and waiter:
-        if bill_pk:
-            bill = Bill.objects.get(pk=bill_pk)
-        else:
-            bill = Bill.objects.create(service_id=waiter, note=note)
-            bill.table.add(*tables)
-
-        print(
-            f"Saved bill: {bill}, table from db: {Bill.objects.get(pk=bill.pk).table}"
-        )
-        # split into 2 orders if exists!
-        kitchen = filter(lambda data: data["category"] == Location.KITCHEN, cart)
-        bar = filter(lambda data: data["category"] == Location.BAR, cart)
-        create_order(bill, list(kitchen), category=Location.KITCHEN)
-        create_order(bill, list(bar), category=Location.BAR)
-
-        # change tables status
-        print(f"{tables = }")
-        Table.objects.filter(pk__in=tables).update(is_occupied=True)
-        request.session["cart"] = []
-        request.session["tables"] = []
-        del request.session["waiter"]
-        messages.success(
-            request, f"Zamówienie na rachunek #{bill.pk} zostało ukończone."
-        )
-        if bill_pk:
-            del request.session["bill"]
-        return redirect("service:menu-waiter")
-    return HttpResponseNotFound("<h1>Page not found</h1>")
 
 
 def get_order_details(order_id, sender: str) -> Optional[dict]:
@@ -241,24 +351,9 @@ def send_payload_to_recipient(pk: int, group_name: str, sender: str):
     )
 
 
-def cart(request):
-    cart = request.session.get("cart", [])
-    return render(request, "service/cart_waiter.html", {"cart": cart})
-
-
 def clear_cart(request):
-    if "cart" in request.session:
-        del request.session["cart"]
-        messages.success(request, "Zamówienie został wyczyszczone")
-
-    if "tables" in request.session:
-        tables = request.session.pop("tables")
-        messages.success(
-            request,
-            f"Stoliki {', '.join(str(table) for table in tables)} zostały wyczyszczone",
-        )
-    if "bill" in request.session:
-        del request.session["bill"]
+    clear_session(request, ["cart", "tables", "waiter", "bill"])
+    messages.success(request, "Zamówienie zostało anulowane!")
 
     return redirect("service:menu-waiter")
 

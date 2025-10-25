@@ -4,7 +4,7 @@
         <p class="fw-bold fs-5 mb-3">{{ item.price }} zł</p>
         {% if item.available != 3 %}
             <form method="post"
-                  action="{% url 'service:add-to-cart' %}?category={{ item.menu }}">
+                  action="{% url 'service:cart-add' %}?category={{ item.menu }}">
                 {% csrf_token %}
                 <input type="hidden" name="item_id" value="{{ item.id }}">
                 <!-- Ilość -->
