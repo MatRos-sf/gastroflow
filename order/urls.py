@@ -7,6 +7,7 @@ from .views import (
     ExtendBillDetailView,
     OpenBillListView,
     ReadyOrderListView,
+    ReportSelectionView,
     close_bill,
     daily_report,
     delete_order_item,
@@ -14,6 +15,10 @@ from .views import (
 )
 
 # TODO: name app "order"
+
+url_report_pattern = [
+    path("report-selection/", ReportSelectionView.as_view(), name="report-selection")
+]
 
 urlpatterns = [
     path("", daily_report, name="daily-report"),
@@ -30,4 +35,4 @@ urlpatterns = [
     path("ready/", ReadyOrderListView.as_view(), name="ready-order-list"),
     path("bill/open/", OpenBillListView.as_view(), name="open-bill-list"),
     path("bill/<int:pk>/close/", close_bill, name="close-bill"),
-]
+] + url_report_pattern

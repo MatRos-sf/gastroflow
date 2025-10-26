@@ -1,3 +1,4 @@
+import logging
 import os
 from datetime import date as date_cls
 
@@ -11,12 +12,13 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-from django.views.generic import DeleteView, DetailView, ListView
+from django.views.generic import DeleteView, DetailView, ListView, View
 from django_filters.views import FilterView
 
 from menu.models import Location
 
 from .filters import OrderFilter
+from .forms import DateForm
 from .models import (
     Bill,
     Item,
@@ -27,6 +29,8 @@ from .models import (
     StatusBill,
 )
 from .raport import daily_summary
+
+logger = logging.getLogger(__name__)
 
 
 def pin_required(view_func):
@@ -264,3 +268,38 @@ class ReadyOrderListView(FilterView):
         ctx["categories"] = Location.values
         ctx["today"] = timezone.localdate().strftime("%Y-%m-%d")
         return ctx
+
+
+class ReportSelectionView(View):
+    """View for handling report generation form submission and redirection.
+
+    This view provides a form for users to select date ranges for report generation.
+    It handles both GET requests (displaying the form) and POST requests (processing the form).
+
+    Attributes:
+        FORM (DateForm): The form class used for date selection
+
+    Methods:
+        get: Renders the report form
+        post: Processes the form submission and redirects to the appropriate report view
+    """
+
+    FORM = DateForm
+
+    def get(self, request):
+        return render(request, "order/report/report_form.html", {"form": self.FORM()})
+
+    def post(self, request):
+        form = self.FORM(request.POST)
+        if not form.is_valid():
+            return render(request, "order/report/report_form.html", {"form": form})
+
+        if "today" in request.POST:
+            date_from = timezone.now().date()
+            date_to = None
+        else:
+            cleaned_data = form.cleaned_data
+            date_from = cleaned_data.get("from_date")
+            date_to = cleaned_data.get("to_date")
+        logger.info(f"Date from: {date_from}, Date to: {date_to}")
+        return redirect("report")
