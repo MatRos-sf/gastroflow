@@ -4,8 +4,9 @@ from datetime import date as date_cls
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib import messages
+from django.db.models import Q
 from django.db.utils import IntegrityError
-from django.http import Http404, HttpRequest, HttpResponse
+from django.http import Http404, HttpRequest
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -16,13 +17,16 @@ from django_filters.views import FilterView
 from menu.models import Location
 
 from .filters import OrderFilter
-from .models import Bill, Item, Order, OrderItem, OrderItemStatus
+from .models import (
+    Bill,
+    Item,
+    Order,
+    OrderItem,
+    OrderItemStatus,
+    PaymentMethod,
+    StatusBill,
+)
 from .raport import daily_summary
-
-
-# Create your views here.
-def home(request):
-    return HttpResponse("Hello, world. You're at the order home.")
 
 
 def pin_required(view_func):
@@ -86,9 +90,10 @@ def update_discount(request, pk: int):
         )
     except Http404:
         messages.add_message(request, messages.ERROR, "Bill doesn't exists")
-    return redirect("service:bill-detail", pk=pk)
+    return redirect("extend-bill-detail", pk=pk)
 
 
+# TODO: BillListView and OpenBillListView look the same
 class BillListView(ListView):
     model = Bill
     template_name = "order/bill_summary_list.html"
@@ -103,6 +108,28 @@ class BillListView(ListView):
         )
 
 
+class OpenBillListView(ListView):
+    model = Bill
+    template_name = "service/bill_list.html"
+
+    def get_queryset(self):
+        queryset = Bill.objects.filter(status=StatusBill.OPEN)
+        table_pk = self.request.GET.get("table")
+        if table_pk:
+            queryset = queryset.filter(table__pk=table_pk)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        action = self.request.GET.get("action", "").lower()
+        if not action or action not in ["bill", "order"]:
+            data["action"] = "bill"
+        else:
+            data["action"] = action
+        return data
+
+
+# TODO: BillDetailView and ExtendBillDetailView look the same, it should be refactored
 class BillDetailView(DetailView):
     model = Bill
     template_name = "order/bill_detail.html"
@@ -129,6 +156,22 @@ class BillDetailView(DetailView):
         return context
 
 
+class ExtendBillDetailView(DetailView):
+    model = Bill
+    template_name = "service/bill_detail.html"
+    extra_context = {"payment_methods": PaymentMethod}
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        payoff = self.object.bill_summary_view()
+        context["summary"] = payoff["summary"]
+        context["total"] = payoff["total"]
+        context["cost_discount"] = payoff["cost_discount"]
+        context["discount"] = self.object.discount
+        context["total_with_discount"] = payoff["total"] - payoff["cost_discount"]
+        return context
+
+
 class BillDeleteView(DeleteView):
     model = Bill
     template_name = "order/bill_confirm_delete.html"  # nieużywane, bo mamy modal
@@ -144,6 +187,33 @@ class BillDeleteView(DeleteView):
 
         # TODO: check and release tables
         return super().post(request, *args, **kwargs)
+
+
+@require_POST
+def close_bill(request, pk):
+    payment_method = request.POST.get("payment_method")
+    bill = get_object_or_404(Bill, pk=pk)
+    if bill.status != StatusBill.OPEN:
+        messages.error(request, "Nie można zamknąć, zamkniętego rachunku!")
+        return redirect("extend-bill-detail", pk=pk)
+    # update fields
+    bill.status = StatusBill.CLOSED
+    bill.payment_method = PaymentMethod(
+        payment_method
+    )  # ValueError when somethind, was wrong
+    bill.closed_at = timezone.now()
+    bill.save(update_fields=["status", "payment_method", "closed_at"])
+
+    bill_tables = bill.table.all()
+    for table in bill_tables:
+        _number_of_open_bills = Bill.objects.filter(
+            Q(table=table) & Q(status=StatusBill.OPEN)
+        ).count()
+        if _number_of_open_bills == 0:
+            table.is_occupied = False
+            table.save()
+    messages.success(request, f"Rachunek #{bill.pk} został zamknięty.")
+    return redirect("service:menu-waiter")
 
 
 def send_delete_order_item_to_kitchen(pk_order, pk_item):

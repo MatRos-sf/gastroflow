@@ -6,11 +6,10 @@ from channels.layers import get_channel_layer
 from django.contrib import messages
 from django.db.models import Q, QuerySet
 from django.http import HttpResponseNotFound, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
-from django.views.decorators.http import require_POST
-from django.views.generic import DetailView, ListView, View
+from django.views.generic import ListView, View
 
 from menu.models import Item, Location, MenuType
 from order.models import (
@@ -20,8 +19,6 @@ from order.models import (
     Order,
     OrderItem,
     OrderItemAddition,
-    PaymentMethod,
-    StatusBill,
 )
 from tools.session import SessionInfo, clear_session, split_items_by_location
 from worker.models import Position, Worker
@@ -355,70 +352,6 @@ def clear_cart(request):
     clear_session(request, ["cart", "tables", "waiter", "bill"])
     messages.success(request, "Zamówienie zostało anulowane!")
 
-    return redirect("service:menu-waiter")
-
-
-class BillListView(ListView):
-    model = Bill
-    template_name = "service/bill_list.html"
-
-    def get_queryset(self):
-        queryset = Bill.objects.filter(status=StatusBill.OPEN)
-        table_pk = self.request.GET.get("table")
-        if table_pk:
-            queryset = queryset.filter(table__pk=table_pk)
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        action = self.request.GET.get("action", "").lower()
-        if not action or action not in ["bill", "order"]:
-            data["action"] = "bill"
-        else:
-            data["action"] = action
-        return data
-
-
-class BillDetailView(DetailView):
-    model = Bill
-    template_name = "service/bill_detail.html"
-    extra_context = {"payment_methods": PaymentMethod}
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        payoff = self.object.bill_summary_view()
-        context["summary"] = payoff["summary"]
-        context["total"] = payoff["total"]
-        context["cost_discount"] = payoff["cost_discount"]
-        context["discount"] = self.object.discount
-        context["total_with_discount"] = payoff["total"] - payoff["cost_discount"]
-        return context
-
-
-@require_POST
-def close_bill(request, pk):
-    payment_method = request.POST.get("payment_method")
-    bill = get_object_or_404(Bill, pk=pk)
-    if bill.status != StatusBill.OPEN:
-        messages.error(request, "Nie można zamknąć, zamkniętego rachunku!")
-        return redirect("service:bill-detail", pk=pk)
-    # update fields
-    bill.status = StatusBill.CLOSED
-    bill.payment_method = PaymentMethod(
-        payment_method
-    )  # ValueError when somethind, was wrong
-    bill.closed_at = timezone.now()
-    bill.save(update_fields=["status", "payment_method", "closed_at"])
-
-    bill_tables = bill.table.all()
-    for table in bill_tables:
-        _number_of_open_bills = Bill.objects.filter(
-            Q(table=table) & Q(status=StatusBill.OPEN)
-        ).count()
-        if _number_of_open_bills == 0:
-            table.is_occupied = False
-            table.save()
-    messages.success(request, f"Rachunek #{bill.pk} został zamknięty.")
     return redirect("service:menu-waiter")
 
 
