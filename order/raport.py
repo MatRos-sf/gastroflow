@@ -1,35 +1,81 @@
-# reports/services.py
-from datetime import datetime, time
+# import datetime
+from datetime import datetime
 from decimal import Decimal
+from typing import Optional
 
-from django.db.models import Avg, Count, DurationField, ExpressionWrapper, F, Sum
+from django.db.models import (  # Value,
+    Avg,
+    Case,
+    Count,
+    DurationField,
+    ExpressionWrapper,
+    F,
+    IntegerField,
+    Sum,
+    When,
+)
 from django.db.models.functions import Coalesce
-from django.utils import timezone
 
 from menu.models import MenuType
 from order.models import Bill, Location, Order, OrderItem, PaymentMethod, StatusBill
 
-
-def day_bounds_local(date):
-    """
-    Zwraca [start, end] dla danego dnia w bieżącej strefie czasowej (zoneinfo).
-    """
-    tz = timezone.get_current_timezone()
-    start = datetime.combine(date, time.min).replace(tzinfo=tz)
-    end = datetime.combine(date, time.max).replace(tzinfo=tz)
-    return start, end
+# from django.utils import timezone
 
 
-def daily_summary(date=None):
+class ReportCalculator:
+    """Base class for report calculators."""
+
+    name = "bill_status"
+
+    def calculate(self, from_date, to_date):
+        raise NotImplementedError("This method should be implemented by subclasses")
+
+
+class CountBillStatus(ReportCalculator):
+    """Calculates the number of bills with each status between two dates."""
+
+    name = "CountBillStatus"
+
+    def calculate(self, from_date, to_date):
+        return Bill.objects.filter(created_at__range=(from_date, to_date)).aggregate(
+            opened=Count(
+                Case(When(status=StatusBill.OPEN, then=1), output_field=IntegerField())
+            ),
+            closed=Count(
+                Case(
+                    When(status=StatusBill.CLOSED, then=1), output_field=IntegerField()
+                )
+            ),
+        )
+
+
+# def day_bounds_local(from_date, to_date):
+#     """
+#     Zwraca [start, end] dla danego dnia w bieżącej strefie czasowej (zoneinfo).
+#     """
+#     tz = timezone.get_current_timezone()
+#     start = datetime.combine(from_date, time.min).replace(tzinfo=tz)
+#     if to_date:
+#         end = datetime.combine(to_date, time.max).replace(tzinfo=tz)
+#     else:
+#         end = datetime.combine(from_date, time.max).replace(tzinfo=tz)
+#     return start, end
+
+
+def summary_report():
+    pass
+
+
+def daily_summary(from_date=datetime.date, to_date: Optional[datetime.date] = None):
     """
     Główny raport dzienny. Zwraca słownik z KPI.
     Domyślnie: dzisiaj (wg Europe/Warsaw).
     """
-    if date is None:
-        date = timezone.localdate()
 
-    start, end = day_bounds_local(date)
-
+    # start, end = day_bounds_local(from_date, to_date)
+    start, end = from_date, to_date
+    print("Daily summary")
+    print(start, end)
     # 1) Rachunki otwarte/zamknięte tego dnia
     bills_opened = Bill.objects.filter(created_at__range=(start, end)).count()
     bills_closed = Bill.objects.filter(
@@ -102,7 +148,7 @@ def daily_summary(date=None):
             revenue_card += total - discount
 
     return {
-        "date": date.isoformat(),
+        "date": from_date.isoformat(),
         "bills": {
             "opened": bills_opened,
             "closed": bills_closed,
