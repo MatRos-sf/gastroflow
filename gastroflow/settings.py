@@ -66,6 +66,12 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+if DEBUG:
+    INSTALLED_APPS += ["debug_toolbar", "silk"]
+    MIDDLEWARE += [
+        "debug_toolbar.middleware.DebugToolbarMiddleware",
+        "silk.middleware.SilkyMiddleware",
+    ]
 
 ROOT_URLCONF = "gastroflow.urls"
 
@@ -156,3 +162,9 @@ CHANNEL_LAYERS = {
         "CONFIG": {"hosts": ["redis://127.0.0.1:6379/0"]},
     },
 }
+
+if DEBUG:
+    DEBUG_TOOLBAR_CONFIG = {
+        "SHOW_TOOLBAR_CALLBACK": lambda request: True,
+    }
+    SILKY_PYTHON_PROFILER = True
