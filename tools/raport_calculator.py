@@ -3,7 +3,8 @@ from typing import Any
 
 from django.db.models import Aggregate, Case, Count, F, IntegerField, Sum, When
 
-from order.models import Bill, Location, OrderItem, StatusBill
+from order.models import Bill, Location, OrderItem, PaymentMethod, StatusBill
+from tools.data_set import BillSummary, SummaryProtocol
 
 
 class ReportCalculator(ABC):
@@ -30,6 +31,18 @@ class CountBillStatus(ReportCalculator):
             closed=Count(
                 Case(
                     When(status=StatusBill.CLOSED, then=1), output_field=IntegerField()
+                )
+            ),
+            pay_by_card=Count(
+                Case(
+                    When(payment_method=PaymentMethod.CARD, then=1),
+                    output_field=IntegerField(),
+                )
+            ),
+            pay_by_cash=Count(
+                Case(
+                    When(payment_method=PaymentMethod.CASH, then=1),
+                    output_field=IntegerField(),
                 )
             ),
         )
@@ -67,3 +80,31 @@ class OrderItemsQuantity(ReportCalculator):
             kitchen=self.sum_quantity_for_category(Location.KITCHEN),
             bar=self.sum_quantity_for_category(Location.BAR),
         )
+
+
+class BillSummaryCalculator(ReportCalculator):
+    name = "bill_summary"
+
+    def __init__(self, summarizer: SummaryProtocol = BillSummary):
+        self.summarizer = summarizer
+
+    def calculate(self, from_date, to_date, **kwargs):
+        qs = (
+            Bill.objects.filter(created_at__range=(from_date, to_date))
+            .prefetch_related(
+                "orders__order_items", "orders__order_items__order_item_additions"
+            )
+            .values(
+                "id",
+                "payment_method",
+                "discount",
+                "orders__order_items__id",
+                "orders__order_items__price_snapshot",
+                "orders__order_items__quantity",
+                "orders__order_items__order_item_additions__pk",
+                "orders__order_items__order_item_additions__price_snapshot",
+            )
+            .all()
+        )
+        self.summarizer.parse_from_qs(qs)
+        return self.summarizer.summary()
