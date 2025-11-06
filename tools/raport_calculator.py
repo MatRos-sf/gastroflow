@@ -106,5 +106,5 @@ class BillSummaryCalculator(ReportCalculator):
             )
             .all()
         )
-        self.summarizer.parse_from_qs(qs)
-        return self.summarizer.summary()
+        summary_instance = self.summarizer.parse_from_qs(qs)
+        return summary_instance.summary()
