@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     "django_filters",
+    "django_extensions",
     # custom apps
     "menu",
     "worker",  # must be before order I think so
