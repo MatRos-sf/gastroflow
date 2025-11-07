@@ -25,7 +25,7 @@
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
                         <div class="fw-semibold text-secondary">Rachunki otwarte</div>
-                        <div class="display-6">{{ report.bills.opened }}</div>
+                        <div class="display-6">{{ report.bills_status.opened }}</div>
                     </div>
                 </div>
             </div>
@@ -33,7 +33,7 @@
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
                         <div class="fw-semibold text-secondary">Rachunki zamknięte</div>
-                        <div class="display-6">{{ report.bills.closed }}</div>
+                        <div class="display-6">{{ report.bills_status.closed }}</div>
                     </div>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
                         <div class="fw-semibold text-secondary">Sprzedane pozycje</div>
-                        <div class="display-6">{{ report.items.total_sold|default:0 }}</div>
+                        <div class="display-6">{{ report.order_item_quantity.total|default:0 }}</div>
                     </div>
                 </div>
             </div>
@@ -52,13 +52,13 @@
                 <div class="card shadow-sm">
                     <div class="card-body text-center">
                         <div class="fw-semibold text-secondary mb-2">Przychód (PLN)</div>
-                        <div class="display-4 mb-3">{{ report.revenue|floatformat:2 }}</div>
+                        <div class="display-4 mb-3">{{ report.bill_summary.revenue|floatformat:2 }}</div>
                         <div class="d-flex justify-content-center gap-4 fs-5">
                             <div>
-                                Karta: <strong>{{ report.revenue_card|floatformat:2 }}</strong>
+                                Karta: <strong>{{ report.bill_summary.revenue_card|floatformat:2 }}</strong>({{ report.bills_status.pay_by_card }})
                             </div>
                             <div>
-                                Gotówka: <strong>{{ report.revenue_cash|floatformat:2 }}</strong>
+                                Gotówka: <strong>{{ report.bill_summary.revenue_cash|floatformat:2 }}</strong>({{ report.bills_status.pay_by_cash }})
                             </div>
                         </div>
                     </div>
@@ -79,12 +79,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                {% if report.items.by_category %}
-                                    {% for category, qty in report.items.by_category.items %}
-                                        <tr>
-                                            <td class="text-capitalize">{{ category }}</td>
-                                            <td class="text-end">{{ qty }}</td>
-                                        </tr>
+                                #TODO: inaczej to musi być
+                                {% if report.order_item_quantity %}
+                                    {% for category, qty in report.order_item_quantity.items %}
+                                        {% if category != "total" %}
+                                            <tr>
+                                                <td class="text-capitalize">{{ category }}</td>
+                                                <td class="text-end">{{ qty }}</td>
+                                            </tr>
+                                        {% endif %}
                                     {% endfor %}
                                 {% else %}
                                     <tr>

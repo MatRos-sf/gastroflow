@@ -8,8 +8,8 @@ from .views import (
     OpenBillListView,
     ReadyOrderListView,
     ReportSelectionView,
+    ReportView,
     close_bill,
-    daily_report,
     delete_order_item,
     update_discount,
 )
@@ -17,11 +17,11 @@ from .views import (
 # TODO: name app "order"
 
 url_report_pattern = [
-    path("report-selection/", ReportSelectionView.as_view(), name="report-selection")
+    path("report", ReportView.as_view(), name="report"),
+    path("report-selection/", ReportSelectionView.as_view(), name="report-selection"),
 ]
 
 urlpatterns = [
-    path("", daily_report, name="daily-report"),
     path("update/discount/<int:pk>", update_discount, name="update-discount"),
     path("summary", BillListView.as_view(), name="summary-bill"),
     path("<int:pk>/delete/", BillDeleteView.as_view(), name="bill-delete"),
