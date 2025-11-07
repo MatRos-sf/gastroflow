@@ -89,7 +89,6 @@ class ReportView(View):
     ]
     template_name = "order/raport.html"
 
-    # TODO: lista raportowania
     def get(self, request):
         raw_from_date = request.GET.get("from", None)
         raw_to_date = request.GET.get("to", None)
