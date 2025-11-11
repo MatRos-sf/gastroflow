@@ -191,7 +191,7 @@ class CardView(View):
         return not (cart and waiter and tables)
 
     def _capture_bill_model(
-        self, bill: int, tables: list, waiter: int, note: str
+        self, bill: int, tables: list, waiter: int, note: str, guest_count: int
     ) -> Bill:
         if bill:
             try:
@@ -200,7 +200,9 @@ class CardView(View):
                 messages.error(self.request, "Nie znaleziono rachunku")
                 raise ValidatorError("Nie znaleziono rachunku")
         else:
-            bill_instance = Bill.objects.create(service_id=waiter, note=note)
+            bill_instance = Bill.objects.create(
+                service_id=waiter, note=note, guest_count=guest_count
+            )
             bill_instance.table.add(*tables)
         return bill_instance
 
@@ -218,6 +220,16 @@ class CardView(View):
     def _change_tables_status(self, tables: list):
         Table.objects.filter(pk__in=tables).update(is_occupied=True)
 
+    def _guest_count_validator(self) -> int:
+        try:
+            guest_count = int(self.request.POST.get("guest_count", 1))
+        except ValueError:
+            raise ValidatorError("Liczba gości musi być liczbą całkowitą!")
+
+        if guest_count < 1:
+            raise ValidatorError("Liczba gości musi być większa niż 0")
+        return guest_count
+
     def post(self, request):
         """
         After press submit button, there are following step:
@@ -231,6 +243,12 @@ class CardView(View):
         session_info = self._get_session_info()
         note = request.POST.get("note", "")
 
+        try:
+            guest_count = self._guest_count_validator()
+        except ValidatorError as e:
+            messages.error(request, str(e))
+            return redirect("service:cart")
+
         if self._missing_required_session_data(
             session_info.cart, session_info.waiter, session_info.tables
         ):
@@ -239,7 +257,11 @@ class CardView(View):
 
         try:
             bill = self._capture_bill_model(
-                session_info.bill, session_info.tables, session_info.waiter, note
+                session_info.bill,
+                session_info.tables,
+                session_info.waiter,
+                note,
+                guest_count,
             )
         except ValidatorError:
             return redirect("service:cart")
