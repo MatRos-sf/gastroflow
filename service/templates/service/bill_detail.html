@@ -35,110 +35,111 @@
                                 </tr>
                             {% endif %}
                         {% endfor %}
-                        <tbody class="fs-5">
-                            <tr class="table-secondary fw-bold">
-                                <td colspan="2" class="text-end">Razem do zapłaty:</td>
-                                <td class="text-end">
-                                    {% if discount > 0 %}
-                                        <span class="text-muted text-decoration-line-through">{{ total|floatformat:2 }}</span>
-                                        <br>
-                                        <span class="fw-bold">{{ total_with_discount|floatformat:2 }}</span>
-                                        <br>
-                                        <small class="text-success">Zniżka: {{ discount }}% ({{ cost_discount|floatformat:2 }})</small>
-                                    {% else %}
-                                        {{ total|floatformat:2 }}
-                                    {% endif %}
-                                </td>
-                                <td></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            {% else %}
-                <div class="alert alert-secondary">Nic nie ma.</div>
-            {% endif %}
-            <div class="d-flex justify-content-between mt-4">
-                <a href="{% url 'service:table-settle' %}"
-                   class="btn btn-outline-secondary btn-lg">← Powrót</a>
-                <a href="{% url 'service:table-settle' %}"
-                   class="btn btn-outline-secondary btn-lg"
-                   data-bs-toggle="modal"
-                   data-bs-target="#exampleModal"
-                   data-bs-whatever="@fat">Dodaj Rabat</a>
-                <button type="button"
-                        class="btn btn-success btn-lg"
-                        data-bs-toggle="modal"
-                        data-bs-target="#closeBillModal">✅ Zamknij Rachunek</button>
+                    </tbody>
+                    <tbody class="fs-5">
+                        <tr class="table-secondary fw-bold">
+                            <td colspan="2" class="text-end">Razem do zapłaty:</td>
+                            <td class="text-end">
+                                {% if discount > 0 %}
+                                    <span class="text-muted text-decoration-line-through">{{ total|floatformat:2 }}</span>
+                                    <br>
+                                    <span class="fw-bold">{{ total_with_discount|floatformat:2 }}</span>
+                                    <br>
+                                    <small class="text-success">Zniżka: {{ discount }}% ({{ cost_discount|floatformat:2 }})</small>
+                                {% else %}
+                                    {{ total|floatformat:2 }}
+                                {% endif %}
+                            </td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
+        {% else %}
+            <div class="alert alert-secondary">Nic nie ma.</div>
+        {% endif %}
+        <div class="d-flex justify-content-between mt-4">
+            <a href="{% url 'service:table-settle' %}"
+               class="btn btn-outline-secondary btn-lg">← Powrót</a>
+            <a href="{% url 'service:table-settle' %}"
+               class="btn btn-outline-secondary btn-lg"
+               data-bs-toggle="modal"
+               data-bs-target="#exampleModal"
+               data-bs-whatever="@fat">Dodaj Rabat</a>
+            <button type="button"
+                    class="btn btn-success btn-lg"
+                    data-bs-toggle="modal"
+                    data-bs-target="#closeBillModal">✅ Zamknij Rachunek</button>
         </div>
-        <!-- Modal with discount -->
-        <div class="modal fade"
-             id="exampleModal"
-             tabindex="-1"
-             aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Dodaj zniżkę</h1>
-                        <button type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form method="post" action="{% url 'update-discount' object.pk %}">
-                            {% csrf_token %}
-                            <div class="mb-3">
-                                <label for="discount" class="col-form-label">Zniżka:</label>
-                                <input type="number" class="form-control" id="discount" name="discount">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Wyjdź</button>
-                                <button type="submit" class="btn btn-primary">Dodaj</button>
-                            </div>
-                        </form>
-                    </div>
+    </div>
+    <!-- Modal with discount -->
+    <div class="modal fade"
+         id="exampleModal"
+         tabindex="-1"
+         aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Dodaj zniżkę</h1>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"></button>
                 </div>
-            </div>
-        </div>
-        <!-- Modal close bill -->
-        <div class="modal fade"
-             id="closeBillModal"
-             tabindex="-1"
-             aria-labelledby="closeBillModalLabel"
-             data-bill-id="{{ bill.id }}"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <form method="post"
-                      class="modal-content"
-                      id="deleteOrderItemForm"
-                      action="{% url 'close-bill' object.id %}">
-                    {% csrf_token %}
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="closeBillModalLabel">Wybierz metode płatności</h5>
-                        <button type="button"
-                                class="btn-close"
-                                data-bs-dismiss="modal"
-                                aria-label="Zamknij"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p id="deleteItemText" class="mb-2"></p>
-                        <div class="alert alert-warning mb-0">
-                            Po kliknięciu opcji płatności rachunek zostanie automatycznie zamknięty. Nie będzie można go otworzyć ponownie.
+                <div class="modal-body">
+                    <form method="post" action="{% url 'update-discount' object.pk %}">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="discount" class="col-form-label">Zniżka:</label>
+                            <input type="number" class="form-control" id="discount" name="discount">
                         </div>
-                    </div>
-                    <div class="modal-footer justify-content-around">
-                        <button type="submit"
-                                class="btn btn-success"
-                                value="{{ payment_methods.CARD }}"
-                                name="payment_method">{{ payment_methods.CARD.title }}</button>
-                        <button type="submit"
-                                class="btn btn-success"
-                                value="{{ payment_methods.CASH }}"
-                                name="payment_method">{{ payment_methods.CASH.title }}</button>
-                    </div>
-                </form>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Wyjdź</button>
+                            <button type="submit" class="btn btn-primary">Dodaj</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    {% endblock content %}
+    </div>
+    <!-- Modal close bill -->
+    <div class="modal fade"
+         id="closeBillModal"
+         tabindex="-1"
+         aria-labelledby="closeBillModalLabel"
+         data-bill-id="{{ bill.id }}"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post"
+                  class="modal-content"
+                  id="deleteOrderItemForm"
+                  action="{% url 'close-bill' object.id %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title" id="closeBillModalLabel">Wybierz metode płatności</h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Zamknij"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="deleteItemText" class="mb-2"></p>
+                    <div class="alert alert-warning mb-0">
+                        Po kliknięciu opcji płatności rachunek zostanie automatycznie zamknięty. Nie będzie można go otworzyć ponownie.
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-around">
+                    <button type="submit"
+                            class="btn btn-success"
+                            value="{{ payment_methods.CARD }}"
+                            name="payment_method">{{ payment_methods.CARD.label.title }}</button>
+                    <button type="submit"
+                            class="btn btn-success"
+                            value="{{ payment_methods.CASH }}"
+                            name="payment_method">{{ payment_methods.CASH.label.title }}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
