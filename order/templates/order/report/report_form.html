@@ -1,0 +1,44 @@
+{% extends "menu/base.html" %}
+{% load duration_extras %}
+{% block title %}
+    Raporty
+{% endblock title %}
+{% block content %}
+    <div class="container">
+        <h1 class="text-center m-3 pb-3">Wybierz datę aby wygenerować raport</h1>
+        <div class="container">
+            <form method="post" class="container mt-4 text-center">
+                {% csrf_token %}
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}<div>{{ error }}</div>{% endfor %}
+                    </div>
+                {% endif %}
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-6">
+                        <label for="{{ form.from_date.id_for_label }}" class="form-label">Wylot</label>
+                        {{ form.from_date }}
+                        {% if form.from_date.errors %}
+                            <div class="text-danger">
+                                {% for error in form.from_date.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <label for="{{ form.to_date.id_for_label }}" class="form-label">Powrót</label>
+                        {{ form.to_date }}
+                        {% if form.to_date.errors %}
+                            <div class="text-danger">
+                                {% for error in form.to_date.errors %}{{ error }}{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="mt-3 d-flex justify-content-center gap-2 ">
+                    <button type="submit" class="btn btn-outline-success" name="today">Dzisiejszy raport</button>
+                    <button type="submit" class="btn btn-success">Generuj</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

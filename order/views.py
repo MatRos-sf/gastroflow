@@ -1,5 +1,6 @@
+import datetime
+import logging
 import os
-from datetime import date as date_cls
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -8,15 +9,21 @@ from django.db.models import Q
 from django.db.utils import IntegrityError
 from django.http import Http404, HttpRequest
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-from django.views.generic import DeleteView, DetailView, ListView
+from django.views.generic import DeleteView, DetailView, ListView, View
 from django_filters.views import FilterView
 
 from menu.models import Location
+from tools.raport_calculator import (
+    BillSummaryCalculator,
+    CountBillStatus,
+    OrderItemsQuantity,
+)
 
 from .filters import OrderFilter
+from .forms import DateForm
 from .models import (
     Bill,
     Item,
@@ -26,7 +33,9 @@ from .models import (
     PaymentMethod,
     StatusBill,
 )
-from .raport import daily_summary
+from .raport import generate_summary_report
+
+logger = logging.getLogger(__name__)
 
 
 def pin_required(view_func):
@@ -54,24 +63,50 @@ def item_list(request):
     return render(request, "order/order_menu.html", {"object_list": items})
 
 
-@pin_required
-def daily_report(request):
-    date_str = request.GET.get("date")
+def convert_date_from_str_to_date(
+    date_str: str, time_min: bool = True, *, date_format: str = "%Y-%m-%d"
+) -> datetime.datetime:
+    tz = timezone.get_current_timezone()
     if date_str:
         try:
-            chosen_date = date_cls.fromisoformat(date_str)  # format YYYY-MM-DD
+            date_object = datetime.datetime.strptime(date_str, date_format).date()
         except ValueError:
-            chosen_date = timezone.localdate()
+            date_object = timezone.localdate()
+
     else:
-        chosen_date = timezone.localdate()
+        date_object = timezone.localdate()
 
-    report = daily_summary(chosen_date)
+    return datetime.datetime.combine(
+        date_object, datetime.time.min if time_min else datetime.time.max, tzinfo=tz
+    )
 
-    context = {
-        "date": chosen_date,
-        "report": report,
-    }
-    return render(request, "order/raport.html", context)
+
+class ReportView(View):
+    calculator_collection = [
+        CountBillStatus(),
+        OrderItemsQuantity(),
+        BillSummaryCalculator(),
+    ]
+    template_name = "order/raport.html"
+
+    def get(self, request):
+        raw_from_date = request.GET.get("from", None)
+        raw_to_date = request.GET.get("to", None)
+
+        from_date = convert_date_from_str_to_date(raw_from_date)
+        if raw_to_date:
+            to_date = convert_date_from_str_to_date(raw_to_date, False)
+        else:
+            to_date = convert_date_from_str_to_date(raw_from_date, False)
+
+        report = generate_summary_report(from_date, to_date, self.calculator_collection)
+
+        context = {
+            "date": from_date,
+            "report": report,
+        }
+
+        return render(request, "order/raport.html", context)
 
 
 # TODO: what happened if pk doesn't exists or is wrong
@@ -264,3 +299,43 @@ class ReadyOrderListView(FilterView):
         ctx["categories"] = Location.values
         ctx["today"] = timezone.localdate().strftime("%Y-%m-%d")
         return ctx
+
+
+class ReportSelectionView(View):
+    """View for handling report generation form submission and redirection.
+
+    This view provides a form for users to select date ranges for report generation.
+    It handles both GET requests (displaying the form) and POST requests (processing the form).
+
+    Attributes:
+        FORM (DateForm): The form class used for date selection
+
+    Methods:
+        get: Renders the report form
+        post: Processes the form submission and redirects to the appropriate report view
+    """
+
+    FORM = DateForm
+
+    def get(self, request):
+        return render(request, "order/report/report_form.html", {"form": self.FORM()})
+
+    def post(self, request):
+        form = self.FORM(request.POST)
+        if not form.is_valid():
+            return render(request, "order/report/report_form.html", {"form": form})
+
+        if "today" in request.POST:
+            date_from = timezone.now().date()
+            date_to = None
+        else:
+            cleaned_data = form.cleaned_data
+            date_from = cleaned_data.get("from_date")
+            date_to = cleaned_data.get("to_date")
+        logger.info(f"Date from: {date_from}, Date to: {date_to}")
+
+        url_parameters = (
+            f"from={date_from}&to={date_to}" if date_to else f"from={date_from}"
+        )
+
+        return redirect(reverse("report") + "?" + url_parameters)
