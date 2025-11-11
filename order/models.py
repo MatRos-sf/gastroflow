@@ -57,8 +57,13 @@ class Bill(models.Model):
         max_length=10, choices=PaymentMethod.choices, default=PaymentMethod.CARD
     )
 
+    guest_count = models.PositiveSmallIntegerField(
+        default=1,
+        validators=[MinValueValidator(1)],
+        help_text="Number of people in one the bill (plates per person)",
+    )
+
     # Payment additional
-    # is_cash
     # tip
     # given_money
     def __str__(self):
