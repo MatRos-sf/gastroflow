@@ -32,8 +32,8 @@ class StatusBill(models.TextChoices):
 
 
 class PaymentMethod(models.TextChoices):
-    CARD = "karta", "KARTA"
-    CASH = "gotówka", "GOTÓWKA"
+    CARD = "card", "Karta"
+    CASH = "cash", "Gotówka"
 
 
 class Bill(models.Model):
