@@ -15,8 +15,8 @@ class SummaryProtocol(Protocol):
 
 
 class PrepaymentMethodEnum(StrEnum):
-    CARD = "karta"
-    CASH = "gotówka"
+    CARD = "card"
+    CASH = "cash"
 
 
 @dataclass
@@ -90,11 +90,14 @@ class BillSummary:
         revenue = self.count_revenue_by_group()
         revenue["revenue"] = self.count_revenue()
 
-        assert abs(
+        test_revenue = abs(
             revenue["revenue"] - (revenue["revenue_cash"] + revenue["revenue_card"])
-        ) < Decimal(
-            "0.01"
-        ), "Total revenue does not match the sum of cash an card revenue"
+        )
+
+        if test_revenue > Decimal("0.01"):
+            raise ValueError(
+                f"Total revenue does not match the sum of cash an card revenue ({test_revenue})"
+            )
 
         return revenue
 
