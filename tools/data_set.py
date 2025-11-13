@@ -120,6 +120,9 @@ class BillSummary:
             raise ValueError(
                 f"Total revenue does not match the sum of cash an card revenue ({test_revenue})"
             )
+
+        revenue["avg_per_plate"] = self.avg_per_plate(revenue["revenue"])
+        revenue["guests"] = self.count_guests()
         return revenue
 
     @classmethod

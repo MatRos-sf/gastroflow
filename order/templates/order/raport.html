@@ -122,4 +122,22 @@
             </ul>
         </div>
     </div>
+    <div class="row g-3 justify-content-around text-center">
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="fw-semibold text-secondary">Średni przychód na gościa PLN</div>
+                    <div class="display-6">{{ report.bill_summary.avg_per_plate }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="fw-semibold text-secondary">Liczba gości</div>
+                    <div class="display-6">{{ report.bill_summary.guests }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
