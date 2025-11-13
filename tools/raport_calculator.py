@@ -98,6 +98,7 @@ class BillSummaryCalculator(ReportCalculator):
                 "id",
                 "payment_method",
                 "discount",
+                "guest_count",
                 "orders__order_items__id",
                 "orders__order_items__price_snapshot",
                 "orders__order_items__quantity",

@@ -4,6 +4,8 @@ from enum import StrEnum
 from typing import Protocol
 from warnings import warn
 
+REVENUE_TOLERANCE = Decimal("0.01")
+
 
 class SummaryProtocol(Protocol):
     def summary(self) -> dict[str, Decimal]:
@@ -14,7 +16,7 @@ class SummaryProtocol(Protocol):
         ...
 
 
-class PrepaymentMethodEnum(StrEnum):
+class PaymentMethodEnum(StrEnum):
     CARD = "card"
     CASH = "cash"
 
@@ -45,6 +47,7 @@ class BillData:
     payment_method: str
     discount: int
     order_items: dict[int, ItemData]
+    guest_count: int
 
     @property
     def price(self):
@@ -67,22 +70,41 @@ class BillSummary:
         return len(self.bills)
 
     def count_revenue(self) -> Decimal:
-        return sum([bill.revenue for bill in self.bills.values()]) or Decimal(0)
+        return sum([bill.revenue for bill in self.bills.values()], start=Decimal(0))
+
+    def count_guests(self) -> int:
+        return sum([bill.guest_count for bill in self.bills.values()]) or 0
+
+    def avg_per_plate(self, revenue: Decimal | None = None):
+        """
+        Calculate average revenue per guests
+
+        Returns:
+            Decimal: Average revenue divided by total number of guests.
+                    Returns 0.00 if there are no guests.
+        """
+        if not revenue:
+            revenue = self.count_revenue()
+        number_of_guests = self.count_guests()
+        if not number_of_guests:
+            return Decimal("0.00")
+
+        return (revenue / Decimal(number_of_guests)).quantize(Decimal("0.01"))
 
     def count_revenue_by_group(self) -> dict[str, Decimal]:
         """Return revenue grouped by payment method"""
         result = {}
-        for method in PrepaymentMethodEnum:
-            if method == PrepaymentMethodEnum.CARD:
-                m = "revenue_card"
+        for payment_method in PaymentMethodEnum:
+            if payment_method == PaymentMethodEnum.CARD:
+                revenue_key = "revenue_card"
             else:
-                m = "revenue_cash"
-            _sum = sum(
+                revenue_key = "revenue_cash"
+            total_revenue = sum(
                 bill.revenue
                 for bill in self.bills.values()
-                if bill.payment_method == method
+                if bill.payment_method == payment_method
             )
-            result[m] = _sum or Decimal(0)
+            result[revenue_key] = total_revenue or Decimal(0)
         return result
 
     def summary(self) -> dict[str, Decimal]:
@@ -94,11 +116,10 @@ class BillSummary:
             revenue["revenue"] - (revenue["revenue_cash"] + revenue["revenue_card"])
         )
 
-        if test_revenue > Decimal("0.01"):
+        if test_revenue > REVENUE_TOLERANCE:
             raise ValueError(
                 f"Total revenue does not match the sum of cash an card revenue ({test_revenue})"
             )
-
         return revenue
 
     @classmethod
@@ -111,6 +132,7 @@ class BillSummary:
                     pk=datum["id"],
                     payment_method=datum["payment_method"],
                     discount=datum["discount"],
+                    guest_count=datum["guest_count"],
                     order_items={},
                 )
 
@@ -127,7 +149,7 @@ class BillSummary:
 
             order_item_pk = datum["orders__order_items__id"]
             if not order_item_pk:
-                warn("Order item pk not found")
+                warn("Order item pk not found", FutureWarning)
                 continue
 
             bill_instance.order_items[order_item_pk] = item_instance

@@ -1,9 +1,10 @@
 from collections import namedtuple
 from decimal import Decimal
+from unittest.mock import patch
 
 from django.test import TestCase
 
-from tools.data_set import BillSummary
+from tools.data_set import BillData, BillSummary
 
 SummaryScore = namedtuple(
     "SummaryScore", ["revenue", "revenue_cash", "revenue_card", "len"]
@@ -15,8 +16,9 @@ class BillSummaryTest(TestCase):
         self.data_set_one = [
             {
                 "id": 11,
-                "payment_method": "karta",
+                "payment_method": "card",
                 "discount": 0,
+                "guest_count": 2,
                 "orders__order_items__id": 38,
                 "orders__order_items__price_snapshot": Decimal("34.00"),
                 "orders__order_items__quantity": 1,
@@ -25,8 +27,9 @@ class BillSummaryTest(TestCase):
             },
             {
                 "id": 11,
-                "payment_method": "karta",
+                "payment_method": "card",
                 "discount": 0,
+                "guest_count": 2,
                 "orders__order_items__id": 39,
                 "orders__order_items__price_snapshot": Decimal("12.00"),
                 "orders__order_items__quantity": 1,
@@ -35,8 +38,9 @@ class BillSummaryTest(TestCase):
             },
             {
                 "id": 11,
-                "payment_method": "karta",
+                "payment_method": "card",
                 "discount": 0,
+                "guest_count": 2,
                 "orders__order_items__id": 40,
                 "orders__order_items__price_snapshot": Decimal("10.00"),
                 "orders__order_items__quantity": 1,
@@ -45,8 +49,9 @@ class BillSummaryTest(TestCase):
             },
             {
                 "id": 12,
-                "payment_method": "karta",
+                "payment_method": "card",
                 "discount": 0,
+                "guest_count": 2,
                 "orders__order_items__id": 41,
                 "orders__order_items__price_snapshot": Decimal("25.00"),
                 "orders__order_items__quantity": 1,
@@ -57,8 +62,9 @@ class BillSummaryTest(TestCase):
             },
             {
                 "id": 12,
-                "payment_method": "karta",
+                "payment_method": "card",
                 "discount": 0,
+                "guest_count": 2,
                 "orders__order_items__id": 41,
                 "orders__order_items__price_snapshot": Decimal("25.00"),
                 "orders__order_items__quantity": 1,
@@ -69,8 +75,9 @@ class BillSummaryTest(TestCase):
             },
             {
                 "id": 12,
-                "payment_method": "karta",
+                "payment_method": "card",
                 "discount": 0,
+                "guest_count": 2,
                 "orders__order_items__id": 42,
                 "orders__order_items__price_snapshot": Decimal("10.00"),
                 "orders__order_items__quantity": 1,
@@ -84,8 +91,9 @@ class BillSummaryTest(TestCase):
         self.data_set_none_items = [
             {
                 "id": 11,
-                "payment_method": "karta",
+                "payment_method": "card",
                 "discount": 0,
+                "guest_count": 2,
                 "orders__order_items__id": None,
                 "orders__order_items__price_snapshot": None,
                 "orders__order_items__quantity": 1,
@@ -94,8 +102,9 @@ class BillSummaryTest(TestCase):
             },
             {
                 "id": 12,
-                "payment_method": "karta",
+                "payment_method": "card",
                 "discount": 0,
+                "guest_count": 2,
                 "orders__order_items__id": None,
                 "orders__order_items__price_snapshot": None,
                 "orders__order_items__quantity": 1,
@@ -109,8 +118,9 @@ class BillSummaryTest(TestCase):
         self.data_set_group = [
             {
                 "id": 11,
-                "payment_method": "karta",
+                "payment_method": "card",
                 "discount": 0,
+                "guest_count": 2,
                 "orders__order_items__id": 38,
                 "orders__order_items__price_snapshot": Decimal("34.00"),
                 "orders__order_items__quantity": 1,
@@ -119,8 +129,9 @@ class BillSummaryTest(TestCase):
             },
             {
                 "id": 11,
-                "payment_method": "karta",
+                "payment_method": "card",
                 "discount": 0,
+                "guest_count": 2,
                 "orders__order_items__id": 39,
                 "orders__order_items__price_snapshot": Decimal("12.00"),
                 "orders__order_items__quantity": 1,
@@ -129,8 +140,9 @@ class BillSummaryTest(TestCase):
             },
             {
                 "id": 11,
-                "payment_method": "karta",
+                "payment_method": "card",
                 "discount": 0,
+                "guest_count": 2,
                 "orders__order_items__id": 40,
                 "orders__order_items__price_snapshot": Decimal("10.00"),
                 "orders__order_items__quantity": 1,
@@ -139,8 +151,9 @@ class BillSummaryTest(TestCase):
             },
             {
                 "id": 12,
-                "payment_method": "gotówka",
+                "payment_method": "cash",
                 "discount": 0,
+                "guest_count": 2,
                 "orders__order_items__id": 41,
                 "orders__order_items__price_snapshot": Decimal("25.00"),
                 "orders__order_items__quantity": 1,
@@ -151,8 +164,9 @@ class BillSummaryTest(TestCase):
             },
             {
                 "id": 12,
-                "payment_method": "gotówka",
+                "payment_method": "cash",
                 "discount": 0,
+                "guest_count": 2,
                 "orders__order_items__id": 41,
                 "orders__order_items__price_snapshot": Decimal("25.00"),
                 "orders__order_items__quantity": 1,
@@ -163,8 +177,9 @@ class BillSummaryTest(TestCase):
             },
             {
                 "id": 12,
-                "payment_method": "gotówka",
+                "payment_method": "cash",
                 "discount": 0,
+                "guest_count": 2,
                 "orders__order_items__id": 42,
                 "orders__order_items__price_snapshot": Decimal("10.00"),
                 "orders__order_items__quantity": 1,
@@ -175,6 +190,54 @@ class BillSummaryTest(TestCase):
         self.data_set_group_summary = SummaryScore(
             Decimal("94.00"), Decimal("38.00"), Decimal("56.00"), 2
         )
+        self.data_set_free = [
+            {
+                "id": 11,
+                "payment_method": "card",
+                "discount": 100,
+                "guest_count": 2,
+                "orders__order_items__id": 38,
+                "orders__order_items__price_snapshot": Decimal("34.00"),
+                "orders__order_items__quantity": 1,
+                "orders__order_items__order_item_additions__pk": None,
+                "orders__order_items__order_item_additions__price_snapshot": None,
+            },
+            {
+                "id": 11,
+                "payment_method": "card",
+                "discount": 100,
+                "guest_count": 2,
+                "orders__order_items__id": 39,
+                "orders__order_items__price_snapshot": Decimal("12.00"),
+                "orders__order_items__quantity": 1,
+                "orders__order_items__order_item_additions__pk": None,
+                "orders__order_items__order_item_additions__price_snapshot": None,
+            },
+            {
+                "id": 12,
+                "payment_method": "card",
+                "discount": 100,
+                "guest_count": 2,
+                "orders__order_items__id": 41,
+                "orders__order_items__price_snapshot": Decimal("25.00"),
+                "orders__order_items__quantity": 1,
+                "orders__order_items__order_item_additions__pk": 8,
+                "orders__order_items__order_item_additions__price_snapshot": Decimal(
+                    "3.00"
+                ),
+            },
+            {
+                "id": 12,
+                "payment_method": "card",
+                "discount": 100,
+                "guest_count": 2,
+                "orders__order_items__id": 42,
+                "orders__order_items__price_snapshot": Decimal("10.00"),
+                "orders__order_items__quantity": 1,
+                "orders__order_items__order_item_additions__pk": None,
+                "orders__order_items__order_item_additions__price_snapshot": None,
+            },
+        ]
 
     def test_should_calculate_revenue_summary(self):
         bs = BillSummary.parse_from_qs(self.data_set_one)
@@ -219,8 +282,9 @@ class BillSummaryTest(TestCase):
         data = [
             {
                 "id": 11,
-                "payment_method": "karta",
+                "payment_method": "card",
                 "discount": 10,
+                "guest_count": 2,
                 "orders__order_items__id": 1,
                 "orders__order_items__price_snapshot": Decimal("100.00"),
                 "orders__order_items__quantity": 1,
@@ -231,3 +295,45 @@ class BillSummaryTest(TestCase):
         bs = BillSummary.parse_from_qs(data)
         summary = bs.summary()
         self.assertEqual(summary["revenue"], Decimal("90.00"))
+
+    def test_should_return_zero_when_discount_equal_100(self):
+        bs = BillSummary.parse_from_qs(self.data_set_free)
+
+        with self.subTest(field="revenue"):
+            self.assertEqual(bs.count_revenue(), Decimal("0.00"))
+
+        with self.subTest(field="avg_per_guests"):
+            self.assertEqual(bs.avg_per_plate(), Decimal("0.00"))
+
+        with self.subTest(field="guest_count"):
+            self.assertEqual(bs.count_guests(), 4)
+
+
+class BillSummaryEmptyTest(TestCase):
+    def setUp(self):
+        self.bills = {
+            1: BillData(1, "test", 0, {}, 0),
+            2: BillData(2, "test", 0, {}, 0),
+        }
+
+    def test_should_return_zero_number_of_guests(self):
+        bs = BillSummary(self.bills)
+        self.assertEqual(bs.count_guests(), 0)
+
+    def test_should_return_zero_avg_per_plate(self):
+        bs = BillSummary(self.bills)
+        self.assertEqual(bs.avg_per_plate(), Decimal(0))
+
+
+class BillSummaryMockTest(TestCase):
+    @patch("tools.data_set.BillSummary.count_revenue", return_value=Decimal("300.00"))
+    def test_should_calculate_avg_per_plate(self, mock_count_revenue):
+        bs = BillSummary(
+            {
+                1: BillData(1, "test", 0, {}, 3),
+                2: BillData(1, "test", 0, {}, 2),
+            }
+        )
+        avg_plate = bs.avg_per_plate()
+        mock_count_revenue.assert_called_once()
+        self.assertAlmostEqual(avg_plate, Decimal(60), places=2)
