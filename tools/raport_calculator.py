@@ -92,12 +92,15 @@ class BillSummaryCalculator(ReportCalculator):
         qs = (
             Bill.objects.filter(created_at__range=(from_date, to_date))
             .prefetch_related(
-                "orders__order_items", "orders__order_items__order_item_additions"
+                "orders__order_items",
+                "orders__order_items__order_item_additions",
+                "service__user",
             )
             .values(
                 "id",
                 "payment_method",
                 "discount",
+                "service__user__username",
                 "guest_count",
                 "orders__order_items__id",
                 "orders__order_items__price_snapshot",

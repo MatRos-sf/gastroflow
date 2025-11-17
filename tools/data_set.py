@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from decimal import Decimal
 from enum import StrEnum
-from typing import Protocol
+from typing import Any, Protocol
 from warnings import warn
 
 REVENUE_TOLERANCE = Decimal("0.01")
@@ -48,6 +48,7 @@ class BillData:
     discount: int
     order_items: dict[int, ItemData]
     guest_count: int
+    service_user: str
 
     @property
     def price(self):
@@ -107,7 +108,21 @@ class BillSummary:
             result[revenue_key] = total_revenue or Decimal(0)
         return result
 
-    def summary(self) -> dict[str, Decimal]:
+    def calculate_waiter_stats(self) -> dict[str, dict[str, int | Decimal]]:
+        """
+        Returns waiter stats.
+        """
+        result = {}
+        for bill in self.bills.values():
+            waiter_stats = result.get(
+                bill.service_user, {"bills": 0, "revenue": Decimal("0.00")}
+            )
+            waiter_stats["bills"] += 1
+            waiter_stats["revenue"] += bill.revenue
+            result[bill.service_user] = waiter_stats
+        return result
+
+    def summary(self) -> dict[str, Any]:
         """Return summary of revenue without discount"""
         revenue = self.count_revenue_by_group()
         revenue["revenue"] = self.count_revenue()
@@ -123,6 +138,7 @@ class BillSummary:
 
         revenue["avg_per_plate"] = self.avg_per_plate(revenue["revenue"])
         revenue["guests"] = self.count_guests()
+        revenue["waiter"] = self.calculate_waiter_stats()
         return revenue
 
     @classmethod
@@ -137,6 +153,7 @@ class BillSummary:
                     discount=datum["discount"],
                     guest_count=datum["guest_count"],
                     order_items={},
+                    service_user=datum.get("service__user__username", "Unknown"),
                 )
 
             item_instance = bill_instance.order_items.get(
