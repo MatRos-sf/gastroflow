@@ -19,7 +19,6 @@
         <p class="text-muted mt-2 mb-4">
             Dzień: <strong>{{ date|date:"Y-m-d" }}</strong>
         </p>
-        <!-- KPI karty -->
         <div class="row g-3 justify-content-around">
             <div class="col-12 col-md-6 col-lg-3">
                 <div class="card shadow-sm h-100">
@@ -46,7 +45,7 @@
                 </div>
             </div>
         </div>
-        <!-- Przychód -->
+        <!-- revenue -->
         <div class="row g-3 mt-1">
             <div class="col-12">
                 <div class="card shadow-sm">
@@ -65,7 +64,7 @@
                 </div>
             </div>
         </div>
-        <!-- Kuchnia / Bar -->
+        <!-- Kitchen / Bar -->
         <div class="row g-3 mt-1">
             <div class="col-12 col-lg-6">
                 <div class="card shadow-sm">
@@ -90,7 +89,7 @@
                                     {% endfor %}
                                 {% else %}
                                     <tr>
-                                        <td colspan="2" class="text-center text-muted">Brak sprzedaży</td>
+                                        <td colspan="3" class="text-center text-muted">Brak sprzedaży</td>
                                     </tr>
                                 {% endif %}
                             </tbody>
@@ -114,12 +113,73 @@
                 </div>
             </div>
         </div>
-        <!-- Wskazówki -->
+        <!-- Alert -->
         <div class="alert alert-info mt-3">
             <div class="fw-semibold mb-1">Uwaga</div>
             <ul class="mb-0">
                 <li>Wartości przychodu liczone są na snapshotach cen (pozycja + dodatki).</li>
             </ul>
+        </div>
+    </div>
+    <div class="row g-3 justify-content-around text-center">
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="fw-semibold text-secondary">Średni przychód na gościa PLN</div>
+                    <div class="display-6">{{ report.bill_summary.avg_per_plate }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <div class="fw-semibold text-secondary">Liczba gości</div>
+                    <div class="display-6">{{ report.bill_summary.guests }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Waiter stats -->
+    <div class="row mt-3 justify-content-md-center">
+        <h3 class="text-center">Statystyki pracowników</h3>
+        <div class="alert alert-info mt-3">
+            <div class="fw-semibold mb-1">O statystykach</div>
+            <ul class="mb-0">
+                <li>
+                    Dane pokazują obsługę rachunków przy stole. Pomijają inne obowiązki pracowników (kuchnia, przygotowanie sali, zaplecze), które także wpływają na funkcjonowanie restauracji.
+                </li>
+            </ul>
+        </div>
+        <div class="col-12 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-light">Statystyki kelnerów/kelnerek</div>
+                <div class="card-body">
+                    <table class="table table-sm align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Kategoria</th>
+                                <th class="text-end">Ilość rachunków</th>
+                                <th class="text-end">Przychód</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if report.bill_summary.waiter.items %}
+                                {% for waiter, data_waiter in report.bill_summary.waiter.items %}
+                                    <tr>
+                                        <td class="text-capitalize">{{ waiter }}</td>
+                                        <td class="text-end">{{ data_waiter.bills }}</td>
+                                        <td class="text-end">{{ data_waiter.revenue }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr>
+                                    <td colspan="2" class="text-center text-muted">Brak sprzedaży</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock content %}
