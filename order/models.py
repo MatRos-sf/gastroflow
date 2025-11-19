@@ -1,6 +1,6 @@
 from decimal import Decimal
 
-from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator, ValidationError
 from django.db import models
 from django.db.models import DecimalField, ExpressionWrapper, F, Sum
 from django.db.models.functions import Coalesce
@@ -206,6 +206,26 @@ class OrderItem(models.Model):
     )
     quantity = models.PositiveIntegerField(default=1)
 
+    line_subtotal = models.GeneratedField(
+        expression=F("price_snapshot") * F("quantity"),
+        output_field=DecimalField(max_digits=12, decimal_places=2),
+        help_text="Subtotal for this item before discount and additions (price × quantity)",
+        db_persist=True,
+    )
+    # TODO: write function than set this field!
+    line_discount_amount = models.DecimalField(
+        default=Decimal("0.00"),
+        max_digits=12,
+        decimal_places=2,
+        help_text="Discount amount allocated from bill's discount percentage. You should change it manually!",
+    )
+    line_final_total = models.GeneratedField(
+        expression=F("line_subtotal") - F("line_discount_amount"),
+        output_field=DecimalField(max_digits=12, decimal_places=2),
+        db_persist=True,
+        help_text="Final price for this addition after discount",
+    )
+
     def __str__(self):
         return f"{self.name_snapshot} x{self.quantity}"
 
@@ -233,6 +253,21 @@ class OrderItem(models.Model):
     def save(self, *args, **kwargs):
         is_init = self.pk is None
 
+        if self.price_snapshot and self.quantity:
+            subtotal = self.price_snapshot * self.quantity
+            if self.line_discount_amount > subtotal:
+                raise ValidationError(
+                    {
+                        "line_discount_amount": f"Discount amount ({self.line_discount_amount}) "
+                        f"cannot exceed item subtotal ({subtotal})"
+                    }
+                )
+
+            if self.line_discount_amount < 0:
+                raise ValidationError(
+                    {"line_discount_amount": "Discount amount cannot be negative"}
+                )
+
         super().save(*args, **kwargs)
 
         # create notification only for new order items
@@ -249,3 +284,21 @@ class OrderItemAddition(models.Model):
     addition = models.ForeignKey(Item, on_delete=models.CASCADE)
     name_snapshot = models.CharField(max_length=100)
     price_snapshot = models.DecimalField(max_digits=7, decimal_places=2)
+    quantity = models.PositiveIntegerField(default=1)
+    line_subtotal = models.GeneratedField(
+        expression=F("price_snapshot") * F("quantity"),
+        output_field=DecimalField(max_digits=12, decimal_places=2),
+        db_persist=True,
+    )
+    line_discount_amount = models.DecimalField(
+        default=Decimal("0.00"),
+        max_digits=12,
+        decimal_places=2,
+        help_text="The amount of discount from Bill. You should change it manually!",
+    )
+    line_final_total = models.GeneratedField(
+        expression=F("line_subtotal") - F("line_discount_amount"),
+        output_field=DecimalField(max_digits=12, decimal_places=2),
+        db_persist=True,
+        help_text="Final price for this addition after discount",
+    )
