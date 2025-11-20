@@ -48,3 +48,5 @@ class TestOrderItem(TestCase):
             )
 
         self.assertEqual(OrderItem.objects.count(), 0)
+
+
