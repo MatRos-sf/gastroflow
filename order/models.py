@@ -253,7 +253,7 @@ class OrderItem(models.Model):
     def save(self, *args, **kwargs):
         is_init = self.pk is None
 
-        if self.price_snapshot and self.quantity:
+        if not is_init and self.price_snapshot and self.quantity:
             subtotal = self.price_snapshot * self.quantity
             if self.line_discount_amount > subtotal:
                 raise ValidationError(
