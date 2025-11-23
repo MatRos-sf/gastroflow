@@ -82,7 +82,9 @@ class Bill(models.Model):
         self.closed_at = timezone.now()
         self.save()
 
-    def _distribute_discount_proportionally(self, model_class, discount_amount: Decimal, total_bill_amount: Decimal) -> None:
+    def _distribute_discount_proportionally(
+        self, model_class, discount_amount: Decimal, total_bill_amount: Decimal
+    ) -> None:
         """
         Distribute discount proportionally across items based on their subtotal.
 
@@ -143,12 +145,19 @@ class Bill(models.Model):
         self.discount = discount_percentage
         self.save(update_fields=["discount"])
 
-        order_items_total = OrderItem.objects.filter(order__bill=self).aggregate(
-            order_items=Sum("line_subtotal")
-        )["order_items"]
-        additions_total = OrderItemAddition.objects.filter(
-            order_item__order__bill=self
-        ).aggregate(additions=Sum("line_subtotal"))["additions"]
+        order_items_total = (
+            OrderItem.objects.filter(order__bill=self).aggregate(
+                order_items=Sum("line_subtotal")
+            )["order_items"]
+            or 0
+        )
+        additions_total = (
+            OrderItemAddition.objects.filter(order_item__order__bill=self).aggregate(
+                additions=Sum("line_subtotal")
+            )["additions"]
+            or 0
+        )
+
         bill_total = Decimal(order_items_total + additions_total)
         if bill_total == 0:
             return  # Nothing to discount
