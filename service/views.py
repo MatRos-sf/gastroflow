@@ -4,6 +4,7 @@ from typing import Iterable, Optional
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib import messages
+from django.db import transaction
 from django.db.models import Q, QuerySet
 from django.http import HttpResponseNotFound, JsonResponse
 from django.shortcuts import redirect, render
@@ -298,6 +299,7 @@ def api_remove_from_cart(request, index):
     return redirect("service:cart")
 
 
+@transaction.atomic
 def create_order(bill: Bill, items: Iterable[dict], **kwargs):
     if not items:
         return
@@ -319,6 +321,7 @@ def create_order(bill: Bill, items: Iterable[dict], **kwargs):
                 addition_id=addition["id"],
                 name_snapshot=addition["name"],
                 price_snapshot=addition["price"],
+                quantity=item["quantity"],
             )
 
     if kwargs["category"] == Location.KITCHEN:

@@ -117,8 +117,7 @@ def update_discount(request, pk: int):
     """
     try:
         bill = get_object_or_404(Bill, pk=pk)
-        bill.discount = int(request.POST.get("discount"))
-        bill.save(update_fields=["discount"])
+        bill.add_discount(int(request.POST.get("discount")))
     except IntegrityError:
         messages.add_message(
             request, messages.ERROR, "Można dodać tylko zniżki od 0% - 100%"

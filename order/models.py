@@ -82,6 +82,93 @@ class Bill(models.Model):
         self.closed_at = timezone.now()
         self.save()
 
+    def _distribute_discount_proportionally(
+        self, model_class, discount_amount: Decimal, total_bill_amount: Decimal
+    ) -> None:
+        """
+        Distribute discount proportionally across items based on their subtotal.
+
+        The discount for each item is calculated as:
+        item_discount = (item_subtotal / total_bill_amount) * total_discount_amount
+
+        Args:
+            model_class: Model to update (OrderItem or OrderItemAddition)
+            discount_amount: Total discount amount to distribute (in currency)
+            total_bill_amount: Sum of all line_subtotals (order items + additions)
+
+        Example:
+            If bill total is 100 PLN with 10% discount (10 PLN):
+            - Item with subtotal 50 PLN gets: (50/100) * 10 = 5 PLN discount
+            - Item with subtotal 30 PLN gets: (30/100) * 10 = 3 PLN discount
+        """
+        if not total_bill_amount or total_bill_amount == 0:
+            return
+
+        # Determine filter based on model type
+        if model_class == OrderItem:
+            filter_kwargs = {"order__bill": self}
+        elif model_class == OrderItemAddition:
+            filter_kwargs = {"order_item__order__bill": self}
+        else:
+            raise ValueError(
+                "Invalid model item: should be OrderItem or OrderItemAddition"
+            )
+
+        items = list(model_class.objects.filter(**filter_kwargs))
+
+        for item in items:
+            proportion = item.line_subtotal / total_bill_amount
+            item.line_discount_amount = proportion * discount_amount
+
+        # Bulk update for performance
+        if items:
+            model_class.objects.bulk_update(items, ["line_discount_amount"])
+
+    def add_discount(self, discount_percentage: int) -> None:
+        """
+        Apply a percentage discount to the bill and distribute it across all items.
+
+        The discount is distributed proportionally based on each item's subtotal.
+        Updates line_discount_amount for all OrderItems and OrderItemAdditions.
+        Args:
+            discount_percentage: Discount percentage to apply (0-100)
+
+        Raises:
+            ValidationError: If discount_percentage is not between 0 and 100
+
+        Example:
+            bill.add_discount(10)  # Apply 10% discount to entire bill
+        """
+        if not 0 <= discount_percentage <= 100:
+            raise ValidationError("Discount must be between 0 and 100")
+
+        self.discount = discount_percentage
+        self.save(update_fields=["discount"])
+
+        order_items_total = (
+            OrderItem.objects.filter(order__bill=self).aggregate(
+                order_items=Sum("line_subtotal")
+            )["order_items"]
+            or 0
+        )
+        additions_total = (
+            OrderItemAddition.objects.filter(order_item__order__bill=self).aggregate(
+                additions=Sum("line_subtotal")
+            )["additions"]
+            or 0
+        )
+
+        bill_total = Decimal(order_items_total + additions_total)
+        if bill_total == 0:
+            return  # Nothing to discount
+        discount_amount = Decimal(bill_total * discount_percentage / 100)
+
+        # Distribute discount proportionally to all items
+        self._distribute_discount_proportionally(OrderItem, discount_amount, bill_total)
+        self._distribute_discount_proportionally(
+            OrderItemAddition, discount_amount, bill_total
+        )
+
     def bill_summary_view(self):
         summary = {}
         total = Decimal("0.00")
@@ -253,7 +340,7 @@ class OrderItem(models.Model):
     def save(self, *args, **kwargs):
         is_init = self.pk is None
 
-        if self.price_snapshot and self.quantity:
+        if not is_init and self.price_snapshot and self.quantity:
             subtotal = self.price_snapshot * self.quantity
             if self.line_discount_amount > subtotal:
                 raise ValidationError(
