@@ -1,9 +1,18 @@
 TODO:
 * update python to 3.12
 
+* update created_at field
+python3 manage.py set_default_create_at_field_in_additions
+
 * update field name:
 Bill.objects.filter(payment_method='karta').update(payment_method='card')
 Bill.objects.filter(payment_method='gotówka').update(payment_method='cash')
+
+* use script normalize_order_data until update model will be zero
+python3 manage.py normalize_order_data --remove-empty-bills --remove-empty-orders --auto-yes
+
+* use script recalculate_bill_discounts
+python3 manage.py recalculate_bill_discounts
 
 
 Historia wydań /order/ready
