@@ -389,3 +389,7 @@ class OrderItemAddition(models.Model):
         db_persist=True,
         help_text="Final price for this addition after discount",
     )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True, help_text="Datetime order was added"
+    )
