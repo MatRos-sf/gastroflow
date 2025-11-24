@@ -5,7 +5,7 @@ import os
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q, Sum
 from django.db.utils import IntegrityError
 from django.http import Http404, HttpRequest
 from django.shortcuts import get_object_or_404, redirect, render
@@ -29,6 +29,7 @@ from .models import (
     Item,
     Order,
     OrderItem,
+    OrderItemAddition,
     OrderItemStatus,
     PaymentMethod,
     StatusBill,
@@ -89,6 +90,34 @@ class ReportView(View):
     ]
     template_name = "order/raport.html"
 
+    def create_table_items(
+        self, from_date: datetime.datetime, to_date: datetime.datetime
+    ):
+        items = (
+            OrderItem.objects.filter(created_at__range=(from_date, to_date))
+            .values("name_snapshot")
+            .annotate(
+                quantity=Sum("quantity"), line_final_total=Sum("line_final_total")
+            )
+            .order_by("-line_final_total")
+        )
+
+        return items
+
+    def create_table_additions(
+        self, from_date: datetime.datetime, to_date: datetime.datetime
+    ):
+        items = (
+            OrderItemAddition.objects.filter(created_at__range=(from_date, to_date))
+            .values("name_snapshot")
+            .annotate(
+                quantity=Sum("quantity"), line_final_total=Sum("line_final_total")
+            )
+            .order_by("-line_final_total")
+        )
+
+        return items
+
     def get(self, request):
         raw_from_date = request.GET.get("from", None)
         raw_to_date = request.GET.get("to", None)
@@ -102,8 +131,11 @@ class ReportView(View):
         report = generate_summary_report(from_date, to_date, self.calculator_collection)
 
         context = {
-            "date": from_date,
+            "date_from": from_date,
+            "date_to": to_date,
             "report": report,
+            "table_report_items": self.create_table_items(from_date, to_date),
+            "table_report_additions": self.create_table_additions(from_date, to_date),
         }
 
         return render(request, "order/raport.html", context)
