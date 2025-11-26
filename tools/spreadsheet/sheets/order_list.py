@@ -2,10 +2,11 @@ __all__ = ["TableWriterSheet"]
 from decimal import Decimal
 from typing import Optional
 
+from tools.spreadsheet.sheets.base import BaseSheetWriter
 from tools.spreadsheet.style import CellStyle, StyleConfig
 
 
-class TableWriterSheet:
+class TableWriterSheet(BaseSheetWriter):
     """Handles writing tabular data to an Excel sheet."""
 
     COLUMN_HEADERS = ("Name", "Quantity", "Revenue")
@@ -17,75 +18,26 @@ class TableWriterSheet:
         start_col: int = 1,
         style_config: Optional[StyleConfig] = None,
     ):
-        self._sheet = sheet
-        self._start_row = start_row
-        self._start_col = start_col
-        self._current_row = start_row
-        self._current_col = start_col
-        self._max_name_length = 0
-        self._style_config = style_config or StyleConfig()
+        super().__init__(sheet, start_row, start_col, style_config)
 
-    def _apply_style(self, cell, style: CellStyle) -> None:
-        """Apply a CellStyle to a cell."""
-        if style.font:
-            cell.font = style.font
-        if style.fill:
-            cell.fill = style.fill
-        if style.alignment:
-            cell.alignment = style.alignment
-        if style.border:
-            cell.border = style.border
-        if style.number_format:
-            cell.number_format = style.number_format
-
-    def write_headers(
-        self,
-        main_title: str,
-        title_style: Optional[CellStyle] = None,
-        header_style: Optional[CellStyle] = None,
-    ) -> None:
-        """Write column headers to the sheet."""
-        # Use provided styles or defaults
-        title_style = title_style or self._style_config.get_title_style()
-        header_style = header_style or self._style_config.get_header_style()
-
-        # Write main title (merged across 3 columns)
-        cell = self._sheet.cell(row=self._current_row, column=self._current_col)
-        cell.value = main_title
-        self._apply_style(cell, title_style)
-
-        # Merge cells for title
-        self._sheet.merge_cells(
-            start_row=self._current_row,
-            start_column=self._current_col,
-            end_row=self._current_row,
-            end_column=self._current_col + 2,
-        )
-        self._current_row += 1
-
-        # Write column headers
-        for idx, header in enumerate(self.COLUMN_HEADERS):
-            cell = self._sheet.cell(
-                row=self._current_row, column=self._current_col + idx
-            )
-            cell.value = header
-            self._apply_style(cell, header_style)
-        self._current_row += 1
-
-    def write_row(
-        self,
-        name: str,
-        quantity: int,
-        revenue: Decimal,
-        name_style: Optional[CellStyle] = None,
-        quantity_style: Optional[CellStyle] = None,
-        revenue_style: Optional[CellStyle] = None,
-    ) -> None:
+    def write_row(self, **kwargs) -> None:
         """Write a single data row."""
+        self.validate_rows(("name", "quantity", "revenue"), **kwargs)
+
+        name = kwargs.get("name")
+        quantity = kwargs.get("quantity")
+        revenue = kwargs.get("revenue")
+
         # Use provided styles or defaults
-        name_style = name_style or self._style_config.get_data_style("left")
-        quantity_style = quantity_style or self._style_config.get_data_style("center")
-        revenue_style = revenue_style or self._style_config.get_data_style("right")
+        name_style = kwargs.get("name_style") or self._style_config.get_data_style(
+            "left"
+        )
+        quantity_style = kwargs.get(
+            "quantity_style"
+        ) or self._style_config.get_data_style("center")
+        revenue_style = kwargs.get(
+            "revenue_style"
+        ) or self._style_config.get_data_style("right")
 
         # Add number format to revenue
         if not revenue_style.number_format:
@@ -154,31 +106,3 @@ class TableWriterSheet:
         self._apply_style(revenue_cell, revenue_style)
 
         self._current_row += 1
-
-    def adjust_columns(
-        self,
-        name_width: Optional[int] = None,
-        quantity_width: int = 12,
-        revenue_width: int = 15,
-    ) -> None:
-        """Adjust column widths based on content."""
-        from openpyxl.utils import get_column_letter
-
-        # Name column - based on content or provided width
-        col_letter = get_column_letter(self._current_col)
-        width = name_width or max(self._max_name_length + 2, 20)
-        self._sheet.column_dimensions[col_letter].width = width
-
-        # Quantity column
-        col_letter = get_column_letter(self._current_col + 1)
-        self._sheet.column_dimensions[col_letter].width = quantity_width
-
-        # Revenue column
-        col_letter = get_column_letter(self._current_col + 2)
-        self._sheet.column_dimensions[col_letter].width = revenue_width
-
-    def start_new_table(self, column_gap: int = 2) -> None:
-        """Start a new table with specified offset from current position."""
-        self._current_row = self._start_row
-        self._current_col += len(self.COLUMN_HEADERS) + column_gap
-        self._max_name_length = 0
