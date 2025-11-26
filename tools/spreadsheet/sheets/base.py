@@ -61,7 +61,7 @@ class BaseSheetWriter(ABC):
             start_row=self._current_row,
             start_column=self._current_col,
             end_row=self._current_row,
-            end_column=self._current_col + 2,
+            end_column=self._current_col + len(self.COLUMN_HEADERS) - 1,
         )
         self._current_row += 1
 
@@ -109,3 +109,20 @@ class BaseSheetWriter(ABC):
         self._current_row = self._start_row
         self._current_col += len(self.COLUMN_HEADERS) + column_gap
         self._max_name_length = 0
+
+    def get_default_style(self, **kwargs):
+        """Use provided styles or defaults"""
+        name_style = kwargs.get("name_style") or self._style_config.get_data_style(
+            "left"
+        )
+        quantity_style = kwargs.get(
+            "quantity_style"
+        ) or self._style_config.get_data_style("center")
+        revenue_style = kwargs.get(
+            "revenue_style"
+        ) or self._style_config.get_data_style("right")
+
+        if not revenue_style.number_format:
+            revenue_style.number_format = self._style_config.FORMAT_DECIMAL
+
+        return name_style, quantity_style, revenue_style
