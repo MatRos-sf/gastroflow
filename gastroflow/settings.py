@@ -169,3 +169,7 @@ if DEBUG:
         "SHOW_TOOLBAR_CALLBACK": lambda request: True,
     }
     SILKY_PYTHON_PROFILER = True
+
+CELERY_TIMEZONE = "Europe/Warsaw"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_BROKER_URL = "redis://localhost:6379"
