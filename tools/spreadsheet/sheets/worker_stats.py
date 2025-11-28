@@ -23,7 +23,6 @@ class WorkerStatsSheet(BaseSheetWriter):
         name = kwargs.get("worker")
         bills = kwargs.get("bills")
         revenue = kwargs.get("revenue")
-        print(f"Write row {name}, {bills}, {revenue}")
 
         name_style = kwargs.get("name_style") or self._style_config.get_data_style(
             "left"
