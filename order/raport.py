@@ -1,5 +1,4 @@
 from datetime import datetime
-from pprint import pprint
 
 from django.db.models import Avg, Count, DurationField, ExpressionWrapper, F
 
@@ -16,7 +15,6 @@ def generate_summary_report(
         data[calc.name] = calc.calculate(start, end)
     data["date_from"] = from_date.isoformat()
     data["date_to"] = to_date.isoformat()
-    pprint(data)
 
     orders_qs = (
         Order.objects.filter(

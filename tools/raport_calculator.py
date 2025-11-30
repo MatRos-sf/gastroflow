@@ -112,3 +112,10 @@ class BillSummaryCalculator(ReportCalculator):
         )
         summary_instance = self.summarizer.parse_from_qs(qs)
         return summary_instance.summary()
+
+
+CALCULATOR_COLLECTION = [
+    CountBillStatus(),
+    OrderItemsQuantity(),
+    BillSummaryCalculator(),
+]

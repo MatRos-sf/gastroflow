@@ -1,11 +1,12 @@
 import datetime
 import logging
 import os
+from typing import Any
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from django.contrib import messages
-from django.db.models import Q, Sum
+from django.db.models import Q
 from django.db.utils import IntegrityError
 from django.http import Http404, HttpRequest
 from django.shortcuts import get_object_or_404, redirect, render
@@ -16,11 +17,9 @@ from django.views.generic import DeleteView, DetailView, ListView, View
 from django_filters.views import FilterView
 
 from menu.models import Location
-from tools.raport_calculator import (
-    BillSummaryCalculator,
-    CountBillStatus,
-    OrderItemsQuantity,
-)
+from model_utils import get_order_additions_summary, get_order_items_summary
+from tools.converter import convert_date_from_str_to_date
+from tools.raport_calculator import CALCULATOR_COLLECTION
 
 from .filters import OrderFilter
 from .forms import DateForm
@@ -29,12 +28,12 @@ from .models import (
     Item,
     Order,
     OrderItem,
-    OrderItemAddition,
     OrderItemStatus,
     PaymentMethod,
     StatusBill,
 )
 from .raport import generate_summary_report
+from .tasks import generate_report_and_send_email_task
 
 logger = logging.getLogger(__name__)
 
@@ -64,81 +63,59 @@ def item_list(request):
     return render(request, "order/order_menu.html", {"object_list": items})
 
 
-def convert_date_from_str_to_date(
-    date_str: str, time_min: bool = True, *, date_format: str = "%Y-%m-%d"
-) -> datetime.datetime:
-    tz = timezone.get_current_timezone()
-    if date_str:
-        try:
-            date_object = datetime.datetime.strptime(date_str, date_format).date()
-        except ValueError:
-            date_object = timezone.localdate()
-
-    else:
-        date_object = timezone.localdate()
-
-    return datetime.datetime.combine(
-        date_object, datetime.time.min if time_min else datetime.time.max, tzinfo=tz
-    )
-
-
 class ReportView(View):
-    calculator_collection = [
-        CountBillStatus(),
-        OrderItemsQuantity(),
-        BillSummaryCalculator(),
-    ]
+    calculator_collection = CALCULATOR_COLLECTION
     template_name = "order/raport.html"
 
-    def create_table_items(
-        self, from_date: datetime.datetime, to_date: datetime.datetime
-    ):
-        items = (
-            OrderItem.objects.filter(created_at__range=(from_date, to_date))
-            .values("name_snapshot")
-            .annotate(
-                quantity=Sum("quantity"), line_final_total=Sum("line_final_total")
-            )
-            .order_by("-line_final_total")
+    def _parse_dates(
+        self, from_d: str | None = None, to_d: str | None = None
+    ) -> tuple[datetime.datetime, datetime.datetime]:
+        raw_from = self.request.GET.get("from")
+        raw_to = self.request.GET.get("to")
+
+        from_date = convert_date_from_str_to_date(
+            raw_from or timezone.now().date().strftime("%Y-%m-%d")
         )
+        to_date = convert_date_from_str_to_date(raw_to or raw_from, False)
 
-        return items
+        return from_date, to_date
 
-    def create_table_additions(
+    def _build_context(
         self, from_date: datetime.datetime, to_date: datetime.datetime
-    ):
-        items = (
-            OrderItemAddition.objects.filter(created_at__range=(from_date, to_date))
-            .values("name_snapshot")
-            .annotate(
-                quantity=Sum("quantity"), line_final_total=Sum("line_final_total")
-            )
-            .order_by("-line_final_total")
-        )
-
-        return items
+    ) -> dict[str, Any]:
+        return {
+            "date_from": from_date,
+            "date_to": to_date,
+            "report": generate_summary_report(
+                from_date, to_date, self.calculator_collection
+            ),
+            "table_report_items": get_order_items_summary(from_date, to_date),
+            "table_report_additions": get_order_additions_summary(from_date, to_date),
+        }
 
     def get(self, request):
         raw_from_date = request.GET.get("from", None)
         raw_to_date = request.GET.get("to", None)
 
-        from_date = convert_date_from_str_to_date(raw_from_date)
-        if raw_to_date:
-            to_date = convert_date_from_str_to_date(raw_to_date, False)
-        else:
-            to_date = convert_date_from_str_to_date(raw_from_date, False)
+        from_date, to_date = self._parse_dates(raw_from_date, raw_to_date)
 
-        report = generate_summary_report(from_date, to_date, self.calculator_collection)
+        return render(
+            request, self.template_name, self._build_context(from_date, to_date)
+        )
 
-        context = {
-            "date_from": from_date,
-            "date_to": to_date,
-            "report": report,
-            "table_report_items": self.create_table_items(from_date, to_date),
-            "table_report_additions": self.create_table_additions(from_date, to_date),
-        }
 
-        return render(request, "order/raport.html", context)
+def generate_report(request, from_to):
+    # if not request.user.is_staff:
+    #     return HttpResponseForbidden("Insufficient permissions")
+
+    try:
+        from_date, to_date = from_to.split("_")
+        generate_report_and_send_email_task.delay(from_date, to_date)
+        messages.success(request, "Raport jest generowany. Zostanie wysłany na email.")
+        return redirect("report-selection")
+    except ValueError:
+        messages.error(request, "Nieprawidłowy format daty")
+        return redirect("report-selection")
 
 
 # TODO: what happened if pk doesn't exists or is wrong

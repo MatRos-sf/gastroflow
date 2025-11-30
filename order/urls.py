@@ -11,6 +11,7 @@ from .views import (
     ReportView,
     close_bill,
     delete_order_item,
+    generate_report,
     update_discount,
 )
 
@@ -18,6 +19,7 @@ from .views import (
 
 url_report_pattern = [
     path("report", ReportView.as_view(), name="report"),
+    path("report/generate/<str:from_to>/", generate_report, name="report-generate"),
     path("report-selection/", ReportSelectionView.as_view(), name="report-selection"),
 ]
 

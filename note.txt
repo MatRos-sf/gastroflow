@@ -1,6 +1,6 @@
 TODO:
 * update python to 3.12
-
+* install Redis,
 * update created_at field
 python3 manage.py set_default_create_at_field_in_additions
 
@@ -14,7 +14,20 @@ python3 manage.py normalize_order_data --remove-empty-bills --remove-empty-order
 * use script recalculate_bill_discounts
 python3 manage.py recalculate_bill_discounts
 
+* run redis
+sudo systemctl services start redis
+
+* run celery
+celery -A gastroflow --loglevel=info
+
 
 Historia wydań /order/ready
 Stworzony tylko po to aby kelnerka, mogła zobaczyć gdzie zanieść jedzenie jeżeli omyłkowo kuchnia wcisnęłą ready
 oraz kelnerka wcisnęła powiadomienie ale nie zapmiętała.
+
+
+# command
+redis-server
+celery -A gastroflow --loglevel=info
+sudo systemctl status redis
+redis-cli -> PING

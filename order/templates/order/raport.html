@@ -1,12 +1,15 @@
 {% extends "menu/base.html" %}
 {% load duration_extras %}
+{% load url_tools %}
 {% block title %}
     Raport dzienny
 {% endblock title %}
 {% block content %}
     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
         <a class="btn btn-success btn-lg" href="{% url 'report-selection' %}">Powrót</a>
-        <a class="btn btn-success btn-lg" href="#">Generuj Raport</a>
+        {% get_dates as dates %}
+        <a class="btn btn-success btn-lg"
+           href="{% url 'report-generate' dates %}">Generuj Raport</a>
     </div>
     <div class="container my-4">
         <h1 class="h1 mb-0 text-center">Raport dzienny</h1>
@@ -162,7 +165,7 @@
                     <table class="table table-sm align-middle mb-0">
                         <thead>
                             <tr>
-                                <th>Kategoria</th>
+                                <th>Pracownik</th>
                                 <th class="text-end">Ilość rachunków</th>
                                 <th class="text-end">Przychód</th>
                             </tr>
