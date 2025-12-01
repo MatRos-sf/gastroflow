@@ -1,0 +1,11 @@
+{% extends "menu/base.html" %}
+{% block title %}
+    Change table
+{% endblock title %}
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Change table</button>
+    </form>
+{% endblock content %}

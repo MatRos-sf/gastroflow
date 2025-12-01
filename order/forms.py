@@ -1,6 +1,9 @@
 from django import forms
 from django.utils.timezone import now
 
+from order.models import Bill
+from service.models import Table
+
 
 class DateForm(forms.Form):
     from_date = forms.DateField(
@@ -42,3 +45,16 @@ class DateForm(forms.Form):
             )
 
         return cleaned_data
+
+
+class ChangeBillTableForm(forms.Form):
+    table = forms.ModelMultipleChoiceField(
+        queryset=Table.objects.filter(is_active=True)
+    )
+
+    class Meta:
+        model = Bill
+
+    def save(self, bill):
+        bill.table.set(self.cleaned_data["table"])
+        return bill
