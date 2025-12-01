@@ -243,7 +243,7 @@ class CardView(View):
         """
         session_info = self._get_session_info()
         note = request.POST.get("note", "")
-
+        is_init_bill = not session_info.bill
         try:
             guest_count = self._guest_count_validator()
         except ValidatorError as e:
@@ -280,7 +280,10 @@ class CardView(View):
         self._change_tables_status(session_info.tables)
 
         messages.success(
-            request, f"Zamówienie na rachunek #{bill.pk} zostało ukończone."
+            request,
+            f"Zamówienie na rachunek #{bill.pk} zostało ukończone."
+            if is_init_bill
+            else f"Zamówienie na rachunek #{bill.pk} zostało zaktualizowane",
         )
         logger.info(f"Bill #{bill.pk} created by waiter {session_info.waiter}")
 
