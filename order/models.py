@@ -4,6 +4,7 @@ from django.core.validators import MaxValueValidator, MinValueValidator, Validat
 from django.db import models
 from django.db.models import DecimalField, ExpressionWrapper, F, Sum
 from django.db.models.functions import Coalesce
+from django.urls import reverse
 from django.utils import timezone
 
 from menu.models import Item, Location
@@ -68,6 +69,9 @@ class Bill(models.Model):
     # given_money
     def __str__(self):
         return f"Bill {self.id} - Table {self.table or 'take-away'}"
+
+    def get_absolute_url(self):
+        return reverse("bill-detail", args=[str(self.id)])
 
     def str_tables(self):
         return ", ".join(str(table.name) for table in self.table.all())
