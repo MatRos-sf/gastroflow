@@ -30,4 +30,5 @@ urlpatterns = [
         views.check_notifications,
         name="check-notifications",
     ),
+    path("bill/<int:pk>/change-table", views.change_table, name="change-table"),
 ]

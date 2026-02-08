@@ -7,12 +7,13 @@ from django.contrib import messages
 from django.db import transaction
 from django.db.models import Q, QuerySet
 from django.http import HttpResponseNotFound, JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import ListView, View
 
 from menu.models import Item, Location, MenuType
+from order.forms import ChangeBillTableForm
 from order.models import (
     Bill,
     Notification,
@@ -442,3 +443,17 @@ def add_order_to_bill(request, pk: int):
 def check_notifications(request):
     has_new = Notification.objects.filter(status=NotificationStatus.WAIT).exists()
     return JsonResponse({"has_new": has_new})
+
+
+def change_table(request, pk: int):
+    bill = get_object_or_404(Bill, pk=pk)
+    if request.method == "POST":
+        form = ChangeBillTableForm(request.POST)
+        if form.is_valid():
+            form.save(bill)
+            messages.success(request, "Stolik został zmieniony!")
+            return redirect(bill.get_absolute_url())
+    else:
+        form = ChangeBillTableForm(initial={"table": bill.table.all()})
+
+    return render(request, "service/change_table.html", {"form": form})
