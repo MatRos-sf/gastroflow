@@ -1,4 +1,6 @@
 import json
+from typing import Optional
+from datetime import datetime
 
 from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -6,6 +8,7 @@ from channels.layers import get_channel_layer
 from django.contrib.auth.models import User
 from django.db.models import Q
 from django.utils import timezone
+import logging
 
 from order.models import (
     Location,
@@ -17,22 +20,74 @@ from order.models import (
 )
 from worker.models import Worker
 
+logger = logging.getLogger(__name__)
+
+def dish_is_done(notification_status: Optional[NotificationStatus]) -> bool:
+    return notification_status in [NotificationStatus.WAIT, NotificationStatus.SERVE]
+
+def get_status_notification(item: OrderItem) -> Optional[NotificationStatus]:
+    try:
+        return item.notification.status
+    except OrderItem.notification.RelatedObjectDoesNotExist:
+        logger.warning(f"Notification not found for item {item.id}")
+        return None
+
+
+def serialize_items_from_order(order: Order) -> list[dict[str, int|str|bool]]:
+    items = []
+    for item in order.order_items.order_by("name_snapshot").all():
+        notification_status = get_status_notification(item)
+
+        items.append(
+            {
+                "id": item.id,
+                "name_snapshot": item.full_name_snapshot,
+                "quantity": item.quantity,
+                "note": item.note,
+                "is_done": dish_is_done(notification_status),
+            }
+        )
+    return items
+
+def serialize_order(order: Order) -> dict[str, int|str|list|datetime]:
+    return {
+            "id": order.pk,
+            "sender": order.bill.service.user.username,
+            "table": order.bill.str_tables(),
+            "status": order.status,
+            "order_items": serialize_items_from_order(order),
+            "created_at": timezone.localtime(order.created_at).strftime(
+                "%Y-%m-%d %H:%M:%S"
+            )
+            }
+
+async def get_unserved_dishes(category: Location):
+    """Capture map orders with unserved dishes"""
+
+    qs = Order.objects.filter(
+            status__in=[StatusOrder.ORDER, StatusOrder.PREPARING],
+            category=category,
+        ).order_by("created_at")
+
+    return [serialize_order(order) for order in qs]
+
 
 class BaseConsumer(AsyncWebsocketConsumer):
     GROUP_NAME: str
     CATEGORY: Location
 
     async def connect(self):
-        """ """
+        """"""
 
-        # Dołączenie do grupy
+        # Joint to the group
         await self.channel_layer.group_add(self.GROUP_NAME, self.channel_name)
         await self.accept()
 
-        print(f"Connected to {self.CATEGORY} orders group: {self.GROUP_NAME}")
+        logger.info(f"Connected to {self.CATEGORY} orders group: {self.GROUP_NAME}")
 
         # Capture the existing orders
         orders = await self.get_initial_orders()
+
         await self.send(
             text_data=json.dumps({"type": "initial_orders", "orders": orders})
         )

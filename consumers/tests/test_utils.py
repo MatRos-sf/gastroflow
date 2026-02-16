@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.test import TestCase
 from model_bakery import baker
 from parameterized import parameterized
@@ -38,12 +40,12 @@ class GetStatusNotificationTests(TestCase):
         notification = item.notification
         notification.status = NotificationStatus.WAIT
         notification.save()
-
         result = get_status_notification(item)
 
-        self.assertEqual(result == NotificationStatus.WAIT)
+        self.assertEqual(result, NotificationStatus.WAIT)
 
-    def test_returns_none_when_notification_does_not_exist(self):
+    @patch("consumers.utils.logger.warning", return_value=None)
+    def test_returns_none_when_notification_does_not_exist(self, mock_warning):
         bill, order, item = self.make_dummy_bill_with_order()
 
         item.notification.delete()
