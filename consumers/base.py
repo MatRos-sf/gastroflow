@@ -8,9 +8,8 @@ from django.contrib.auth.models import User
 from django.db.models import Q
 from django.utils import timezone
 
-from consumers.serializers import serialize_order
-
-# from consumers.utils import dish_is_done, get_status_notification
+from consumers.queries import get_unserved_orders
+from consumers.utils import dish_is_done
 from order.models import (
     Location,
     NotificationStatus,
@@ -34,7 +33,7 @@ class BaseConsumer(AsyncWebsocketConsumer):
 
         logger.info(f"Connected to {self.CATEGORY} orders group: {self.GROUP_NAME}")
 
-        orders = await self.get_initial_orders()
+        orders = await get_unserved_orders(self.CATEGORY)
 
         await self.send(
             text_data=json.dumps({"type": "initial_orders", "orders": orders})
@@ -128,22 +127,12 @@ class BaseConsumer(AsyncWebsocketConsumer):
         )
 
     @sync_to_async
-    def get_initial_orders(self):
-        orders = Order.objects.filter(
-            status__in=[StatusOrder.ORDER, StatusOrder.PREPARING],
-            category=self.CATEGORY,
-        ).order_by("created_at")
-        return [serialize_order(order) for order in orders]
-
-    @sync_to_async
     def get_notification_data(self, order_id, item_id):
         try:
             order_item = OrderItem.objects.get(id=item_id, order_id=order_id)
             notification = order_item.notification
-            if notification.status in [
-                NotificationStatus.WAIT,
-                NotificationStatus.SERVE,
-            ]:
+
+            if dish_is_done(notification.status):
                 return None
 
             notification.status = NotificationStatus.WAIT
