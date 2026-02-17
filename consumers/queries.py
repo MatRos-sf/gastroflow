@@ -15,12 +15,3 @@ def get_unserved_orders(category: Location):
     ).order_by("created_at")
 
     return [serialize_order(order) for order in qs]
-
-
-@sync_to_async
-def foo(category: Location):
-    """Capture map orders with unserved dishes"""
-
-    qs = Order.objects.filter(...)
-
-    return [serialize_order(order) for order in qs]

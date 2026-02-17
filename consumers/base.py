@@ -5,19 +5,11 @@ from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.layers import get_channel_layer
 from django.contrib.auth.models import User
-from django.db.models import Q
-from django.utils import timezone
 
 from consumers.queries import get_unserved_orders
 from consumers.utils import dish_is_done
-from order.models import (
-    Location,
-    NotificationStatus,
-    Order,
-    OrderItem,
-    OrderItemStatus,
-    StatusOrder,
-)
+from order.models import Location, NotificationStatus, OrderItem, StatusOrder
+from order.queries import update_batch_order_items_status
 from worker.models import Worker
 
 logger = logging.getLogger(__name__)
@@ -68,7 +60,9 @@ class BaseConsumer(AsyncWebsocketConsumer):
                 new_status = StatusOrder.READY
 
             if new_status:
-                await sync_to_async(self.update_order_status)(order_id, new_status)
+                await sync_to_async(update_batch_order_items_status)(
+                    order_id, new_status
+                )
 
                 await self.channel_layer.group_send(
                     self.GROUP_NAME,
@@ -78,36 +72,6 @@ class BaseConsumer(AsyncWebsocketConsumer):
                         "new_status": new_status,
                     },
                 )
-
-    def update_order_status(self, order_id, new_status):
-        try:
-            order = Order.objects.get(id=order_id)
-            order.status = new_status
-
-            if new_status == StatusOrder.PREPARING:
-                OrderItem.objects.filter(
-                    Q(order=order) & Q(status=OrderItemStatus.WAITING)
-                ).update(
-                    status=OrderItemStatus.PREPARING,
-                    started_at=timezone.now(),
-                )
-                order.preparing_at = timezone.now()
-            elif new_status == StatusOrder.READY:
-                OrderItem.objects.filter(order=order).update(
-                    status=OrderItemStatus.READY,
-                    finished_at=timezone.now(),
-                )
-                OrderItem.objects.filter(order=order, started_at__isnull=True).update(
-                    started_at=timezone.now(),
-                )
-                order.finished_at = timezone.now()
-
-            if new_status == StatusOrder.READY:
-                order.readied_at = timezone.now()
-            order.save()
-            logger.info(f"Order {order_id} status updated to {new_status}")
-        except Order.DoesNotExist:
-            logger.error(f"Order with ID {order_id} does not exist.")
 
     async def order_status_update(self, event):
         await self.send(
