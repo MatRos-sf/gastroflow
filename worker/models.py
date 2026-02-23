@@ -1,11 +1,12 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class Position(models.TextChoices):
-    WAITER = "kelner", "Kelner"
-    CHEF = "kucharz", "Kucharz"
-    ASSISTANT = "asystent", "Asystent"
-    BARISTA = "barysta", "Barysta"
+    WAITER = "waiter", _("Waiter")
+    CHEF = "chef", _("Chef")
+    ASSISTANT = "assistant", _("Asystent")
+    BARISTA = "barista", _("Barista")
 
 
 class Worker(models.Model):
