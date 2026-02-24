@@ -77,6 +77,7 @@ if DEBUG:
     ]
 
 ROOT_URLCONF = "gastroflow.urls"
+AUTH_USER_MODEL = "worker.User"
 
 TEMPLATES = [
     {
