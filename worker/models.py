@@ -1,4 +1,3 @@
-from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -8,15 +7,6 @@ class Position(models.TextChoices):
     CHEF = "chef", _("Chef")
     ASSISTANT = "assistant", _("Asystent")
     BARISTA = "barista", _("Barista")
-
-
-class Role(models.TextChoices):
-    BOSS = "boss", _("Boss")
-    WORKER = "worker", _("Worker")
-
-
-class User(AbstractUser):
-    role = models.CharField(max_length=20, choices=Role.choices, default=Role.WORKER)
 
 
 class Worker(models.Model):
