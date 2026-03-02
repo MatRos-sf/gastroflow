@@ -26,6 +26,7 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 
 
+@transaction.atomic
 def create_app_user(username: str, password: str, is_superuser: bool) -> bool:
     user, created = User.objects.get_or_create(username=username)
     if created:
@@ -41,35 +42,34 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
-            "--BOSS_USERNAME",
+            "--boss_username",
             type=str,
             default=settings.BOSS_USERNAME,
             help="Boss username.",
             required=False,
         )
         parser.add_argument(
-            "--BOSS_PASSWORD",
+            "--boss_password",
             type=str,
             default=settings.BOSS_PASSWORD,
             help="Boss password.",
             required=False,
         )
         parser.add_argument(
-            "--WORKERS_USERNAME",
+            "--workers_username",
             type=str,
             default=settings.WORKERS_USERNAME,
             help="Worker username.",
             required=False,
         )
         parser.add_argument(
-            "--WORKERS_PASSWORD",
+            "--workers_password",
             type=str,
             default=settings.WORKERS_PASSWORD,
             help="Worker password.",
             required=False,
         )
 
-    @transaction.atomic
     def _try_create_user(self, is_superuser: bool) -> None:
         if is_superuser:
             user_name = self.username_boss
@@ -91,10 +91,10 @@ class Command(BaseCommand):
             self.stdout.write(self.style.WARNING(f"User {user_name} already exists"))
 
     def handle(self, *args, **options):
-        self.username_boss = options["BOSS_USERNAME"]
-        self.password_boss = options["BOSS_PASSWORD"]
-        self.username_worker = options["WORKERS_USERNAME"]
-        self.password_worker = options["WORKERS_PASSWORD"]
+        self.username_boss = options["boss_username"]
+        self.password_boss = options["boss_password"]
+        self.username_worker = options["workers_username"]
+        self.password_worker = options["workers_password"]
 
         self._try_create_user(True)
         self._try_create_user(False)
