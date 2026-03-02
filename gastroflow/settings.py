@@ -13,24 +13,26 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 
+import environ
 from django.utils.translation import gettext_lazy as _
-from dotenv import load_dotenv
+
+from .env import env
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-load_dotenv(BASE_DIR / ".env")
+environ.Env.read_env(BASE_DIR / ".env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY", "fallback-key")
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 
 print(ALLOWED_HOSTS)
 # Application definition
@@ -186,5 +188,11 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = os.getenv("HOST_EMAIL", "")
-EMAIL_HOST_PASSWORD = os.getenv("HOST_PASSWORD", "")
+EMAIL_HOST_USER = env("HOST_EMAIL")
+EMAIL_HOST_PASSWORD = env("HOST_PASSWORD")
+
+# Custom app variables
+BOSS_USERNAME = env("BOSS_USERNAME")
+BOSS_PASSWORD = env("BOSS_PASSWORD")
+WORKERS_USERNAME = env("WORKERS_USERNAME")
+WORKERS_PASSWORD = env("WORKERS_PASSWORD")
