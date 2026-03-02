@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from tools.models.validators import validate_digits
+
 
 class Position(models.TextChoices):
     WAITER = "waiter", _("Waiter")
@@ -20,7 +22,9 @@ class Worker(models.Model):
     position = models.CharField(
         max_length=20, choices=Position.choices, default=Position.WAITER
     )
-    pin = models.SmallIntegerField(max_length=4, blank=True, null=True)
+    pin = models.CharField(
+        max_length=4, blank=True, null=True, validators=[validate_digits]
+    )
 
     def __str__(self):
-        return f"{self.first_name} - {self.last_name}"
+        return f"{self.first_name} {self.last_name}"
