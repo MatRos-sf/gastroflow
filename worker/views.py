@@ -1,3 +1,10 @@
-# from django.shortcuts import render
+from django.views.generic import CreateView
 
-# Create your views here.
+from .forms import WorkerForm
+from .models import Worker
+
+
+class CreateWorkerView(CreateView):
+    model = Worker
+    form_class = WorkerForm
+    template_name = "worker/create-worker.html"

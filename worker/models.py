@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from tools.models.validators import validate_digits
@@ -43,6 +44,9 @@ class Worker(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+
+    def get_absolute_url(self):
+        return reverse("gf-worker:worker-detail", kwargs={"pk": self.pk})
 
 
 class WorkTime(models.Model):
