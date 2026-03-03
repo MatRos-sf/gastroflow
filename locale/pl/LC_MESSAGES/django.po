@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-17 22:55+0100\n"
+"POT-Creation-Date: 2026-03-03 21:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,11 +20,11 @@ msgstr ""
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
-#: gastroflow/settings.py:134
+#: gastroflow/settings.py:136
 msgid "Polish"
 msgstr ""
 
-#: gastroflow/settings.py:135
+#: gastroflow/settings.py:137
 msgid "English"
 msgstr ""
 
@@ -1552,18 +1552,62 @@ msgid ""
 "Message Django's middlewares"
 msgstr ""
 
-#: worker/models.py:6
+#: worker/models.py:10
 msgid "Waiter"
 msgstr "Kelner"
 
-#: worker/models.py:7
+#: worker/models.py:11
 msgid "Chef"
 msgstr "Kucharz"
 
-#: worker/models.py:8
-msgid "Asystent"
+#: worker/models.py:12
+msgid "Assistant"
 msgstr "Asystent"
 
-#: worker/models.py:9
+#: worker/models.py:13
 msgid "Barista"
 msgstr "Barysta"
+
+#: worker/models.py:17
+msgid "first name"
+msgstr "imię"
+
+#: worker/models.py:18
+msgid "last name"
+msgstr "nazwisko"
+
+#: worker/models.py:20
+msgid "per hour"
+msgstr "za godzinę"
+
+#: worker/models.py:20
+msgid "salary"
+msgstr "wynagrodzenie"
+
+#: worker/models.py:25
+msgid "position"
+msgstr "stanowisko"
+
+#: worker/models.py:28
+msgid "pin"
+msgstr "pin"
+
+#: worker/templates/worker/create-worker.html:4
+#: worker/templates/worker/create-worker.html:12
+msgid "New employee"
+msgstr "Nowy pracownik"
+
+#: worker/templates/worker/create-worker.html:13
+msgid "Fill in the details and save the profile"
+msgstr "Wypełnij dane i zapisz profil"
+
+#: worker/templates/worker/create-worker.html:19
+msgid "Save"
+msgstr "Zapisz"
+
+#: worker/templates/worker/create-worker.html:20
+msgid "Cancel"
+msgstr "Anuluj"
+
+#~ msgid "Asystent"
+#~ msgstr "Asystent"
