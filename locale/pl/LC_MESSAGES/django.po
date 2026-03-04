@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-04 21:33+0100\n"
+"POT-Creation-Date: 2026-03-04 22:52+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,32 +94,49 @@ msgid "Save"
 msgstr "Zapisz"
 
 #: worker/templates/worker/create-worker.html:21
+#: worker/templates/worker/update-work-time.html:20
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: worker/templates/worker/detail-worker.html:16
+#: worker/templates/worker/detail-worker.html:17
 msgid "Salary"
 msgstr "Wynagrodzenie"
 
-#: worker/templates/worker/detail-worker.html:20
+#: worker/templates/worker/detail-worker.html:22
 msgid "Total hours worked"
 msgstr "Łączne przepracowane godziny"
 
-#: worker/templates/worker/detail-worker.html:29
+#: worker/templates/worker/detail-worker.html:31
 msgid "Work times"
 msgstr "Godziny pracy"
 
-#: worker/templates/worker/detail-worker.html:34
+#: worker/templates/worker/detail-worker.html:36
 msgid "Start"
 msgstr "Początek"
 
-#: worker/templates/worker/detail-worker.html:35
+#: worker/templates/worker/detail-worker.html:37
 msgid "Finish"
 msgstr "Koniec"
 
-#: worker/templates/worker/detail-worker.html:36
+#: worker/templates/worker/detail-worker.html:38
 msgid "Duration"
 msgstr "Czas trwania"
+
+#: worker/templates/worker/update-work-time.html:4
+msgid "Update work time"
+msgstr "Edytuj czas pracy"
+
+#: worker/templates/worker/update-work-time.html:12
+msgid "Update Work Time"
+msgstr "Edytuj czas pracy"
+
+#: worker/templates/worker/update-work-time.html:18
+msgid "Update"
+msgstr "Zapisz"
+
+#: worker/views.py:56
+msgid "Work time has been successfully updated!"
+msgstr "Czas pracy został pomyślnie zaktualizowany!"
 
 #~ msgid "Asystent"
 #~ msgstr "Asystent"
