@@ -53,10 +53,21 @@ class WorkTime(models.Model):
     worker = models.ForeignKey(Worker, on_delete=models.SET_NULL, null=True)
     start_time = models.DateTimeField()
     finish_time = models.DateTimeField()
+    salary_snapshot = models.DecimalField(max_digits=7, decimal_places=2)
 
     @property
     def duration(self) -> timedelta:
         return self.finish_time - self.start_time
 
+    @property
+    def earnings(self):
+        return self.duration.total_seconds() / 3600 * self.salary_snapshot
+
     def __str__(self):
         return f"Worker: {self.duration}"
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            self.salary_snapshot = self.worker.salary
+
+        super().save(*args, **kwargs)
