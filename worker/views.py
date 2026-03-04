@@ -1,12 +1,14 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
-from django.views.generic import CreateView, DetailView, ListView
+from django.utils.translation import gettext_lazy as _
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
 from tools.models.aggregate import total_work_duration
 
-from .forms import WorkerForm
-from .models import Worker
+from .forms import WorkerForm, WorkTimeForm
+from .models import Worker, WorkTime
 
 PAGE_SIZE = 10
 
@@ -40,3 +42,19 @@ class WorkerWorkTimeListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         self.worker = get_object_or_404(Worker, pk=self.kwargs["pk"])
         return self.worker.worktime_set.order_by("-start_time")
+
+
+class WorkTimeUpdateView(UserPassesTestMixin, UpdateView):
+    model = WorkTime
+    form_class = WorkTimeForm
+    template_name = "worker/update-work-time.html"
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def form_valid(self, form):
+        messages.success(self.request, _("Work time has been successfully updated!"))
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return self.object.worker.get_absolute_url()
