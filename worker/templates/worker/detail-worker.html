@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+    {{ worker.first_name }} {{ worker.last_name }}
+{% endblock title %}
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <!-- Worker info card -->
+            <div class="card border-0 rounded-4 shadow mb-4">
+                <div class="card-body p-4 p-md-5 text-center">
+                    <h3 class="fw-bold mb-1">{{ worker.first_name }} {{ worker.last_name }}</h3>
+                    <p class="text-muted small mb-4">{{ worker.get_position_display }}</p>
+                    <div class="d-flex flex-wrap justify-content-center gap-4">
+                        <div>
+                            <small class="text-muted d-block">{% trans "Salary" %}</small>
+                            <strong>{{ worker.salary }} / h</strong>
+                        </div>
+                        <div>
+                            <small class="text-muted d-block">{% trans "Total hours worked" %}</small>
+                            <strong>{{ total_duration|default:"—" }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Work times card -->
+            <div class="card border-0 rounded-4 shadow">
+                <div class="card-body p-4 p-md-5">
+                    <h5 class="fw-bold mb-4">{% trans "Work times" %}</h5>
+                    <div class="table-responsive">
+                        <table class="table table-sm align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>{% trans "Start" %}</th>
+                                    <th>{% trans "Finish" %}</th>
+                                    <th>{% trans "Duration" %}</th>
+                                    {% if request.user.is_superuser %}<th></th>{% endif %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% include "worker/_worktime_rows.html" %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

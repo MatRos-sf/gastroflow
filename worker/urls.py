@@ -1,7 +1,13 @@
 from django.urls import path
 
-from .views import CreateWorkerView
+from .views import WorkerCreateView, WorkerDetailView, WorkerWorkTimeListView
 
 app_name = "gf-worker"
 
-urlpatterns = [path("create/", CreateWorkerView.as_view(), name="worker-create")]
+urlpatterns = [
+    path("create/", WorkerCreateView.as_view(), name="worker-create"),
+    path("<int:pk>/", WorkerDetailView.as_view(), name="worker-detail"),
+    path(
+        "<int:pk>/worktimes/", WorkerWorkTimeListView.as_view(), name="worker-worktimes"
+    ),
+]
