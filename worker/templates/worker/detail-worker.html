@@ -12,10 +12,12 @@
                     <h3 class="fw-bold mb-1">{{ worker.first_name }} {{ worker.last_name }}</h3>
                     <p class="text-muted small mb-4">{{ worker.get_position_display }}</p>
                     <div class="d-flex flex-wrap justify-content-center gap-4">
-                        <div>
-                            <small class="text-muted d-block">{% trans "Salary" %}</small>
-                            <strong>{{ worker.salary }} / h</strong>
-                        </div>
+                        {% if request.user.is_superuser %}
+                            <div>
+                                <small class="text-muted d-block">{% trans "Salary" %}</small>
+                                <strong>{{ worker.salary }} / h</strong>
+                            </div>
+                        {% endif %}
                         <div>
                             <small class="text-muted d-block">{% trans "Total hours worked" %}</small>
                             <strong>{{ total_duration|default:"—" }}</strong>
