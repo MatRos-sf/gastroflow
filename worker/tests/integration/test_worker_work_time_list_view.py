@@ -15,6 +15,8 @@ def url(pk):
 class WorkerDetailViewTest(TestCase):
     def setUp(self):
         self.worker = baker.make(Worker)
+        user = baker.make("User", is_superuser=True)
+        self.client.force_login(user)
 
     # --- HTTP / routing ---
     def test_returns_200_for_existing_worker(self):

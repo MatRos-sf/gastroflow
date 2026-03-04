@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 from django.views.generic import CreateView, DetailView, ListView
@@ -10,13 +11,16 @@ from .models import Worker
 PAGE_SIZE = 10
 
 
-class WorkerCreateView(CreateView):
+class WorkerCreateView(UserPassesTestMixin, CreateView):
     model = Worker
     form_class = WorkerForm
     template_name = "worker/create-worker.html"
 
+    def test_func(self) -> bool:
+        return self.request.user.is_superuser
 
-class WorkerDetailView(DetailView):
+
+class WorkerDetailView(LoginRequiredMixin, DetailView):
     model = Worker
     template_name = "worker/detail-worker.html"
 
@@ -29,7 +33,7 @@ class WorkerDetailView(DetailView):
         return context
 
 
-class WorkerWorkTimeListView(ListView):
+class WorkerWorkTimeListView(LoginRequiredMixin, ListView):
     template_name = "worker/_worktime_rows.html"
     paginate_by = PAGE_SIZE
 
