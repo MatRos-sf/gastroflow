@@ -6,7 +6,7 @@ from worker.models import WorkTime
 
 
 def total_work_duration(qs: WorkTime) -> timedelta | None:
-    return qs.aggregate(
+    return qs.filter(finish_time__isnull=False).aggregate(
         total=Sum(
             ExpressionWrapper(
                 F("finish_time") - F("start_time"), output_field=DurationField()
