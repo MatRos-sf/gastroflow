@@ -17,7 +17,7 @@ from tools.models.aggregate import total_work_duration
 
 from .forms import WorkerForm, WorkTimeForm
 from .models import Worker, WorkTime
-from .queries import get_workers_not_clocked_in_today
+from .queries import get_workers_clocked_in_today, get_workers_not_clocked_in_today
 
 PAGE_SIZE = 10
 
@@ -69,7 +69,7 @@ class WorkTimeUpdateView(UserPassesTestMixin, UpdateView):
         return self.object.worker.get_absolute_url()
 
 
-class ClockInView(TemplateView):
+class ClockInView(LoginRequiredMixin, TemplateView):
     template_name = "worker/clock-in.html"
 
     def get_context_data(self, **kwargs):
@@ -78,7 +78,7 @@ class ClockInView(TemplateView):
         return context
 
 
-class ClockInActionView(View):
+class ClockInActionView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         worker = get_object_or_404(Worker, pk=self.kwargs["pk"])
         WorkTime.objects.create(worker=worker, start_time=timezone.now())
@@ -87,3 +87,31 @@ class ClockInActionView(View):
         )
 
         return redirect("gf-worker:worker-clock-in")
+
+
+class ClockOutView(LoginRequiredMixin, TemplateView):
+    template_name = "worker/clock-out.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["workers"] = get_workers_clocked_in_today()
+        return context
+
+
+class ClockOutActionView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        worker = get_object_or_404(Worker, pk=self.kwargs["pk"])
+
+        dt_now = timezone.now()
+        wt = get_object_or_404(
+            WorkTime,
+            worker=worker,
+            start_time__date=dt_now.date(),
+            finish_time__isnull=True,
+        )
+        wt.finish_time = dt_now
+        wt.save()
+
+        messages.success(request, _("Goodbye, %(name)s!") % {"name": worker.first_name})
+
+        return redirect("gf-worker:worker-clock-out")
