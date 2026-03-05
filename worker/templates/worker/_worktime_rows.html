@@ -1,0 +1,29 @@
+{% load i18n %}
+{% for worktime in page_obj %}
+    <tr>
+        <td>{{ worktime.start_time }}</td>
+        <td>{{ worktime.finish_time }}</td>
+        <td>{{ worktime.duration }}</td>
+        {% if request.user.is_superuser %}
+            <td class="text-end">
+                <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" disabled>{% trans "Edit" %}</button>
+            </td>
+        {% endif %}
+    </tr>
+{% empty %}
+    <tr>
+        <td colspan="{% if request.user.is_superuser %}4{% else %}3{% endif %}"
+            class="text-center text-muted py-4">{% trans "No work times recorded." %}</td>
+    </tr>
+{% endfor %}
+{% if page_obj.has_next %}
+    <tr id="show-more-row">
+        <td colspan="{% if request.user.is_superuser %}4{% else %}3{% endif %}"
+            class="text-center pt-3">
+            <button class="btn btn-sm btn-outline-secondary rounded-pill px-4"
+                    hx-get="{% url 'gf-worker:worker-worktimes' pk=page_obj.object_list.0.worker_id %}?page={{ page_obj.next_page_number }}"
+                    hx-target="#show-more-row"
+                    hx-swap="outerHTML">{% trans "Show more" %}</button>
+        </td>
+    </tr>
+{% endif %}

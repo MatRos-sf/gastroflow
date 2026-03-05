@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
+    path("i18n/", include("django.conf.urls.i18n")),
     path("admin/", admin.site.urls),
     path("api-auth/", include("rest_framework.urls")),
     path("menu/", include("menu.urls")),
@@ -10,6 +11,7 @@ urlpatterns = [
     path("", include("service.urls")),
     path("kitchen/", include("kitchen.urls")),
     path("bar/", include("bar.urls")),
+    path("worker/", include("worker.urls", namespace="gf-worker")),
 ]
 
 if settings.DEBUG:

@@ -1,6 +1,8 @@
 from datetime import timedelta
+from decimal import Decimal
 
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from tools.models.validators import validate_digits
@@ -44,15 +46,34 @@ class Worker(models.Model):
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
 
+    def get_absolute_url(self):
+        return reverse("gf-worker:worker-detail", kwargs={"pk": self.pk})
+
 
 class WorkTime(models.Model):
     worker = models.ForeignKey(Worker, on_delete=models.SET_NULL, null=True)
     start_time = models.DateTimeField()
-    finish_time = models.DateTimeField()
+    finish_time = models.DateTimeField(blank=True, null=True)
+    salary_snapshot = models.DecimalField(max_digits=7, decimal_places=2)
 
     @property
-    def duration(self) -> timedelta:
-        return self.finish_time - self.start_time
+    def duration(self) -> timedelta | None:
+        if self.finish_time:
+            return self.finish_time - self.start_time
+        return None
+
+    @property
+    def earnings(self):
+        return self.duration.total_seconds() / 3600 * self.salary_snapshot
 
     def __str__(self):
         return f"Worker: {self.duration}"
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            if not self.worker:
+                self.salary_snapshot = Decimal("0.00")
+            else:
+                self.salary_snapshot = self.worker.salary
+
+        super().save(*args, **kwargs)

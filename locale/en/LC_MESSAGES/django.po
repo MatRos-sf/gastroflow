@@ -16,9 +16,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
-"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
-"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: gastroflow/settings.py:136
 msgid "Polish"
@@ -45,10 +43,8 @@ msgid "{text} {deprecated_message}"
 msgstr ""
 
 #: venv/lib/python3.12/site-packages/click/core.py:1170
-#, fuzzy
-#| msgid "position"
 msgid "Options"
-msgstr "stanowisko"
+msgstr ""
 
 #: venv/lib/python3.12/site-packages/click/core.py:1245
 #, python-brace-format
@@ -56,8 +52,6 @@ msgid "Got unexpected extra argument ({args})"
 msgid_plural "Got unexpected extra arguments ({args})"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/click/core.py:1264
 msgid "DeprecationWarning: The command {name!r} is deprecated.{extra_message}"
@@ -89,8 +83,6 @@ msgid "Takes {nargs} values but 1 was given."
 msgid_plural "Takes {nargs} values but {len} were given."
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/click/core.py:2567
 msgid ""
@@ -178,8 +170,6 @@ msgid "Did you mean {possibility}?"
 msgid_plural "(Possible options: {possibilities})"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/click/exceptions.py:282
 msgid "unknown error"
@@ -202,8 +192,6 @@ msgid "Option {name!r} requires an argument."
 msgid_plural "Option {name!r} requires {nargs} arguments."
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/click/shell_completion.py:332
 msgid "Shell completion is not supported for Bash versions older than 4.4."
@@ -250,16 +238,12 @@ msgid "{value!r} is not {choice}."
 msgid_plural "{value!r} is not one of {choices}."
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/click/types.py:460
 msgid "{value!r} does not match the format {format}."
 msgid_plural "{value!r} does not match the formats {formats}."
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/click/types.py:482
 msgid "{value!r} is not a valid {number_type}."
@@ -320,8 +304,6 @@ msgid "{len_type} values are required, but {len_value} was given."
 msgid_plural "{len_type} values are required, but {len_value} were given."
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/django/contrib/messages/apps.py:16
 msgid "Messages"
@@ -452,8 +434,6 @@ msgid_plural ""
 "%(show_value)d)."
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/django/core/validators.py:491
 #, python-format
@@ -465,8 +445,6 @@ msgid_plural ""
 "%(show_value)d)."
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/django/core/validators.py:514
 #: venv/lib/python3.12/site-packages/django/forms/fields.py:366
@@ -480,8 +458,6 @@ msgid "Ensure that there are no more than %(max)s digit in total."
 msgid_plural "Ensure that there are no more than %(max)s digits in total."
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/django/core/validators.py:521
 #, python-format
@@ -489,8 +465,6 @@ msgid "Ensure that there are no more than %(max)s decimal place."
 msgid_plural "Ensure that there are no more than %(max)s decimal places."
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/django/core/validators.py:526
 #, python-format
@@ -500,8 +474,6 @@ msgid_plural ""
 "Ensure that there are no more than %(max)s digits before the decimal point."
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/django/core/validators.py:597
 #, python-format
@@ -603,10 +575,8 @@ msgid ""
 msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1435
-#, fuzzy
-#| msgid "Update work time"
 msgid "Date (without time)"
-msgstr "Edytuj czas pracy"
+msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1562
 #, python-format
@@ -623,10 +593,8 @@ msgid ""
 msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1575
-#, fuzzy
-#| msgid "Update work time"
 msgid "Date (with time)"
-msgstr "Edytuj czas pracy"
+msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1702
 #, python-format
@@ -647,7 +615,7 @@ msgstr ""
 #: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1868
 #: worker/templates/worker/detail-worker.html:38
 msgid "Duration"
-msgstr "Czas trwania"
+msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1920
 msgid "Email address"
@@ -856,8 +824,6 @@ msgid_plural ""
 "Ensure this filename has at most %(max)d characters (it has %(length)d)."
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/django/forms/fields.py:649
 msgid "Please either submit a file or check the clear checkbox, not both."
@@ -917,8 +883,6 @@ msgid "Please submit at most %(num)d form."
 msgid_plural "Please submit at most %(num)d forms."
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/django/forms/formsets.py:70
 #, python-format
@@ -926,8 +890,6 @@ msgid "Please submit at least %(num)d form."
 msgid_plural "Please submit at least %(num)d forms."
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/django/forms/formsets.py:484
 #: venv/lib/python3.12/site-packages/django/forms/formsets.py:491
@@ -1015,8 +977,6 @@ msgid "%(size)d byte"
 msgid_plural "%(size)d bytes"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:922
 #, python-format
@@ -1116,10 +1076,8 @@ msgid "Fri"
 msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:21
-#, fuzzy
-#| msgid "Start"
 msgid "Sat"
-msgstr "Początek"
+msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/utils/dates.py:22
 msgid "Sun"
@@ -1367,8 +1325,6 @@ msgid "%(num)d year"
 msgid_plural "%(num)d years"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/django/utils/timesince.py:9
 #, python-format
@@ -1376,8 +1332,6 @@ msgid "%(num)d month"
 msgid_plural "%(num)d months"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/django/utils/timesince.py:10
 #, python-format
@@ -1385,8 +1339,6 @@ msgid "%(num)d week"
 msgid_plural "%(num)d weeks"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/django/utils/timesince.py:11
 #, python-format
@@ -1394,8 +1346,6 @@ msgid "%(num)d day"
 msgid_plural "%(num)d days"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/django/utils/timesince.py:12
 #, python-format
@@ -1403,8 +1353,6 @@ msgid "%(num)d hour"
 msgid_plural "%(num)d hours"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/django/utils/timesince.py:13
 #, python-format
@@ -1412,8 +1360,6 @@ msgid "%(num)d minute"
 msgid_plural "%(num)d minutes"
 msgstr[0] ""
 msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
 
 #: venv/lib/python3.12/site-packages/django/views/csrf.py:29
 msgid "Forbidden"
@@ -1607,156 +1553,148 @@ msgstr ""
 
 #: worker/models.py:12
 msgid "Waiter"
-msgstr "Kelner"
+msgstr ""
 
 #: worker/models.py:13
 msgid "Chef"
-msgstr "Kucharz"
+msgstr ""
 
 #: worker/models.py:14
 msgid "Assistant"
-msgstr "Asystent"
+msgstr ""
 
 #: worker/models.py:15
 msgid "Barista"
-msgstr "Barysta"
+msgstr ""
 
 #: worker/models.py:19
 msgid "first name"
-msgstr "imię"
+msgstr ""
 
 #: worker/models.py:20
 msgid "last name"
-msgstr "nazwisko"
+msgstr ""
 
 #: worker/models.py:26
 msgid "per hour"
-msgstr "za godzinę"
+msgstr ""
 
 #: worker/models.py:27
 msgid "salary"
-msgstr "wynagrodzenie"
+msgstr ""
 
 #: worker/models.py:36
 msgid "position"
-msgstr "stanowisko"
+msgstr ""
 
 #: worker/models.py:43
 msgid "pin"
-msgstr "pin"
+msgstr ""
 
 #: worker/templates/worker/_worktime_rows.html:9
 msgid "Edit"
-msgstr "Edytuj"
+msgstr ""
 
 #: worker/templates/worker/_worktime_rows.html:16
 msgid "No work times recorded."
-msgstr "Brak zarejestrowanych godzin pracy."
+msgstr ""
 
 #: worker/templates/worker/_worktime_rows.html:26
 msgid "Show more"
-msgstr "Pokaż więcej"
+msgstr ""
 
 #: worker/templates/worker/clock-in.html:4
 msgid "Clock in"
-msgstr "Rozpocznij pracę"
+msgstr ""
 
 #: worker/templates/worker/clock-in.html:12
 msgid "Nice to see you again!"
-msgstr "Miło cię widzieć!"
+msgstr ""
 
 #: worker/templates/worker/clock-in.html:13
 msgid "Choose your name to start your shift"
-msgstr "Wybierz swoje imię, aby rozpocząć zmianę"
+msgstr ""
 
 #: worker/templates/worker/clock-in.html:25
 msgid "No workers available — time to hire someone!"
-msgstr "Brak dostępnych pracowników — czas kogoś zatrudnić!"
+msgstr ""
 
 #: worker/templates/worker/clock-out.html:4
 msgid "Clock out"
-msgstr "Zakończ pracę"
+msgstr ""
 
 #: worker/templates/worker/clock-out.html:12
 msgid "It's time to go home!"
-msgstr "Czas do domu!"
+msgstr ""
 
 #: worker/templates/worker/clock-out.html:14
 msgid "Choose your name to end your shift"
-msgstr "Wybierz swoje imię, aby zakończyć zmianę"
+msgstr ""
 
 #: worker/templates/worker/clock-out.html:27
 msgid "No workers available. Call it a day ;)"
-msgstr "Brak pracowników na zmianie. Na dziś koniec ;)"
+msgstr ""
 
 #: worker/templates/worker/create-worker.html:4
 #: worker/templates/worker/create-worker.html:12
 msgid "New employee"
-msgstr "Nowy pracownik"
+msgstr ""
 
 #: worker/templates/worker/create-worker.html:13
 msgid "Fill in the details and save the profile"
-msgstr "Wypełnij dane i zapisz profil"
+msgstr ""
 
 #: worker/templates/worker/create-worker.html:19
 msgid "Save"
-msgstr "Zapisz"
+msgstr ""
 
 #: worker/templates/worker/create-worker.html:21
 #: worker/templates/worker/update-work-time.html:20
 msgid "Cancel"
-msgstr "Anuluj"
+msgstr ""
 
 #: worker/templates/worker/detail-worker.html:17
 msgid "Salary"
-msgstr "Wynagrodzenie"
+msgstr ""
 
 #: worker/templates/worker/detail-worker.html:22
 msgid "Total hours worked"
-msgstr "Łączne przepracowane godziny"
+msgstr ""
 
 #: worker/templates/worker/detail-worker.html:31
 msgid "Work times"
-msgstr "Godziny pracy"
+msgstr ""
 
 #: worker/templates/worker/detail-worker.html:36
 msgid "Start"
-msgstr "Początek"
+msgstr ""
 
 #: worker/templates/worker/detail-worker.html:37
 msgid "Finish"
-msgstr "Koniec"
+msgstr ""
 
 #: worker/templates/worker/update-work-time.html:4
 msgid "Update work time"
-msgstr "Edytuj czas pracy"
+msgstr ""
 
 #: worker/templates/worker/update-work-time.html:12
 msgid "Update Work Time"
-msgstr "Edytuj czas pracy"
+msgstr ""
 
 #: worker/templates/worker/update-work-time.html:18
 msgid "Update"
-msgstr "Zapisz"
+msgstr ""
 
 #: worker/views.py:65
 msgid "Work time has been successfully updated!"
-msgstr "Czas pracy został pomyślnie zaktualizowany!"
+msgstr ""
 
 #: worker/views.py:86
 #, python-format
 msgid "Have a great shift, %(name)s!"
-msgstr "Miłej zmiany, %(name)s!"
+msgstr ""
 
 #: worker/views.py:113
 #, python-format
 msgid "Goodbye, %(name)s!"
-msgstr "Do widzenia, %(name)s!"
-
-#, fuzzy
-#~| msgid "last name"
-#~ msgid "name"
-#~ msgstr "nazwisko"
-
-#~ msgid "Asystent"
-#~ msgstr "Asystent"
+msgstr ""
