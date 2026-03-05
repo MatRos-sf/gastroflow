@@ -27,3 +27,14 @@ class TotalWorkDurationTest(TestCase):
     def test_returns_none_when_queryset_is_empty(self):
         total = total_work_duration(WorkTime.objects.all())
         self.assertIsNone(total)
+
+    def test_should_skip_record_when_finish_time_is_null(self):
+        self.make_work_time(
+            start_time=timezone.make_aware(datetime.datetime(2026, 1, 1, 7, 0)),
+            finish_time=timezone.make_aware(datetime.datetime(2026, 1, 1, 16, 0)),  # 9h
+        )
+        self.make_work_time(
+            start_time=timezone.make_aware(datetime.datetime(2026, 1, 2, 7, 0)),
+        )
+        total = total_work_duration(WorkTime.objects.all())
+        self.assertEqual(total, datetime.timedelta(hours=9))
