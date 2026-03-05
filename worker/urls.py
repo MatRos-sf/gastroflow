@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    ClockInView,
     WorkerCreateView,
     WorkerDetailView,
     WorkerWorkTimeListView,
@@ -20,4 +21,5 @@ urlpatterns = [
         WorkTimeUpdateView.as_view(),
         name="worktimes-update",
     ),
+    path("clock-in/", ClockInView.as_view(), name="worker-clock-in"),
 ]

@@ -3,12 +3,19 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from django.views.generic import (
+    CreateView,
+    DetailView,
+    ListView,
+    TemplateView,
+    UpdateView,
+)
 
 from tools.models.aggregate import total_work_duration
 
 from .forms import WorkerForm, WorkTimeForm
 from .models import Worker, WorkTime
+from .queries import get_workers_not_clocked_in_today
 
 PAGE_SIZE = 10
 
@@ -58,3 +65,12 @@ class WorkTimeUpdateView(UserPassesTestMixin, UpdateView):
 
     def get_success_url(self):
         return self.object.worker.get_absolute_url()
+
+
+class ClockInView(LoginRequiredMixin, TemplateView):
+    template_name = "worker/clock-in.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["workers"] = get_workers_not_clocked_in_today()
+        return context

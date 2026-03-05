@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+    {% trans "Clock in" %}
+{% endblock title %}
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card border-0 rounded-4 shadow">
+                <div class="card-body p-4 p-md-5">
+                    <div class="mb-4 text-center">
+                        <h3 class="fw-bold mb-1">{% trans "Nice to see you again!" %}</h3>
+                        <p class="text-muted small mb-0">{% trans "Choose your name to start your shift" %}</p>
+                    </div>
+                    <div class="d-grid gap-2">
+                        {% for worker in workers %}
+                            <a href="" class="btn btn-outline-dark rounded-pill py-2">{{ worker.first_name }} {{ worker.last_name }}</a>
+                        {% empty %}
+                            <p class="text-center text-muted">{% trans "No workers available — time to hire someone!" %}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
