@@ -1,7 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
     CreateView,
@@ -9,6 +10,7 @@ from django.views.generic import (
     ListView,
     TemplateView,
     UpdateView,
+    View,
 )
 
 from tools.models.aggregate import total_work_duration
@@ -67,10 +69,21 @@ class WorkTimeUpdateView(UserPassesTestMixin, UpdateView):
         return self.object.worker.get_absolute_url()
 
 
-class ClockInView(LoginRequiredMixin, TemplateView):
+class ClockInView(TemplateView):
     template_name = "worker/clock-in.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["workers"] = get_workers_not_clocked_in_today()
         return context
+
+
+class ClockInActionView(View):
+    def post(self, request, *args, **kwargs):
+        worker = get_object_or_404(Worker, pk=self.kwargs["pk"])
+        WorkTime.objects.create(worker=worker, start_time=timezone.now())
+        messages.success(
+            request, _("Have a great shift, %(name)s!") % {"name": worker.first_name}
+        )
+
+        return redirect("gf-worker:worker-clock-in")

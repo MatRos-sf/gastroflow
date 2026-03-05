@@ -14,7 +14,13 @@
                     </div>
                     <div class="d-grid gap-2">
                         {% for worker in workers %}
-                            <a href="" class="btn btn-outline-dark rounded-pill py-2">{{ worker.first_name }} {{ worker.last_name }}</a>
+                            <form method="post"
+                                  action="{% url 'gf-worker:worker-clock-in-start' worker.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-outline-dark rounded-pill py-2 w-100">
+                                    {{ worker.first_name }} {{ worker.last_name }}
+                                </button>
+                            </form>
                         {% empty %}
                             <p class="text-center text-muted">{% trans "No workers available — time to hire someone!" %}</p>
                         {% endfor %}
