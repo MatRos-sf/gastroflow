@@ -57,8 +57,10 @@ class WorkTime(models.Model):
     salary_snapshot = models.DecimalField(max_digits=7, decimal_places=2)
 
     @property
-    def duration(self) -> timedelta:
-        return self.finish_time - self.start_time
+    def duration(self) -> timedelta | None:
+        if self.finish_time:
+            return self.finish_time - self.start_time
+        return None
 
     @property
     def earnings(self):
