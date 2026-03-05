@@ -52,7 +52,7 @@ class Worker(models.Model):
 class WorkTime(models.Model):
     worker = models.ForeignKey(Worker, on_delete=models.SET_NULL, null=True)
     start_time = models.DateTimeField()
-    finish_time = models.DateTimeField()
+    finish_time = models.DateTimeField(blank=True, null=True)
     salary_snapshot = models.DecimalField(max_digits=7, decimal_places=2)
 
     @property
