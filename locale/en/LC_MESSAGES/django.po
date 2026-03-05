@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-05 21:10+0100\n"
+"POT-Creation-Date: 2026-03-05 21:41+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1615,8 +1615,24 @@ msgstr ""
 msgid "Choose your name to start your shift"
 msgstr ""
 
-#: worker/templates/worker/clock-in.html:24
+#: worker/templates/worker/clock-in.html:25
 msgid "No workers available — time to hire someone!"
+msgstr ""
+
+#: worker/templates/worker/clock-out.html:4
+msgid "Clock out"
+msgstr ""
+
+#: worker/templates/worker/clock-out.html:12
+msgid "It's time to go home!"
+msgstr ""
+
+#: worker/templates/worker/clock-out.html:14
+msgid "Choose your name to end your shift"
+msgstr ""
+
+#: worker/templates/worker/clock-out.html:27
+msgid "No workers available. Call it a day ;)"
 msgstr ""
 
 #: worker/templates/worker/create-worker.html:4
@@ -1669,15 +1685,16 @@ msgstr ""
 msgid "Update"
 msgstr ""
 
-#: worker/views.py:64
+#: worker/views.py:65
 msgid "Work time has been successfully updated!"
 msgstr ""
 
-#: worker/views.py:83
+#: worker/views.py:86
 #, python-format
 msgid "Have a great shift, %(name)s!"
 msgstr ""
 
-#: worker/views.py:83
-msgid "name"
+#: worker/views.py:113
+#, python-format
+msgid "Goodbye, %(name)s!"
 msgstr ""

@@ -3,6 +3,8 @@ from django.urls import path
 from .views import (
     ClockInActionView,
     ClockInView,
+    ClockOutActionView,
+    ClockOutView,
     WorkerCreateView,
     WorkerDetailView,
     WorkerWorkTimeListView,
@@ -27,5 +29,11 @@ urlpatterns = [
         "clock-in/<int:pk>/start/",
         ClockInActionView.as_view(),
         name="worker-clock-in-start",
+    ),
+    path("clock-out/", ClockOutView.as_view(), name="worker-clock-out"),
+    path(
+        "clock-out/<int:pk>/end/",
+        ClockOutActionView.as_view(),
+        name="worker-clock-out-end",
     ),
 ]
