@@ -1,4 +1,5 @@
 from datetime import timedelta
+from decimal import Decimal
 
 from django.db import models
 from django.urls import reverse
@@ -68,6 +69,9 @@ class WorkTime(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            self.salary_snapshot = self.worker.salary
+            if not self.worker:
+                self.salary_snapshot = Decimal("0.00")
+            else:
+                self.salary_snapshot = self.worker.salary
 
         super().save(*args, **kwargs)
