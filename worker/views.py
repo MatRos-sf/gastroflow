@@ -53,6 +53,11 @@ class WorkerWorkTimeListView(LoginRequiredMixin, ListView):
         return self.worker.worktime_set.order_by("-start_time")
 
 
+class WorkerListView(LoginRequiredMixin, ListView):
+    model = Worker
+    template_name = "worker/list-worker.html"
+
+
 class WorkTimeUpdateView(UserPassesTestMixin, UpdateView):
     model = WorkTime
     form_class = WorkTimeForm
