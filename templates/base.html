@@ -1,10 +1,12 @@
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta name="keywords" content="foo,bar" />
-        <meta name="description" content="foo" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description"
+              content="GastroFlow — restaurant management system">
+        <meta name="keywords" content="gastroflow,restaurant">
         <title>
             {% block title %}
             {% endblock title %}
@@ -14,18 +16,23 @@
               integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr"
               crossorigin="anonymous">
         <style>
-      body {
-        padding-top: 70px; /* zabezpiecza przed nachodzeniem na navbar */
-      }
+            body {
+                padding-top: 70px;
+            }
+            .nav-section-label {
+                font-size: .65rem;
+                letter-spacing: .08em;
+            }
+            .navbar-superuser {
+                border-bottom: 3px solid var(--bs-warning);
+            }
         </style>
     </head>
     <body>
-        <!-- Navibar -->
-        <nav class="navbar navbar-dark bg-dark fixed-top">
+        <nav class="navbar navbar-dark bg-dark fixed-top {% if request.user.is_superuser %}navbar-superuser{% endif %}">
             <div class="container-fluid d-flex justify-content-between align-items-center">
-                <!-- Lewa strona: Logo -->
-                <a class="navbar-brand fw-bold" href="{% url 'service:menu-waiter' %}">Frisztek</a>
-                <!-- Środek: Koszyk -->
+                <a class="navbar-brand fw-bold {% if request.user.is_superuser %}text-warning{% endif %}"
+                   href="{% url 'service:menu-waiter' %}">Frisztek</a>
                 <div class="d-flex justify-content-center flex-grow-1">
                     {% if request.session.cart %}
                         <a href="{% url 'service:cart' %}"
@@ -37,7 +44,6 @@
                         </a>
                     {% endif %}
                 </div>
-                <!-- Prawa strona: Hamburger -->
                 <button class="navbar-toggler position-relative"
                         type="button"
                         data-bs-toggle="offcanvas"
@@ -45,21 +51,19 @@
                         aria-controls="offcanvasNavbar"
                         aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
-                    <!-- Czerwona kropka -->
                     <span id="menu-dot"
                           class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"
                           style="display:none">
-                        <span class="visually-hidden">New alerts</span>
+                        <span class="visually-hidden">{% trans "New alerts" %}</span>
                     </span>
                 </button>
             </div>
-            <!-- Offcanvas menu -->
             <div class="offcanvas offcanvas-end text-bg-dark"
                  tabindex="-1"
                  id="offcanvasNavbar"
                  aria-labelledby="offcanvasNavbarLabel">
                 <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menu</h5>
+                    <h5 class="offcanvas-title fw-bold" id="offcanvasNavbarLabel">{% trans "Menu" %}</h5>
                     <button type="button"
                             class="btn-close btn-close-white"
                             data-bs-dismiss="offcanvas"
@@ -67,74 +71,122 @@
                 </div>
                 <div class="offcanvas-body">
                     <ul class="navbar-nav flex-grow-1 pe-3">
-                        <!-- Główne linki -->
+                        <li>
+                            <small class="nav-section-label text-uppercase text-secondary px-3 fw-bold">{% trans "Service" %}</small>
+                        </li>
                         <li class="nav-item">
                             <a href="{% url 'service:menu-waiter' %}"
                                class="nav-link {% if request.resolver_match.url_name == 'menu-waiter' %}text-warning fw-bold{% endif %}">
-                                Sala
+                                {% trans "Hall" %}
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'kitchen-orders' %}"
                                class="nav-link {% if request.resolver_match.url_name == 'kitchen-orders' %}text-warning fw-bold{% endif %}">
-                                Kuchnia
+                                {% trans "Kitchen" %}
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'bar-orders' %}"
                                class="nav-link {% if request.resolver_match.url_name == 'bar-orders' %}text-warning fw-bold{% endif %}">
-                                Bar
+                                {% trans "Bar" %}
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'service:waiter-notifications' %}"
-                               class="nav-link {% if request.resolver_match.url_name == 'service:waiter-notifications' %}text-warning fw-bold{% endif %}">
-                                Powiadomienia
+                               class="nav-link {% if request.resolver_match.url_name == 'waiter-notifications' %}text-warning fw-bold{% endif %}">
+                                {% trans "Notifications" %}
                             </a>
                         </li>
                         <li>
-                            <hr class="dropdown-divider">
+                            <hr class="dropdown-divider border-secondary">
                         </li>
-                        <hr>
-                        <!-- Admin / dodatkowe -->
-                        <li class="nav-item">
-                            <a href="{% url 'item-list' %}" class="nav-link">Edytuj menu</a>
+                        <li>
+                            <small class="nav-section-label text-uppercase text-secondary px-3 fw-bold">{% trans "Management" %}</small>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'available' %}" class="nav-link">Zmień status</a>
+                            <a href="{% url 'item-list' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'item-list' %}text-warning fw-bold{% endif %}">{% trans "Edit menu" %}</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'ready-order-list' %}" class="nav-link">Historia Wydań</a>
+                            <a href="{% url 'available' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'available' %}text-warning fw-bold{% endif %}">{% trans "Change status" %}</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'summary-bill' %}" class="nav-link">Rachunki</a>
+                            <a href="{% url 'ready-order-list' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'ready-order-list' %}text-warning fw-bold{% endif %}">{% trans "Order history" %}</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'report-selection' %}" class="nav-link">Raporty</a>
+                            <a href="{% url 'summary-bill' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'summary-bill' %}text-warning fw-bold{% endif %}">{% trans "Bills" %}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'report-selection' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'report-selection' %}text-warning fw-bold{% endif %}">{% trans "Reports" %}</a>
+                        </li>
+                        <li>
+                            <hr class="dropdown-divider border-secondary">
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle {% if request.resolver_match.namespace == 'gf-worker' %}text-warning fw-bold{% endif %}"
+                               href="#"
+                               role="button"
+                               data-bs-toggle="dropdown"
+                               aria-expanded="false">{% trans "Workers" %}</a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'gf-worker:worker-clock-in' %}">{% trans "Clock in" %}</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'gf-worker:worker-clock-out' %}">{% trans "Clock out" %}</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{% url 'gf-worker:worker-list' %}">{% trans "Workers" %}</a>
+                                </li>
+                                {% if request.user.is_superuser %}
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="{% url 'gf-worker:worker-create' %}">{% trans "Add worker" %}</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
                         </li>
                     </ul>
-                    <hr>
-                    {% load i18n %}
+                    <hr class="border-secondary">
                     <form action="{% url 'set_language' %}" method="post" class="d-flex gap-2">
                         {% csrf_token %}
                         <input name="next" type="hidden" value="{{ request.get_full_path }}">
                         <button type="submit"
                                 name="language"
                                 value="pl"
-                                class="btn btn-sm btn-outline-light w-100">PL</button>
+                                class="btn btn-sm btn-outline-light rounded-pill w-100">PL</button>
                         <button type="submit"
                                 name="language"
                                 value="en"
-                                class="btn btn-sm btn-outline-light w-100">EN</button>
+                                class="btn btn-sm btn-outline-light rounded-pill w-100">EN</button>
                     </form>
+                    <hr class="border-secondary">
+                    <div class="d-flex align-items-center justify-content-between gap-2">
+                        <small class="text-secondary">
+                            {{ request.user.username }}
+                            {% if request.user.is_superuser %}
+                                <span class="badge bg-warning text-dark ms-1">{% trans "Admin" %}</span>
+                            {% endif %}
+                        </small>
+                        <form action="{% url 'logout' %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3">{% trans "Logout" %}</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </nav>
-        <!-- Messages -->
         <div class="container mt-3">
             {% if messages %}
                 {% for message in messages %}
-                    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show"
+                    <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show rounded-4"
                          role="alert">
                         {{ message }}
                         <button type="button"
@@ -145,12 +197,10 @@
                 {% endfor %}
             {% endif %}
         </div>
-        <!-- Content -->
         <main class="container py-3">
             {% block content %}
             {% endblock content %}
         </main>
-        <!-- Bootstrap JS -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
                 integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
                 crossorigin="anonymous"></script>
@@ -158,28 +208,32 @@
                 integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz"
                 crossorigin="anonymous"></script>
         <script>
-  async function checkNotifications() {
-    try {
-      const response = await fetch("{% url 'service:check-notifications' %}", {
-        headers: { "X-Requested-With": "XMLHttpRequest" }
-      });
-      if (!response.ok) return;
+            function connectNotificationSocket() {
+                const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
+                const ws = new WebSocket(`${protocol}//${window.location.host}/ws/notifications/`);
+                const dot = document.getElementById("menu-dot");
+                const unread = new Set();
 
-      const data = await response.json();
-      const dot = document.getElementById("menu-dot");
+                ws.onmessage = function (event) {
+                    const data = JSON.parse(event.data);
 
-      if (data.has_new) {   // albo data.has_notifications, zależy co zwracasz
-        dot.style.display = "block";
-      } else {
-        dot.style.display = "none";
-      }
-    } catch (error) {
-      console.error("Błąd sprawdzania powiadomień:", error);
-    }
-  }
+                    if (data.type === "initial_notifications") {
+                        data.notifications.forEach(n => unread.add(n.id));
+                    } else if (data.type === "new_notification") {
+                        unread.add(data.id);
+                    } else if (data.type === "notification_seen") {
+                        unread.delete(data.notification_id);
+                    }
 
-  checkNotifications();
-  setInterval(checkNotifications, 15000);
+                    dot.style.display = unread.size > 0 ? "block" : "none";
+                };
+
+                ws.onclose = function () {
+                    setTimeout(connectNotificationSocket, 3000);
+                };
+            }
+
+            connectNotificationSocket();
         </script>
     </body>
 </html>

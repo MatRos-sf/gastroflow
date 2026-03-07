@@ -1810,3 +1810,11 @@ msgstr ""
 #: templates/base.html
 msgid "Add worker"
 msgstr ""
+
+#: templates/base.html
+msgid "Admin"
+msgstr ""
+
+#: templates/base.html
+msgid "Logout"
+msgstr ""
