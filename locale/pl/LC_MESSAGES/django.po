@@ -1865,6 +1865,14 @@ msgstr "Raporty"
 msgid "Add worker"
 msgstr "Dodaj pracownika"
 
+#: templates/base.html
+msgid "Admin"
+msgstr "Admin"
+
+#: templates/base.html
+msgid "Logout"
+msgstr "Wyloguj"
+
 #, fuzzy
 #~| msgid "last name"
 #~ msgid "name"
