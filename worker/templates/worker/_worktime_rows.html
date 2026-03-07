@@ -6,7 +6,9 @@
         <td>{{ worktime.duration }}</td>
         {% if request.user.is_superuser %}
             <td class="text-end">
-                <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" disabled>{% trans "Edit" %}</button>
+                <a href="{% url 'gf-worker:worktimes-update' worktime.pk %}"
+                   class="btn btn-sm btn-outline-secondary rounded-pill px-3"
+                   disabled>{% trans "Edit" %}</a>
             </td>
         {% endif %}
     </tr>
