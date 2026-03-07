@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-05 21:41+0100\n"
+"POT-Creation-Date: 2026-03-05 22:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,6 +24,38 @@ msgstr ""
 
 #: gastroflow/settings.py:137
 msgid "English"
+msgstr ""
+
+#: templates/registration/logged_out.html:4
+msgid "Logged out"
+msgstr ""
+
+#: templates/registration/logged_out.html:11
+msgid "See you next time!"
+msgstr ""
+
+#: templates/registration/logged_out.html:12
+msgid "You have been successfully logged out."
+msgstr ""
+
+#: templates/registration/logged_out.html:14
+msgid "Sign in again"
+msgstr ""
+
+#: templates/registration/login.html:4
+msgid "Login"
+msgstr ""
+
+#: templates/registration/login.html:12
+msgid "Welcome back"
+msgstr ""
+
+#: templates/registration/login.html:13
+msgid "Sign in to continue"
+msgstr ""
+
+#: templates/registration/login.html:20
+msgid "Sign in"
 msgstr ""
 
 #: venv/lib/python3.12/site-packages/click/_termui_impl.py:613
@@ -1694,7 +1726,75 @@ msgstr ""
 msgid "Have a great shift, %(name)s!"
 msgstr ""
 
-#: worker/views.py:113
+#: worker/views.py:115
 #, python-format
 msgid "Goodbye, %(name)s!"
+msgstr ""
+
+#: worker/templates/worker/list-worker.html:11
+msgid "Workers"
+msgstr ""
+
+#: worker/templates/worker/list-worker.html:16
+msgid "Name"
+msgstr ""
+
+#: worker/templates/worker/list-worker.html:17
+msgid "Position"
+msgstr ""
+
+#: templates/base.html
+msgid "Menu"
+msgstr ""
+
+#: templates/base.html
+msgid "New alerts"
+msgstr ""
+
+#: templates/base.html
+msgid "Service"
+msgstr ""
+
+#: templates/base.html
+msgid "Management"
+msgstr ""
+
+#: templates/base.html
+msgid "Hall"
+msgstr ""
+
+#: templates/base.html
+msgid "Kitchen"
+msgstr ""
+
+#: templates/base.html
+msgid "Bar"
+msgstr ""
+
+#: templates/base.html
+msgid "Notifications"
+msgstr ""
+
+#: templates/base.html
+msgid "Edit menu"
+msgstr ""
+
+#: templates/base.html
+msgid "Change status"
+msgstr ""
+
+#: templates/base.html
+msgid "Order history"
+msgstr ""
+
+#: templates/base.html
+msgid "Bills"
+msgstr ""
+
+#: templates/base.html
+msgid "Reports"
+msgstr ""
+
+#: templates/base.html
+msgid "Add worker"
 msgstr ""
