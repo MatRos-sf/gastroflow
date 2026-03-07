@@ -1685,6 +1685,18 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+#: worker/templates/worker/update-worker.html:12
+msgid "Update employee"
+msgstr ""
+
+#: worker/templates/worker/update-worker.html:13
+msgid "Edit the details and save the profile"
+msgstr ""
+
+#: worker/templates/worker/update-worker.html:19
+msgid "Update"
+msgstr ""
+
 #: worker/templates/worker/detail-worker.html:17
 msgid "Salary"
 msgstr ""

@@ -1739,6 +1739,18 @@ msgstr "Zapisz"
 msgid "Cancel"
 msgstr "Anuluj"
 
+#: worker/templates/worker/update-worker.html:12
+msgid "Update employee"
+msgstr "Edytuj pracownika"
+
+#: worker/templates/worker/update-worker.html:13
+msgid "Edit the details and save the profile"
+msgstr "Zmień dane i zapisz profil"
+
+#: worker/templates/worker/update-worker.html:19
+msgid "Update"
+msgstr "Zapisz zmiany"
+
 #: worker/templates/worker/detail-worker.html:17
 msgid "Salary"
 msgstr "Wynagrodzenie"
