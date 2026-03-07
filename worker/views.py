@@ -58,6 +58,19 @@ class WorkerListView(LoginRequiredMixin, ListView):
     template_name = "worker/list-worker.html"
 
 
+class WorkerUpdateView(UserPassesTestMixin, UpdateView):
+    model = Worker
+    form_class = WorkerForm
+    template_name = "worker/update-worker.html"
+
+    def test_func(self):
+        return self.request.user.is_superuser
+
+    def form_valid(self, form):
+        messages.success(self.request, _("Worker detail has been updated!"))
+        return super().form_valid(form)
+
+
 class WorkTimeUpdateView(UserPassesTestMixin, UpdateView):
     model = WorkTime
     form_class = WorkTimeForm

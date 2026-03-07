@@ -8,6 +8,7 @@ from .views import (
     WorkerCreateView,
     WorkerDetailView,
     WorkerListView,
+    WorkerUpdateView,
     WorkerWorkTimeListView,
     WorkTimeUpdateView,
 )
@@ -18,6 +19,7 @@ urlpatterns = [
     path("create/", WorkerCreateView.as_view(), name="worker-create"),
     path("list/", WorkerListView.as_view(), name="worker-list"),
     path("<int:pk>/", WorkerDetailView.as_view(), name="worker-detail"),
+    path("<int:pk>/update/", WorkerUpdateView.as_view(), name="worker-update"),
     path(
         "<int:pk>/worktimes/", WorkerWorkTimeListView.as_view(), name="worker-worktimes"
     ),
