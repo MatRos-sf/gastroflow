@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-05 21:41+0100\n"
+"POT-Creation-Date: 2026-03-05 22:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,6 +27,38 @@ msgstr ""
 #: gastroflow/settings.py:137
 msgid "English"
 msgstr ""
+
+#: templates/registration/logged_out.html:4
+msgid "Logged out"
+msgstr ""
+
+#: templates/registration/logged_out.html:11
+msgid "See you next time!"
+msgstr "Do zobaczenia!"
+
+#: templates/registration/logged_out.html:12
+msgid "You have been successfully logged out."
+msgstr "Zostałeś pomyślnie wylogowany."
+
+#: templates/registration/logged_out.html:14
+msgid "Sign in again"
+msgstr "Zaloguj się ponownie"
+
+#: templates/registration/login.html:4
+msgid "Login"
+msgstr "Logowanie"
+
+#: templates/registration/login.html:12
+msgid "Welcome back"
+msgstr "Witaj ponownie"
+
+#: templates/registration/login.html:13
+msgid "Sign in to continue"
+msgstr "Zaloguj się, aby kontynuować"
+
+#: templates/registration/login.html:20
+msgid "Sign in"
+msgstr "Zaloguj się"
 
 #: venv/lib/python3.12/site-packages/click/_termui_impl.py:613
 #, python-brace-format
@@ -1748,10 +1780,78 @@ msgstr "Czas pracy został pomyślnie zaktualizowany!"
 msgid "Have a great shift, %(name)s!"
 msgstr "Miłej zmiany, %(name)s!"
 
-#: worker/views.py:113
+#: worker/views.py:115
 #, python-format
 msgid "Goodbye, %(name)s!"
 msgstr "Do widzenia, %(name)s!"
+
+#: worker/templates/worker/list-worker.html:11
+msgid "Workers"
+msgstr "Pracownicy"
+
+#: worker/templates/worker/list-worker.html:16
+msgid "Name"
+msgstr "Imię i nazwisko"
+
+#: worker/templates/worker/list-worker.html:17
+msgid "Position"
+msgstr "Stanowisko"
+
+#: templates/base.html
+msgid "Menu"
+msgstr "Menu"
+
+#: templates/base.html
+msgid "New alerts"
+msgstr "Nowe powiadomienia"
+
+#: templates/base.html
+msgid "Service"
+msgstr "Obsługa"
+
+#: templates/base.html
+msgid "Management"
+msgstr "Zarządzanie"
+
+#: templates/base.html
+msgid "Hall"
+msgstr "Sala"
+
+#: templates/base.html
+msgid "Kitchen"
+msgstr "Kuchnia"
+
+#: templates/base.html
+msgid "Bar"
+msgstr "Bar"
+
+#: templates/base.html
+msgid "Notifications"
+msgstr "Powiadomienia"
+
+#: templates/base.html
+msgid "Edit menu"
+msgstr "Edytuj menu"
+
+#: templates/base.html
+msgid "Change status"
+msgstr "Zmień status"
+
+#: templates/base.html
+msgid "Order history"
+msgstr "Historia wydań"
+
+#: templates/base.html
+msgid "Bills"
+msgstr "Rachunki"
+
+#: templates/base.html
+msgid "Reports"
+msgstr "Raporty"
+
+#: templates/base.html
+msgid "Add worker"
+msgstr "Dodaj pracownika"
 
 #, fuzzy
 #~| msgid "last name"

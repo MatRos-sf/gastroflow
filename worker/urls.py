@@ -7,6 +7,7 @@ from .views import (
     ClockOutView,
     WorkerCreateView,
     WorkerDetailView,
+    WorkerListView,
     WorkerWorkTimeListView,
     WorkTimeUpdateView,
 )
@@ -15,6 +16,7 @@ app_name = "gf-worker"
 
 urlpatterns = [
     path("create/", WorkerCreateView.as_view(), name="worker-create"),
+    path("list/", WorkerListView.as_view(), name="worker-list"),
     path("<int:pk>/", WorkerDetailView.as_view(), name="worker-detail"),
     path(
         "<int:pk>/worktimes/", WorkerWorkTimeListView.as_view(), name="worker-worktimes"
