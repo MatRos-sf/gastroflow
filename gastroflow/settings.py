@@ -147,6 +147,11 @@ USE_I18N = True
 USE_TZ = True
 
 
+# Auth redirects
+LOGIN_REDIRECT_URL = "service:menu-waiter"
+LOGOUT_REDIRECT_URL = "login"
+LOGIN_URL = "login"
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
