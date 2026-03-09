@@ -1818,3 +1818,87 @@ msgstr ""
 #: worker/forms.py
 msgid "Finish time must be after start time."
 msgstr "Finish time must be after start time."
+
+#: menu/models.py
+msgid "name"
+msgstr "name"
+
+#: menu/models.py
+msgid "category"
+msgstr "category"
+
+#: menu/models.py
+msgid "categories"
+msgstr "categories"
+
+#: menu/models.py
+msgid "subcategory"
+msgstr "subcategory"
+
+#: menu/models.py
+msgid "subcategories"
+msgstr "subcategories"
+
+#: menu/models.py
+msgid "price"
+msgstr "price"
+
+#: menu/models.py
+msgid "checkout ID"
+msgstr "checkout ID"
+
+#: menu/models.py
+msgid "Cash register product ID"
+msgstr "Cash register product ID"
+
+#: menu/models.py
+msgid "created at"
+msgstr "created at"
+
+#: menu/models.py
+msgid "deleted"
+msgstr "deleted"
+
+#: menu/models.py
+msgid "priority"
+msgstr "priority"
+
+#: menu/models.py
+msgid "addition"
+msgstr "addition"
+
+#: menu/models.py
+msgid "additions"
+msgstr "additions"
+
+#: menu/models.py
+msgid "preparation location"
+msgstr "preparation location"
+
+#: menu/models.py
+msgid "Item name"
+msgstr "Item name"
+
+#: menu/models.py
+msgid "description"
+msgstr "description"
+
+#: menu/models.py
+msgid "Item description"
+msgstr "Item description"
+
+#: menu/models.py
+msgid "Number of portions available today. None = unlimited, 0 = sold out."
+msgstr "Number of portions available today. None = unlimited, 0 = sold out."
+
+#: menu/models.py
+msgid "daily stock"
+msgstr "daily stock"
+
+#: menu/models.py
+msgid "item"
+msgstr "item"
+
+#: menu/models.py
+msgid "items"
+msgstr "items"

@@ -1873,10 +1873,92 @@ msgstr "Wyloguj"
 msgid "Finish time must be after start time."
 msgstr "Czas zakończenia musi być późniejszy niż czas rozpoczęcia."
 
+#: menu/models.py
+msgid "name"
+msgstr "nazwa"
+
+#: menu/models.py
+msgid "category"
+msgstr "kategoria"
+
+#: menu/models.py
+msgid "categories"
+msgstr "kategorie"
+
+#: menu/models.py
+msgid "subcategory"
+msgstr "podkategoria"
+
+#: menu/models.py
+msgid "subcategories"
+msgstr "podkategorie"
+
+#: menu/models.py
+msgid "price"
+msgstr "cena"
+
+#: menu/models.py
+msgid "checkout ID"
+msgstr "ID kasy"
+
+#: menu/models.py
+msgid "Cash register product ID"
+msgstr "Numer produktu w kasie fiskalnej"
+
+#: menu/models.py
+msgid "created at"
+msgstr "utworzono"
+
+#: menu/models.py
+msgid "deleted"
+msgstr "usunięto"
+
+#: menu/models.py
+msgid "priority"
+msgstr "priorytet"
+
+#: menu/models.py
+msgid "addition"
+msgstr "dodatek"
+
+#: menu/models.py
+msgid "additions"
+msgstr "dodatki"
+
+#: menu/models.py
+msgid "preparation location"
+msgstr "miejsce przygotowania"
+
+#: menu/models.py
+msgid "Item name"
+msgstr "Nazwa produktu"
+
+#: menu/models.py
+msgid "description"
+msgstr "opis"
+
+#: menu/models.py
+msgid "Item description"
+msgstr "Opis produktu"
+
+#: menu/models.py
+msgid "Number of portions available today. None = unlimited, 0 = sold out."
+msgstr "Liczba porcji dostępnych dziś. None = bez limitu, 0 = wyprzedane."
+
+#: menu/models.py
+msgid "daily stock"
+msgstr "dzienny stan"
+
+#: menu/models.py
+msgid "item"
+msgstr "produkt"
+
+#: menu/models.py
+msgid "items"
+msgstr "produkty"
+
 #, fuzzy
 #~| msgid "last name"
-#~ msgid "name"
-#~ msgstr "nazwisko"
 
 #~ msgid "Asystent"
 #~ msgstr "Asystent"
