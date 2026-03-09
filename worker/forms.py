@@ -1,4 +1,5 @@
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 from .models import Worker, WorkTime
 
@@ -20,6 +21,6 @@ class WorkTimeForm(forms.ModelForm):
         finish_time = cleaned_data.get("finish_time")
 
         if finish_time and start_time and finish_time <= start_time:
-            raise forms.ValidationError("Finish time must be after start time.")
+            raise forms.ValidationError(_("Finish time must be after start time."))
 
         return cleaned_data
