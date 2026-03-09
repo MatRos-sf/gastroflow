@@ -1693,7 +1693,7 @@ msgstr ""
 msgid "Edit the details and save the profile"
 msgstr ""
 
-#: worker/templates/worker/update-worker.html:19
+#: worker/templates/worker/update-worker.html:19 worker/templates/worker/update-work-time.html:18
 msgid "Update"
 msgstr ""
 
@@ -1723,10 +1723,6 @@ msgstr ""
 
 #: worker/templates/worker/update-work-time.html:12
 msgid "Update Work Time"
-msgstr ""
-
-#: worker/templates/worker/update-work-time.html:18
-msgid "Update"
 msgstr ""
 
 #: worker/views.py:65
@@ -1818,3 +1814,7 @@ msgstr ""
 #: templates/base.html
 msgid "Logout"
 msgstr ""
+
+#: worker/forms.py
+msgid "Finish time must be after start time."
+msgstr "Finish time must be after start time."

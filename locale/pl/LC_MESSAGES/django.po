@@ -1747,7 +1747,7 @@ msgstr "Edytuj pracownika"
 msgid "Edit the details and save the profile"
 msgstr "Zmień dane i zapisz profil"
 
-#: worker/templates/worker/update-worker.html:19
+#: worker/templates/worker/update-worker.html:19 worker/templates/worker/update-work-time.html:18
 msgid "Update"
 msgstr "Zapisz zmiany"
 
@@ -1778,10 +1778,6 @@ msgstr "Edytuj czas pracy"
 #: worker/templates/worker/update-work-time.html:12
 msgid "Update Work Time"
 msgstr "Edytuj czas pracy"
-
-#: worker/templates/worker/update-work-time.html:18
-msgid "Update"
-msgstr "Zapisz"
 
 #: worker/views.py:65
 msgid "Work time has been successfully updated!"
@@ -1872,6 +1868,10 @@ msgstr "Admin"
 #: templates/base.html
 msgid "Logout"
 msgstr "Wyloguj"
+
+#: worker/forms.py
+msgid "Finish time must be after start time."
+msgstr "Czas zakończenia musi być późniejszy niż czas rozpoczęcia."
 
 #, fuzzy
 #~| msgid "last name"
