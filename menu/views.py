@@ -2,25 +2,28 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 from django_filters.views import FilterView
 
 from .filters import ItemMenuTypeFilter
 from .forms import ItemForm
-from .models import Availability, Item, MenuType
+from .models import Addition, Availability, Category, Item, MenuType, SubCategory
 
 
 class ItemCreateView(CreateView):
     model = Item
     form_class = ItemForm
-    template_name = "menu/add.html"
-    extra_context = {"action_type": "Dodaj"}
+    template_name = "menu/create-item.html"
 
     def get_success_url(self):
+        return reverse("gf-menu:item-list")
+
+    def form_valid(self, form):
         messages.success(
-            self.request, f"Pozycja została zaktualizowana: '{self.object.name}'"
+            self.request, _("Item added: '%(name)s'") % {"name": self.object.name}
         )
-        return reverse("item-list")
+        return super().form_valid(form)
 
 
 class ItemListView(ListView):

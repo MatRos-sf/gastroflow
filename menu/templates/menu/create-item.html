@@ -1,15 +1,282 @@
-{% extends "menu/base.html" %}
-{% load crispy_forms_tags %}
+{% extends "base.html" %}
+{% load i18n crispy_forms_tags %}
+{% block title %}
+    {% trans "Add Item" %}
+{% endblock title %}
 {% block content %}
-    <h1 class="text-center">
-        {{ action_type }} pozycje <strong class="text-success">{{ object.name }}</strong>
-    </h1>
-    <form method="post" enctype="multipart/form-data" class="container mt-4">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <div class="d-flex justify-content-center mt-2 gap-2">
-            <button type="submit" class="btn btn-primary btn-lg">Zapisz</button>
-            <a href="{% url 'item-list' %}" class="btn btn-secondary btn-lg">Anuluj</a>
+    <div class="row justify-content-center">
+        <div class="col-12 col-sm-10 col-md-10 col-lg-8 col-xl-7">
+            <div class="card border-0 rounded-4 shadow">
+                <div class="card-body p-4 p-md-5">
+                    <div class="mb-4">
+                        <h3 class="fw-bold mb-1">{% trans "Add Item" %}</h3>
+                        <p class="text-muted small mb-0">{% trans "Fill in the details and save the menu item" %}</p>
+                    </div>
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <div class="d-grid gap-2 d-sm-flex mt-4">
+                            <button type="submit" class="btn btn-dark rounded-pill px-4 w-100">{% trans "Save" %}</button>
+                            <a href="{% url 'gf-menu:item-list' %}"
+                               class="btn btn-outline-secondary rounded-pill px-4 w-100">{% trans "Cancel" %}</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-    </form>
+    </div>
+    <!-- Quick Add Addition Modal -->
+    <div class="modal fade"
+         id="addAdditionModal"
+         tabindex="-1"
+         aria-labelledby="addAdditionModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold" id="addAdditionModalLabel">{% trans "New Addition" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-2">
+                    <form id="addAdditionForm">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">{% trans "Name" %}</label>
+                            <input type="text" name="name" class="form-control rounded-3" required>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">{% trans "Price" %}</label>
+                                <input type="number"
+                                       name="price"
+                                       step="0.01"
+                                       min="0"
+                                       value="0.00"
+                                       class="form-control rounded-3"
+                                       required>
+                            </div>
+                            <div class="col-6">
+                                <label class="form-label small fw-semibold">{% trans "Checkout ID" %}</label>
+                                <input type="number"
+                                       name="id_checkout"
+                                       min="0"
+                                       value="0"
+                                       class="form-control rounded-3"
+                                       required>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <label class="form-label small fw-semibold">{% trans "Priority" %}</label>
+                            <input type="number"
+                                   name="priority"
+                                   min="1"
+                                   value="1"
+                                   class="form-control rounded-3"
+                                   required>
+                        </div>
+                    </form>
+                    <div id="addAdditionError" class="text-danger small mt-2 d-none">{% trans "Something went wrong. Try again." %}</div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button"
+                            class="btn btn-outline-secondary rounded-pill px-4"
+                            data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <button type="button"
+                            class="btn btn-dark rounded-pill px-4"
+                            id="saveAdditionBtn">{% trans "Save" %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Quick Add Category Modal -->
+    <div class="modal fade"
+         id="addCategoryModal"
+         tabindex="-1"
+         aria-labelledby="addCategoryModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold" id="addCategoryModalLabel">{% trans "New Category" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-2">
+                    <form id="addCategoryForm">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">{% trans "Name" %}</label>
+                            <input type="text" name="name" class="form-control rounded-3" required>
+                        </div>
+                    </form>
+                    <div id="addCategoryError" class="text-danger small mt-2 d-none">{% trans "Something went wrong. Try again." %}</div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button"
+                            class="btn btn-outline-secondary rounded-pill px-4"
+                            data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <button type="button"
+                            class="btn btn-dark rounded-pill px-4"
+                            id="saveCategoryBtn">{% trans "Save" %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Quick Add SubCategory Modal -->
+    <div class="modal fade"
+         id="addSubCategoryModal"
+         tabindex="-1"
+         aria-labelledby="addSubCategoryModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 rounded-4 shadow">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold" id="addSubCategoryModalLabel">{% trans "New Subcategory" %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body pt-2">
+                    <form id="addSubCategoryForm">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">{% trans "Name" %}</label>
+                            <input type="text" name="name" class="form-control rounded-3" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">{% trans "Category" %}</label>
+                            <select name="category_id"
+                                    id="subCategoryCategorySelect"
+                                    class="form-select rounded-3"
+                                    required></select>
+                        </div>
+                    </form>
+                    <div id="addSubCategoryError" class="text-danger small mt-2 d-none">
+                        {% trans "Something went wrong. Try again." %}
+                    </div>
+                </div>
+                <div class="modal-footer border-0 pt-0">
+                    <button type="button"
+                            class="btn btn-outline-secondary rounded-pill px-4"
+                            data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <button type="button"
+                            class="btn btn-dark rounded-pill px-4"
+                            id="saveSubCategoryBtn">{% trans "Save" %}</button>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock content %}
+{% block extra_js %}
+    <script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    function makeQuickAddBtn(modalTarget) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn btn-sm btn-outline-dark rounded-pill ms-2 py-0 px-2';
+        btn.setAttribute('data-bs-toggle', 'modal');
+        btn.setAttribute('data-bs-target', modalTarget);
+        btn.textContent = '+';
+        return btn;
+    }
+
+    function addOptionToSelect(selectEl, id, text) {
+        const option = document.createElement('option');
+        option.value = id;
+        option.textContent = text;
+        option.selected = true;
+        selectEl.appendChild(option);
+    }
+
+    // --- Additions ---
+    const additionsLabel = document.querySelector('#div_id_additions .form-label');
+    if (additionsLabel) additionsLabel.appendChild(makeQuickAddBtn('#addAdditionModal'));
+
+    document.getElementById('saveAdditionBtn').addEventListener('click', function () {
+        const form = document.getElementById('addAdditionForm');
+        const errorEl = document.getElementById('addAdditionError');
+        fetch("{% url 'gf-menu:addition-quick-create' %}", {
+            method: 'POST', body: new FormData(form), headers: {'X-CSRFToken': '{{ csrf_token }}'}
+        })
+        .then(r => r.json())
+        .then(function (res) {
+            if (res.id) {
+                const wrapper = document.getElementById('div_id_additions');
+                if (wrapper) {
+                    const div = document.createElement('div');
+                    div.className = 'form-check';
+                    div.innerHTML = `<input class="form-check-input" type="checkbox" name="additions" value="${res.id}" id="id_additions_new_${res.id}" checked>
+                                     <label class="form-check-label" for="id_additions_new_${res.id}">${res.name}</label>`;
+                    wrapper.lastElementChild.appendChild(div);
+                }
+                bootstrap.Modal.getInstance(document.getElementById('addAdditionModal')).hide();
+                form.reset();
+                errorEl.classList.add('d-none');
+            } else { errorEl.classList.remove('d-none'); }
+        })
+        .catch(() => errorEl.classList.remove('d-none'));
+    });
+
+    // --- Category ---
+    const categoryLabel = document.querySelector('label[for="id_category"]');
+    if (categoryLabel) categoryLabel.appendChild(makeQuickAddBtn('#addCategoryModal'));
+
+    document.getElementById('saveCategoryBtn').addEventListener('click', function () {
+        const form = document.getElementById('addCategoryForm');
+        const errorEl = document.getElementById('addCategoryError');
+        fetch("{% url 'gf-menu:category-quick-create' %}", {
+            method: 'POST', body: new FormData(form), headers: {'X-CSRFToken': '{{ csrf_token }}'}
+        })
+        .then(r => r.json())
+        .then(function (res) {
+            if (res.id) {
+                // Add to main form category select
+                addOptionToSelect(document.getElementById('id_category'), res.id, res.name);
+                // Add to subcategory modal category select
+                addOptionToSelect(document.getElementById('subCategoryCategorySelect'), res.id, res.name);
+                bootstrap.Modal.getInstance(document.getElementById('addCategoryModal')).hide();
+                form.reset();
+                errorEl.classList.add('d-none');
+            } else { errorEl.classList.remove('d-none'); }
+        })
+        .catch(() => errorEl.classList.remove('d-none'));
+    });
+
+    // --- SubCategory ---
+    const subCategoryLabel = document.querySelector('label[for="id_sub_menu"]');
+    if (subCategoryLabel) subCategoryLabel.appendChild(makeQuickAddBtn('#addSubCategoryModal'));
+
+    // Populate category select in subcategory modal from the main form select
+    document.getElementById('addSubCategoryModal').addEventListener('show.bs.modal', function () {
+        const mainSelect = document.getElementById('id_category');
+        const modalSelect = document.getElementById('subCategoryCategorySelect');
+        modalSelect.innerHTML = '';
+        Array.from(mainSelect.options).forEach(function (opt) {
+            if (opt.value) {
+                const o = document.createElement('option');
+                o.value = opt.value;
+                o.textContent = opt.textContent;
+                modalSelect.appendChild(o);
+            }
+        });
+    });
+
+    document.getElementById('saveSubCategoryBtn').addEventListener('click', function () {
+        const form = document.getElementById('addSubCategoryForm');
+        const errorEl = document.getElementById('addSubCategoryError');
+        fetch("{% url 'gf-menu:subcategory-quick-create' %}", {
+            method: 'POST', body: new FormData(form), headers: {'X-CSRFToken': '{{ csrf_token }}'}
+        })
+        .then(r => r.json())
+        .then(function (res) {
+            if (res.id) {
+                addOptionToSelect(document.getElementById('id_sub_menu'), res.id, res.name);
+                bootstrap.Modal.getInstance(document.getElementById('addSubCategoryModal')).hide();
+                form.reset();
+                errorEl.classList.add('d-none');
+            } else { errorEl.classList.remove('d-none'); }
+        })
+        .catch(() => errorEl.classList.remove('d-none'));
+    });
+
+});
+    </script>
+{% endblock extra_js %}

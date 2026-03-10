@@ -10,8 +10,11 @@ from .views import (
     toggle_availability,
 )
 
+app_name = "gf-menu"
+
 urlpatterns = [
     # path("items/", ItemListView.as_view(), name="item-list"),
+    path("item/create/", ItemCreateView.as_view(), name="item-create"),
     path("", ItemListView.as_view(), name="item-list"),
     path("add/", ItemCreateView.as_view(), name="item-add"),
     path("<int:pk>/", ItemDetailView.as_view(), name="item-detail"),
