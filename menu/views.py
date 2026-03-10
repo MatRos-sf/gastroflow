@@ -88,6 +88,40 @@ def toggle_availability(request, pk: int):
     return redirect("available")
 
 
+def addition_quick_create(request):
+    if request.method == "POST":
+        name = request.POST.get("name", "").strip()
+        price = request.POST.get("price", "0")
+        id_checkout = request.POST.get("id_checkout", "0")
+        priority = request.POST.get("priority", "1")
+        if name:
+            addition = Addition.objects.create(
+                name=name, price=price, id_checkout=id_checkout, priority=priority
+            )
+            return JsonResponse({"id": addition.pk, "name": addition.name})
+    return JsonResponse({"error": "invalid"}, status=400)
+
+
+def category_quick_create(request):
+    if request.method == "POST":
+        name = request.POST.get("name", "").strip()
+        if name:
+            category = Category.objects.create(name=name)
+            return JsonResponse({"id": category.pk, "name": category.name})
+    return JsonResponse({"error": "invalid"}, status=400)
+
+
+def subcategory_quick_create(request):
+    if request.method == "POST":
+        name = request.POST.get("name", "").strip()
+        category_id = request.POST.get("category_id", "").strip()
+        if name and category_id:
+            category = get_object_or_404(Category, pk=category_id)
+            subcategory = SubCategory.objects.create(name=name, category=category)
+            return JsonResponse({"id": subcategory.pk, "name": subcategory.name})
+    return JsonResponse({"error": "invalid"}, status=400)
+
+
 def delivery_items(request):
     updated_fields = Item.objects.filter(available__gt=Availability.AVAILABLE).update(
         available=Availability.AVAILABLE

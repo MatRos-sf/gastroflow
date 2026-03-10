@@ -6,7 +6,10 @@ from .views import (
     ItemDetailView,
     ItemListView,
     ItemUpdateView,
+    addition_quick_create,
+    category_quick_create,
     delivery_items,
+    subcategory_quick_create,
     toggle_availability,
 )
 
@@ -22,4 +25,11 @@ urlpatterns = [
     path("changer/", AvailableListView.as_view(), name="available"),
     path("toggle/<int:pk>/", toggle_availability, name="toggle-availability"),
     path("delivery-product/", delivery_items, name="delivery-product"),
+    path("addition/quick-create/", addition_quick_create, name="addition-quick-create"),
+    path("category/quick-create/", category_quick_create, name="category-quick-create"),
+    path(
+        "subcategory/quick-create/",
+        subcategory_quick_create,
+        name="subcategory-quick-create",
+    ),
 ]
