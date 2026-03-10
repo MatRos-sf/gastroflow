@@ -1902,3 +1902,51 @@ msgstr "item"
 #: menu/models.py
 msgid "items"
 msgstr "items"
+
+#: menu/views.py
+msgid "Item added: '%(name)s'"
+msgstr "Item added: '%(name)s'"
+
+#: menu/templates/menu/create-item.html
+msgid "Add Item"
+msgstr "Add Item"
+
+#: menu/templates/menu/create-item.html
+msgid "Fill in the details and save the menu item"
+msgstr "Fill in the details and save the menu item"
+
+#: menu/templates/menu/create-item.html
+msgid "New Addition"
+msgstr "New Addition"
+
+#: menu/templates/menu/create-item.html
+msgid "Checkout ID"
+msgstr "Checkout ID"
+
+#: menu/templates/menu/create-item.html
+msgid "Priority"
+msgstr "Priority"
+
+#: menu/templates/menu/create-item.html
+msgid "Something went wrong. Try again."
+msgstr "Something went wrong. Try again."
+
+#: menu/models.py
+msgid "Bar"
+msgstr "Bar"
+
+#: menu/models.py
+msgid "Kitchen"
+msgstr "Kitchen"
+
+#: menu/templates/menu/create-item.html
+msgid "New Category"
+msgstr "New Category"
+
+#: menu/templates/menu/create-item.html
+msgid "New Subcategory"
+msgstr "New Subcategory"
+
+#: menu/templates/menu/create-item.html
+msgid "Category"
+msgstr "Category"

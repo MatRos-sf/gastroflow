@@ -1962,3 +1962,51 @@ msgstr "produkty"
 
 #~ msgid "Asystent"
 #~ msgstr "Asystent"
+
+#: menu/views.py
+msgid "Item added: '%(name)s'"
+msgstr "Pozycja została dodana: '%(name)s'"
+
+#: menu/templates/menu/create-item.html
+msgid "Add Item"
+msgstr "Dodaj pozycję"
+
+#: menu/templates/menu/create-item.html
+msgid "Fill in the details and save the menu item"
+msgstr "Wypełnij dane i zapisz pozycję menu"
+
+#: menu/templates/menu/create-item.html
+msgid "New Addition"
+msgstr "Nowy dodatek"
+
+#: menu/templates/menu/create-item.html
+msgid "Checkout ID"
+msgstr "ID kasy"
+
+#: menu/templates/menu/create-item.html
+msgid "Priority"
+msgstr "Priorytet"
+
+#: menu/templates/menu/create-item.html
+msgid "Something went wrong. Try again."
+msgstr "Coś poszło nie tak. Spróbuj ponownie."
+
+#: menu/models.py
+msgid "Bar"
+msgstr "Bar"
+
+#: menu/models.py
+msgid "Kitchen"
+msgstr "Kuchnia"
+
+#: menu/templates/menu/create-item.html
+msgid "New Category"
+msgstr "Nowa kategoria"
+
+#: menu/templates/menu/create-item.html
+msgid "New Subcategory"
+msgstr "Nowa podkategoria"
+
+#: menu/templates/menu/create-item.html
+msgid "Category"
+msgstr "Kategoria"
