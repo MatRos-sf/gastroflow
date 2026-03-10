@@ -29,8 +29,8 @@ class Availability(models.IntegerChoices):
 
 
 class Location(models.TextChoices):
-    BAR = "bar", "BAR"
-    KITCHEN = "kitchen", "KITCHEN"
+    BAR = "bar", _("Bar")
+    KITCHEN = "kitchen", _("Kitchen")
 
 
 class Category(models.Model):
