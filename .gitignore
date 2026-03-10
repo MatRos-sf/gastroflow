@@ -55,6 +55,9 @@ coverage.xml
 *.log
 local_settings.py
 
+# Private fixtures (restaurant-specific data)
+menu/fixtures/
+
 # Flask stuff:
 instance/
 .webassets-cache
