@@ -1,7 +1,14 @@
+from django.core.cache import cache
 from django.db import models
+from django.db.models.signals import post_delete, post_save
+from django.dispatch import receiver
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
+CATEGORIES_CACHE_KEY = "menu:categories"
 
+
+# TODO: remove
 class MenuType(models.TextChoices):
     MAIN = "menu", "Menu"
     MENU_FOR_CHILDREN = "menu dla dzieci", "Menu dla dzieci"
@@ -12,6 +19,7 @@ class MenuType(models.TextChoices):
     UNAVAILABLE = "niedostępny", "Niedostępny"
 
 
+# TODO: remove
 class SubMenuType(models.TextChoices):
     COFFEE = "kawa", "Kawa"
     TEA = "herbata", "Herbata"
@@ -22,6 +30,7 @@ class SubMenuType(models.TextChoices):
     CAKE = "ciasto", "Ciasto"
 
 
+# TODO: remove
 class Availability(models.IntegerChoices):
     AVAILABLE = 1, "Available"
     SMALL_AMOUNT = 2, "Small amount"
@@ -29,8 +38,8 @@ class Availability(models.IntegerChoices):
 
 
 class Location(models.TextChoices):
-    BAR = "bar", "BAR"
-    KITCHEN = "kitchen", "KITCHEN"
+    BAR = "bar", _("Bar")
+    KITCHEN = "kitchen", _("Kitchen")
 
 
 class Category(models.Model):
@@ -42,6 +51,11 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+
+@receiver([post_save, post_delete], sender="menu.Category")
+def invalidate_categories_cache(sender, **kwargs):
+    cache.delete(CATEGORIES_CACHE_KEY)
 
 
 class SubCategory(models.Model):
@@ -137,3 +151,6 @@ class Item(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("gf-menu:item-detail", kwargs={"pk": self.pk})

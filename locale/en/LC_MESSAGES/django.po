@@ -1751,9 +1751,9 @@ msgstr ""
 msgid "Position"
 msgstr ""
 
-#: templates/base.html
+#: templates/base.html menu/templates/menu/list.html
 msgid "Menu"
-msgstr ""
+msgstr "Menu"
 
 #: templates/base.html
 msgid "New alerts"
@@ -1771,13 +1771,13 @@ msgstr ""
 msgid "Hall"
 msgstr ""
 
-#: templates/base.html
+#: templates/base.html menu/models.py
 msgid "Kitchen"
-msgstr ""
+msgstr "Kitchen"
 
-#: templates/base.html
+#: templates/base.html menu/models.py
 msgid "Bar"
-msgstr ""
+msgstr "Bar"
 
 #: templates/base.html
 msgid "Notifications"
@@ -1902,3 +1902,119 @@ msgstr "item"
 #: menu/models.py
 msgid "items"
 msgstr "items"
+
+#: menu/views.py
+msgid "Item added: '%(name)s'"
+msgstr "Item added: '%(name)s'"
+
+#: menu/views.py
+msgid "Item '%(name)s' has been updated."
+msgstr "Item '%(name)s' has been updated."
+
+#: menu/templates/menu/update-item.html
+msgid "Update Item"
+msgstr "Update Item"
+
+#: menu/templates/menu/update-item.html
+msgid "Update the item"
+msgstr "Update the item"
+
+#: menu/templates/menu/detail.html
+msgid "Details"
+msgstr "Details"
+
+#: menu/templates/menu/detail.html
+msgid "Location"
+msgstr "Location"
+
+#: menu/templates/menu/detail.html
+msgid "Daily stock"
+msgstr "Daily stock"
+
+#: menu/templates/menu/detail.html
+msgid "Back"
+msgstr "Back"
+
+#: menu/templates/menu/detail.html
+msgid "Price"
+msgstr "Price"
+
+#: menu/templates/menu/detail.html
+msgid "Subcategory"
+msgstr "Subcategory"
+
+#: menu/templates/menu/detail.html
+msgid "Description"
+msgstr "Description"
+
+#: menu/templates/menu/detail.html
+msgid "Additions"
+msgstr "Additions"
+
+#: menu/templates/menu/detail.html
+msgid "Created at"
+msgstr "Created at"
+
+#: menu/templates/menu/list.html
+msgid "Items"
+msgstr "Items"
+
+#: menu/templates/menu/list.html
+msgid "Add item"
+msgstr "Add item"
+
+#: menu/templates/menu/list.html
+msgid "View"
+msgstr "View"
+
+#: menu/templates/menu/list.html
+msgid "No items in this category."
+msgstr "No items in this category."
+
+#: menu/templates/menu/list.html
+msgid "Filter"
+msgstr "Filter"
+
+#: menu/templates/menu/list.html
+msgid "All"
+msgstr "All"
+
+#: menu/templates/menu/list.html
+msgid "Page %(current)s of %(total)s"
+msgstr "Page %(current)s of %(total)s"
+
+#: menu/templates/menu/create-item.html
+msgid "Add Item"
+msgstr "Add Item"
+
+#: menu/templates/menu/create-item.html
+msgid "Fill in the details and save the menu item"
+msgstr "Fill in the details and save the menu item"
+
+#: menu/templates/menu/create-item.html
+msgid "New Addition"
+msgstr "New Addition"
+
+#: menu/templates/menu/create-item.html
+msgid "Checkout ID"
+msgstr "Checkout ID"
+
+#: menu/templates/menu/create-item.html
+msgid "Priority"
+msgstr "Priority"
+
+#: menu/templates/menu/create-item.html
+msgid "Something went wrong. Try again."
+msgstr "Something went wrong. Try again."
+
+#: menu/templates/menu/create-item.html
+msgid "New Category"
+msgstr "New Category"
+
+#: menu/templates/menu/create-item.html
+msgid "New Subcategory"
+msgstr "New Subcategory"
+
+#: menu/templates/menu/create-item.html
+msgid "Category"
+msgstr "Category"

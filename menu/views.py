@@ -2,61 +2,75 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
-from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from django.utils.translation import gettext_lazy as _
+from django.views.generic import CreateView, DetailView, UpdateView
 from django_filters.views import FilterView
 
-from .filters import ItemMenuTypeFilter
+from tools.views.permission import BossPermissionMixin
+
+from .filters import ItemListFilter, ItemMenuTypeFilter
 from .forms import ItemForm
-from .models import Availability, Item, MenuType
+from .models import Addition, Availability, Category, Item, MenuType, SubCategory
 
 
-class ItemCreateView(CreateView):
+class ItemCreateView(BossPermissionMixin, CreateView):
     model = Item
     form_class = ItemForm
-    template_name = "menu/add.html"
-    extra_context = {"action_type": "Dodaj"}
+    template_name = "menu/create-item.html"
 
     def get_success_url(self):
+        return reverse("gf-menu:item-detail", kwargs={"pk": self.object.pk})
+
+    def form_valid(self, form):
         messages.success(
-            self.request, f"Pozycja została zaktualizowana: '{self.object.name}'"
+            self.request, _("Item added: '%(name)s'") % {"name": self.object.name}
         )
-        return reverse("item-list")
+        return super().form_valid(form)
 
 
-class ItemListView(ListView):
+class ItemUpdateView(BossPermissionMixin, UpdateView):
     model = Item
     form_class = ItemForm
-    template_name = "menu/list.html"
+    template_name = "menu/update-item.html"
+
+    def get_success_url(self):
+        return reverse("gf-menu:item-detail", kwargs={"pk": self.object.pk})
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            _("Item '%(name)s' has been updated.") % {"name": self.object.name},
+        )
+        return super().form_valid(form)
+
+
+class ItemDetailView(BossPermissionMixin, DetailView):
+    model = Item
+    template_name = "menu/detail-item.html"
+
+
+class ItemListView(BossPermissionMixin, FilterView):
+    model = Item
+    template_name = "menu/list-item.html"
+    filterset_class = ItemListFilter
+    paginate_by = 50
 
     def get_queryset(self):
-        category = self.request.GET.get("category", MenuType.MAIN)
-        return Item.objects.filter(menu=category).order_by("id_checkout")
+        return (
+            Item.objects.select_related("category", "sub_menu")
+            .prefetch_related("additions")
+            .order_by("id_checkout")
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["categories"] = [(value, label) for value, label in MenuType.choices]
-        context["selected_category"] = self.request.GET.get("category", MenuType.MAIN)
+        params = self.request.GET.copy()
+        params.pop("page", None)
+        context["filter_params"] = params.urlencode()
         return context
 
 
-class ItemDetailView(DetailView):
-    model = Item
-    template_name = "menu/detail.html"
-
-
-class ItemUpdateView(UpdateView):
-    model = Item
-    form_class = ItemForm
-    template_name = "menu/add.html"
-    extra_context = {"action_type": "Edytuj"}
-
-    def get_success_url(self):
-        messages.success(
-            self.request, f"Pozycja została zaktualizowana: '{self.object.name}'"
-        )
-        return reverse("item-list")
-
-
+# TODO: refactor
 class AvailableListView(FilterView):
     template_name = "menu/available_changer.html"
     model = Item
@@ -72,6 +86,7 @@ class AvailableListView(FilterView):
         return qs.order_by("-available")
 
 
+# TODO: refactor
 def toggle_availability(request, pk: int):
     item = get_object_or_404(Item, pk=pk)
     values = Availability.values
@@ -85,6 +100,44 @@ def toggle_availability(request, pk: int):
     return redirect("available")
 
 
+# TODO: refactor
+def addition_quick_create(request):
+    if request.method == "POST":
+        name = request.POST.get("name", "").strip()
+        price = request.POST.get("price", "0")
+        id_checkout = request.POST.get("id_checkout", "0")
+        priority = request.POST.get("priority", "1")
+        if name:
+            addition = Addition.objects.create(
+                name=name, price=price, id_checkout=id_checkout, priority=priority
+            )
+            return JsonResponse({"id": addition.pk, "name": addition.name})
+    return JsonResponse({"error": "invalid"}, status=400)
+
+
+# TODO: refactor
+def category_quick_create(request):
+    if request.method == "POST":
+        name = request.POST.get("name", "").strip()
+        if name:
+            category = Category.objects.create(name=name)
+            return JsonResponse({"id": category.pk, "name": category.name})
+    return JsonResponse({"error": "invalid"}, status=400)
+
+
+# TODO: refactor
+def subcategory_quick_create(request):
+    if request.method == "POST":
+        name = request.POST.get("name", "").strip()
+        category_id = request.POST.get("category_id", "").strip()
+        if name and category_id:
+            category = get_object_or_404(Category, pk=category_id)
+            subcategory = SubCategory.objects.create(name=name, category=category)
+            return JsonResponse({"id": subcategory.pk, "name": subcategory.name})
+    return JsonResponse({"error": "invalid"}, status=400)
+
+
+# TODO: refactor
 def delivery_items(request):
     updated_fields = Item.objects.filter(available__gt=Availability.AVAILABLE).update(
         available=Availability.AVAILABLE
