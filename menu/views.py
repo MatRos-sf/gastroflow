@@ -17,11 +17,27 @@ class ItemCreateView(CreateView):
     template_name = "menu/create-item.html"
 
     def get_success_url(self):
-        return reverse("gf-menu:item-list")
+        return reverse("gf-menu:item-list")  # TODO: detail-view
 
     def form_valid(self, form):
         messages.success(
             self.request, _("Item added: '%(name)s'") % {"name": self.object.name}
+        )
+        return super().form_valid(form)
+
+
+class ItemUpdateView(UpdateView):
+    model = Item
+    form_class = ItemForm
+    template_name = "menu/update-item.html"
+
+    def get_success_url(self):
+        return reverse("gf-menu:item-list")
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            _("Item '%(name)s' has been updated.") % {"name": self.object.name},
         )
         return super().form_valid(form)
 
@@ -45,19 +61,6 @@ class ItemListView(ListView):
 class ItemDetailView(DetailView):
     model = Item
     template_name = "menu/detail.html"
-
-
-class ItemUpdateView(UpdateView):
-    model = Item
-    form_class = ItemForm
-    template_name = "menu/add.html"
-    extra_context = {"action_type": "Edytuj"}
-
-    def get_success_url(self):
-        messages.success(
-            self.request, f"Pozycja została zaktualizowana: '{self.object.name}'"
-        )
-        return reverse("item-list")
 
 
 class AvailableListView(FilterView):

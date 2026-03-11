@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n crispy_forms_tags %}
 {% block title %}
-    {% trans "Add Item" %}
+    {% trans "Update Item" %}
 {% endblock title %}
 {% block content %}
     <div class="row justify-content-center">
@@ -9,14 +9,14 @@
             <div class="card border-0 rounded-4 shadow">
                 <div class="card-body p-4 p-md-5">
                     <div class="mb-4">
-                        <h3 class="fw-bold mb-1">{% trans "Add Item" %}</h3>
-                        <p class="text-muted small mb-0">{% trans "Fill in the details and save the menu item" %}</p>
+                        <h3 class="fw-bold mb-1">{% trans "Update" %}</h3>
+                        <p class="text-muted small mb-0">{% trans "Update the item" %}</p>
                     </div>
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         {{ form|crispy }}
                         <div class="d-grid gap-2 d-sm-flex mt-4">
-                            <button type="submit" class="btn btn-dark rounded-pill px-4 w-100">{% trans "Save" %}</button>
+                            <button type="submit" class="btn btn-dark rounded-pill px-4 w-100">{% trans "Update" %}</button>
                             <a href="{% url 'gf-menu:item-list' %}"
                                class="btn btn-outline-secondary rounded-pill px-4 w-100">{% trans "Cancel" %}</a>
                         </div>
