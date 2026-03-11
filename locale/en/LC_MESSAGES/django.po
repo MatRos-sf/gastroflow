@@ -1771,13 +1771,13 @@ msgstr ""
 msgid "Hall"
 msgstr ""
 
-#: templates/base.html
+#: templates/base.html menu/models.py
 msgid "Kitchen"
-msgstr ""
+msgstr "Kitchen"
 
-#: templates/base.html
+#: templates/base.html menu/models.py
 msgid "Bar"
-msgstr ""
+msgstr "Bar"
 
 #: templates/base.html
 msgid "Notifications"
@@ -1907,6 +1907,18 @@ msgstr "items"
 msgid "Item added: '%(name)s'"
 msgstr "Item added: '%(name)s'"
 
+#: menu/views.py
+msgid "Item '%(name)s' has been updated."
+msgstr "Item '%(name)s' has been updated."
+
+#: menu/templates/menu/update-item.html
+msgid "Update Item"
+msgstr "Update Item"
+
+#: menu/templates/menu/update-item.html
+msgid "Update the item"
+msgstr "Update the item"
+
 #: menu/templates/menu/create-item.html
 msgid "Add Item"
 msgstr "Add Item"
@@ -1930,14 +1942,6 @@ msgstr "Priority"
 #: menu/templates/menu/create-item.html
 msgid "Something went wrong. Try again."
 msgstr "Something went wrong. Try again."
-
-#: menu/models.py
-msgid "Bar"
-msgstr "Bar"
-
-#: menu/models.py
-msgid "Kitchen"
-msgstr "Kitchen"
 
 #: menu/templates/menu/create-item.html
 msgid "New Category"

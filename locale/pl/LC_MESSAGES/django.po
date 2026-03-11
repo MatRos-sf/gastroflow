@@ -1825,11 +1825,11 @@ msgstr "Zarządzanie"
 msgid "Hall"
 msgstr "Sala"
 
-#: templates/base.html
+#: templates/base.html menu/models.py
 msgid "Kitchen"
 msgstr "Kuchnia"
 
-#: templates/base.html
+#: templates/base.html menu/models.py
 msgid "Bar"
 msgstr "Bar"
 
@@ -1967,6 +1967,18 @@ msgstr "produkty"
 msgid "Item added: '%(name)s'"
 msgstr "Pozycja została dodana: '%(name)s'"
 
+#: menu/views.py
+msgid "Item '%(name)s' has been updated."
+msgstr "Pozycja '%(name)s' została zaktualizowana."
+
+#: menu/templates/menu/update-item.html
+msgid "Update Item"
+msgstr "Edytuj pozycję"
+
+#: menu/templates/menu/update-item.html
+msgid "Update the item"
+msgstr "Zaktualizuj dane pozycji menu"
+
 #: menu/templates/menu/create-item.html
 msgid "Add Item"
 msgstr "Dodaj pozycję"
@@ -1990,14 +2002,6 @@ msgstr "Priorytet"
 #: menu/templates/menu/create-item.html
 msgid "Something went wrong. Try again."
 msgstr "Coś poszło nie tak. Spróbuj ponownie."
-
-#: menu/models.py
-msgid "Bar"
-msgstr "Bar"
-
-#: menu/models.py
-msgid "Kitchen"
-msgstr "Kuchnia"
 
 #: menu/templates/menu/create-item.html
 msgid "New Category"
