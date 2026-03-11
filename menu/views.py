@@ -3,10 +3,10 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, DetailView, ListView, UpdateView
+from django.views.generic import CreateView, DetailView, UpdateView
 from django_filters.views import FilterView
 
-from .filters import ItemMenuTypeFilter
+from .filters import ItemListFilter, ItemMenuTypeFilter
 from .forms import ItemForm
 from .models import Addition, Availability, Category, Item, MenuType, SubCategory
 
@@ -47,19 +47,24 @@ class ItemDetailView(DetailView):
     template_name = "menu/detail-item.html"
 
 
-class ItemListView(ListView):
+class ItemListView(FilterView):
     model = Item
-    form_class = ItemForm
-    template_name = "menu/list.html"
+    template_name = "menu/list-item.html"
+    filterset_class = ItemListFilter
+    paginate_by = 50
 
     def get_queryset(self):
-        category = self.request.GET.get("category", MenuType.MAIN)
-        return Item.objects.filter(menu=category).order_by("id_checkout")
+        return (
+            Item.objects.select_related("category", "sub_menu")
+            .prefetch_related("additions")
+            .order_by("id_checkout")
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["categories"] = [(value, label) for value, label in MenuType.choices]
-        context["selected_category"] = self.request.GET.get("category", MenuType.MAIN)
+        params = self.request.GET.copy()
+        params.pop("page", None)
+        context["filter_params"] = params.urlencode()
         return context
 
 

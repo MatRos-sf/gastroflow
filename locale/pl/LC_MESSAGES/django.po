@@ -1013,7 +1013,7 @@ msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/forms/widgets.py:527
 msgid "Clear"
-msgstr ""
+msgstr "Wyczyść"
 
 #: venv/lib/python3.12/site-packages/django/forms/widgets.py:528
 msgid "Currently"
@@ -1805,7 +1805,7 @@ msgstr "Imię i nazwisko"
 msgid "Position"
 msgstr "Stanowisko"
 
-#: templates/base.html
+#: templates/base.html menu/templates/menu/list.html
 msgid "Menu"
 msgstr "Menu"
 
@@ -2014,6 +2014,34 @@ msgstr "Dodatki"
 #: menu/templates/menu/detail.html
 msgid "Created at"
 msgstr "Utworzono"
+
+#: menu/templates/menu/list.html
+msgid "Items"
+msgstr "Pozycje"
+
+#: menu/templates/menu/list.html
+msgid "Add item"
+msgstr "Dodaj pozycję"
+
+#: menu/templates/menu/list.html
+msgid "View"
+msgstr "Podgląd"
+
+#: menu/templates/menu/list.html
+msgid "No items in this category."
+msgstr "Brak pozycji w tej kategorii."
+
+#: menu/templates/menu/list.html
+msgid "Filter"
+msgstr "Filtruj"
+
+#: menu/templates/menu/list.html
+msgid "All"
+msgstr "Wszystkie"
+
+#: menu/templates/menu/list.html
+msgid "Page %(current)s of %(total)s"
+msgstr "Strona %(current)s z %(total)s"
 
 #: menu/templates/menu/create-item.html
 msgid "Add Item"

@@ -1751,9 +1751,9 @@ msgstr ""
 msgid "Position"
 msgstr ""
 
-#: templates/base.html
+#: templates/base.html menu/templates/menu/list.html
 msgid "Menu"
-msgstr ""
+msgstr "Menu"
 
 #: templates/base.html
 msgid "New alerts"
@@ -1954,6 +1954,34 @@ msgstr "Additions"
 #: menu/templates/menu/detail.html
 msgid "Created at"
 msgstr "Created at"
+
+#: menu/templates/menu/list.html
+msgid "Items"
+msgstr "Items"
+
+#: menu/templates/menu/list.html
+msgid "Add item"
+msgstr "Add item"
+
+#: menu/templates/menu/list.html
+msgid "View"
+msgstr "View"
+
+#: menu/templates/menu/list.html
+msgid "No items in this category."
+msgstr "No items in this category."
+
+#: menu/templates/menu/list.html
+msgid "Filter"
+msgstr "Filter"
+
+#: menu/templates/menu/list.html
+msgid "All"
+msgstr "All"
+
+#: menu/templates/menu/list.html
+msgid "Page %(current)s of %(total)s"
+msgstr "Page %(current)s of %(total)s"
 
 #: menu/templates/menu/create-item.html
 msgid "Add Item"

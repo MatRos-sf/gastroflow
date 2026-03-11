@@ -16,12 +16,10 @@ from .views import (
 app_name = "gf-menu"
 
 urlpatterns = [
-    # path("items/", ItemListView.as_view(), name="item-list"),
+    path("item/", ItemListView.as_view(), name="item-list"),
     path("item/create/", ItemCreateView.as_view(), name="item-create"),
     path("item/update/<int:pk>/", ItemUpdateView.as_view(), name="item-update"),
     path("item/<int:pk>/", ItemDetailView.as_view(), name="item-detail"),
-    path("", ItemListView.as_view(), name="item-list"),
-    path("add/", ItemCreateView.as_view(), name="item-add"),
     path("changer/", AvailableListView.as_view(), name="available"),
     path("toggle/<int:pk>/", toggle_availability, name="toggle-availability"),
     path("delivery-product/", delivery_items, name="delivery-product"),
