@@ -17,7 +17,7 @@ class ItemCreateView(CreateView):
     template_name = "menu/create-item.html"
 
     def get_success_url(self):
-        return reverse("gf-menu:item-list")  # TODO: detail-view
+        return reverse("gf-menu:item-detail", kwargs={"pk": self.object.pk})
 
     def form_valid(self, form):
         messages.success(
@@ -32,7 +32,7 @@ class ItemUpdateView(UpdateView):
     template_name = "menu/update-item.html"
 
     def get_success_url(self):
-        return reverse("gf-menu:item-list")
+        return reverse("gf-menu:item-detail", kwargs={"pk": self.object.pk})
 
     def form_valid(self, form):
         messages.success(
@@ -40,6 +40,11 @@ class ItemUpdateView(UpdateView):
             _("Item '%(name)s' has been updated.") % {"name": self.object.name},
         )
         return super().form_valid(form)
+
+
+class ItemDetailView(DetailView):
+    model = Item
+    template_name = "menu/detail-item.html"
 
 
 class ItemListView(ListView):
@@ -56,11 +61,6 @@ class ItemListView(ListView):
         context["categories"] = [(value, label) for value, label in MenuType.choices]
         context["selected_category"] = self.request.GET.get("category", MenuType.MAIN)
         return context
-
-
-class ItemDetailView(DetailView):
-    model = Item
-    template_name = "menu/detail.html"
 
 
 class AvailableListView(FilterView):

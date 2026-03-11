@@ -1919,6 +1919,42 @@ msgstr "Update Item"
 msgid "Update the item"
 msgstr "Update the item"
 
+#: menu/templates/menu/detail.html
+msgid "Details"
+msgstr "Details"
+
+#: menu/templates/menu/detail.html
+msgid "Location"
+msgstr "Location"
+
+#: menu/templates/menu/detail.html
+msgid "Daily stock"
+msgstr "Daily stock"
+
+#: menu/templates/menu/detail.html
+msgid "Back"
+msgstr "Back"
+
+#: menu/templates/menu/detail.html
+msgid "Price"
+msgstr "Price"
+
+#: menu/templates/menu/detail.html
+msgid "Subcategory"
+msgstr "Subcategory"
+
+#: menu/templates/menu/detail.html
+msgid "Description"
+msgstr "Description"
+
+#: menu/templates/menu/detail.html
+msgid "Additions"
+msgstr "Additions"
+
+#: menu/templates/menu/detail.html
+msgid "Created at"
+msgstr "Created at"
+
 #: menu/templates/menu/create-item.html
 msgid "Add Item"
 msgstr "Add Item"

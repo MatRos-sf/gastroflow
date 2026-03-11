@@ -1979,6 +1979,42 @@ msgstr "Edytuj pozycję"
 msgid "Update the item"
 msgstr "Zaktualizuj dane pozycji menu"
 
+#: menu/templates/menu/detail.html
+msgid "Details"
+msgstr "Szczegóły"
+
+#: menu/templates/menu/detail.html
+msgid "Location"
+msgstr "Lokalizacja"
+
+#: menu/templates/menu/detail.html
+msgid "Daily stock"
+msgstr "Dzienny stan"
+
+#: menu/templates/menu/detail.html
+msgid "Back"
+msgstr "Wróć"
+
+#: menu/templates/menu/detail.html
+msgid "Price"
+msgstr "Cena"
+
+#: menu/templates/menu/detail.html
+msgid "Subcategory"
+msgstr "Podkategoria"
+
+#: menu/templates/menu/detail.html
+msgid "Description"
+msgstr "Opis"
+
+#: menu/templates/menu/detail.html
+msgid "Additions"
+msgstr "Dodatki"
+
+#: menu/templates/menu/detail.html
+msgid "Created at"
+msgstr "Utworzono"
+
 #: menu/templates/menu/create-item.html
 msgid "Add Item"
 msgstr "Dodaj pozycję"
