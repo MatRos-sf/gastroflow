@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 CATEGORIES_CACHE_KEY = "menu:categories"
 
 
+# TODO: remove
 class MenuType(models.TextChoices):
     MAIN = "menu", "Menu"
     MENU_FOR_CHILDREN = "menu dla dzieci", "Menu dla dzieci"
@@ -18,6 +19,7 @@ class MenuType(models.TextChoices):
     UNAVAILABLE = "niedostępny", "Niedostępny"
 
 
+# TODO: remove
 class SubMenuType(models.TextChoices):
     COFFEE = "kawa", "Kawa"
     TEA = "herbata", "Herbata"
@@ -28,6 +30,7 @@ class SubMenuType(models.TextChoices):
     CAKE = "ciasto", "Ciasto"
 
 
+# TODO: remove
 class Availability(models.IntegerChoices):
     AVAILABLE = 1, "Available"
     SMALL_AMOUNT = 2, "Small amount"

@@ -70,6 +70,7 @@ class ItemListView(BossPermissionMixin, FilterView):
         return context
 
 
+# TODO: refactor
 class AvailableListView(FilterView):
     template_name = "menu/available_changer.html"
     model = Item
@@ -85,6 +86,7 @@ class AvailableListView(FilterView):
         return qs.order_by("-available")
 
 
+# TODO: refactor
 def toggle_availability(request, pk: int):
     item = get_object_or_404(Item, pk=pk)
     values = Availability.values
@@ -98,6 +100,7 @@ def toggle_availability(request, pk: int):
     return redirect("available")
 
 
+# TODO: refactor
 def addition_quick_create(request):
     if request.method == "POST":
         name = request.POST.get("name", "").strip()
@@ -112,6 +115,7 @@ def addition_quick_create(request):
     return JsonResponse({"error": "invalid"}, status=400)
 
 
+# TODO: refactor
 def category_quick_create(request):
     if request.method == "POST":
         name = request.POST.get("name", "").strip()
@@ -121,6 +125,7 @@ def category_quick_create(request):
     return JsonResponse({"error": "invalid"}, status=400)
 
 
+# TODO: refactor
 def subcategory_quick_create(request):
     if request.method == "POST":
         name = request.POST.get("name", "").strip()
@@ -132,6 +137,7 @@ def subcategory_quick_create(request):
     return JsonResponse({"error": "invalid"}, status=400)
 
 
+# TODO: refactor
 def delivery_items(request):
     updated_fields = Item.objects.filter(available__gt=Availability.AVAILABLE).update(
         available=Availability.AVAILABLE
