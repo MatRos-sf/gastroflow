@@ -6,12 +6,14 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DetailView, UpdateView
 from django_filters.views import FilterView
 
+from tools.views.permission import BossPermissionMixin
+
 from .filters import ItemListFilter, ItemMenuTypeFilter
 from .forms import ItemForm
 from .models import Addition, Availability, Category, Item, MenuType, SubCategory
 
 
-class ItemCreateView(CreateView):
+class ItemCreateView(BossPermissionMixin, CreateView):
     model = Item
     form_class = ItemForm
     template_name = "menu/create-item.html"
@@ -26,7 +28,7 @@ class ItemCreateView(CreateView):
         return super().form_valid(form)
 
 
-class ItemUpdateView(UpdateView):
+class ItemUpdateView(BossPermissionMixin, UpdateView):
     model = Item
     form_class = ItemForm
     template_name = "menu/update-item.html"
@@ -42,12 +44,12 @@ class ItemUpdateView(UpdateView):
         return super().form_valid(form)
 
 
-class ItemDetailView(DetailView):
+class ItemDetailView(BossPermissionMixin, DetailView):
     model = Item
     template_name = "menu/detail-item.html"
 
 
-class ItemListView(FilterView):
+class ItemListView(BossPermissionMixin, FilterView):
     model = Item
     template_name = "menu/list-item.html"
     filterset_class = ItemListFilter
