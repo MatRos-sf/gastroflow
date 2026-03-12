@@ -1,7 +1,7 @@
 from django.core.cache import cache
 from django_filters import ChoiceFilter, FilterSet, ModelChoiceFilter
 
-from .models import CATEGORIES_CACHE_KEY, Category, Item, Location, MenuType
+from .models import CATEGORIES_CACHE_KEY, Category, Item, Location
 
 
 def _get_categories(request):
@@ -26,11 +26,3 @@ class ItemListFilter(FilterSet):
     class Meta:
         model = Item
         fields = ("category", "preparation_location")
-
-
-class ItemMenuTypeFilter(FilterSet):
-    menu = ChoiceFilter(choices=MenuType.choices)
-
-    class Meta:
-        model = Item
-        fields = ("menu",)
