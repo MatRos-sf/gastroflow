@@ -2018,3 +2018,71 @@ msgstr "New Subcategory"
 #: menu/templates/menu/create-item.html
 msgid "Category"
 msgstr "Category"
+
+#: menu/templates/menu/replenish-item.html
+msgid "Replenish Stock"
+msgstr "Replenish Stock"
+
+#: menu/templates/menu/replenish-item.html
+msgid "Replenish stock"
+msgstr "Replenish stock"
+
+#: menu/templates/menu/replenish-item.html
+msgid "Set today's available portions for tracked items."
+msgstr "Set today's available portions for tracked items."
+
+#: menu/templates/menu/replenish-item.html
+msgid "Supply all"
+msgstr "Supply all"
+
+#: menu/templates/menu/replenish-item.html
+msgid "ID"
+msgstr "ID"
+
+#: menu/templates/menu/replenish-item.html
+msgid "Sold out"
+msgstr "Sold out"
+
+#: menu/templates/menu/replenish-item.html
+msgid "Supply partly"
+msgstr "Supply partly"
+
+#: menu/templates/menu/replenish-item.html
+msgid "Supply"
+msgstr "Supply"
+
+#: menu/templates/menu/replenish-item.html
+msgid "No tracked items found."
+msgstr "No tracked items found."
+
+#: menu/templates/menu/replenish-item.html
+msgid "Set daily stock"
+msgstr "Set daily stock"
+
+#: menu/templates/menu/replenish-item.html
+msgid "Leave empty for unlimited"
+msgstr "Leave empty for unlimited"
+
+#: menu/templates/menu/replenish-item.html
+msgid "0 = sold out, empty = unlimited"
+msgstr "0 = sold out, empty = unlimited"
+
+#: menu/templates/menu/daily-stock-item.html
+msgid "Set Daily Stock"
+msgstr "Set Daily Stock"
+
+#: menu/templates/menu/daily-stock-item.html
+msgid "Set stock"
+msgstr "Set stock"
+
+#: menu/views
+msgid "Set daily stock for '%(name)s'"
+msgstr "Set daily stock for '%(name)s'"
+
+#: menu/views
+msgid "Supplied '%(name)s'"
+msgstr "Supplied '%(name)s'"
+
+#: menu/views
+msgid "Supplied %(count)s items"
+msgstr "Supplied %(count)s items"
