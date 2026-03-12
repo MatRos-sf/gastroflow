@@ -2078,3 +2078,71 @@ msgstr "Nowa podkategoria"
 #: menu/templates/menu/create-item.html
 msgid "Category"
 msgstr "Kategoria"
+
+#: menu/templates/menu/replenish-item.html
+msgid "Replenish Stock"
+msgstr "Uzupełnij magazyn"
+
+#: menu/templates/menu/replenish-item.html
+msgid "Replenish stock"
+msgstr "Uzupełnij magazyn"
+
+#: menu/templates/menu/replenish-item.html
+msgid "Set today's available portions for tracked items."
+msgstr "Ustaw dzisiejszą dostępną ilość dla śledzonych pozycji."
+
+#: menu/templates/menu/replenish-item.html
+msgid "Supply all"
+msgstr "Uzupełnij wszystko"
+
+#: menu/templates/menu/replenish-item.html
+msgid "ID"
+msgstr "ID"
+
+#: menu/templates/menu/replenish-item.html
+msgid "Sold out"
+msgstr "Wyprzedane"
+
+#: menu/templates/menu/replenish-item.html
+msgid "Supply partly"
+msgstr "Uzupełnij częściowo"
+
+#: menu/templates/menu/replenish-item.html
+msgid "Supply"
+msgstr "Uzupełnij"
+
+#: menu/templates/menu/replenish-item.html
+msgid "No tracked items found."
+msgstr "Nie znaleziono śledzonych pozycji."
+
+#: menu/templates/menu/replenish-item.html
+msgid "Set daily stock"
+msgstr "Ustaw dzienny stan"
+
+#: menu/templates/menu/replenish-item.html
+msgid "Leave empty for unlimited"
+msgstr "Pozostaw puste dla nieograniczonej ilości"
+
+#: menu/templates/menu/replenish-item.html
+msgid "0 = sold out, empty = unlimited"
+msgstr "0 = wyprzedane, puste = bez limitu"
+
+#: menu/templates/menu/daily-stock-item.html
+msgid "Set Daily Stock"
+msgstr "Ustaw dzienny stan"
+
+#: menu/templates/menu/daily-stock-item.html
+msgid "Set stock"
+msgstr "Ustaw stan"
+
+#: menu/views
+msgid "Set daily stock for '%(name)s'"
+msgstr "Ustawiono dzienny stan dla '%(name)s'"
+
+#: menu/views
+msgid "Supplied '%(name)s'"
+msgstr "Uzupełniono '%(name)s'"
+
+#: menu/views
+msgid "Supplied %(count)s items"
+msgstr "Uzupełniono %(count)s pozycji"
