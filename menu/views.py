@@ -1,17 +1,24 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Prefetch
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import (
+    CreateView,
+    DetailView,
+    ListView,
+    TemplateView,
+    UpdateView,
+)
 from django_filters.views import FilterView
 
 from tools.views.permission import BossPermissionMixin
 
 from .filters import ItemListFilter
-from .forms import ItemForm
-from .models import Addition, Category, Item, SubCategory
+from .forms import ItemForm, MenuPeriodForm
+from .models import Addition, Category, Item, MenuPeriod, SubCategory
 
 
 class ItemCreateView(BossPermissionMixin, CreateView):
@@ -151,3 +158,59 @@ def supply_all_items(request):
         ).update(daily_stock=None)
         messages.success(request, _("Supplied %(count)s items") % {"count": updated})
     return redirect("gf-menu:item-replenish")
+
+
+class MenuPeriodFormMixin:
+    model = MenuPeriod
+    form_class = MenuPeriodForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.prefetch_related(
+            Prefetch(
+                "item_set",
+                queryset=Item.objects.filter(is_delete=False).order_by("name"),
+            )
+        ).order_by("name")
+        obj = getattr(self, "object", None)
+        context["selected_item_pks"] = (
+            set(obj.items.values_list("pk", flat=True)) if obj and obj.pk else set()
+        )
+        return context
+
+
+class MenuPeriodCreateView(BossPermissionMixin, MenuPeriodFormMixin, CreateView):
+    template_name = "menu/create-menu-period.html"
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            _("Menu period '%(name)s' created.") % {"name": form.instance.name},
+        )
+        return super().form_valid(form)
+
+
+class MenuPeriodUpdateView(BossPermissionMixin, MenuPeriodFormMixin, UpdateView):
+    template_name = "menu/update-menu-period.html"
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            _("Menu period '%(name)s' updated.") % {"name": form.instance.name},
+        )
+        return super().form_valid(form)
+
+
+class MenuPeriodDetailView(BossPermissionMixin, DetailView):
+    model = MenuPeriod
+    template_name = "menu/detail-menu-period.html"
+
+
+class MenuDashboardView(BossPermissionMixin, TemplateView):
+    template_name = "menu/dashboard.html"
+
+
+class MenuPeriodListView(BossPermissionMixin, ListView):
+    model = MenuPeriod
+    template_name = "menu/list-menu-period.html"
+    queryset = MenuPeriod.objects.order_by("-is_enabled", "name")

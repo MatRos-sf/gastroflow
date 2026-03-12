@@ -154,3 +154,14 @@ class Item(models.Model):
 
     def get_absolute_url(self):
         return reverse("gf-menu:item-detail", kwargs={"pk": self.pk})
+
+
+class MenuPeriod(models.Model):
+    name = models.CharField(max_length=100)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    items = models.ManyToManyField(Item, blank=True)
+    is_enabled = models.BooleanField(default=True)
+
+    def get_absolute_url(self):
+        return reverse("gf-menu:menu-period-detail", kwargs={"pk": self.pk})
