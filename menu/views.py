@@ -179,7 +179,7 @@ class MenuPeriodFormMixin:
         return context
 
 
-class MenuPeriodCreateView(MenuPeriodFormMixin, CreateView):
+class MenuPeriodCreateView(BossPermissionMixin, MenuPeriodFormMixin, CreateView):
     template_name = "menu/create-menu-period.html"
 
     def form_valid(self, form):
@@ -190,7 +190,7 @@ class MenuPeriodCreateView(MenuPeriodFormMixin, CreateView):
         return super().form_valid(form)
 
 
-class MenuPeriodUpdateView(MenuPeriodFormMixin, UpdateView):
+class MenuPeriodUpdateView(BossPermissionMixin, MenuPeriodFormMixin, UpdateView):
     template_name = "menu/update-menu-period.html"
 
     def form_valid(self, form):
@@ -201,7 +201,7 @@ class MenuPeriodUpdateView(MenuPeriodFormMixin, UpdateView):
         return super().form_valid(form)
 
 
-class MenuPeriodDetailView(DetailView):
+class MenuPeriodDetailView(BossPermissionMixin, DetailView):
     model = MenuPeriod
     template_name = "menu/detail-menu-period.html"
 
