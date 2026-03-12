@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+    {% trans "Menu Management" %}
+{% endblock title %}
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-11 col-lg-9">
+            <div class="text-center mb-4">
+                <h4 class="fw-bold mb-0">{% trans "Menu management" %}</h4>
+            </div>
+            <!-- Catalog -->
+            <p class="small text-uppercase text-muted fw-bold mb-2"
+               style="letter-spacing:.05em">{% trans "Catalog" %}</p>
+            <div class="row g-3 mb-4">
+                <div class="col-12 col-sm-6">
+                    <a href="{% url 'gf-menu:item-list' %}"
+                       class="card border-0 rounded-4 shadow text-decoration-none h-100">
+                        <div class="card-body p-4">
+                            <h6 class="fw-bold mb-1">{% trans "All items" %}</h6>
+                            <p class="text-muted small mb-0">{% trans "Browse and edit the full menu catalog." %}</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-12 col-sm-6">
+                    <a href="{% url 'gf-menu:item-create' %}"
+                       class="card border-0 rounded-4 shadow text-decoration-none h-100">
+                        <div class="card-body p-4">
+                            <h6 class="fw-bold mb-1">{% trans "Add item" %}</h6>
+                            <p class="text-muted small mb-0">{% trans "Create a new menu item." %}</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <!-- Daily stock -->
+            <p class="small text-uppercase text-muted fw-bold mb-2"
+               style="letter-spacing:.05em">{% trans "Daily stock" %}</p>
+            <div class="row g-3 mb-4">
+                <div class="col-12 col-sm-6">
+                    <a href="{% url 'gf-menu:item-replenish' %}"
+                       class="card border-0 rounded-4 shadow text-decoration-none h-100">
+                        <div class="card-body p-4">
+                            <h6 class="fw-bold mb-1">{% trans "Replenish stock" %}</h6>
+                            <p class="text-muted small mb-0">{% trans "Set today's available portions for tracked items." %}</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-12 col-sm-6">
+                    <a href="{% url 'gf-menu:item-daily-stock' %}"
+                       class="card border-0 rounded-4 shadow text-decoration-none h-100">
+                        <div class="card-body p-4">
+                            <h6 class="fw-bold mb-1">{% trans "Set daily stock" %}</h6>
+                            <p class="text-muted small mb-0">{% trans "Configure which items have stock tracking enabled." %}</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <!-- Menu periods -->
+            <p class="small text-uppercase text-muted fw-bold mb-2"
+               style="letter-spacing:.05em">{% trans "Menu periods" %}</p>
+            <div class="row g-3">
+                <div class="col-12 col-sm-6">
+                    <a href="{% url 'gf-menu:menu-period-list' %}"
+                       class="card border-0 rounded-4 shadow text-decoration-none h-100">
+                        <div class="card-body p-4">
+                            <h6 class="fw-bold mb-1">{% trans "All periods" %}</h6>
+                            <p class="text-muted small mb-0">{% trans "View and manage breakfast, lunch, and other time windows." %}</p>
+                        </div>
+                    </a>
+                </div>
+                <div class="col-12 col-sm-6">
+                    <a href="{% url 'gf-menu:menu-period-create' %}"
+                       class="card border-0 rounded-4 shadow text-decoration-none h-100">
+                        <div class="card-body p-4">
+                            <h6 class="fw-bold mb-1">{% trans "Add period" %}</h6>
+                            <p class="text-muted small mb-0">{% trans "Define a new time window and assign items to it." %}</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
