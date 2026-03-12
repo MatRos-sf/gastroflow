@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
@@ -8,9 +9,9 @@ from django_filters.views import FilterView
 
 from tools.views.permission import BossPermissionMixin
 
-from .filters import ItemListFilter, ItemMenuTypeFilter
+from .filters import ItemListFilter
 from .forms import ItemForm
-from .models import Addition, Availability, Category, Item, MenuType, SubCategory
+from .models import Addition, Category, Item, SubCategory
 
 
 class ItemCreateView(BossPermissionMixin, CreateView):
@@ -49,9 +50,8 @@ class ItemDetailView(BossPermissionMixin, DetailView):
     template_name = "menu/detail-item.html"
 
 
-class ItemListView(BossPermissionMixin, FilterView):
+class ItemBaseListView(FilterView):
     model = Item
-    template_name = "menu/list-item.html"
     filterset_class = ItemListFilter
     paginate_by = 50
 
@@ -70,37 +70,37 @@ class ItemListView(BossPermissionMixin, FilterView):
         return context
 
 
-# TODO: refactor
-class AvailableListView(FilterView):
-    template_name = "menu/available_changer.html"
-    model = Item
-    filterset_class = ItemMenuTypeFilter
-    extra_context = {
-        "menu_types": [
-            i[0] for i in MenuType.choices if i[0] != MenuType.UNAVAILABLE.value
-        ]
-    }
+class ItemListView(BossPermissionMixin, ItemBaseListView):
+    """Full menu item list. Boss only."""
+
+    template_name = "menu/list-item.html"
+
+
+class ItemDailyStockListView(LoginRequiredMixin, ItemBaseListView):
+    """Manage which items have daily stock tracking enabled. Boss only."""
+
+    template_name = "menu/daily-stock-item.html"
+
+
+class ItemReplenishView(LoginRequiredMixin, ItemBaseListView):
+    """Morning replenish view — shows only tracked items so staff can set today's portions."""
+
+    template_name = "menu/replenish-item.html"
 
     def get_queryset(self):
-        qs = super().get_queryset()
-        return qs.order_by("-available")
+        return super().get_queryset().filter(daily_stock__isnull=False)
 
 
-# TODO: refactor
-def toggle_availability(request, pk: int):
-    item = get_object_or_404(Item, pk=pk)
-    values = Availability.values
-    current_value_idx = values.index(item.available)
-    item.available = values[(current_value_idx + 1) % len(values)]
-    item.save()
-
-    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-        return JsonResponse({"available": item.available})
-
-    return redirect("available")
+def set_daily_stock(request, pk: int):
+    if request.method == "POST":
+        item = get_object_or_404(Item, pk=pk)
+        value = request.POST.get("daily_stock", "").strip()
+        item.daily_stock = int(value) if value != "" else None
+        item.save(update_fields=["daily_stock"])
+        messages.success(request, _("Set daily stock for '%(name)s'") % {"name": item})
+    return redirect("gf-menu:item-daily-stock")
 
 
-# TODO: refactor
 def addition_quick_create(request):
     if request.method == "POST":
         name = request.POST.get("name", "").strip()
@@ -115,7 +115,6 @@ def addition_quick_create(request):
     return JsonResponse({"error": "invalid"}, status=400)
 
 
-# TODO: refactor
 def category_quick_create(request):
     if request.method == "POST":
         name = request.POST.get("name", "").strip()
@@ -125,7 +124,6 @@ def category_quick_create(request):
     return JsonResponse({"error": "invalid"}, status=400)
 
 
-# TODO: refactor
 def subcategory_quick_create(request):
     if request.method == "POST":
         name = request.POST.get("name", "").strip()
@@ -137,10 +135,19 @@ def subcategory_quick_create(request):
     return JsonResponse({"error": "invalid"}, status=400)
 
 
-# TODO: refactor
-def delivery_items(request):
-    updated_fields = Item.objects.filter(available__gt=Availability.AVAILABLE).update(
-        available=Availability.AVAILABLE
-    )
-    messages.success(request, f"{updated_fields} pozycji zostały przywrócone")
-    return redirect("available")
+def supply_item(request, pk: int):
+    if request.method == "POST":
+        item = get_object_or_404(Item, pk=pk)
+        item.daily_stock = None
+        item.save(update_fields=["daily_stock"])
+        messages.success(request, _("Supplied '%(name)s'") % {"name": item})
+    return redirect("gf-menu:item-replenish")
+
+
+def supply_all_items(request):
+    if request.method == "POST":
+        updated = Item.objects.filter(
+            daily_stock__isnull=False, is_delete=False
+        ).update(daily_stock=None)
+        messages.success(request, _("Supplied %(count)s items") % {"count": updated})
+    return redirect("gf-menu:item-replenish")
