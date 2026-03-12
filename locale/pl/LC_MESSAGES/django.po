@@ -2146,3 +2146,131 @@ msgstr "Uzupełniono '%(name)s'"
 #: menu/views
 msgid "Supplied %(count)s items"
 msgstr "Uzupełniono %(count)s pozycji"
+
+#: menu/templates/menu/create-menu-period.html
+msgid "Create Menu Period"
+msgstr "Utwórz okres menu"
+
+#: menu/templates/menu/create-menu-period.html
+msgid "Create menu period"
+msgstr "Utwórz okres menu"
+
+#: menu/templates/menu/create-menu-period.html
+msgid "Define a time window and assign items available during it."
+msgstr "Zdefiniuj przedział czasowy i przypisz dostępne w nim pozycje."
+
+#: menu/templates/menu/create-menu-period.html
+msgid "e.g. Breakfast, Lunch"
+msgstr "np. Śniadanie, Obiad"
+
+#: menu/templates/menu/create-menu-period.html
+msgid "Start time"
+msgstr "Godzina rozpoczęcia"
+
+#: menu/templates/menu/create-menu-period.html
+msgid "End time"
+msgstr "Godzina zakończenia"
+
+#: menu/templates/menu/create-menu-period.html
+msgid "Enabled"
+msgstr "Aktywny"
+
+#: menu/templates/menu/create-menu-period.html
+msgid "selected"
+msgstr "wybranych"
+
+#: menu/templates/menu/create-menu-period.html
+msgid "Search items..."
+msgstr "Szukaj pozycji..."
+
+#: menu/templates/menu/create-menu-period.html
+msgid "Select all"
+msgstr "Zaznacz wszystkie"
+
+#: menu/templates/menu/create-menu-period.html
+msgid "No categories found."
+msgstr "Nie znaleziono kategorii."
+
+#: menu/views
+msgid "Menu period '%(name)s' created."
+msgstr "Okres menu '%(name)s' został utworzony."
+
+#: menu/templates/menu/update-menu-period.html
+msgid "Edit Menu Period"
+msgstr "Edytuj okres menu"
+
+#: menu/templates/menu/update-menu-period.html
+msgid "Edit menu period"
+msgstr "Edytuj okres menu"
+
+#: menu/templates/menu/detail-menu-period.html
+msgid "Disabled"
+msgstr "Nieaktywny"
+
+#: menu/templates/menu/detail-menu-period.html
+msgid "Status"
+msgstr "Status"
+
+#: menu/templates/menu/detail-menu-period.html
+msgid "No items assigned."
+msgstr "Brak przypisanych pozycji."
+
+#: menu/views
+msgid "Menu period '%(name)s' updated."
+msgstr "Okres menu '%(name)s' został zaktualizowany."
+
+#: menu/templates/menu/list-menu-period.html
+msgid "Menu Periods"
+msgstr "Okresy menu"
+
+#: menu/templates/menu/list-menu-period.html
+msgid "Menu periods"
+msgstr "Okresy menu"
+
+#: menu/templates/menu/list-menu-period.html
+msgid "Add period"
+msgstr "Dodaj okres"
+
+#: menu/templates/menu/list-menu-period.html
+msgid "No menu periods defined."
+msgstr "Nie zdefiniowano żadnych okresów menu."
+
+#: menu/templates/menu/dashboard.html
+msgid "Menu Management"
+msgstr "Zarządzanie menu"
+
+#: menu/templates/menu/dashboard.html
+msgid "Menu management"
+msgstr "Zarządzanie menu"
+
+#: menu/templates/menu/dashboard.html
+msgid "Catalog"
+msgstr "Katalog"
+
+#: menu/templates/menu/dashboard.html
+msgid "All items"
+msgstr "Wszystkie pozycje"
+
+#: menu/templates/menu/dashboard.html
+msgid "Browse and edit the full menu catalog."
+msgstr "Przeglądaj i edytuj pełny katalog menu."
+
+#: menu/templates/menu/dashboard.html
+msgid "Create a new menu item."
+msgstr "Utwórz nową pozycję menu."
+
+#: menu/templates/menu/dashboard.html
+msgid "Configure which items have stock tracking enabled."
+msgstr "Skonfiguruj, które pozycje mają włączone śledzenie stanu."
+
+#: menu/templates/menu/dashboard.html
+msgid "All periods"
+msgstr "Wszystkie okresy"
+
+#: menu/templates/menu/dashboard.html
+msgid "View and manage breakfast, lunch, and other time windows."
+msgstr "Przeglądaj i zarządzaj śniadaniem, obiadem i innymi przedziałami czasowymi."
+
+#: menu/templates/menu/dashboard.html
+msgid "Define a new time window and assign items to it."
+msgstr "Zdefiniuj nowy przedział czasowy i przypisz do niego pozycje."
