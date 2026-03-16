@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+    {% trans "Halls" %}
+{% endblock title %}
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h4 fw-bold mb-0">{% trans "Halls" %}</h1>
+        <a href="{% url 'service:hall-create' %}"
+           class="btn btn-primary rounded-pill px-4 fw-bold">+ {% trans "Add hall" %}</a>
+    </div>
+    {% if halls %}
+        <div class="row g-3">
+            {% for hall in halls %}
+                <div class="col-12 col-sm-6 col-lg-4">
+                    <div class="card border-0 rounded-4 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="fw-bold mb-0">{{ hall.name }}</h5>
+                                {% if hall.is_active %}
+                                    <span class="badge bg-success rounded-pill">{% trans "Active" %}</span>
+                                {% else %}
+                                    <span class="badge bg-secondary rounded-pill">{% trans "Inactive" %}</span>
+                                {% endif %}
+                            </div>
+                            <p class="text-secondary small mb-3">
+                                {% trans "Ratio" %}: {{ hall.aspect_w }}:{{ hall.aspect_h }}
+                                &nbsp;·&nbsp;
+                                {% trans "Order" %}: {{ hall.order }}
+                                &nbsp;·&nbsp;
+                                {{ hall.tables.count }} {% trans "tables" %}
+                            </p>
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'service:hall-update' hall.pk %}"
+                                   class="btn btn-sm btn-outline-secondary rounded-pill px-3">{% trans "Edit" %}</a>
+                                <a href="{% url 'service:hall-floor-editor' hall.pk %}"
+                                   class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                    {% trans "Floor editor" %}
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card border-0 rounded-4 shadow-sm">
+            <div class="card-body p-5 text-center text-secondary">
+                <p class="mb-3">{% trans "No halls yet." %}</p>
+                <a href="{% url 'service:hall-create' %}"
+                   class="btn btn-primary rounded-pill px-4">{% trans "Create your first hall" %}</a>
+            </div>
+        </div>
+    {% endif %}
+{% endblock content %}
