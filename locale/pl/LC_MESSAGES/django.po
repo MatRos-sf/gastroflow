@@ -2274,3 +2274,172 @@ msgstr "Przeglądaj i zarządzaj śniadaniem, obiadem i innymi przedziałami cza
 #: menu/templates/menu/dashboard.html
 msgid "Define a new time window and assign items to it."
 msgstr "Zdefiniuj nowy przedział czasowy i przypisz do niego pozycje."
+
+#: service/models.py
+msgid "1×1"
+msgstr "1×1"
+
+#: service/models.py
+msgid "1×2"
+msgstr "1×2"
+
+#: service/models.py
+msgid "1×3"
+msgstr "1×3"
+
+#: service/forms.py
+msgid "Aspect ratio — width"
+msgstr "Proporcje — szerokość"
+
+#: service/forms.py
+msgid "Aspect ratio — height"
+msgstr "Proporcje — wysokość"
+
+#: service/forms.py
+msgid "e.g. 2 for a 2:1 (wide) room"
+msgstr "np. 2 dla sali 2:1 (szerokiej)"
+
+#: service/forms.py
+msgid "e.g. 1 for a 2:1 (wide) room"
+msgstr "np. 1 dla sali 2:1 (szerokiej)"
+
+#: service/_views/table_view.py
+msgid "Hall '%(name)s' created."
+msgstr "Sala '%(name)s' została utworzona."
+
+#: service/_views/table_view.py
+msgid "Hall '%(name)s' updated."
+msgstr "Sala '%(name)s' została zaktualizowana."
+
+#: service/templates/service/hall/list-hall.html
+msgid "Halls"
+msgstr "Sale"
+
+#: service/templates/service/hall/list-hall.html
+msgid "Add hall"
+msgstr "Dodaj salę"
+
+#: service/templates/service/hall/list-hall.html
+msgid "Active"
+msgstr "Aktywna"
+
+#: service/templates/service/hall/list-hall.html
+msgid "Inactive"
+msgstr "Nieaktywna"
+
+#: service/templates/service/hall/list-hall.html
+msgid "Ratio"
+msgstr "Proporcje"
+
+#: service/templates/service/hall/list-hall.html
+msgid "tables"
+msgstr "stoliki"
+
+#: service/templates/service/hall/list-hall.html
+msgid "Floor editor"
+msgstr "Edytor sali"
+
+#: service/templates/service/hall/list-hall.html
+msgid "No halls yet."
+msgstr "Brak sal."
+
+#: service/templates/service/hall/list-hall.html
+msgid "Create your first hall"
+msgstr "Utwórz pierwszą salę"
+
+#: service/templates/service/hall/create-hall.html
+#: service/templates/service/hall/update-hall.html
+msgid "Create hall"
+msgstr "Utwórz salę"
+
+#: service/templates/service/hall/create-hall.html
+#: service/templates/service/hall/update-hall.html
+msgid "Canvas preview"
+msgstr "Podgląd obszaru"
+
+#: service/templates/service/hall/create-hall.html
+#: service/templates/service/hall/update-hall.html
+msgid "Updates as you change the ratio fields."
+msgstr "Aktualizuje się po zmianie proporcji."
+
+#: service/templates/service/hall/create-hall.html
+#: service/templates/service/hall/update-hall.html
+msgid "Shows how the floor plan canvas will be shaped."
+msgstr "Pokazuje kształt obszaru planu sali."
+
+
+#: service/templates/service/hall/create-hall.html
+msgid "Wide rectangle (default)"
+msgstr "Szeroki prostokąt (domyślny)"
+
+#: service/templates/service/hall/create-hall.html
+msgid "Standard rectangle"
+msgstr "Standardowy prostokąt"
+
+#: service/templates/service/hall/create-hall.html
+msgid "Square"
+msgstr "Kwadrat"
+
+#: service/templates/service/hall/create-hall.html
+msgid "Tall rectangle"
+msgstr "Wysoki prostokąt"
+
+#: service/templates/service/hall/create-hall.html
+msgid "Width"
+msgstr "Szerokość"
+
+#: service/templates/service/hall/create-hall.html
+msgid "Height"
+msgstr "Wysokość"
+
+#: service/templates/service/hall/create-hall.html
+msgid "Shape"
+msgstr "Kształt"
+
+#: service/templates/service/hall/update-hall.html
+msgid "Edit hall"
+msgstr "Edytuj salę"
+
+#: service/templates/service/hall/update-hall.html
+msgid "Open floor editor"
+msgstr "Otwórz edytor sali"
+
+#: service/templates/service/hall/floor-editor.html
+msgid "Add table"
+msgstr "Dodaj stolik"
+
+#: service/templates/service/hall/floor-editor.html
+msgid "Save layout"
+msgstr "Zapisz układ"
+
+#: service/templates/service/hall/floor-editor.html
+msgid "Drag to move · Double-click to rename · Click size badge to change size · × to remove"
+msgstr "Przeciągnij, aby przesunąć · Dwuklik, aby zmienić nazwę · Kliknij znacznik rozmiaru, aby zmienić · × usuwa"
+
+#: service/templates/service/hall/floor-editor.html
+msgid "Remove"
+msgstr "Usuń"
+
+#: service/templates/service/hall/floor-editor.html
+msgid "Click to change size"
+msgstr "Kliknij, aby zmienić rozmiar"
+
+#: service/templates/service/hall/floor-editor.html
+msgid "Table name:"
+msgstr "Nazwa stolika:"
+
+#: service/templates/service/hall/floor-editor.html
+msgid "Saving…"
+msgstr "Zapisywanie…"
+
+#: service/templates/service/hall/floor-editor.html
+msgid "Saved"
+msgstr "Zapisano"
+
+#: service/templates/service/hall/floor-editor.html
+msgid "Error saving"
+msgstr "Błąd zapisu"
+
+#: service/templates/service/hall/floor-editor.html
+msgid "Network error"
+msgstr "Błąd sieci"

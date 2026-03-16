@@ -2214,3 +2214,172 @@ msgstr "View and manage breakfast, lunch, and other time windows."
 #: menu/templates/menu/dashboard.html
 msgid "Define a new time window and assign items to it."
 msgstr "Define a new time window and assign items to it."
+
+#: service/models.py
+msgid "1×1"
+msgstr "1×1"
+
+#: service/models.py
+msgid "1×2"
+msgstr "1×2"
+
+#: service/models.py
+msgid "1×3"
+msgstr "1×3"
+
+#: service/forms.py
+msgid "Aspect ratio — width"
+msgstr "Aspect ratio — width"
+
+#: service/forms.py
+msgid "Aspect ratio — height"
+msgstr "Aspect ratio — height"
+
+#: service/forms.py
+msgid "e.g. 2 for a 2:1 (wide) room"
+msgstr "e.g. 2 for a 2:1 (wide) room"
+
+#: service/forms.py
+msgid "e.g. 1 for a 2:1 (wide) room"
+msgstr "e.g. 1 for a 2:1 (wide) room"
+
+#: service/_views/table_view.py
+msgid "Hall '%(name)s' created."
+msgstr "Hall '%(name)s' created."
+
+#: service/_views/table_view.py
+msgid "Hall '%(name)s' updated."
+msgstr "Hall '%(name)s' updated."
+
+#: service/templates/service/hall/list-hall.html
+msgid "Halls"
+msgstr "Halls"
+
+#: service/templates/service/hall/list-hall.html
+msgid "Add hall"
+msgstr "Add hall"
+
+#: service/templates/service/hall/list-hall.html
+msgid "Active"
+msgstr "Active"
+
+#: service/templates/service/hall/list-hall.html
+msgid "Inactive"
+msgstr "Inactive"
+
+#: service/templates/service/hall/list-hall.html
+msgid "Ratio"
+msgstr "Ratio"
+
+#: service/templates/service/hall/list-hall.html
+msgid "tables"
+msgstr "tables"
+
+#: service/templates/service/hall/list-hall.html
+msgid "Floor editor"
+msgstr "Floor editor"
+
+#: service/templates/service/hall/list-hall.html
+msgid "No halls yet."
+msgstr "No halls yet."
+
+#: service/templates/service/hall/list-hall.html
+msgid "Create your first hall"
+msgstr "Create your first hall"
+
+#: service/templates/service/hall/create-hall.html
+#: service/templates/service/hall/update-hall.html
+msgid "Create hall"
+msgstr "Create hall"
+
+#: service/templates/service/hall/create-hall.html
+#: service/templates/service/hall/update-hall.html
+msgid "Canvas preview"
+msgstr "Canvas preview"
+
+#: service/templates/service/hall/create-hall.html
+#: service/templates/service/hall/update-hall.html
+msgid "Updates as you change the ratio fields."
+msgstr "Updates as you change the ratio fields."
+
+#: service/templates/service/hall/create-hall.html
+#: service/templates/service/hall/update-hall.html
+msgid "Shows how the floor plan canvas will be shaped."
+msgstr "Shows how the floor plan canvas will be shaped."
+
+
+#: service/templates/service/hall/create-hall.html
+msgid "Wide rectangle (default)"
+msgstr "Wide rectangle (default)"
+
+#: service/templates/service/hall/create-hall.html
+msgid "Standard rectangle"
+msgstr "Standard rectangle"
+
+#: service/templates/service/hall/create-hall.html
+msgid "Square"
+msgstr "Square"
+
+#: service/templates/service/hall/create-hall.html
+msgid "Tall rectangle"
+msgstr "Tall rectangle"
+
+#: service/templates/service/hall/create-hall.html
+msgid "Width"
+msgstr "Width"
+
+#: service/templates/service/hall/create-hall.html
+msgid "Height"
+msgstr "Height"
+
+#: service/templates/service/hall/create-hall.html
+msgid "Shape"
+msgstr "Shape"
+
+#: service/templates/service/hall/update-hall.html
+msgid "Edit hall"
+msgstr "Edit hall"
+
+#: service/templates/service/hall/update-hall.html
+msgid "Open floor editor"
+msgstr "Open floor editor"
+
+#: service/templates/service/hall/floor-editor.html
+msgid "Add table"
+msgstr "Add table"
+
+#: service/templates/service/hall/floor-editor.html
+msgid "Save layout"
+msgstr "Save layout"
+
+#: service/templates/service/hall/floor-editor.html
+msgid "Drag to move · Double-click to rename · Click size badge to change size · × to remove"
+msgstr "Drag to move · Double-click to rename · Click size badge to change size · × to remove"
+
+#: service/templates/service/hall/floor-editor.html
+msgid "Remove"
+msgstr "Remove"
+
+#: service/templates/service/hall/floor-editor.html
+msgid "Click to change size"
+msgstr "Click to change size"
+
+#: service/templates/service/hall/floor-editor.html
+msgid "Table name:"
+msgstr "Table name:"
+
+#: service/templates/service/hall/floor-editor.html
+msgid "Saving…"
+msgstr "Saving…"
+
+#: service/templates/service/hall/floor-editor.html
+msgid "Saved"
+msgstr "Saved"
+
+#: service/templates/service/hall/floor-editor.html
+msgid "Error saving"
+msgstr "Error saving"
+
+#: service/templates/service/hall/floor-editor.html
+msgid "Network error"
+msgstr "Network error"
