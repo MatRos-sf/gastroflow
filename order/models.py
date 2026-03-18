@@ -1,13 +1,11 @@
-from decimal import Decimal
-
-from django.core.validators import MaxValueValidator, MinValueValidator, ValidationError
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import DecimalField, ExpressionWrapper, F, Sum
 from django.db.models.functions import Coalesce
 from django.urls import reverse
 from django.utils import timezone
 
-from menu.models import Item, Location
+from menu.models import Addition, Item, Location
 from service.models import Table
 from worker.models import Worker
 
@@ -43,8 +41,13 @@ class Bill(models.Model):
         max_length=10, choices=StatusBill.choices, default=StatusBill.OPEN
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    closed_at = models.DateTimeField(null=True, blank=True)
-    service = models.ForeignKey(
+    paid_at = models.DateTimeField(
+        null=True, blank=True
+    )  # Customer can pay but occupied table
+    closed_at = models.DateTimeField(
+        null=True, blank=True
+    )  # When customer leave restaurant
+    waiter = models.ForeignKey(
         Worker,
         on_delete=models.SET_NULL,
         null=True,
@@ -73,145 +76,151 @@ class Bill(models.Model):
     def get_absolute_url(self):
         return reverse("bill-detail", args=[str(self.id)])
 
+    # TODO: deprecated ?
     def str_tables(self):
         return ", ".join(str(table.name) for table in self.table.all())
 
+    # TODO: deprecated ?
     @property
     def total(self):
         s = self.bill_summary_view()
         return s["total"] - s["cost_discount"]
 
+    # TODO: deprecated ?
     def close(self):
         self.status = StatusBill.CLOSED
         self.closed_at = timezone.now()
         self.save()
 
-    def _distribute_discount_proportionally(
-        self, model_class, discount_amount: Decimal, total_bill_amount: Decimal
-    ) -> None:
-        """
-        Distribute discount proportionally across items based on their subtotal.
+    # #TODO: deprecated ?
+    # def _distribute_discount_proportionally(
+    #     self, model_class, discount_amount: Decimal, total_bill_amount: Decimal
+    # ) -> None:
+    #     """
+    #     Distribute discount proportionally across items based on their subtotal.
+    #
+    #     The discount for each item is calculated as:
+    #     item_discount = (item_subtotal / total_bill_amount) * total_discount_amount
+    #
+    #     Args:
+    #         model_class: Model to update (OrderItem or OrderItemAddition)
+    #         discount_amount: Total discount amount to distribute (in currency)
+    #         total_bill_amount: Sum of all line_subtotals (order items + additions)
+    #
+    #     Example:
+    #         If bill total is 100 PLN with 10% discount (10 PLN):
+    #         - Item with subtotal 50 PLN gets: (50/100) * 10 = 5 PLN discount
+    #         - Item with subtotal 30 PLN gets: (30/100) * 10 = 3 PLN discount
+    #     """
+    #     if not total_bill_amount or total_bill_amount == 0:
+    #         return
+    #
+    #     # Determine filter based on model type
+    #     if model_class == OrderItem:
+    #         filter_kwargs = {"order__bill": self}
+    #     elif model_class == OrderItemAddition:
+    #         filter_kwargs = {"order_item__order__bill": self}
+    #     else:
+    #         raise ValueError(
+    #             "Invalid model item: should be OrderItem or OrderItemAddition"
+    #         )
+    #
+    #     items = list(model_class.objects.filter(**filter_kwargs))
+    #
+    #     for item in items:
+    #         proportion = item.line_subtotal / total_bill_amount
+    #         item.line_discount_amount = proportion * discount_amount
+    #
+    #     # Bulk update for performance
+    #     if items:
+    #         model_class.objects.bulk_update(items, ["line_discount_amount"])
 
-        The discount for each item is calculated as:
-        item_discount = (item_subtotal / total_bill_amount) * total_discount_amount
+    # #TODO: deprecated ?
+    # def add_discount(self, discount_percentage: int) -> None:
+    #     """
+    #     Apply a percentage discount to the bill and distribute it across all items.
+    #
+    #     The discount is distributed proportionally based on each item's subtotal.
+    #     Updates line_discount_amount for all OrderItems and OrderItemAdditions.
+    #     Args:
+    #         discount_percentage: Discount percentage to apply (0-100)
+    #
+    #     Raises:
+    #         ValidationError: If discount_percentage is not between 0 and 100
+    #
+    #     Example:
+    #         bill.add_discount(10)  # Apply 10% discount to entire bill
+    #     """
+    #     if not 0 <= discount_percentage <= 100:
+    #         raise ValidationError("Discount must be between 0 and 100")
+    #
+    #     self.discount = discount_percentage
+    #     self.save(update_fields=["discount"])
+    #
+    #     order_items_total = (
+    #         OrderItem.objects.filter(order__bill=self).aggregate(
+    #             order_items=Sum("line_subtotal")
+    #         )["order_items"]
+    #         or 0
+    #     )
+    #     additions_total = (
+    #         OrderItemAddition.objects.filter(order_item__order__bill=self).aggregate(
+    #             additions=Sum("line_subtotal")
+    #         )["additions"]
+    #         or 0
+    #     )
+    #
+    #     bill_total = Decimal(order_items_total + additions_total)
+    #     if bill_total == 0:
+    #         return  # Nothing to discount
+    #     discount_amount = Decimal(bill_total * discount_percentage / 100)
+    #
+    #     # Distribute discount proportionally to all items
+    #     self._distribute_discount_proportionally(OrderItem, discount_amount, bill_total)
+    #     self._distribute_discount_proportionally(
+    #         OrderItemAddition, discount_amount, bill_total
+    #     )
 
-        Args:
-            model_class: Model to update (OrderItem or OrderItemAddition)
-            discount_amount: Total discount amount to distribute (in currency)
-            total_bill_amount: Sum of all line_subtotals (order items + additions)
-
-        Example:
-            If bill total is 100 PLN with 10% discount (10 PLN):
-            - Item with subtotal 50 PLN gets: (50/100) * 10 = 5 PLN discount
-            - Item with subtotal 30 PLN gets: (30/100) * 10 = 3 PLN discount
-        """
-        if not total_bill_amount or total_bill_amount == 0:
-            return
-
-        # Determine filter based on model type
-        if model_class == OrderItem:
-            filter_kwargs = {"order__bill": self}
-        elif model_class == OrderItemAddition:
-            filter_kwargs = {"order_item__order__bill": self}
-        else:
-            raise ValueError(
-                "Invalid model item: should be OrderItem or OrderItemAddition"
-            )
-
-        items = list(model_class.objects.filter(**filter_kwargs))
-
-        for item in items:
-            proportion = item.line_subtotal / total_bill_amount
-            item.line_discount_amount = proportion * discount_amount
-
-        # Bulk update for performance
-        if items:
-            model_class.objects.bulk_update(items, ["line_discount_amount"])
-
-    def add_discount(self, discount_percentage: int) -> None:
-        """
-        Apply a percentage discount to the bill and distribute it across all items.
-
-        The discount is distributed proportionally based on each item's subtotal.
-        Updates line_discount_amount for all OrderItems and OrderItemAdditions.
-        Args:
-            discount_percentage: Discount percentage to apply (0-100)
-
-        Raises:
-            ValidationError: If discount_percentage is not between 0 and 100
-
-        Example:
-            bill.add_discount(10)  # Apply 10% discount to entire bill
-        """
-        if not 0 <= discount_percentage <= 100:
-            raise ValidationError("Discount must be between 0 and 100")
-
-        self.discount = discount_percentage
-        self.save(update_fields=["discount"])
-
-        order_items_total = (
-            OrderItem.objects.filter(order__bill=self).aggregate(
-                order_items=Sum("line_subtotal")
-            )["order_items"]
-            or 0
-        )
-        additions_total = (
-            OrderItemAddition.objects.filter(order_item__order__bill=self).aggregate(
-                additions=Sum("line_subtotal")
-            )["additions"]
-            or 0
-        )
-
-        bill_total = Decimal(order_items_total + additions_total)
-        if bill_total == 0:
-            return  # Nothing to discount
-        discount_amount = Decimal(bill_total * discount_percentage / 100)
-
-        # Distribute discount proportionally to all items
-        self._distribute_discount_proportionally(OrderItem, discount_amount, bill_total)
-        self._distribute_discount_proportionally(
-            OrderItemAddition, discount_amount, bill_total
-        )
-
-    def bill_summary_view(self):
-        summary = {}
-        total = Decimal("0.00")
-
-        orders = self.orders.prefetch_related("order_items__order_item_additions")
-        for order in orders:
-            for item in order.order_items.all():
-                # main dish
-                summary.setdefault(
-                    item.name_snapshot,
-                    {
-                        "id": item.menu_item.id_checkout,
-                        "quantity": 0,
-                        "total_cost": Decimal("0.00"),
-                    },
-                )
-                summary[item.name_snapshot]["quantity"] += item.quantity
-                summary[item.name_snapshot]["total_cost"] += item.raw_cost
-
-                total += item.raw_cost
-
-                # check additions
-                for addition in item.order_item_additions.all():
-                    summary.setdefault(
-                        addition.name_snapshot,
-                        {
-                            "id": addition.addition.id_checkout,
-                            "quantity": 0,
-                            "total_cost": Decimal("0.00"),
-                        },
-                    )
-                    summary[addition.name_snapshot]["quantity"] += item.quantity
-                    summary[addition.name_snapshot]["total_cost"] += (
-                        addition.price_snapshot * item.quantity
-                    )
-                    total += addition.price_snapshot * item.quantity
-        cost_discount = (total * self.discount) / 100
-
-        return {"total": total, "summary": summary, "cost_discount": cost_discount}
+    # #TODO: deprecated ?
+    # def bill_summary_view(self):
+    #     summary = {}
+    #     total = Decimal("0.00")
+    #
+    #     orders = self.orders.prefetch_related("order_items__order_item_additions")
+    #     for order in orders:
+    #         for item in order.order_items.all():
+    #             # main dish
+    #             summary.setdefault(
+    #                 item.name_snapshot,
+    #                 {
+    #                     "id": item.menu_item.id_checkout,
+    #                     "quantity": 0,
+    #                     "total_cost": Decimal("0.00"),
+    #                 },
+    #             )
+    #             summary[item.name_snapshot]["quantity"] += item.quantity
+    #             summary[item.name_snapshot]["total_cost"] += item.raw_cost
+    #
+    #             total += item.raw_cost
+    #
+    #             # check additions
+    #             for addition in item.order_item_additions.all():
+    #                 summary.setdefault(
+    #                     addition.name_snapshot,
+    #                     {
+    #                         "id": addition.addition.id_checkout,
+    #                         "quantity": 0,
+    #                         "total_cost": Decimal("0.00"),
+    #                     },
+    #                 )
+    #                 summary[addition.name_snapshot]["quantity"] += item.quantity
+    #                 summary[addition.name_snapshot]["total_cost"] += (
+    #                     addition.price_snapshot * item.quantity
+    #                 )
+    #                 total += addition.price_snapshot * item.quantity
+    #     cost_discount = (total * self.discount) / 100
+    #
+    #     return {"total": total, "summary": summary, "cost_discount": cost_discount}
 
 
 class Order(models.Model):
@@ -224,17 +233,13 @@ class Order(models.Model):
     category = models.CharField(default=Location.KITCHEN, choices=Location.choices)
     # Date time fields
     created_at = models.DateTimeField(auto_now_add=True)
-    preparing_at = models.DateTimeField(null=True, blank=True)
     readied_at = models.DateTimeField(null=True, blank=True)
-    paid_at = models.DateTimeField(null=True, blank=True)
     canceled_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"Order {self.id}"
 
-    # @property
-    # def total(self):
-    #     return self.order_items.aggregate(total=Sum("total_cost"))["total"]
+    # TODO: deprecated ?
     def total(self):
         return (
             self.order_items.annotate(
@@ -275,7 +280,7 @@ class OrderItem(models.Model):
     order = models.ForeignKey(
         Order, on_delete=models.CASCADE, related_name="order_items"
     )
-    menu_item = models.ForeignKey(Item, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
     name_snapshot = models.CharField(
         max_length=150, help_text="Name of dish with additions"
     )
@@ -286,93 +291,89 @@ class OrderItem(models.Model):
     status = models.CharField(
         max_length=20, choices=OrderItemStatus.choices, default=OrderItemStatus.WAITING
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True, help_text="Datetime order was added"
-    )
-    started_at = models.DateTimeField(
-        null=True, blank=True, help_text="Datetime when the cook started preparing"
-    )
-    finished_at = models.DateTimeField(
-        null=True, blank=True, help_text="Datetime when the cook finished preparing"
-    )
     quantity = models.PositiveIntegerField(default=1)
 
+    # TODO: deprecated?
     line_subtotal = models.GeneratedField(
         expression=F("price_snapshot") * F("quantity"),
         output_field=DecimalField(max_digits=12, decimal_places=2),
         help_text="Subtotal for this item before discount and additions (price × quantity)",
         db_persist=True,
     )
-    # TODO: write function than set this field!
-    line_discount_amount = models.DecimalField(
-        default=Decimal("0.00"),
-        max_digits=12,
-        decimal_places=2,
-        help_text="Discount amount allocated from bill's discount percentage. You should change it manually!",
-    )
-    line_final_total = models.GeneratedField(
-        expression=F("line_subtotal") - F("line_discount_amount"),
-        output_field=DecimalField(max_digits=12, decimal_places=2),
-        db_persist=True,
-        help_text="Final price for this addition after discount",
-    )
+    # # TODO: write function than set this field!
+    # line_discount_amount = models.DecimalField(
+    #     default=Decimal("0.00"),
+    #     max_digits=12,
+    #     decimal_places=2,
+    #     help_text="Discount amount allocated from bill's discount percentage. You should change it manually!",
+    # )
+    # line_final_total = models.GeneratedField(
+    #     expression=F("line_subtotal") - F("line_discount_amount"),
+    #     output_field=DecimalField(max_digits=12, decimal_places=2),
+    #     db_persist=True,
+    #     help_text="Final price for this addition after discount",
+    # )
 
     def __str__(self):
         return f"{self.name_snapshot} x{self.quantity}"
 
+    # TODO: deprecated?
     @property
     def raw_cost(self):
         """Cost without additions"""
         return self.price_snapshot * self.quantity
 
-    @property
-    def total_cost(self):
-        """Cost with additions"""
-        additions = self.order_item_additions.aggregate(
-            additions_sum=Coalesce(Sum("price_snapshot"), 0)
-        )["additions_sum"]
-        return (self.price_snapshot + additions) * self.quantity
+    # #TODO: deprecated?
+    # @property
+    # def total_cost(self):
+    #     """Cost with additions"""
+    #     additions = self.order_item_additions.aggregate(
+    #         additions_sum=Coalesce(Sum("price_snapshot"), 0)
+    #     )["additions_sum"]
+    #     return (self.price_snapshot + additions) * self.quantity
 
-    @property
-    def full_name_snapshot(self):
-        additions = self.order_item_additions.all()
-        if additions.exists():
-            additions_names = ", ".join(a.name_snapshot for a in additions)
-            return f"{self.name_snapshot} ({additions_names})"
-        return self.name_snapshot
+    # #TODO: deprecated?
+    # @property
+    # def full_name_snapshot(self):
+    #     additions = self.order_item_additions.all()
+    #     if additions.exists():
+    #         additions_names = ", ".join(a.name_snapshot for a in additions)
+    #         return f"{self.name_snapshot} ({additions_names})"
+    #     return self.name_snapshot
 
+    # TODO: deprecated?
     def save(self, *args, **kwargs):
-        is_init = self.pk is None
-
-        if not is_init and self.price_snapshot and self.quantity:
-            subtotal = self.price_snapshot * self.quantity
-            if self.line_discount_amount > subtotal:
-                raise ValidationError(
-                    {
-                        "line_discount_amount": f"Discount amount ({self.line_discount_amount}) "
-                        f"cannot exceed item subtotal ({subtotal})"
-                    }
-                )
-
-            if self.line_discount_amount < 0:
-                raise ValidationError(
-                    {"line_discount_amount": "Discount amount cannot be negative"}
-                )
+        # is_init = self.pk is None
+        #
+        # if not is_init and self.price_snapshot and self.quantity:
+        #     subtotal = self.price_snapshot * self.quantity
+        #     if self.line_discount_amount > subtotal:
+        #         raise ValidationError(
+        #             {
+        #                 "line_discount_amount": f"Discount amount ({self.line_discount_amount}) "
+        #                 f"cannot exceed item subtotal ({subtotal})"
+        #             }
+        #         )
+        #
+        #     if self.line_discount_amount < 0:
+        #         raise ValidationError(
+        #             {"line_discount_amount": "Discount amount cannot be negative"}
+        #         )
 
         super().save(*args, **kwargs)
 
-        # create notification only for new order items
-        if is_init:
-            service_worker = getattr(self.order.bill, "service", None)
-            if service_worker is not None:
-                Notification.objects.create(worker=service_worker, order_item=self)
+        # # create notification only for new order items
+        # if is_init:
+        #     service_worker = getattr(self.order.bill, "service", None)
+        #     if service_worker is not None:
+        #         Notification.objects.create(worker=service_worker, order_item=self)
 
 
 class OrderItemAddition(models.Model):
     order_item = models.ForeignKey(
         OrderItem, on_delete=models.CASCADE, related_name="order_item_additions"
     )
-    addition = models.ForeignKey(Item, on_delete=models.CASCADE)
+    addition = models.ForeignKey(Addition, on_delete=models.CASCADE)
     name_snapshot = models.CharField(max_length=100)
     price_snapshot = models.DecimalField(max_digits=7, decimal_places=2)
     quantity = models.PositiveIntegerField(default=1)
@@ -381,19 +382,15 @@ class OrderItemAddition(models.Model):
         output_field=DecimalField(max_digits=12, decimal_places=2),
         db_persist=True,
     )
-    line_discount_amount = models.DecimalField(
-        default=Decimal("0.00"),
-        max_digits=12,
-        decimal_places=2,
-        help_text="The amount of discount from Bill. You should change it manually!",
-    )
-    line_final_total = models.GeneratedField(
-        expression=F("line_subtotal") - F("line_discount_amount"),
-        output_field=DecimalField(max_digits=12, decimal_places=2),
-        db_persist=True,
-        help_text="Final price for this addition after discount",
-    )
-
-    created_at = models.DateTimeField(
-        auto_now_add=True, help_text="Datetime order was added"
-    )
+    # line_discount_amount = models.DecimalField(
+    #     default=Decimal("0.00"),
+    #     max_digits=12,
+    #     decimal_places=2,
+    #     help_text="The amount of discount from Bill. You should change it manually!",
+    # )
+    # line_final_total = models.GeneratedField(
+    #     expression=F("line_subtotal") - F("line_discount_amount"),
+    #     output_field=DecimalField(max_digits=12, decimal_places=2),
+    #     db_persist=True,
+    #     help_text="Final price for this addition after discount",
+    # )
