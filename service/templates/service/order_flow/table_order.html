@@ -1,225 +1,122 @@
 {% extends "base.html" %}
 {% load i18n %}
-
-{% block title %}{% trans "Choose table" %}{% endblock %}
-
-{% block content %}
-<div class="table-order-page">
-
-    <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
-        <h1 class="h4 fw-bold mb-0">{% trans "Choose table" %}</h1>
-        <a href="{% url 'service:menu-waiter' %}" class="btn btn-outline-secondary rounded-pill px-4">
-            &larr; {% trans "Back" %}
-        </a>
-    </div>
-
-    {% if not halls %}
-        <div class="card border-0 rounded-4 shadow-sm">
-            <div class="card-body p-5 text-center text-secondary">
-                <p class="mb-0">{% trans "No halls configured." %}</p>
-            </div>
-        </div>
-    {% else %}
-
-    <form id="tables-form" method="post" action="{% url 'service:order-select-table' %}" class="table-order-form">
-        {% csrf_token %}
-        <input type="hidden" name="tables" id="tables-input" value="">
-
-        {% if halls|length > 1 %}
-        <ul class="nav nav-tabs mb-2" id="hallTabs" role="tablist">
-            {% for hall in halls %}
-            <li class="nav-item" role="presentation">
-                <button class="nav-link {% if forloop.first %}active{% endif %} fw-semibold"
-                        id="tab-{{ hall.pk }}"
-                        data-bs-toggle="tab"
-                        data-bs-target="#hall-{{ hall.pk }}"
-                        type="button" role="tab">
-                    {{ hall.name }}
-                </button>
-            </li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-
-        <div class="tab-content table-order-tab-content" id="hallTabContent">
-            {% for hall in halls %}
-            <div class="tab-pane fade {% if forloop.first %}show active{% endif %} table-order-tab-pane"
-                 id="hall-{{ hall.pk }}"
-                 role="tabpanel">
-
-                <div class="card border-0 rounded-4 shadow-sm table-order-card">
-                    <div class="card-body p-2 table-order-card-body">
-                        <div class="floor-canvas"
-                             id="canvas-{{ hall.pk }}"
-                             data-aspect-w="{{ hall.aspect_w }}"
-                             data-aspect-h="{{ hall.aspect_h }}"
-                             style="position: relative;
-                                    background: #f8f9fa;
-                                    border: 2px solid #dee2e6;
-                                    border-radius: 12px;
-                                    overflow: hidden;">
-                            {% for table in hall.tables.all %}
-                            <button type="button"
-                                    class="floor-table {% if table.is_occupied %}floor-table--occupied{% endif %}"
-                                    data-pk="{{ table.pk }}"
-                                    data-size="{{ table.size }}"
-                                    style="left: {{ table.x }}%;
-                                           top: {{ table.y }}%;">
-                                {{ table.name }}
-                            </button>
-                            {% empty %}
-                            <p class="text-secondary text-center mt-4 small">{% trans "No tables in this hall." %}</p>
-                            {% endfor %}
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-            {% endfor %}
-        </div>
-
-        <div class="d-flex justify-content-between align-items-center mt-2 flex-wrap gap-2">
-            <p id="selection-hint" class="text-secondary small mb-0">{% trans "No table selected" %}</p>
-            <button type="submit" id="btn-submit" class="btn btn-primary rounded-pill px-5 fw-bold" disabled>
-                {% trans "Proceed to order" %} &rarr;
-            </button>
-        </div>
-    </form>
-
-    {% endif %}
-</div>
+{% block title %}
+    {% trans "Choose table" %}
 {% endblock %}
-
+{% block content %}
+    <div class="table-order-page">
+        <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+            <h1 class="h4 fw-bold mb-0">{% trans "Choose table" %}</h1>
+            <a href="{% url 'service:menu-waiter' %}"
+               class="btn btn-outline-secondary rounded-pill px-4">&larr; {% trans "Back" %}</a>
+        </div>
+        {% if not halls %}
+            <div class="card border-0 rounded-4 shadow-sm">
+                <div class="card-body p-5 text-center text-secondary">
+                    <p class="mb-0">{% trans "No halls configured." %}</p>
+                </div>
+            </div>
+        {% else %}
+            <form id="tables-form"
+                  method="post"
+                  action="{% url 'service:order-select-table' %}"
+                  class="table-order-form">
+                {% csrf_token %}
+                <input type="hidden" name="tables" id="tables-input" value="">
+                {% if halls|length > 1 %}
+                    <ul class="nav nav-tabs mb-2" id="hallTabs" role="tablist">
+                        {% for hall in halls %}
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link {% if forloop.first %}active{% endif %} fw-semibold"
+                                        id="tab-{{ hall.pk }}"
+                                        data-bs-toggle="tab"
+                                        data-bs-target="#hall-{{ hall.pk }}"
+                                        type="button"
+                                        role="tab">{{ hall.name }}</button>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                <div class="tab-content canvas-tab-content" id="hallTabContent">
+                    {% for hall in halls %}
+                        <div class="tab-pane fade {% if forloop.first %}show active{% endif %} canvas-tab-pane"
+                             id="hall-{{ hall.pk }}"
+                             role="tabpanel">
+                            <div class="floor-canvas"
+                                 data-aspect-w="{{ hall.aspect_w }}"
+                                 data-aspect-h="{{ hall.aspect_h }}"
+                                 style="aspect-ratio: {{ hall.aspect_w }} / {{ hall.aspect_h }}">
+                                {% for table in hall.tables.all %}
+                                    <button type="button"
+                                            class="floor-table {% if table.is_occupied %}floor-table--occupied{% endif %}"
+                                            data-pk="{{ table.pk }}"
+                                            data-size="{{ table.size }}"
+                                            data-x="{{ table.x|stringformat:'.6f' }}"
+                                            data-y="{{ table.y|stringformat:'.6f' }}"
+                                            {% if table.is_occupied %}disabled{% endif %}>{{ table.name }}</button>
+                                {% empty %}
+                                    <p class="text-secondary text-center mt-4 small">{% trans "No tables in this hall." %}</p>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-2 flex-wrap gap-2">
+                    <p id="selection-hint" class="text-secondary small mb-0">{% trans "No table selected" %}</p>
+                    <button type="submit"
+                            id="btn-submit"
+                            class="btn btn-primary rounded-pill px-5 fw-bold"
+                            disabled>{% trans "Proceed to order" %} &rarr;</button>
+                </div>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}
 {% block extra_js %}
-<script>
-const SIZE_WIDTHS = { "1x1": 8, "1x2": 16, "1x3": 24 };  // % of canvas width
-
-function fitCanvas(canvas) {
-    const container = canvas.parentElement;
-    const aw = parseInt(canvas.dataset.aspectW);
-    const ah = parseInt(canvas.dataset.aspectH);
-    const cw = container.clientWidth;
-    const ch = container.clientHeight;
-    if (!cw || !ch || !aw || !ah) return;
-
-    let w = cw;
-    let h = w * ah / aw;
-    if (h > ch) {
-        h = ch;
-        w = h * aw / ah;
-    }
-    canvas.style.width = w + "px";
-    canvas.style.height = h + "px";
-
-    canvas.querySelectorAll(".floor-table").forEach(btn => {
-        const size = btn.dataset.size || "1x1";
-        const unitW = SIZE_WIDTHS[size] || 8;
-        const unitH = unitW * aw / ah;
-        btn.style.width = unitW + "%";
-        btn.style.height = unitH + "%";
-    });
-}
-
-function fitAllCanvases() {
-    document.querySelectorAll(".floor-canvas").forEach(fitCanvas);
-}
-
-// Fit on load
-fitAllCanvases();
-
-// Refit on window resize
-window.addEventListener("resize", fitAllCanvases);
-
-// Refit when a tab becomes visible
-document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
-    tab.addEventListener("shown.bs.tab", () => fitAllCanvases());
-});
-
-// Observe container size changes (e.g. orientation change)
-if (window.ResizeObserver) {
-    const ro = new ResizeObserver(() => fitAllCanvases());
-    document.querySelectorAll(".table-order-card-body").forEach(el => ro.observe(el));
-}
-
-let selectedTables = [];
-
-function updateState() {
-    document.getElementById("tables-input").value = selectedTables.join(",");
-    const hint = document.getElementById("selection-hint");
-    const btn = document.getElementById("btn-submit");
-    if (selectedTables.length === 0) {
-        hint.textContent = "{% trans 'No table selected' %}";
-        btn.disabled = true;
-    } else {
-        const names = selectedTables.map(pk => {
-            const el = document.querySelector(`.floor-table[data-pk="${pk}"]`);
-            return el ? el.textContent.trim() : pk;
-        });
-        hint.textContent = "{% trans 'Selected' %}: " + names.join(", ");
-        btn.disabled = false;
-    }
-}
-
-document.querySelectorAll(".floor-table:not(.floor-table--occupied)").forEach(btn => {
-    btn.addEventListener("click", () => {
-        const pk = btn.dataset.pk;
-        if (selectedTables.includes(pk)) {
-            selectedTables = selectedTables.filter(t => t !== pk);
-            btn.classList.remove("floor-table--selected");
-        } else {
-            selectedTables.push(pk);
-            btn.classList.add("floor-table--selected");
-        }
-        updateState();
-    });
-});
-</script>
-
-<style>
-/* ── Full-viewport layout ── */
+    <style>
+/* ── Viewport fit ── */
 .table-order-page {
-    height: calc(100dvh - 70px - 1rem); /* navbar (70px) + pt-3 from main */
+    height: calc(100dvh - 70px - 2rem); /* navbar + py-3 top + bottom */
     display: flex;
     flex-direction: column;
     overflow: hidden;
 }
-
 .table-order-form {
     flex: 1;
     min-height: 0;
     display: flex;
     flex-direction: column;
 }
-
-.table-order-tab-content {
+.canvas-tab-content {
     flex: 1;
     min-height: 0;
-    overflow: hidden;
-}
-
-.table-order-tab-pane {
-    height: 100%;
+    display: flex;
     flex-direction: column;
 }
-
-/* Bootstrap sets display:block on .show.active; override for our flex layout */
-.table-order-tab-pane.show.active {
+/* Bootstrap overrides for flex pane */
+.canvas-tab-pane {
+    display: none;
+    flex: 1;
+    min-height: 0;
+    align-items: center;
+    justify-content: center;
+}
+.canvas-tab-pane.show.active {
     display: flex !important;
 }
 
-.table-order-card {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-}
-
-.table-order-card-body {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+/* ── Canvas: contain within available space ── */
+.floor-canvas {
+    position: relative;
+    background: #f8f9fa;
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    overflow: hidden;
+    /* CSS "contain" — fill available space, keep aspect-ratio */
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+    /* aspect-ratio set inline per hall */
 }
 
 /* ── Table buttons ── */
@@ -257,5 +154,53 @@ document.querySelectorAll(".floor-table:not(.floor-table--occupied)").forEach(bt
     cursor: not-allowed;
     opacity: 0.7;
 }
-</style>
+    </style>
+    <script>
+const SIZE_WIDTHS = { "1x1": 8, "1x2": 16, "1x3": 24 };
+
+document.querySelectorAll(".floor-canvas").forEach(canvas => {
+    const aw = parseInt(canvas.dataset.aspectW);
+    const ah = parseInt(canvas.dataset.aspectH);
+    const unitH = 8 * aw / ah;  // base height keeps 1x1 square; same for all sizes
+    canvas.querySelectorAll(".floor-table").forEach(btn => {
+        btn.style.left   = parseFloat(btn.dataset.x) + "%";
+        btn.style.top    = parseFloat(btn.dataset.y) + "%";
+        btn.style.width  = (SIZE_WIDTHS[btn.dataset.size] || 8) + "%";
+        btn.style.height = unitH + "%";
+    });
+});
+
+let selectedTables = [];
+
+function updateState() {
+    document.getElementById("tables-input").value = selectedTables.join(",");
+    const hint = document.getElementById("selection-hint");
+    const btn  = document.getElementById("btn-submit");
+    if (selectedTables.length === 0) {
+        hint.textContent = "{% trans 'No table selected' %}";
+        btn.disabled = true;
+    } else {
+        const names = selectedTables.map(pk => {
+            const el = document.querySelector(`.floor-table[data-pk="${pk}"]`);
+            return el ? el.textContent.trim() : pk;
+        });
+        hint.textContent = "{% trans 'Selected' %}: " + names.join(", ");
+        btn.disabled = false;
+    }
+}
+
+document.querySelectorAll(".floor-table:not(.floor-table--occupied)").forEach(btn => {
+    btn.addEventListener("click", () => {
+        const pk = btn.dataset.pk;
+        if (selectedTables.includes(pk)) {
+            selectedTables = selectedTables.filter(t => t !== pk);
+            btn.classList.remove("floor-table--selected");
+        } else {
+            selectedTables.push(pk);
+            btn.classList.add("floor-table--selected");
+        }
+        updateState();
+    });
+});
+    </script>
 {% endblock %}
