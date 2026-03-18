@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Cart" %}{% endblock %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+    <div>
+        <h1 class="h4 fw-bold mb-0">{% trans "Cart" %}</h1>
+        <small class="text-secondary">{{ cart|length }} {% trans "items" %}</small>
+    </div>
+    <a href="{% url 'service:order-select-items' %}" class="btn btn-outline-secondary rounded-pill px-4">
+        &larr; {% trans "Back" %}
+    </a>
+</div>
+
+{% if not cart %}
+    <div class="card border-0 rounded-4 shadow-sm">
+        <div class="card-body p-5 text-center text-secondary">
+            <p class="mb-3">{% trans "Your cart is empty." %}</p>
+            <a href="{% url 'service:order-select-items' %}" class="btn btn-outline-primary rounded-pill px-4">
+                {% trans "Browse menu" %}
+            </a>
+        </div>
+    </div>
+
+{% else %}
+
+<div class="row g-4 align-items-start">
+
+    {# ── Left: ordered items ─────────────────────────────────────────────── #}
+    <div class="col-12 col-lg-8">
+        <div class="card border-0 rounded-4 shadow-sm">
+            <div class="card-body p-0">
+                <ul class="list-group list-group-flush rounded-4">
+                    {% for item in cart %}
+                    <li class="list-group-item px-4 py-3">
+                        <div class="d-flex justify-content-between align-items-start gap-3">
+
+                            <div class="flex-grow-1 min-w-0">
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <span class="fw-bold">{{ item.name }}</span>
+                                    <span class="badge bg-primary rounded-pill">×{{ item.quantity }}</span>
+                                </div>
+                                {% if item.note %}
+                                    <p class="text-secondary small mb-1">{{ item.note }}</p>
+                                {% endif %}
+                                {% if item.additions %}
+                                    <ul class="list-unstyled small mb-0">
+                                        {% for add in item.additions %}
+                                            <li class="text-secondary">
+                                                + {{ add.name }}
+                                                <span class="text-success">(+{{ add.price }} zł)</span>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+
+                            <div class="d-flex flex-column align-items-end gap-2 flex-shrink-0">
+                                <span class="fw-bold text-nowrap">{{ item.price }} zł</span>
+                                <a href="{% url 'service:remove-from-cart' forloop.counter0 %}"
+                                   class="btn btn-outline-danger btn-sm rounded-pill px-3">
+                                    {% trans "Remove" %}
+                                </a>
+                            </div>
+
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    {# ── Right: order form (sticky) ──────────────────────────────────────── #}
+    <div class="col-12 col-lg-4 cart-form-sticky">
+        <div class="card border-0 rounded-4 shadow-sm mb-2">
+            <div class="card-body p-4">
+                <h6 class="fw-bold mb-3">{% trans "Order details" %}</h6>
+
+                <form method="post" id="order-form">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" for="id_waiter">{% trans "Waiter" %}</label>
+                        <select name="waiter" id="id_waiter" class="form-select rounded-3" required>
+                            <option value="" disabled {% if not selected_waiter %}selected{% endif %}>
+                                {% trans "Select waiter..." %}
+                            </option>
+                            {% for waiter in waiters %}
+                                <option value="{{ waiter.pk }}"
+                                        {% if selected_waiter == waiter.pk|stringformat:"s" %}selected{% endif %}>
+                                    {{ waiter }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3" id="pin-field" style="display:none;">
+                        <label class="form-label fw-semibold" for="id_pin">{% trans "PIN" %}</label>
+                        <input type="password"
+                               name="pin"
+                               id="id_pin"
+                               class="form-control rounded-3"
+                               maxlength="4"
+                               inputmode="numeric"
+                               autocomplete="off"
+                               placeholder="••••">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" for="id_note">
+                            {% trans "Note" %}
+                            <span class="text-secondary fw-normal small">({% trans "optional" %})</span>
+                        </label>
+                        <input type="text"
+                               name="note"
+                               id="id_note"
+                               class="form-control rounded-3"
+                               placeholder="{% trans 'Additional note...' %}">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold" for="id_guest_count">{% trans "Guest count" %}</label>
+                        <input type="number"
+                               name="guest_count"
+                               id="id_guest_count"
+                               class="form-control rounded-3"
+                               value="1"
+                               min="1">
+                    </div>
+
+                    <button type="submit" id="btn-submit"
+                            class="btn btn-primary w-100 rounded-pill py-2 fw-bold">
+                        {% if request.session.bill %}
+                            {% trans "Add to order" %}
+                        {% else %}
+                            {% trans "Place order" %}
+                        {% endif %}
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <a href="{% url 'service:cart-clear' %}"
+           class="btn btn-outline-danger w-100 rounded-pill"
+           onclick="return confirm('{% trans "Cancel order and clear cart?" %}');">
+            {% trans "Cancel order" %}
+        </a>
+    </div>
+
+</div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const WAITERS_WITH_PIN = new Set({{ waiters_with_pin|safe }});
+
+const waiterSelect = document.getElementById("id_waiter");
+const pinField     = document.getElementById("pin-field");
+const pinInput     = document.getElementById("id_pin");
+
+function togglePin() {
+    const pk = parseInt(waiterSelect.value);
+    const needs = WAITERS_WITH_PIN.has(pk);
+    pinField.style.display = needs ? "" : "none";
+    pinInput.required = needs;
+    if (!needs) pinInput.value = "";
+}
+
+waiterSelect.addEventListener("change", togglePin);
+togglePin();
+
+document.getElementById("order-form").addEventListener("submit", function () {
+    const btn = document.getElementById("btn-submit");
+    btn.disabled = true;
+    btn.textContent = "{% trans 'Placing order...' %}";
+});
+</script>
+<style>
+@media (min-width: 992px) {
+    .cart-form-sticky {
+        position: sticky;
+        top: calc(70px + 1rem); /* navbar height + spacing */
+    }
+}
+</style>
+{% endblock %}
