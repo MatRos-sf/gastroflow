@@ -40,7 +40,7 @@ class ValidatorError(Exception):
 
 
 def menu_waiter(request):
-    return render(request, "service/menu_waiter.html")
+    return render(request, "service/order_flow/menu_waiter.html")
 
 
 class CartAddView(View):
@@ -100,19 +100,19 @@ class CartAddView(View):
             additions = self._additions_validator()
         except ValidatorError as e:
             messages.error(request, e.message)
-            return redirect("service:items-waiter")
+            return redirect("service:order-select-items")
 
         try:
             item = Item.objects.get(pk=item_id)
         except Item.DoesNotExist:
             messages.error(request, "Nie znaleziono produktu")
-            return redirect("service:items-waiter")
+            return redirect("service:order-select-items")
 
         self._add_item_to_cart(item, quantity, note, additions)
 
         messages.success(request, "Dodano danie do zamówienia")
 
-        return redirect(f"{reverse('service:items-waiter')}?category={category}")
+        return redirect(f"{reverse('service:order-select-items')}?category={category}")
 
 
 def api_remove_from_cart(request, index):
@@ -122,7 +122,7 @@ def api_remove_from_cart(request, index):
         request.session["cart"] = cart
         request.session.modified = True
         print("Deleted item:", del_item)
-    return redirect("service:cart")
+    return redirect("service:order-cart-summary")
 
 
 def clear_cart(request):
@@ -158,7 +158,7 @@ def add_order_to_bill(request, pk: int):
     request.session["bill"] = pk
     request.session["tables"] = [t.pk for t in bill.table.all()]
     request.session["waiter"] = str(bill.service.pk)
-    return redirect("service:items-waiter")
+    return redirect("service:order-select-items")
 
 
 def check_notifications(request):
