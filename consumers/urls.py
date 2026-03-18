@@ -1,5 +1,8 @@
 from django.urls import path
 
-from .views import kitchen_orders_view
+from consumers.views import bar_orders_view, kitchen_orders_view
 
-urlpatterns = [path("orders/", kitchen_orders_view, name="kitchen-orders")]
+urlpatterns = [
+    path("kitchen/orders/", kitchen_orders_view, name="kitchen-orders"),
+    path("bar/orders/", bar_orders_view, name="bar-orders"),
+]

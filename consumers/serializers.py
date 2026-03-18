@@ -14,7 +14,7 @@ def serialize_items_from_order(order: Order) -> list[dict[str, int | str | bool]
         items.append(
             {
                 "id": item.id,
-                "name_snapshot": item.full_name_snapshot,
+                "name_snapshot": item.name_snapshot,
                 "quantity": item.quantity,
                 "note": item.note,
                 "is_done": dish_is_done(notification_status),
@@ -26,7 +26,7 @@ def serialize_items_from_order(order: Order) -> list[dict[str, int | str | bool]
 def serialize_order(order: Order) -> dict[str, int | str | list | datetime]:
     return {
         "id": order.pk,
-        "sender": order.bill.service.user.username,
+        "sender": str(order.bill.waiter),
         "table": order.bill.str_tables(),
         "status": order.status,
         "order_items": serialize_items_from_order(order),
