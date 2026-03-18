@@ -14,12 +14,12 @@ class MenuWaiterView(ListView):
         self._active_period = self._resolve_active_period()
 
     def _resolve_active_period(self) -> MenuPeriod | None:
-        period_pk = self.request.session.get("menu_period")
-        if period_pk:
+        period_param = self.request.GET.get("period")
+        if period_param:
             try:
-                return MenuPeriod.objects.get(pk=period_pk, is_enabled=True)
-            except MenuPeriod.DoesNotExist:
-                del self.request.session["menu_period"]
+                return MenuPeriod.objects.get(pk=int(period_param), is_enabled=True)
+            except (ValueError, MenuPeriod.DoesNotExist):
+                pass
         now = timezone.localtime().time()
         return MenuPeriod.objects.filter(
             is_enabled=True, start_time__lte=now, end_time__gte=now
