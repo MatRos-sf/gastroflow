@@ -1,4 +1,4 @@
-from consumers.base import BaseConsumer
+from _consumers.base import BaseConsumer
 from menu.models import Location
 
 
