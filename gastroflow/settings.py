@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
+import sys
 from pathlib import Path
 
 import environ
@@ -55,8 +56,7 @@ INSTALLED_APPS = [
     "worker",  # must be before order I think so
     "order",
     "service",
-    "kitchen",
-    "bar",
+    "consumers",
 ]
 
 
@@ -179,7 +179,7 @@ CHANNEL_LAYERS = {
     },
 }
 
-if DEBUG:
+if DEBUG and not TESTING:
     DEBUG_TOOLBAR_CONFIG = {
         "SHOW_TOOLBAR_CALLBACK": lambda request: True,
     }
