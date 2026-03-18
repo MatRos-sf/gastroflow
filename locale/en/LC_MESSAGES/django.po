@@ -2383,3 +2383,139 @@ msgstr "Error saving"
 #: service/templates/service/hall/floor-editor.html
 msgid "Network error"
 msgstr "Network error"
+
+#: service/templates/service/table_order.html
+msgid "Choose table"
+msgstr "Choose table"
+
+#: service/templates/service/table_order.html
+msgid "No halls configured."
+msgstr "No halls configured."
+
+#: service/templates/service/table_order.html
+msgid "No tables in this hall."
+msgstr "No tables in this hall."
+
+#: service/templates/service/table_order.html
+msgid "No table selected"
+msgstr "No table selected"
+
+#: service/templates/service/table_order.html
+msgid "Selected"
+msgstr "Selected"
+
+#: service/templates/service/table_order.html
+msgid "Proceed to order"
+msgstr "Proceed to order"
+
+#: service/_views/order_flow/table_select.py
+msgid "Select a table to proceed to the order"
+msgstr "Select a table to proceed to the order"
+
+#: service/templates/service/order_flow/items_waiter.html
+msgid "Period"
+msgstr "Period"
+
+#: service/templates/service/order_flow/items_waiter.html
+msgid "Cart"
+msgstr "Cart"
+
+#: service/_views/order_flow/cart.py
+msgid "Bill not found"
+msgstr "Bill not found"
+
+#: service/_views/order_flow/cart.py
+msgid "Missing required session data"
+msgstr "Missing required session data"
+
+#: service/_views/order_flow/cart.py
+msgid "Guest count must be an integer!"
+msgstr "Guest count must be an integer!"
+
+#: service/_views/order_flow/cart.py
+msgid "Guest count must be greater than 0"
+msgstr "Guest count must be greater than 0"
+
+#: service/_views/order_flow/cart.py
+msgid "%(item)s is sold out."
+msgstr "%(item)s is sold out."
+
+#: service/_views/order_flow/cart.py
+msgid "%(item)s: only %(n)d portion(s) left."
+msgstr "%(item)s: only %(n)d portion(s) left."
+
+#: service/_views/order_flow/cart.py
+msgid "An error occurred while creating the order"
+msgstr "An error occurred while creating the order"
+
+#: service/_views/order_flow/cart.py
+msgid "Order #%(pk)s completed."
+msgstr "Order #%(pk)s completed."
+
+#: service/_views/order_flow/cart.py
+msgid "Order #%(pk)s updated."
+msgstr "Order #%(pk)s updated."
+
+#: service/templates/service/cart_waiter.html
+msgid "Your cart is empty."
+msgstr "Your cart is empty."
+
+#: service/templates/service/cart_waiter.html
+msgid "Browse menu"
+msgstr "Browse menu"
+
+#: service/templates/service/cart_waiter.html
+msgid "Order details"
+msgstr "Order details"
+
+#: service/templates/service/cart_waiter.html
+msgid "Select waiter..."
+msgstr "Select waiter..."
+
+#: service/templates/service/cart_waiter.html
+msgid "Note"
+msgstr "Note"
+
+#: service/templates/service/cart_waiter.html
+msgid "optional"
+msgstr "optional"
+
+#: service/templates/service/cart_waiter.html
+msgid "Additional note..."
+msgstr "Additional note..."
+
+#: service/templates/service/cart_waiter.html
+msgid "Guest count"
+msgstr "Guest count"
+
+#: service/templates/service/cart_waiter.html
+msgid "Add to order"
+msgstr "Add to order"
+
+#: service/templates/service/cart_waiter.html
+msgid "Place order"
+msgstr "Place order"
+
+#: service/templates/service/cart_waiter.html
+msgid "Cancel order and clear cart?"
+msgstr "Cancel order and clear cart?"
+
+#: service/templates/service/cart_waiter.html
+msgid "Cancel order"
+msgstr "Cancel order"
+
+#: service/templates/service/cart_waiter.html
+msgid "Placing order..."
+msgstr "Placing order..."
+
+#: service/_views/order_flow/cart.py
+msgid "Waiter not found"
+msgstr "Waiter not found"
+
+#: service/_views/order_flow/cart.py
+msgid "Invalid PIN"
+msgstr "Invalid PIN"
+
+#: service/templates/service/cart_waiter.html
+msgid "PIN"
+msgstr "PIN"
