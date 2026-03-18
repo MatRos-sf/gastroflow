@@ -10,9 +10,8 @@ urlpatterns = [
     path("menu/", include("menu.urls", namespace="gf-menu")),
     path("order/", include("order.urls")),
     path("", include("service.urls")),
-    path("kitchen/", include("kitchen.urls")),
-    path("bar/", include("bar.urls")),
     path("worker/", include("worker.urls", namespace="gf-worker")),
+    path("display/", include("consumers.urls")),
 ]
 
 if settings.DEBUG:

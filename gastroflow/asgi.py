@@ -18,8 +18,7 @@ django_asgi_app = get_asgi_application()
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 
-import bar.routing
-import kitchen.routing
+import consumers.routing
 import service.routing
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gastroflow.settings")
@@ -30,8 +29,7 @@ application = ProtocolTypeRouter(
         "http": get_asgi_application(),
         "websocket": AuthMiddlewareStack(
             URLRouter(
-                kitchen.routing.websocket_urlpatterns
-                + bar.routing.websocket_urlpatterns
+                consumers.routing.websocket_urlpatterns
                 + service.routing.websocket_urlpatterns
             )
         ),
