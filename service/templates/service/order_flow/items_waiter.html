@@ -23,7 +23,7 @@
                         {% for period in all_periods %}
                             <li>
                                 <a class="dropdown-item {% if active_period.pk == period.pk %}fw-bold{% endif %}"
-                                   href="{% url 'service:set-menu-period' period.pk %}">
+                                   href="?period={{ period.pk }}{% if selected_category %}&category={{ selected_category.pk }}{% endif %}">
                                     {% if active_period.pk == period.pk %}✓{% endif %}
                                     {{ period.name }}
                                     <small class="text-secondary ms-1">{{ period.start_time|time:"H:i" }}–{{ period.end_time|time:"H:i" }}</small>
@@ -40,7 +40,7 @@
     {% if categories %}
         <div class="d-flex flex-wrap gap-2 mb-4">
             {% for cat in categories %}
-                <a href="?category={{ cat.pk }}"
+                <a href="?category={{ cat.pk }}{% if request.GET.period %}&period={{ request.GET.period }}{% endif %}"
                    class="btn rounded-pill px-4 {% if selected_category.pk == cat.pk %}btn-primary{% else %}btn-outline-secondary{% endif %}">
                     {{ cat.name }}
                 </a>
