@@ -1,77 +1,69 @@
 {% extends "base.html" %}
 {% load i18n %}
-
-{% block title %}{% trans "Menu" %}{% endblock %}
-
+{% block title %}
+    {% trans "Menu" %}
+{% endblock title %}
 {% block content %}
-<div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
-    <div>
-        <h1 class="h4 fw-bold mb-0">{% trans "Menu" %}</h1>
-        {% if active_period %}
-            <small class="text-secondary">{{ active_period.name }} · {{ active_period.start_time|time:"H:i" }}–{{ active_period.end_time|time:"H:i" }}</small>
-        {% else %}
-            <small class="text-secondary">{% trans "All items" %}</small>
-        {% endif %}
-    </div>
-    <div class="d-flex gap-2 align-items-center flex-wrap">
-        {% if all_periods %}
-            <div class="dropdown">
-                <button class="btn btn-outline-secondary rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                    {% trans "Period" %}
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    {% for period in all_periods %}
-                        <li>
-                            <a class="dropdown-item {% if active_period.pk == period.pk %}fw-bold{% endif %}"
-                               href="{% url 'service:set-menu-period' period.pk %}">
-                                {% if active_period.pk == period.pk %}✓ {% endif %}
-                                {{ period.name }}
-                                <small class="text-secondary ms-1">{{ period.start_time|time:"H:i" }}–{{ period.end_time|time:"H:i" }}</small>
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
-        <a href="{% url 'service:cart' %}" class="btn btn-outline-primary rounded-pill px-4">
-            {% trans "Cart" %}
-        </a>
-    </div>
-</div>
-
-{% if categories %}
-<div class="d-flex flex-wrap gap-2 mb-4">
-    {% for cat in categories %}
-        <a href="?category={{ cat.pk }}"
-           class="btn rounded-pill px-4 {% if selected_category.pk == cat.pk %}btn-primary{% else %}btn-outline-secondary{% endif %}">
-            {{ cat.name }}
-        </a>
-    {% endfor %}
-</div>
-{% endif %}
-
-{% if not object_list %}
-    <p class="text-secondary">{% trans "No items in this category." %}</p>
-{% else %}
-    {% if items_no_sub %}
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3 mb-4">
-            {% for item in items_no_sub %}
-                <div class="col d-grid">
-                    {% include "service/menu_cards/_modal_view.html" with item=item %}
+    <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+        <div>
+            <h1 class="h4 fw-bold mb-0">{% trans "Menu" %}</h1>
+            {% if active_period %}
+                <small class="text-secondary">{{ active_period.name }} · {{ active_period.start_time|time:"H:i" }}–{{ active_period.end_time|time:"H:i" }}</small>
+            {% else %}
+                <small class="text-secondary">{% trans "All items" %}</small>
+            {% endif %}
+        </div>
+        <div class="d-flex gap-2 align-items-center flex-wrap">
+            {% if all_periods %}
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary rounded-pill px-3 dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown">{% trans "Period" %}</button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        {% for period in all_periods %}
+                            <li>
+                                <a class="dropdown-item {% if active_period.pk == period.pk %}fw-bold{% endif %}"
+                                   href="{% url 'service:set-menu-period' period.pk %}">
+                                    {% if active_period.pk == period.pk %}✓{% endif %}
+                                    {{ period.name }}
+                                    <small class="text-secondary ms-1">{{ period.start_time|time:"H:i" }}–{{ period.end_time|time:"H:i" }}</small>
+                                </a>
+                            </li>
+                        {% endfor %}
+                    </ul>
                 </div>
+            {% endif %}
+            <a href="{% url 'service:cart' %}"
+               class="btn btn-outline-primary rounded-pill px-4">{% trans "Cart" %}</a>
+        </div>
+    </div>
+    {% if categories %}
+        <div class="d-flex flex-wrap gap-2 mb-4">
+            {% for cat in categories %}
+                <a href="?category={{ cat.pk }}"
+                   class="btn rounded-pill px-4 {% if selected_category.pk == cat.pk %}btn-primary{% else %}btn-outline-secondary{% endif %}">
+                    {{ cat.name }}
+                </a>
             {% endfor %}
         </div>
     {% endif %}
-
-    {% for sub, group_items in sub_menu_groups.items %}
-        <h5 class="fw-bold mt-4 mb-3">{{ sub.name|capfirst }}</h5>
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3 mb-4">
-            {% for item in group_items %}
-                <div class="col d-grid">
-                    {% include "service/menu_cards/_modal_view.html" with item=item %}
-                </div>
-            {% endfor %}
-        </div>
-    {% endfor %}
-{% endif %}
-{% endblock %}
+    {% if not object_list %}
+        <p class="text-secondary">{% trans "No items in this category." %}</p>
+    {% else %}
+        {% if items_no_sub %}
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3 mb-4">
+                {% for item in items_no_sub %}
+                    <div class="col d-grid">{% include "service/order_flow/_modal_view.html" with item=item %}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% for sub, group_items in sub_menu_groups.items %}
+            <h5 class="fw-bold mt-4 mb-3">{{ sub.name|capfirst }}</h5>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-3 mb-4">
+                {% for item in group_items %}
+                    <div class="col d-grid">{% include "service/order_flow/_modal_view.html" with item=item %}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock content %}
