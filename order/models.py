@@ -222,6 +222,45 @@ class Bill(models.Model):
     #
     #     return {"total": total, "summary": summary, "cost_discount": cost_discount}
 
+class NotificationType(models.TextChoices):
+    ITEM_INFO = "item_info", "Item Info"
+    ORDER_INFO = "order_info", "Order Info"
+    CALL = "call", "Call"
+
+
+class NotificationStatus(models.TextChoices):
+    NONE = "none", "None"
+    WAITING_TO_READ = "waiting_to_read", "Waiting to Read"
+    READ = "read", "Read"
+
+
+class Notification(models.Model):
+    worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
+    notification_type = models.CharField(max_length=20, choices=NotificationType.choices)
+    item = models.ForeignKey(
+        "order.OrderItem", on_delete=models.CASCADE, null=True, blank=True
+    )
+    order = models.ForeignKey(
+        "order.Order", on_delete=models.CASCADE, null=True, blank=True
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=NotificationStatus.choices,
+        default=NotificationStatus.NONE,
+    )
+    message = models.CharField(max_length=400, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_update = models.DateTimeField(auto_now=True)
+
+    @property
+    def tables(self)-> str:
+        if not self.order and self.item:
+            return ""
+        if self.order:
+            return "Tables form set order #TODO"
+
+        return "Tables form set item #TODO"
+
 
 class Order(models.Model):
     bill = models.ForeignKey(Bill, on_delete=models.CASCADE, related_name="orders")
@@ -394,3 +433,23 @@ class OrderItemAddition(models.Model):
     #     db_persist=True,
     #     help_text="Final price for this addition after discount",
     # )
+
+def create_notification(
+        worker: Worker,
+        notification_type: NotificationType,
+        message: str|None = None,
+        order: Order|None=None,
+        item: OrderItem|None=None,
+        status: NotificationStatus = NotificationStatus.NONE
+):
+    if order and item:
+        raise ValueError("Order and item cannot be both set")
+
+    return Notification.objects.create(
+        worker=worker,
+        notification_type=notification_type,
+        item=item,
+        order=order,
+        status=status,
+        message=message
+    )
