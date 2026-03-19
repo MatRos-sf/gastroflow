@@ -241,10 +241,10 @@ class Notification(models.Model):
     notification_type = models.CharField(
         max_length=20, choices=NotificationType.choices
     )
-    item = models.ForeignKey(
+    item = models.OneToOneField(
         "order.OrderItem", on_delete=models.CASCADE, null=True, blank=True
     )
-    order = models.ForeignKey(
+    order = models.OneToOneField(
         "order.Order", on_delete=models.CASCADE, null=True, blank=True
     )
     status = models.CharField(
