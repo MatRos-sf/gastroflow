@@ -4,6 +4,7 @@ from django.db.models import DecimalField, ExpressionWrapper, F, Sum
 from django.db.models.functions import Coalesce
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 from menu.models import Addition, Item, Location
 from service.models import Table
@@ -11,32 +12,37 @@ from worker.models import Worker
 
 
 class OrderItemStatus(models.TextChoices):
-    WAITING = "waiting", "WAITING"
-    PREPARING = "preparing", "PREPARING"
-    READY = "ready", "READY"
-    CANCELED = "canceled", "CANCELED"
+    WAITING = "waiting", _("Waiting")
+    PREPARING = "preparing", _("Preparing")
+    READY = "ready", _("Ready")
+    CANCELED = "canceled", _("Canceled")
 
 
 class StatusOrder(models.TextChoices):
-    ORDER = "ordering", "ORDERING"
-    PREPARING = "preparing", "PREPARING"
-    READY = "ready", "READY"
-    PAID = "paid", "PAID"
-    CANCELED = "canceled", "CANCELED"
+    ORDER = "ordering", _("Ordering")
+    PREPARING = "preparing", _("Preparing")
+    READY = "ready", _("Ready")
+    PAID = "paid", _("Paid")
+    CANCELED = "canceled", _("Canceled")
 
 
 class StatusBill(models.TextChoices):
-    OPEN = "open", "OPEN"
-    CLOSED = "closed", "CLOSED"
+    OPEN = "open", _("Open")
+    CLOSED = "closed", _("Closed")
 
 
 class PaymentMethod(models.TextChoices):
-    CARD = "card", "Karta"
-    CASH = "cash", "Gotówka"
+    CARD = "card", _("Card")
+    CASH = "cash", _("Cash")
 
 
 class Bill(models.Model):
-    table = models.ManyToManyField(Table, blank=True)
+    table = models.ManyToManyField(
+        Table,
+        blank=True,
+        null=True,
+        help_text=_("Table to which the bill is assigned. Null means take-away"),
+    )
     status = models.CharField(
         max_length=10, choices=StatusBill.choices, default=StatusBill.OPEN
     )
@@ -51,7 +57,7 @@ class Bill(models.Model):
         Worker,
         on_delete=models.SET_NULL,
         null=True,
-        help_text="Person who served the customer",
+        help_text=_("Person who served the customer"),
     )
     note = models.CharField(max_length=200, blank=True, null=True)
     discount = models.PositiveIntegerField(
@@ -64,12 +70,9 @@ class Bill(models.Model):
     guest_count = models.PositiveSmallIntegerField(
         default=1,
         validators=[MinValueValidator(1)],
-        help_text="Number of people in one the bill (plates per person)",
+        help_text=_("Number of people in one the bill (plates per person)"),
     )
 
-    # Payment additional
-    # tip
-    # given_money
     def __str__(self):
         return f"Bill {self.id} - Table {self.table or 'take-away'}"
 
@@ -222,21 +225,24 @@ class Bill(models.Model):
     #
     #     return {"total": total, "summary": summary, "cost_discount": cost_discount}
 
+
 class NotificationType(models.TextChoices):
-    ITEM_INFO = "item_info", "Item Info"
-    ORDER_INFO = "order_info", "Order Info"
-    CALL = "call", "Call"
+    ITEM_INFO = "item_info", _("Item Info")
+    ORDER_INFO = "order_info", _("Order Info")
+    CALL = "call", _("Call")
 
 
 class NotificationStatus(models.TextChoices):
-    NONE = "none", "None"
-    WAITING_TO_READ = "waiting_to_read", "Waiting to Read"
-    READ = "read", "Read"
+    NONE = "none", _("None")
+    WAITING_TO_READ = "waiting_to_read", _("Waiting to Read")
+    READ = "read", _("Read")
 
 
 class Notification(models.Model):
     worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
-    notification_type = models.CharField(max_length=20, choices=NotificationType.choices)
+    notification_type = models.CharField(
+        max_length=20, choices=NotificationType.choices
+    )
     item = models.ForeignKey(
         "order.OrderItem", on_delete=models.CASCADE, null=True, blank=True
     )
@@ -253,7 +259,7 @@ class Notification(models.Model):
     last_update = models.DateTimeField(auto_now=True)
 
     @property
-    def tables(self)-> str:
+    def tables(self) -> str:
         if not self.order and self.item:
             return ""
         if self.order:
@@ -278,6 +284,16 @@ class Order(models.Model):
     def __str__(self):
         return f"Order {self.id}"
 
+    def save(self, *args, **kwargs):
+        is_init = self.pk is None
+        super().save(*args, **kwargs)
+        if is_init:
+            create_notification(
+                worker=self.bill.waiter,
+                notification_type=NotificationType.ORDER_INFO,
+                order=self,
+            )
+
     # TODO: deprecated ?
     def total(self):
         return (
@@ -294,50 +310,37 @@ class Order(models.Model):
         )
 
 
-class NotificationStatus(models.TextChoices):
-    PREPARE = "prepare", "Prepare"  # when kitchen is preparing the order
-    WAIT = "wait", "Wait"  # when the dish waiting to be served
-    SERVE = "serve", "Serve"  # when the dish is served
-
-
-class Notification(models.Model):
-    worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    order_item = models.OneToOneField("order.OrderItem", on_delete=models.CASCADE)
-    status = models.CharField(
-        max_length=20,
-        choices=NotificationStatus.choices,
-        default=NotificationStatus.PREPARE,
+class OrderBase(models.Model):
+    name_snapshot = models.CharField(
+        max_length=150, help_text=_("Name of dish or additions")
     )
-    last_update = models.DateTimeField(auto_now=True)
+    price_snapshot = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        help_text=_("Price of dish or additions when it was ordered"),
+    )
+    quantity = models.PositiveIntegerField(default=1)
+    line_subtotal = models.GeneratedField(
+        expression=F("price_snapshot") * F("quantity"),
+        output_field=DecimalField(max_digits=12, decimal_places=2),
+        help_text=_(
+            "Subtotal for this item before discount and additions (price × quantity)"
+        ),
+        db_persist=True,
+    )
 
-    def __str__(self):
-        return f"@{self.worker} - {self.order_item.name_snapshot} | {self.order_item.order.bill.str_tables()}"
+    class Meta:
+        abstract = True
 
 
-class OrderItem(models.Model):
+class OrderItem(OrderBase):
     order = models.ForeignKey(
         Order, on_delete=models.CASCADE, related_name="order_items"
     )
     item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    name_snapshot = models.CharField(
-        max_length=150, help_text="Name of dish with additions"
-    )
-    price_snapshot = models.DecimalField(
-        max_digits=5, decimal_places=2, help_text="Price of dish when it was ordered"
-    )
     note = models.TextField(null=True, blank=True, max_length=500)
     status = models.CharField(
         max_length=20, choices=OrderItemStatus.choices, default=OrderItemStatus.WAITING
-    )
-    quantity = models.PositiveIntegerField(default=1)
-
-    # TODO: deprecated?
-    line_subtotal = models.GeneratedField(
-        expression=F("price_snapshot") * F("quantity"),
-        output_field=DecimalField(max_digits=12, decimal_places=2),
-        help_text="Subtotal for this item before discount and additions (price × quantity)",
-        db_persist=True,
     )
     # # TODO: write function than set this field!
     # line_discount_amount = models.DecimalField(
@@ -380,47 +383,24 @@ class OrderItem(models.Model):
     #         return f"{self.name_snapshot} ({additions_names})"
     #     return self.name_snapshot
 
-    # TODO: deprecated?
     def save(self, *args, **kwargs):
-        # is_init = self.pk is None
-        #
-        # if not is_init and self.price_snapshot and self.quantity:
-        #     subtotal = self.price_snapshot * self.quantity
-        #     if self.line_discount_amount > subtotal:
-        #         raise ValidationError(
-        #             {
-        #                 "line_discount_amount": f"Discount amount ({self.line_discount_amount}) "
-        #                 f"cannot exceed item subtotal ({subtotal})"
-        #             }
-        #         )
-        #
-        #     if self.line_discount_amount < 0:
-        #         raise ValidationError(
-        #             {"line_discount_amount": "Discount amount cannot be negative"}
-        #         )
-
+        is_init = self.pk is None
         super().save(*args, **kwargs)
 
-        # # create notification only for new order items
-        # if is_init:
-        #     service_worker = getattr(self.order.bill, "service", None)
-        #     if service_worker is not None:
-        #         Notification.objects.create(worker=service_worker, order_item=self)
+        if is_init:
+            create_notification(
+                worker=self.order.bill.waiter,
+                notification_type=NotificationType.ITEM_INFO,
+                item=self,
+            )
 
 
-class OrderItemAddition(models.Model):
+class OrderItemAddition(OrderBase):
     order_item = models.ForeignKey(
         OrderItem, on_delete=models.CASCADE, related_name="order_item_additions"
     )
     addition = models.ForeignKey(Addition, on_delete=models.CASCADE)
-    name_snapshot = models.CharField(max_length=100)
-    price_snapshot = models.DecimalField(max_digits=7, decimal_places=2)
-    quantity = models.PositiveIntegerField(default=1)
-    line_subtotal = models.GeneratedField(
-        expression=F("price_snapshot") * F("quantity"),
-        output_field=DecimalField(max_digits=12, decimal_places=2),
-        db_persist=True,
-    )
+
     # line_discount_amount = models.DecimalField(
     #     default=Decimal("0.00"),
     #     max_digits=12,
@@ -434,13 +414,14 @@ class OrderItemAddition(models.Model):
     #     help_text="Final price for this addition after discount",
     # )
 
+
 def create_notification(
-        worker: Worker,
-        notification_type: NotificationType,
-        message: str|None = None,
-        order: Order|None=None,
-        item: OrderItem|None=None,
-        status: NotificationStatus = NotificationStatus.NONE
+    worker: Worker,
+    notification_type: NotificationType,
+    message: str | None = None,
+    order: Order | None = None,
+    item: OrderItem | None = None,
+    status: NotificationStatus = NotificationStatus.NONE,
 ):
     if order and item:
         raise ValueError("Order and item cannot be both set")
@@ -451,5 +432,5 @@ def create_notification(
         item=item,
         order=order,
         status=status,
-        message=message
+        message=message,
     )

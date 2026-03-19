@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-05 22:14+0100\n"
+"POT-Creation-Date: 2026-03-19 21:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,6 +28,1046 @@ msgstr ""
 msgid "English"
 msgstr ""
 
+#: menu/models.py:41 templates/base.html:92
+msgid "Bar"
+msgstr "Bar"
+
+#: menu/models.py:42 templates/base.html:86
+msgid "Kitchen"
+msgstr "Kuchnia"
+
+#: menu/models.py:46 menu/models.py:62 menu/models.py:76 menu/models.py:121
+msgid "name"
+msgstr "nazwa"
+
+#: menu/models.py:49 menu/models.py:64 menu/models.py:103
+msgid "category"
+msgstr "kategoria"
+
+#: menu/models.py:50
+msgid "categories"
+msgstr "kategorie"
+
+#: menu/models.py:68 menu/models.py:110
+msgid "subcategory"
+msgstr "podkategoria"
+
+#: menu/models.py:69
+msgid "subcategories"
+msgstr "podkategorie"
+
+#: menu/models.py:77 menu/models.py:144
+msgid "price"
+msgstr "cena"
+
+#: menu/models.py:79 menu/models.py:142
+msgid "Cash register product ID"
+msgstr "Numer produktu w kasie fiskalnej"
+
+#: menu/models.py:79 menu/models.py:142
+msgid "checkout ID"
+msgstr "ID kasy"
+
+#: menu/models.py:81 menu/models.py:145
+msgid "created at"
+msgstr "utworzono"
+
+#: menu/models.py:82 menu/models.py:146
+msgid "deleted"
+msgstr "usunięto"
+
+#: menu/models.py:83
+msgid "priority"
+msgstr "priorytet"
+
+#: menu/models.py:87
+msgid "addition"
+msgstr "dodatek"
+
+#: menu/models.py:88 menu/models.py:131
+msgid "additions"
+msgstr "dodatki"
+
+#: menu/models.py:118
+msgid "preparation location"
+msgstr "miejsce przygotowania"
+
+#: menu/models.py:121
+msgid "Item name"
+msgstr "Nazwa produktu"
+
+#: menu/models.py:124
+msgid "Item description"
+msgstr "Opis produktu"
+
+#: menu/models.py:128
+msgid "description"
+msgstr "opis"
+
+#: menu/models.py:137
+msgid "Number of portions available today. None = unlimited, 0 = sold out."
+msgstr "Liczba porcji dostępnych dziś. None = bez limitu, 0 = wyprzedane."
+
+#: menu/models.py:139
+msgid "daily stock"
+msgstr "dzienny stan"
+
+#: menu/models.py:149
+msgid "item"
+msgstr "produkt"
+
+#: menu/models.py:150 service/templates/service/order_flow/cart_summary.html:10
+msgid "items"
+msgstr "produkty"
+
+#: menu/templates/menu/_item_form_extras.html:11
+msgid "New Addition"
+msgstr "Nowy dodatek"
+
+#: menu/templates/menu/_item_form_extras.html:18
+#: menu/templates/menu/_item_form_extras.html:81
+#: menu/templates/menu/_item_form_extras.html:114
+#: menu/templates/menu/create-menu-period.html:21
+#: menu/templates/menu/daily-stock-item.html:65
+#: menu/templates/menu/list-item.html:65
+#: menu/templates/menu/list-menu-period.html:25
+#: menu/templates/menu/replenish-item.html:53
+#: menu/templates/menu/update-menu-period.html:21
+#: worker/templates/worker/list-worker.html:16
+msgid "Name"
+msgstr "Imię i nazwisko"
+
+#: menu/templates/menu/_item_form_extras.html:23
+#: menu/templates/menu/detail-item.html:16
+#: menu/templates/menu/list-item.html:66
+msgid "Price"
+msgstr "Cena"
+
+#: menu/templates/menu/_item_form_extras.html:33
+#: menu/templates/menu/detail-item.html:20
+msgid "Checkout ID"
+msgstr "ID kasy"
+
+#: menu/templates/menu/_item_form_extras.html:43
+msgid "Priority"
+msgstr "Priorytet"
+
+#: menu/templates/menu/_item_form_extras.html:52
+#: menu/templates/menu/_item_form_extras.html:85
+#: menu/templates/menu/_item_form_extras.html:126
+msgid "Something went wrong. Try again."
+msgstr "Coś poszło nie tak. Spróbuj ponownie."
+
+#: menu/templates/menu/_item_form_extras.html:57
+#: menu/templates/menu/_item_form_extras.html:90
+#: menu/templates/menu/_item_form_extras.html:132
+#: menu/templates/menu/create-item.html:21
+#: menu/templates/menu/create-menu-period.html:129
+#: menu/templates/menu/daily-stock-item.html:152
+#: menu/templates/menu/replenish-item.html:143
+#: menu/templates/menu/update-item.html:21
+#: menu/templates/menu/update-menu-period.html:129
+#: service/templates/service/hall/create-hall.html:24
+#: service/templates/service/hall/update-hall.html:27
+#: worker/templates/worker/create-worker.html:21
+#: worker/templates/worker/update-work-time.html:20
+#: worker/templates/worker/update-worker.html:21
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: menu/templates/menu/_item_form_extras.html:60
+#: menu/templates/menu/_item_form_extras.html:93
+#: menu/templates/menu/_item_form_extras.html:135
+#: menu/templates/menu/create-item.html:19
+#: menu/templates/menu/create-menu-period.html:127
+#: menu/templates/menu/daily-stock-item.html:153
+#: menu/templates/menu/replenish-item.html:144
+#: menu/templates/menu/update-menu-period.html:127
+#: service/templates/service/hall/create-hall.html:22
+#: service/templates/service/hall/update-hall.html:25
+#: worker/templates/worker/create-worker.html:19
+msgid "Save"
+msgstr "Zapisz"
+
+#: menu/templates/menu/_item_form_extras.html:74
+msgid "New Category"
+msgstr "Nowa kategoria"
+
+#: menu/templates/menu/_item_form_extras.html:107
+msgid "New Subcategory"
+msgstr "Nowa podkategoria"
+
+#: menu/templates/menu/_item_form_extras.html:118
+#: menu/templates/menu/daily-stock-item.html:22
+#: menu/templates/menu/detail-item.html:39
+#: menu/templates/menu/list-item.html:22
+msgid "Category"
+msgstr "Kategoria"
+
+#: menu/templates/menu/create-item.html:4
+#: menu/templates/menu/create-item.html:12
+msgid "Add Item"
+msgstr "Dodaj pozycję"
+
+#: menu/templates/menu/create-item.html:13
+msgid "Fill in the details and save the menu item"
+msgstr "Wypełnij dane i zapisz pozycję menu"
+
+#: menu/templates/menu/create-menu-period.html:4
+msgid "Create Menu Period"
+msgstr "Utwórz okres menu"
+
+#: menu/templates/menu/create-menu-period.html:11
+msgid "Create menu period"
+msgstr "Utwórz okres menu"
+
+#: menu/templates/menu/create-menu-period.html:12
+msgid "Define a time window and assign items available during it."
+msgstr "Zdefiniuj przedział czasowy i przypisz dostępne w nim pozycje."
+
+#: menu/templates/menu/create-menu-period.html:19
+#: menu/templates/menu/detail-item.html:37
+#: menu/templates/menu/detail-menu-period.html:27
+#: menu/templates/menu/update-menu-period.html:19
+msgid "Details"
+msgstr "Szczegóły"
+
+#: menu/templates/menu/create-menu-period.html:27
+#: menu/templates/menu/update-menu-period.html:27
+msgid "e.g. Breakfast, Lunch"
+msgstr "np. Śniadanie, Obiad"
+
+#: menu/templates/menu/create-menu-period.html:32
+#: menu/templates/menu/detail-menu-period.html:30
+#: menu/templates/menu/update-menu-period.html:32
+msgid "Start time"
+msgstr "Godzina rozpoczęcia"
+
+#: menu/templates/menu/create-menu-period.html:41
+#: menu/templates/menu/detail-menu-period.html:35
+#: menu/templates/menu/update-menu-period.html:41
+msgid "End time"
+msgstr "Godzina zakończenia"
+
+#: menu/templates/menu/create-menu-period.html:56
+#: menu/templates/menu/detail-menu-period.html:43
+#: menu/templates/menu/list-menu-period.html:40
+#: menu/templates/menu/update-menu-period.html:56
+msgid "Enabled"
+msgstr "Aktywny"
+
+#: menu/templates/menu/create-menu-period.html:64
+#: menu/templates/menu/detail-menu-period.html:55
+#: menu/templates/menu/list-item.html:4 menu/templates/menu/list-item.html:11
+#: menu/templates/menu/list-menu-period.html:27
+#: menu/templates/menu/update-menu-period.html:64
+msgid "Items"
+msgstr "Pozycje"
+
+#: menu/templates/menu/create-menu-period.html:65
+#: menu/templates/menu/create-menu-period.html:140
+#: menu/templates/menu/update-menu-period.html:65
+#: menu/templates/menu/update-menu-period.html:140
+msgid "selected"
+msgstr "wybranych"
+
+#: menu/templates/menu/create-menu-period.html:71
+#: menu/templates/menu/update-menu-period.html:71
+msgid "Search items..."
+msgstr "Szukaj pozycji..."
+
+#: menu/templates/menu/create-menu-period.html:94
+#: menu/templates/menu/update-menu-period.html:94
+msgid "Select all"
+msgstr "Zaznacz wszystkie"
+
+#: menu/templates/menu/create-menu-period.html:98
+#: menu/templates/menu/daily-stock-item.html:53
+#: menu/templates/menu/list-item.html:53
+#: menu/templates/menu/update-menu-period.html:98
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:527
+msgid "Clear"
+msgstr "Wyczyść"
+
+#: menu/templates/menu/create-menu-period.html:114
+#: menu/templates/menu/daily-stock-item.html:96
+#: menu/templates/menu/list-item.html:96
+#: menu/templates/menu/update-menu-period.html:114
+#: service/templates/service/order_flow/items_waiter.html:51
+msgid "No items in this category."
+msgstr "Brak pozycji w tej kategorii."
+
+#: menu/templates/menu/create-menu-period.html:120
+#: menu/templates/menu/update-menu-period.html:120
+msgid "No categories found."
+msgstr "Nie znaleziono kategorii."
+
+#: menu/templates/menu/daily-stock-item.html:4
+msgid "Set Daily Stock"
+msgstr "Ustaw dzienny stan"
+
+#: menu/templates/menu/daily-stock-item.html:11
+#: menu/templates/menu/daily-stock-item.html:133
+#: menu/templates/menu/dashboard.html:52
+#: menu/templates/menu/replenish-item.html:125
+msgid "Set daily stock"
+msgstr "Ustaw dzienny stan"
+
+#: menu/templates/menu/daily-stock-item.html:16
+#: menu/templates/menu/dashboard.html:43
+#: menu/templates/menu/replenish-item.html:11
+msgid "Replenish stock"
+msgstr "Uzupełnij magazyn"
+
+#: menu/templates/menu/daily-stock-item.html:24
+#: menu/templates/menu/daily-stock-item.html:38
+#: menu/templates/menu/list-item.html:24 menu/templates/menu/list-item.html:38
+#: menu/templates/menu/replenish-item.html:31
+msgid "All"
+msgstr "Wszystkie"
+
+#: menu/templates/menu/daily-stock-item.html:34
+#: menu/templates/menu/detail-item.html:24
+#: menu/templates/menu/list-item.html:34 menu/templates/menu/list-item.html:68
+#: menu/templates/menu/replenish-item.html:27
+msgid "Location"
+msgstr "Lokalizacja"
+
+#: menu/templates/menu/daily-stock-item.html:50
+#: menu/templates/menu/list-item.html:50
+msgid "Filter"
+msgstr "Filtruj"
+
+#: menu/templates/menu/daily-stock-item.html:64
+#: menu/templates/menu/list-item.html:64
+#: menu/templates/menu/replenish-item.html:52
+msgid "ID"
+msgstr "ID"
+
+#: menu/templates/menu/daily-stock-item.html:66
+#: menu/templates/menu/daily-stock-item.html:140
+#: menu/templates/menu/dashboard.html:37
+#: menu/templates/menu/detail-item.html:28
+#: menu/templates/menu/replenish-item.html:17
+#: menu/templates/menu/replenish-item.html:54
+#: menu/templates/menu/replenish-item.html:131
+msgid "Daily stock"
+msgstr "Dzienny stan"
+
+#: menu/templates/menu/daily-stock-item.html:90
+msgid "Set stock"
+msgstr "Ustaw stan"
+
+#: menu/templates/menu/daily-stock-item.html:112
+#: menu/templates/menu/list-item.html:112
+#: menu/templates/menu/replenish-item.html:104
+#, python-format
+msgid ""
+"\n"
+"                            Page %(current)s of %(total)s\n"
+"                        "
+msgstr ""
+
+#: menu/templates/menu/daily-stock-item.html:146
+#: menu/templates/menu/replenish-item.html:137
+msgid "Leave empty for unlimited"
+msgstr "Pozostaw puste dla nieograniczonej ilości"
+
+#: menu/templates/menu/daily-stock-item.html:147
+#: menu/templates/menu/replenish-item.html:138
+msgid "0 = sold out, empty = unlimited"
+msgstr "0 = wyprzedane, puste = bez limitu"
+
+#: menu/templates/menu/dashboard.html:4
+msgid "Menu Management"
+msgstr "Zarządzanie menu"
+
+#: menu/templates/menu/dashboard.html:10
+msgid "Menu management"
+msgstr "Zarządzanie menu"
+
+#: menu/templates/menu/dashboard.html:14
+msgid "Catalog"
+msgstr "Katalog"
+
+#: menu/templates/menu/dashboard.html:20
+#: service/templates/service/order_flow/items_waiter.html:13
+msgid "All items"
+msgstr "Wszystkie pozycje"
+
+#: menu/templates/menu/dashboard.html:21
+msgid "Browse and edit the full menu catalog."
+msgstr "Przeglądaj i edytuj pełny katalog menu."
+
+#: menu/templates/menu/dashboard.html:29 menu/templates/menu/list-item.html:16
+msgid "Add item"
+msgstr "Dodaj pozycję"
+
+#: menu/templates/menu/dashboard.html:30
+msgid "Create a new menu item."
+msgstr "Utwórz nową pozycję menu."
+
+#: menu/templates/menu/dashboard.html:44
+#: menu/templates/menu/replenish-item.html:12
+msgid "Set today's available portions for tracked items."
+msgstr "Ustaw dzisiejszą dostępną ilość dla śledzonych pozycji."
+
+#: menu/templates/menu/dashboard.html:53
+msgid "Configure which items have stock tracking enabled."
+msgstr "Skonfiguruj, które pozycje mają włączone śledzenie stanu."
+
+#: menu/templates/menu/dashboard.html:60
+#: menu/templates/menu/list-menu-period.html:11
+msgid "Menu periods"
+msgstr "Okresy menu"
+
+#: menu/templates/menu/dashboard.html:66
+msgid "All periods"
+msgstr "Wszystkie okresy"
+
+#: menu/templates/menu/dashboard.html:67
+msgid "View and manage breakfast, lunch, and other time windows."
+msgstr ""
+"Przeglądaj i zarządzaj śniadaniem, obiadem i innymi przedziałami czasowymi."
+
+#: menu/templates/menu/dashboard.html:75
+#: menu/templates/menu/list-menu-period.html:16
+msgid "Add period"
+msgstr "Dodaj okres"
+
+#: menu/templates/menu/dashboard.html:76
+msgid "Define a new time window and assign items to it."
+msgstr "Zdefiniuj nowy przedział czasowy i przypisz do niego pozycje."
+
+#: menu/templates/menu/detail-item.html:43
+msgid "Subcategory"
+msgstr "Podkategoria"
+
+#: menu/templates/menu/detail-item.html:47
+msgid "Description"
+msgstr "Opis"
+
+#: menu/templates/menu/detail-item.html:51
+#: menu/templates/menu/list-item.html:67
+#: service/templates/service/order_flow/_modal_view.html:49
+msgid "Additions"
+msgstr "Dodatki"
+
+#: menu/templates/menu/detail-item.html:61
+msgid "Created at"
+msgstr "Utworzono"
+
+#: menu/templates/menu/detail-item.html:71
+#: menu/templates/menu/detail-menu-period.html:22
+#: service/templates/service/hall/list-hall.html:35
+#: worker/templates/worker/_worktime_rows.html:11
+msgid "Edit"
+msgstr "Edytuj"
+
+#: menu/templates/menu/detail-item.html:73
+#: service/templates/service/order_flow/_modal_view.html:70
+#: service/templates/service/order_flow/cart_summary.html:13
+#: service/templates/service/order_flow/table_order.html:11
+msgid "Back"
+msgstr "Wróć"
+
+#: menu/templates/menu/detail-menu-period.html:15
+#: menu/templates/menu/detail-menu-period.html:45
+#: menu/templates/menu/list-menu-period.html:42
+msgid "Disabled"
+msgstr "Nieaktywny"
+
+#: menu/templates/menu/detail-menu-period.html:40
+#: menu/templates/menu/list-menu-period.html:28
+msgid "Status"
+msgstr "Status"
+
+#: menu/templates/menu/detail-menu-period.html:88
+msgid "No items assigned."
+msgstr "Brak przypisanych pozycji."
+
+#: menu/templates/menu/list-item.html:91
+#: menu/templates/menu/list-menu-period.html:47
+msgid "View"
+msgstr "Podgląd"
+
+#: menu/templates/menu/list-menu-period.html:4
+msgid "Menu Periods"
+msgstr "Okresy menu"
+
+#: menu/templates/menu/list-menu-period.html:26
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2534
+msgid "Time"
+msgstr ""
+
+#: menu/templates/menu/list-menu-period.html:52
+msgid "No menu periods defined."
+msgstr "Nie zdefiniowano żadnych okresów menu."
+
+#: menu/templates/menu/replenish-item.html:4
+msgid "Replenish Stock"
+msgstr "Uzupełnij magazyn"
+
+#: menu/templates/menu/replenish-item.html:20
+msgid "Supply all"
+msgstr "Uzupełnij wszystko"
+
+#: menu/templates/menu/replenish-item.html:65
+msgid "Sold out"
+msgstr "Wyprzedane"
+
+#: menu/templates/menu/replenish-item.html:78
+msgid "Supply partly"
+msgstr "Uzupełnij częściowo"
+
+#: menu/templates/menu/replenish-item.html:82
+msgid "Supply"
+msgstr "Uzupełnij"
+
+#: menu/templates/menu/replenish-item.html:88
+msgid "No tracked items found."
+msgstr "Nie znaleziono śledzonych pozycji."
+
+#: menu/templates/menu/update-item.html:4
+msgid "Update Item"
+msgstr "Edytuj pozycję"
+
+#: menu/templates/menu/update-item.html:12
+#: menu/templates/menu/update-item.html:19
+#: worker/templates/worker/update-work-time.html:18
+#: worker/templates/worker/update-worker.html:19
+msgid "Update"
+msgstr "Zapisz zmiany"
+
+#: menu/templates/menu/update-item.html:13
+msgid "Update the item"
+msgstr "Zaktualizuj dane pozycji menu"
+
+#: menu/templates/menu/update-menu-period.html:4
+msgid "Edit Menu Period"
+msgstr "Edytuj okres menu"
+
+#: menu/templates/menu/update-menu-period.html:11
+msgid "Edit menu period"
+msgstr "Edytuj okres menu"
+
+#: menu/views.py:34
+#, python-format
+msgid "Item added: '%(name)s'"
+msgstr "Pozycja została dodana: '%(name)s'"
+
+#: menu/views.py:50
+#, python-format
+msgid "Item '%(name)s' has been updated."
+msgstr "Pozycja '%(name)s' została zaktualizowana."
+
+#: menu/views.py:107
+#, python-format
+msgid "Set daily stock for '%(name)s'"
+msgstr "Ustawiono dzienny stan dla '%(name)s'"
+
+#: menu/views.py:150
+#, python-format
+msgid "Supplied '%(name)s'"
+msgstr "Uzupełniono '%(name)s'"
+
+#: menu/views.py:159
+#, python-format
+msgid "Supplied %(count)s items"
+msgstr "Uzupełniono %(count)s pozycji"
+
+#: menu/views.py:188
+#, python-format
+msgid "Menu period '%(name)s' created."
+msgstr "Okres menu '%(name)s' został utworzony."
+
+#: menu/views.py:199
+#, python-format
+msgid "Menu period '%(name)s' updated."
+msgstr "Okres menu '%(name)s' został zaktualizowany."
+
+#: order/models.py:15
+#: order/models.py:15
+msgid "Waiting"
+msgstr "Oczekuje"
+
+#: order/models.py:16 order/models.py:23
+msgid "Preparing"
+msgstr "Przygotowywane"
+
+#: order/models.py:17 order/models.py:24
+msgid "Ready"
+msgstr "Gotowe"
+
+#: order/models.py:18 order/models.py:26
+msgid "Canceled"
+msgstr "Anulowane"
+
+#: order/models.py:22
+msgid "Ordering"
+msgstr "Zamówienie"
+
+#: order/models.py:25
+msgid "Paid"
+msgstr "Zapłacone"
+
+#: order/models.py:30
+msgid "Open"
+msgstr "Otwarte"
+
+#: order/models.py:31
+msgid "Closed"
+msgstr "Zamknięte"
+
+#: order/models.py:35
+msgid "Card"
+msgstr "Karta"
+
+#: order/models.py:36
+msgid "Cash"
+msgstr "Gotówka"
+
+#: order/models.py:44
+msgid "Table to which the bill is assigned. Null means take-away"
+msgstr "Stolik przypisany do rachunku. Null oznacza zamówienie na wynos"
+
+#: order/models.py:60
+msgid "Person who served the customer"
+msgstr "Osoba, która obsłużyła klienta"
+
+#: order/models.py:73
+msgid "Number of people in one the bill (plates per person)"
+msgstr "Liczba osób na rachunku (talerze na osobę)"
+
+#: order/models.py:230
+msgid "Item Info"
+msgstr "Info o pozycji"
+
+#: order/models.py:231
+msgid "Order Info"
+msgstr "Info o zamówieniu"
+
+#: order/models.py:232
+msgid "Call"
+msgstr "Wezwanie"
+
+#: order/models.py:236
+msgid "None"
+msgstr "Brak"
+
+#: order/models.py:237
+msgid "Waiting to Read"
+msgstr "Oczekuje na odczytanie"
+
+#: order/models.py:238
+msgid "Read"
+msgstr "Odczytane"
+
+#: order/models.py:315
+msgid "Name of dish or additions"
+msgstr "Nazwa dania lub dodatku"
+
+#: order/models.py:320
+msgid "Price of dish or additions when it was ordered"
+msgstr "Cena dania lub dodatku w momencie zamówienia"
+
+#: order/models.py:326
+msgid "Subtotal for this item before discount and additions (price × quantity)"
+msgstr "Suma częściowa dla tej pozycji przed rabatem i dodatkami (cena × ilość)"
+
+#: service/_views/order_flow/cart.py:137
+msgid "Bill not found"
+msgstr "Nie znaleziono rachunku"
+
+#: service/_views/order_flow/cart.py:158
+msgid "Waiter not found"
+msgstr "Nie znaleziono kelnera"
+
+#: service/_views/order_flow/cart.py:162
+msgid "Invalid PIN"
+msgstr "Nieprawidłowy PIN"
+
+#: service/_views/order_flow/cart.py:168
+msgid "Guest count must be an integer!"
+msgstr "Liczba gości musi być liczbą całkowitą!"
+
+#: service/_views/order_flow/cart.py:170
+msgid "Guest count must be greater than 0"
+msgstr "Liczba gości musi być większa niż 0"
+
+#: service/_views/order_flow/cart.py:204
+msgid "Missing required session data"
+msgstr "Brak wymaganych danych w sesji"
+
+#: service/_views/order_flow/cart.py:222
+#, python-format
+msgid "%(item)s is sold out."
+msgstr "%(item)s jest wyprzedany."
+
+#: service/_views/order_flow/cart.py:226
+#, python-format
+msgid "%(item)s: only %(n)d portion(s) left."
+msgstr "%(item)s: zostało tylko %(n)d porcji."
+
+#: service/_views/order_flow/cart.py:234
+msgid "An error occurred while creating the order"
+msgstr "Wystąpił błąd podczas tworzenia zamówienia"
+
+#: service/_views/order_flow/cart.py:239
+#, python-format
+msgid "Order #%(pk)s completed."
+msgstr "Zamówienie na rachunek #%(pk)s zostało ukończone."
+
+#: service/_views/order_flow/cart.py:241
+#, python-format
+msgid "Order #%(pk)s updated."
+msgstr "Zamówienie na rachunek #%(pk)s zostało zaktualizowane."
+
+#: service/_views/order_flow/table_select.py:18
+msgid "Select a table to proceed to the order"
+msgstr "Wybierz stolik aby przejść do zamówienia"
+
+#: service/_views/table_view.py:32
+#, python-format
+msgid "Hall '%(name)s' created."
+msgstr "Sala '%(name)s' została utworzona."
+
+#: service/_views/table_view.py:46
+#, python-format
+msgid "Hall '%(name)s' updated."
+msgstr "Sala '%(name)s' została zaktualizowana."
+
+#: service/forms.py:12
+msgid "Aspect ratio — width"
+msgstr "Proporcje — szerokość"
+
+#: service/forms.py:13
+msgid "Aspect ratio — height"
+msgstr "Proporcje — wysokość"
+
+#: service/forms.py:16
+msgid "e.g. 2 for a 2:1 (wide) room"
+msgstr "np. 2 dla sali 2:1 (szerokiej)"
+
+#: service/forms.py:17
+msgid "e.g. 1 for a 2:1 (wide) room"
+msgstr "np. 1 dla sali 2:1 (szerokiej)"
+
+#: service/models.py:6
+msgid "1×1"
+msgstr "1×1"
+
+#: service/models.py:7
+msgid "1×2"
+msgstr "1×2"
+
+#: service/models.py:8
+msgid "1×3"
+msgstr "1×3"
+
+#: service/templates/service/hall/create-hall.html:4
+#: service/templates/service/hall/create-hall.html:12
+msgid "Create hall"
+msgstr "Utwórz salę"
+
+#: service/templates/service/hall/create-hall.html:11
+#: service/templates/service/hall/floor-editor.html:10
+#: service/templates/service/hall/list-hall.html:4
+#: service/templates/service/hall/list-hall.html:8
+#: service/templates/service/hall/update-hall.html:11
+msgid "Halls"
+msgstr "Sale"
+
+#: service/templates/service/hall/create-hall.html:33
+#: service/templates/service/hall/update-hall.html:36
+msgid "Canvas preview"
+msgstr "Podgląd obszaru"
+
+#: service/templates/service/hall/create-hall.html:34
+msgid "Shows how the floor plan canvas will be shaped."
+msgstr "Pokazuje kształt obszaru planu sali."
+
+#: service/templates/service/hall/floor-editor.html:4
+#: service/templates/service/hall/list-hall.html:38
+msgid "Floor editor"
+msgstr "Edytor sali"
+
+#: service/templates/service/hall/floor-editor.html:13
+#: service/templates/service/hall/list-hall.html:27
+msgid "Ratio"
+msgstr "Proporcje"
+
+#: service/templates/service/hall/floor-editor.html:17
+msgid "Add table"
+msgstr "Dodaj stolik"
+
+#: service/templates/service/hall/floor-editor.html:28
+#: service/templates/service/hall/floor-editor.html:205
+msgid "Save layout"
+msgstr "Zapisz układ"
+
+#: service/templates/service/hall/floor-editor.html:33
+msgid ""
+"Drag to move · Double-click to rename · Click size badge to change size · × "
+"to remove"
+msgstr ""
+"Przeciągnij, aby przesunąć · Dwuklik, aby zmienić nazwę · Kliknij znacznik "
+"rozmiaru, aby zmienić · × usuwa"
+
+#: service/templates/service/hall/floor-editor.html:102
+msgid "Click to change size"
+msgstr "Kliknij, aby zmienić rozmiar"
+
+#: service/templates/service/hall/floor-editor.html:118
+#: service/templates/service/order_flow/cart_summary.html:64
+msgid "Remove"
+msgstr "Usuń"
+
+#: service/templates/service/hall/floor-editor.html:129
+msgid "Table name:"
+msgstr "Nazwa stolika:"
+
+#: service/templates/service/hall/floor-editor.html:171
+msgid "Saving…"
+msgstr "Zapisywanie…"
+
+#: service/templates/service/hall/floor-editor.html:193
+msgid "Saved"
+msgstr "Zapisano"
+
+#: service/templates/service/hall/floor-editor.html:196
+msgid "Error saving"
+msgstr "Błąd zapisu"
+
+#: service/templates/service/hall/floor-editor.html:200
+msgid "Network error"
+msgstr "Błąd sieci"
+
+#: service/templates/service/hall/list-hall.html:10
+msgid "Add hall"
+msgstr "Dodaj salę"
+
+#: service/templates/service/hall/list-hall.html:21
+msgid "Active"
+msgstr "Aktywna"
+
+#: service/templates/service/hall/list-hall.html:23
+msgid "Inactive"
+msgstr "Nieaktywna"
+
+#: service/templates/service/hall/list-hall.html:29
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:484
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:491
+msgid "Order"
+msgstr ""
+
+#: service/templates/service/hall/list-hall.html:31
+msgid "tables"
+msgstr "stoliki"
+
+#: service/templates/service/hall/list-hall.html:49
+msgid "No halls yet."
+msgstr "Brak sal."
+
+#: service/templates/service/hall/list-hall.html:51
+msgid "Create your first hall"
+msgstr "Utwórz pierwszą salę"
+
+#: service/templates/service/hall/update-hall.html:4
+#: service/templates/service/hall/update-hall.html:14
+msgid "Edit hall"
+msgstr "Edytuj salę"
+
+#: service/templates/service/hall/update-hall.html:37
+msgid "Updates as you change the ratio fields."
+msgstr "Aktualizuje się po zmianie proporcji."
+
+#: service/templates/service/hall/update-hall.html:48
+msgid "Open floor editor"
+msgstr "Otwórz edytor sali"
+
+#: service/templates/service/order_flow/_modal_view.html:25
+msgid "Close"
+msgstr ""
+
+#: service/templates/service/order_flow/_modal_view.html:35
+msgid "Quantity"
+msgstr ""
+
+#: service/templates/service/order_flow/_modal_view.html:44
+#: service/templates/service/order_flow/cart_summary.html:114
+msgid "Note"
+msgstr "Uwaga"
+
+#: service/templates/service/order_flow/_modal_view.html:73
+msgid "Add"
+msgstr ""
+
+#: service/templates/service/order_flow/cart_summary.html:4
+#: service/templates/service/order_flow/cart_summary.html:9
+#: service/templates/service/order_flow/items_waiter.html:37
+msgid "Cart"
+msgstr "Koszyk"
+
+#: service/templates/service/order_flow/cart_summary.html:20
+msgid "Your cart is empty."
+msgstr "Twój koszyk jest pusty."
+
+#: service/templates/service/order_flow/cart_summary.html:22
+msgid "Browse menu"
+msgstr "Przeglądaj menu"
+
+#: service/templates/service/order_flow/cart_summary.html:80
+msgid "Order details"
+msgstr "Szczegóły zamówienia"
+
+#: service/templates/service/order_flow/cart_summary.html:86
+#: worker/models.py:12
+msgid "Waiter"
+msgstr "Kelner"
+
+#: service/templates/service/order_flow/cart_summary.html:89
+msgid "Select waiter..."
+msgstr "Wybierz kelnera..."
+
+#: service/templates/service/order_flow/cart_summary.html:101
+msgid "PIN"
+msgstr "PIN"
+
+#: service/templates/service/order_flow/cart_summary.html:115
+msgid "optional"
+msgstr "opcjonalne"
+
+#: service/templates/service/order_flow/cart_summary.html:121
+msgid "Additional note..."
+msgstr "Dodatkowa uwaga..."
+
+#: service/templates/service/order_flow/cart_summary.html:125
+msgid "Guest count"
+msgstr "Liczba gości"
+
+#: service/templates/service/order_flow/cart_summary.html:137
+msgid "Add to order"
+msgstr "Dodaj do zamówienia"
+
+#: service/templates/service/order_flow/cart_summary.html:139
+msgid "Place order"
+msgstr "Złóż zamówienie"
+
+#: service/templates/service/order_flow/cart_summary.html:148
+msgid "Cancel order and clear cart?"
+msgstr "Anulować zamówienie i wyczyścić koszyk?"
+
+#: service/templates/service/order_flow/cart_summary.html:149
+msgid "Cancel order"
+msgstr "Anuluj zamówienie"
+
+#: service/templates/service/order_flow/cart_summary.html:179
+msgid "Placing order..."
+msgstr "Trwa składanie zamówienia..."
+
+#: service/templates/service/order_flow/items_waiter.html:4
+#: service/templates/service/order_flow/items_waiter.html:9
+#: templates/base.html:66
+msgid "Menu"
+msgstr "Menu"
+
+#: service/templates/service/order_flow/items_waiter.html:21
+msgid "Period"
+msgstr "Okres"
+
+#: service/templates/service/order_flow/table_order.html:4
+#: service/templates/service/order_flow/table_order.html:9
+msgid "Choose table"
+msgstr "Wybierz stolik"
+
+#: service/templates/service/order_flow/table_order.html:16
+msgid "No halls configured."
+msgstr "Brak skonfigurowanych sal."
+
+#: service/templates/service/order_flow/table_order.html:58
+msgid "No tables in this hall."
+msgstr "Brak stolików w tej sali."
+
+#: service/templates/service/order_flow/table_order.html:65
+#: service/templates/service/order_flow/table_order.html:180
+msgid "No table selected"
+msgstr "Nie wybrano stolika"
+
+#: service/templates/service/order_flow/table_order.html:69
+msgid "Proceed to order"
+msgstr "Przejdź do zamówienia"
+
+#: service/templates/service/order_flow/table_order.html:187
+msgid "Selected"
+msgstr "Wybrano"
+
+#: templates/base.html:57
+msgid "New alerts"
+msgstr "Nowe powiadomienia"
+
+#: templates/base.html:75
+msgid "Service"
+msgstr "Obsługa"
+
+#: templates/base.html:80
+msgid "Hall"
+msgstr "Sala"
+
+#: templates/base.html:98
+msgid "Notifications"
+msgstr "Powiadomienia"
+
+#: templates/base.html:105
+msgid "Management"
+msgstr "Zarządzanie"
+
+#: templates/base.html:109
+msgid "Edit menu"
+msgstr "Edytuj menu"
+
+#: templates/base.html:113
+msgid "Change status"
+msgstr "Zmień status"
+
+#: templates/base.html:117
+msgid "Order history"
+msgstr "Historia wydań"
+
+#: templates/base.html:121
+msgid "Bills"
+msgstr "Rachunki"
+
+#: templates/base.html:125
+msgid "Reports"
+msgstr "Raporty"
+
+#: templates/base.html:135 templates/base.html:144
+#: worker/templates/worker/list-worker.html:4
+#: worker/templates/worker/list-worker.html:11
+msgid "Workers"
+msgstr "Pracownicy"
+
+#: templates/base.html:138 worker/templates/worker/clock-in.html:4
+msgid "Clock in"
+msgstr "Rozpocznij pracę"
+
+#: templates/base.html:141 worker/templates/worker/clock-out.html:4
+msgid "Clock out"
+msgstr "Zakończ pracę"
+
+#: templates/base.html:151
+msgid "Add worker"
+msgstr "Dodaj pracownika"
+
+#: templates/base.html:175
+msgid "Admin"
+msgstr "Admin"
+
+#: templates/base.html:180
+msgid "Logout"
+msgstr "Wyloguj"
+
 #: templates/registration/logged_out.html:4
 msgid "Logged out"
 msgstr ""
@@ -40,7 +1080,7 @@ msgstr "Do zobaczenia!"
 msgid "You have been successfully logged out."
 msgstr "Zostałeś pomyślnie wylogowany."
 
-#: templates/registration/logged_out.html:14
+#: templates/registration/logged_out.html:13
 msgid "Sign in again"
 msgstr "Zaloguj się ponownie"
 
@@ -56,7 +1096,7 @@ msgstr "Witaj ponownie"
 msgid "Sign in to continue"
 msgstr "Zaloguj się, aby kontynuować"
 
-#: templates/registration/login.html:20
+#: templates/registration/login.html:19
 msgid "Sign in"
 msgstr "Zaloguj się"
 
@@ -768,10 +1808,6 @@ msgid ""
 "invalid time."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2534
-msgid "Time"
-msgstr ""
-
 #: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2642
 msgid "URL"
 msgstr ""
@@ -961,11 +1997,6 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
-#: venv/lib/python3.12/site-packages/django/forms/formsets.py:484
-#: venv/lib/python3.12/site-packages/django/forms/formsets.py:491
-msgid "Order"
-msgstr ""
-
 #: venv/lib/python3.12/site-packages/django/forms/formsets.py:499
 msgid "Delete"
 msgstr ""
@@ -1010,10 +2041,6 @@ msgid ""
 "%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
 "may be ambiguous or it may not exist."
 msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/widgets.py:527
-msgid "Clear"
-msgstr "Wyczyść"
 
 #: venv/lib/python3.12/site-packages/django/forms/widgets.py:528
 msgid "Currently"
@@ -1637,9 +2664,9 @@ msgid ""
 "Message Django's middlewares"
 msgstr ""
 
-#: worker/models.py:12
-msgid "Waiter"
-msgstr "Kelner"
+#: worker/forms.py:24
+msgid "Finish time must be after start time."
+msgstr "Czas zakończenia musi być późniejszy niż czas rozpoczęcia."
 
 #: worker/models.py:13
 msgid "Chef"
@@ -1677,21 +2704,13 @@ msgstr "stanowisko"
 msgid "pin"
 msgstr "pin"
 
-#: worker/templates/worker/_worktime_rows.html:9
-msgid "Edit"
-msgstr "Edytuj"
-
-#: worker/templates/worker/_worktime_rows.html:16
+#: worker/templates/worker/_worktime_rows.html:18
 msgid "No work times recorded."
 msgstr "Brak zarejestrowanych godzin pracy."
 
-#: worker/templates/worker/_worktime_rows.html:26
+#: worker/templates/worker/_worktime_rows.html:28
 msgid "Show more"
 msgstr "Pokaż więcej"
-
-#: worker/templates/worker/clock-in.html:4
-msgid "Clock in"
-msgstr "Rozpocznij pracę"
 
 #: worker/templates/worker/clock-in.html:12
 msgid "Nice to see you again!"
@@ -1702,12 +2721,9 @@ msgid "Choose your name to start your shift"
 msgstr "Wybierz swoje imię, aby rozpocząć zmianę"
 
 #: worker/templates/worker/clock-in.html:25
+#: worker/templates/worker/list-worker.html:33
 msgid "No workers available — time to hire someone!"
 msgstr "Brak dostępnych pracowników — czas kogoś zatrudnić!"
-
-#: worker/templates/worker/clock-out.html:4
-msgid "Clock out"
-msgstr "Zakończ pracę"
 
 #: worker/templates/worker/clock-out.html:12
 msgid "It's time to go home!"
@@ -1730,27 +2746,6 @@ msgstr "Nowy pracownik"
 msgid "Fill in the details and save the profile"
 msgstr "Wypełnij dane i zapisz profil"
 
-#: worker/templates/worker/create-worker.html:19
-msgid "Save"
-msgstr "Zapisz"
-
-#: worker/templates/worker/create-worker.html:21
-#: worker/templates/worker/update-work-time.html:20
-msgid "Cancel"
-msgstr "Anuluj"
-
-#: worker/templates/worker/update-worker.html:12
-msgid "Update employee"
-msgstr "Edytuj pracownika"
-
-#: worker/templates/worker/update-worker.html:13
-msgid "Edit the details and save the profile"
-msgstr "Zmień dane i zapisz profil"
-
-#: worker/templates/worker/update-worker.html:19 worker/templates/worker/update-work-time.html:18
-msgid "Update"
-msgstr "Zapisz zmiany"
-
 #: worker/templates/worker/detail-worker.html:17
 msgid "Salary"
 msgstr "Wynagrodzenie"
@@ -1771,6 +2766,10 @@ msgstr "Początek"
 msgid "Finish"
 msgstr "Koniec"
 
+#: worker/templates/worker/list-worker.html:17
+msgid "Position"
+msgstr "Stanowisko"
+
 #: worker/templates/worker/update-work-time.html:4
 msgid "Update work time"
 msgstr "Edytuj czas pracy"
@@ -1779,802 +2778,60 @@ msgstr "Edytuj czas pracy"
 msgid "Update Work Time"
 msgstr "Edytuj czas pracy"
 
-#: worker/views.py:65
+#: worker/templates/worker/update-worker.html:4
+#: worker/templates/worker/update-worker.html:12
+msgid "Update employee"
+msgstr "Edytuj pracownika"
+
+#: worker/templates/worker/update-worker.html:13
+msgid "Edit the details and save the profile"
+msgstr "Zmień dane i zapisz profil"
+
+#: worker/views.py:70
+#, fuzzy
+#| msgid "Work time has been successfully updated!"
+msgid "Worker detail has been updated!"
+msgstr "Czas pracy został pomyślnie zaktualizowany!"
+
+#: worker/views.py:83
 msgid "Work time has been successfully updated!"
 msgstr "Czas pracy został pomyślnie zaktualizowany!"
 
-#: worker/views.py:86
+#: worker/views.py:104
 #, python-format
 msgid "Have a great shift, %(name)s!"
 msgstr "Miłej zmiany, %(name)s!"
 
-#: worker/views.py:115
+#: worker/views.py:133
 #, python-format
 msgid "Goodbye, %(name)s!"
 msgstr "Do widzenia, %(name)s!"
 
-#: worker/templates/worker/list-worker.html:11
-msgid "Workers"
-msgstr "Pracownicy"
-
-#: worker/templates/worker/list-worker.html:16
-msgid "Name"
-msgstr "Imię i nazwisko"
-
-#: worker/templates/worker/list-worker.html:17
-msgid "Position"
-msgstr "Stanowisko"
-
-#: templates/base.html menu/templates/menu/list.html
-msgid "Menu"
-msgstr "Menu"
-
-#: templates/base.html
-msgid "New alerts"
-msgstr "Nowe powiadomienia"
-
-#: templates/base.html
-msgid "Service"
-msgstr "Obsługa"
-
-#: templates/base.html
-msgid "Management"
-msgstr "Zarządzanie"
-
-#: templates/base.html
-msgid "Hall"
-msgstr "Sala"
-
-#: templates/base.html menu/models.py
-msgid "Kitchen"
-msgstr "Kuchnia"
-
-#: templates/base.html menu/models.py
-msgid "Bar"
-msgstr "Bar"
-
-#: templates/base.html
-msgid "Notifications"
-msgstr "Powiadomienia"
-
-#: templates/base.html
-msgid "Edit menu"
-msgstr "Edytuj menu"
-
-#: templates/base.html
-msgid "Change status"
-msgstr "Zmień status"
-
-#: templates/base.html
-msgid "Order history"
-msgstr "Historia wydań"
-
-#: templates/base.html
-msgid "Bills"
-msgstr "Rachunki"
-
-#: templates/base.html
-msgid "Reports"
-msgstr "Raporty"
-
-#: templates/base.html
-msgid "Add worker"
-msgstr "Dodaj pracownika"
-
-#: templates/base.html
-msgid "Admin"
-msgstr "Admin"
-
-#: templates/base.html
-msgid "Logout"
-msgstr "Wyloguj"
-
-#: worker/forms.py
-msgid "Finish time must be after start time."
-msgstr "Czas zakończenia musi być późniejszy niż czas rozpoczęcia."
-
-#: menu/models.py
-msgid "name"
-msgstr "nazwa"
-
-#: menu/models.py
-msgid "category"
-msgstr "kategoria"
-
-#: menu/models.py
-msgid "categories"
-msgstr "kategorie"
-
-#: menu/models.py
-msgid "subcategory"
-msgstr "podkategoria"
-
-#: menu/models.py
-msgid "subcategories"
-msgstr "podkategorie"
-
-#: menu/models.py
-msgid "price"
-msgstr "cena"
-
-#: menu/models.py
-msgid "checkout ID"
-msgstr "ID kasy"
-
-#: menu/models.py
-msgid "Cash register product ID"
-msgstr "Numer produktu w kasie fiskalnej"
-
-#: menu/models.py
-msgid "created at"
-msgstr "utworzono"
-
-#: menu/models.py
-msgid "deleted"
-msgstr "usunięto"
-
-#: menu/models.py
-msgid "priority"
-msgstr "priorytet"
-
-#: menu/models.py
-msgid "addition"
-msgstr "dodatek"
-
-#: menu/models.py
-msgid "additions"
-msgstr "dodatki"
-
-#: menu/models.py
-msgid "preparation location"
-msgstr "miejsce przygotowania"
-
-#: menu/models.py
-msgid "Item name"
-msgstr "Nazwa produktu"
-
-#: menu/models.py
-msgid "description"
-msgstr "opis"
-
-#: menu/models.py
-msgid "Item description"
-msgstr "Opis produktu"
-
-#: menu/models.py
-msgid "Number of portions available today. None = unlimited, 0 = sold out."
-msgstr "Liczba porcji dostępnych dziś. None = bez limitu, 0 = wyprzedane."
-
-#: menu/models.py
-msgid "daily stock"
-msgstr "dzienny stan"
-
-#: menu/models.py
-msgid "item"
-msgstr "produkt"
-
-#: menu/models.py
-msgid "items"
-msgstr "produkty"
-
 #, fuzzy
 #~| msgid "last name"
-
 #~ msgid "Asystent"
 #~ msgstr "Asystent"
 
-#: menu/views.py
-msgid "Item added: '%(name)s'"
-msgstr "Pozycja została dodana: '%(name)s'"
+#~ msgid "Page %(current)s of %(total)s"
+#~ msgstr "Strona %(current)s z %(total)s"
 
-#: menu/views.py
-msgid "Item '%(name)s' has been updated."
-msgstr "Pozycja '%(name)s' została zaktualizowana."
+#~ msgid "Wide rectangle (default)"
+#~ msgstr "Szeroki prostokąt (domyślny)"
 
-#: menu/templates/menu/update-item.html
-msgid "Update Item"
-msgstr "Edytuj pozycję"
+#~ msgid "Standard rectangle"
+#~ msgstr "Standardowy prostokąt"
 
-#: menu/templates/menu/update-item.html
-msgid "Update the item"
-msgstr "Zaktualizuj dane pozycji menu"
+#~ msgid "Square"
+#~ msgstr "Kwadrat"
 
-#: menu/templates/menu/detail.html
-msgid "Details"
-msgstr "Szczegóły"
+#~ msgid "Tall rectangle"
+#~ msgstr "Wysoki prostokąt"
 
-#: menu/templates/menu/detail.html
-msgid "Location"
-msgstr "Lokalizacja"
+#~ msgid "Width"
+#~ msgstr "Szerokość"
 
-#: menu/templates/menu/detail.html
-msgid "Daily stock"
-msgstr "Dzienny stan"
+#~ msgid "Height"
+#~ msgstr "Wysokość"
 
-#: menu/templates/menu/detail.html
-msgid "Back"
-msgstr "Wróć"
-
-#: menu/templates/menu/detail.html
-msgid "Price"
-msgstr "Cena"
-
-#: menu/templates/menu/detail.html
-msgid "Subcategory"
-msgstr "Podkategoria"
-
-#: menu/templates/menu/detail.html
-msgid "Description"
-msgstr "Opis"
-
-#: menu/templates/menu/detail.html
-msgid "Additions"
-msgstr "Dodatki"
-
-#: menu/templates/menu/detail.html
-msgid "Created at"
-msgstr "Utworzono"
-
-#: menu/templates/menu/list.html
-msgid "Items"
-msgstr "Pozycje"
-
-#: menu/templates/menu/list.html
-msgid "Add item"
-msgstr "Dodaj pozycję"
-
-#: menu/templates/menu/list.html
-msgid "View"
-msgstr "Podgląd"
-
-#: menu/templates/menu/list.html
-msgid "No items in this category."
-msgstr "Brak pozycji w tej kategorii."
-
-#: menu/templates/menu/list.html
-msgid "Filter"
-msgstr "Filtruj"
-
-#: menu/templates/menu/list.html
-msgid "All"
-msgstr "Wszystkie"
-
-#: menu/templates/menu/list.html
-msgid "Page %(current)s of %(total)s"
-msgstr "Strona %(current)s z %(total)s"
-
-#: menu/templates/menu/create-item.html
-msgid "Add Item"
-msgstr "Dodaj pozycję"
-
-#: menu/templates/menu/create-item.html
-msgid "Fill in the details and save the menu item"
-msgstr "Wypełnij dane i zapisz pozycję menu"
-
-#: menu/templates/menu/create-item.html
-msgid "New Addition"
-msgstr "Nowy dodatek"
-
-#: menu/templates/menu/create-item.html
-msgid "Checkout ID"
-msgstr "ID kasy"
-
-#: menu/templates/menu/create-item.html
-msgid "Priority"
-msgstr "Priorytet"
-
-#: menu/templates/menu/create-item.html
-msgid "Something went wrong. Try again."
-msgstr "Coś poszło nie tak. Spróbuj ponownie."
-
-#: menu/templates/menu/create-item.html
-msgid "New Category"
-msgstr "Nowa kategoria"
-
-#: menu/templates/menu/create-item.html
-msgid "New Subcategory"
-msgstr "Nowa podkategoria"
-
-#: menu/templates/menu/create-item.html
-msgid "Category"
-msgstr "Kategoria"
-
-#: menu/templates/menu/replenish-item.html
-msgid "Replenish Stock"
-msgstr "Uzupełnij magazyn"
-
-#: menu/templates/menu/replenish-item.html
-msgid "Replenish stock"
-msgstr "Uzupełnij magazyn"
-
-#: menu/templates/menu/replenish-item.html
-msgid "Set today's available portions for tracked items."
-msgstr "Ustaw dzisiejszą dostępną ilość dla śledzonych pozycji."
-
-#: menu/templates/menu/replenish-item.html
-msgid "Supply all"
-msgstr "Uzupełnij wszystko"
-
-#: menu/templates/menu/replenish-item.html
-msgid "ID"
-msgstr "ID"
-
-#: menu/templates/menu/replenish-item.html
-msgid "Sold out"
-msgstr "Wyprzedane"
-
-#: menu/templates/menu/replenish-item.html
-msgid "Supply partly"
-msgstr "Uzupełnij częściowo"
-
-#: menu/templates/menu/replenish-item.html
-msgid "Supply"
-msgstr "Uzupełnij"
-
-#: menu/templates/menu/replenish-item.html
-msgid "No tracked items found."
-msgstr "Nie znaleziono śledzonych pozycji."
-
-#: menu/templates/menu/replenish-item.html
-msgid "Set daily stock"
-msgstr "Ustaw dzienny stan"
-
-#: menu/templates/menu/replenish-item.html
-msgid "Leave empty for unlimited"
-msgstr "Pozostaw puste dla nieograniczonej ilości"
-
-#: menu/templates/menu/replenish-item.html
-msgid "0 = sold out, empty = unlimited"
-msgstr "0 = wyprzedane, puste = bez limitu"
-
-#: menu/templates/menu/daily-stock-item.html
-msgid "Set Daily Stock"
-msgstr "Ustaw dzienny stan"
-
-#: menu/templates/menu/daily-stock-item.html
-msgid "Set stock"
-msgstr "Ustaw stan"
-
-#: menu/views
-msgid "Set daily stock for '%(name)s'"
-msgstr "Ustawiono dzienny stan dla '%(name)s'"
-
-#: menu/views
-msgid "Supplied '%(name)s'"
-msgstr "Uzupełniono '%(name)s'"
-
-#: menu/views
-msgid "Supplied %(count)s items"
-msgstr "Uzupełniono %(count)s pozycji"
-
-#: menu/templates/menu/create-menu-period.html
-msgid "Create Menu Period"
-msgstr "Utwórz okres menu"
-
-#: menu/templates/menu/create-menu-period.html
-msgid "Create menu period"
-msgstr "Utwórz okres menu"
-
-#: menu/templates/menu/create-menu-period.html
-msgid "Define a time window and assign items available during it."
-msgstr "Zdefiniuj przedział czasowy i przypisz dostępne w nim pozycje."
-
-#: menu/templates/menu/create-menu-period.html
-msgid "e.g. Breakfast, Lunch"
-msgstr "np. Śniadanie, Obiad"
-
-#: menu/templates/menu/create-menu-period.html
-msgid "Start time"
-msgstr "Godzina rozpoczęcia"
-
-#: menu/templates/menu/create-menu-period.html
-msgid "End time"
-msgstr "Godzina zakończenia"
-
-#: menu/templates/menu/create-menu-period.html
-msgid "Enabled"
-msgstr "Aktywny"
-
-#: menu/templates/menu/create-menu-period.html
-msgid "selected"
-msgstr "wybranych"
-
-#: menu/templates/menu/create-menu-period.html
-msgid "Search items..."
-msgstr "Szukaj pozycji..."
-
-#: menu/templates/menu/create-menu-period.html
-msgid "Select all"
-msgstr "Zaznacz wszystkie"
-
-#: menu/templates/menu/create-menu-period.html
-msgid "No categories found."
-msgstr "Nie znaleziono kategorii."
-
-#: menu/views
-msgid "Menu period '%(name)s' created."
-msgstr "Okres menu '%(name)s' został utworzony."
-
-#: menu/templates/menu/update-menu-period.html
-msgid "Edit Menu Period"
-msgstr "Edytuj okres menu"
-
-#: menu/templates/menu/update-menu-period.html
-msgid "Edit menu period"
-msgstr "Edytuj okres menu"
-
-#: menu/templates/menu/detail-menu-period.html
-msgid "Disabled"
-msgstr "Nieaktywny"
-
-#: menu/templates/menu/detail-menu-period.html
-msgid "Status"
-msgstr "Status"
-
-#: menu/templates/menu/detail-menu-period.html
-msgid "No items assigned."
-msgstr "Brak przypisanych pozycji."
-
-#: menu/views
-msgid "Menu period '%(name)s' updated."
-msgstr "Okres menu '%(name)s' został zaktualizowany."
-
-#: menu/templates/menu/list-menu-period.html
-msgid "Menu Periods"
-msgstr "Okresy menu"
-
-#: menu/templates/menu/list-menu-period.html
-msgid "Menu periods"
-msgstr "Okresy menu"
-
-#: menu/templates/menu/list-menu-period.html
-msgid "Add period"
-msgstr "Dodaj okres"
-
-#: menu/templates/menu/list-menu-period.html
-msgid "No menu periods defined."
-msgstr "Nie zdefiniowano żadnych okresów menu."
-
-#: menu/templates/menu/dashboard.html
-msgid "Menu Management"
-msgstr "Zarządzanie menu"
-
-#: menu/templates/menu/dashboard.html
-msgid "Menu management"
-msgstr "Zarządzanie menu"
-
-#: menu/templates/menu/dashboard.html
-msgid "Catalog"
-msgstr "Katalog"
-
-#: menu/templates/menu/dashboard.html
-msgid "All items"
-msgstr "Wszystkie pozycje"
-
-#: menu/templates/menu/dashboard.html
-msgid "Browse and edit the full menu catalog."
-msgstr "Przeglądaj i edytuj pełny katalog menu."
-
-#: menu/templates/menu/dashboard.html
-msgid "Create a new menu item."
-msgstr "Utwórz nową pozycję menu."
-
-#: menu/templates/menu/dashboard.html
-msgid "Configure which items have stock tracking enabled."
-msgstr "Skonfiguruj, które pozycje mają włączone śledzenie stanu."
-
-#: menu/templates/menu/dashboard.html
-msgid "All periods"
-msgstr "Wszystkie okresy"
-
-#: menu/templates/menu/dashboard.html
-msgid "View and manage breakfast, lunch, and other time windows."
-msgstr "Przeglądaj i zarządzaj śniadaniem, obiadem i innymi przedziałami czasowymi."
-
-#: menu/templates/menu/dashboard.html
-msgid "Define a new time window and assign items to it."
-msgstr "Zdefiniuj nowy przedział czasowy i przypisz do niego pozycje."
-
-#: service/models.py
-msgid "1×1"
-msgstr "1×1"
-
-#: service/models.py
-msgid "1×2"
-msgstr "1×2"
-
-#: service/models.py
-msgid "1×3"
-msgstr "1×3"
-
-#: service/forms.py
-msgid "Aspect ratio — width"
-msgstr "Proporcje — szerokość"
-
-#: service/forms.py
-msgid "Aspect ratio — height"
-msgstr "Proporcje — wysokość"
-
-#: service/forms.py
-msgid "e.g. 2 for a 2:1 (wide) room"
-msgstr "np. 2 dla sali 2:1 (szerokiej)"
-
-#: service/forms.py
-msgid "e.g. 1 for a 2:1 (wide) room"
-msgstr "np. 1 dla sali 2:1 (szerokiej)"
-
-#: service/_views/table_view.py
-msgid "Hall '%(name)s' created."
-msgstr "Sala '%(name)s' została utworzona."
-
-#: service/_views/table_view.py
-msgid "Hall '%(name)s' updated."
-msgstr "Sala '%(name)s' została zaktualizowana."
-
-#: service/templates/service/hall/list-hall.html
-msgid "Halls"
-msgstr "Sale"
-
-#: service/templates/service/hall/list-hall.html
-msgid "Add hall"
-msgstr "Dodaj salę"
-
-#: service/templates/service/hall/list-hall.html
-msgid "Active"
-msgstr "Aktywna"
-
-#: service/templates/service/hall/list-hall.html
-msgid "Inactive"
-msgstr "Nieaktywna"
-
-#: service/templates/service/hall/list-hall.html
-msgid "Ratio"
-msgstr "Proporcje"
-
-#: service/templates/service/hall/list-hall.html
-msgid "tables"
-msgstr "stoliki"
-
-#: service/templates/service/hall/list-hall.html
-msgid "Floor editor"
-msgstr "Edytor sali"
-
-#: service/templates/service/hall/list-hall.html
-msgid "No halls yet."
-msgstr "Brak sal."
-
-#: service/templates/service/hall/list-hall.html
-msgid "Create your first hall"
-msgstr "Utwórz pierwszą salę"
-
-#: service/templates/service/hall/create-hall.html
-#: service/templates/service/hall/update-hall.html
-msgid "Create hall"
-msgstr "Utwórz salę"
-
-#: service/templates/service/hall/create-hall.html
-#: service/templates/service/hall/update-hall.html
-msgid "Canvas preview"
-msgstr "Podgląd obszaru"
-
-#: service/templates/service/hall/create-hall.html
-#: service/templates/service/hall/update-hall.html
-msgid "Updates as you change the ratio fields."
-msgstr "Aktualizuje się po zmianie proporcji."
-
-#: service/templates/service/hall/create-hall.html
-#: service/templates/service/hall/update-hall.html
-msgid "Shows how the floor plan canvas will be shaped."
-msgstr "Pokazuje kształt obszaru planu sali."
-
-
-#: service/templates/service/hall/create-hall.html
-msgid "Wide rectangle (default)"
-msgstr "Szeroki prostokąt (domyślny)"
-
-#: service/templates/service/hall/create-hall.html
-msgid "Standard rectangle"
-msgstr "Standardowy prostokąt"
-
-#: service/templates/service/hall/create-hall.html
-msgid "Square"
-msgstr "Kwadrat"
-
-#: service/templates/service/hall/create-hall.html
-msgid "Tall rectangle"
-msgstr "Wysoki prostokąt"
-
-#: service/templates/service/hall/create-hall.html
-msgid "Width"
-msgstr "Szerokość"
-
-#: service/templates/service/hall/create-hall.html
-msgid "Height"
-msgstr "Wysokość"
-
-#: service/templates/service/hall/create-hall.html
-msgid "Shape"
-msgstr "Kształt"
-
-#: service/templates/service/hall/update-hall.html
-msgid "Edit hall"
-msgstr "Edytuj salę"
-
-#: service/templates/service/hall/update-hall.html
-msgid "Open floor editor"
-msgstr "Otwórz edytor sali"
-
-#: service/templates/service/hall/floor-editor.html
-msgid "Add table"
-msgstr "Dodaj stolik"
-
-#: service/templates/service/hall/floor-editor.html
-msgid "Save layout"
-msgstr "Zapisz układ"
-
-#: service/templates/service/hall/floor-editor.html
-msgid "Drag to move · Double-click to rename · Click size badge to change size · × to remove"
-msgstr "Przeciągnij, aby przesunąć · Dwuklik, aby zmienić nazwę · Kliknij znacznik rozmiaru, aby zmienić · × usuwa"
-
-#: service/templates/service/hall/floor-editor.html
-msgid "Remove"
-msgstr "Usuń"
-
-#: service/templates/service/hall/floor-editor.html
-msgid "Click to change size"
-msgstr "Kliknij, aby zmienić rozmiar"
-
-#: service/templates/service/hall/floor-editor.html
-msgid "Table name:"
-msgstr "Nazwa stolika:"
-
-#: service/templates/service/hall/floor-editor.html
-msgid "Saving…"
-msgstr "Zapisywanie…"
-
-#: service/templates/service/hall/floor-editor.html
-msgid "Saved"
-msgstr "Zapisano"
-
-#: service/templates/service/hall/floor-editor.html
-msgid "Error saving"
-msgstr "Błąd zapisu"
-
-#: service/templates/service/hall/floor-editor.html
-msgid "Network error"
-msgstr "Błąd sieci"
-
-#: service/templates/service/table_order.html
-msgid "Choose table"
-msgstr "Wybierz stolik"
-
-#: service/templates/service/table_order.html
-msgid "No halls configured."
-msgstr "Brak skonfigurowanych sal."
-
-#: service/templates/service/table_order.html
-msgid "No tables in this hall."
-msgstr "Brak stolików w tej sali."
-
-#: service/templates/service/table_order.html
-msgid "No table selected"
-msgstr "Nie wybrano stolika"
-
-#: service/templates/service/table_order.html
-msgid "Selected"
-msgstr "Wybrano"
-
-#: service/templates/service/table_order.html
-msgid "Proceed to order"
-msgstr "Przejdź do zamówienia"
-
-#: service/_views/order_flow/table_select.py
-msgid "Select a table to proceed to the order"
-msgstr "Wybierz stolik aby przejść do zamówienia"
-#: service/templates/service/order_flow/items_waiter.html
-msgid "Period"
-msgstr "Okres"
-
-#: service/templates/service/order_flow/items_waiter.html
-msgid "Cart"
-msgstr "Koszyk"
-
-#: service/_views/order_flow/cart.py
-msgid "Bill not found"
-msgstr "Nie znaleziono rachunku"
-
-#: service/_views/order_flow/cart.py
-msgid "Missing required session data"
-msgstr "Brak wymaganych danych w sesji"
-
-#: service/_views/order_flow/cart.py
-msgid "Guest count must be an integer!"
-msgstr "Liczba gości musi być liczbą całkowitą!"
-
-#: service/_views/order_flow/cart.py
-msgid "Guest count must be greater than 0"
-msgstr "Liczba gości musi być większa niż 0"
-
-#: service/_views/order_flow/cart.py
-msgid "%(item)s is sold out."
-msgstr "%(item)s jest wyprzedany."
-
-#: service/_views/order_flow/cart.py
-msgid "%(item)s: only %(n)d portion(s) left."
-msgstr "%(item)s: zostało tylko %(n)d porcji."
-
-#: service/_views/order_flow/cart.py
-msgid "An error occurred while creating the order"
-msgstr "Wystąpił błąd podczas tworzenia zamówienia"
-
-#: service/_views/order_flow/cart.py
-msgid "Order #%(pk)s completed."
-msgstr "Zamówienie na rachunek #%(pk)s zostało ukończone."
-
-#: service/_views/order_flow/cart.py
-msgid "Order #%(pk)s updated."
-msgstr "Zamówienie na rachunek #%(pk)s zostało zaktualizowane."
-
-#: service/templates/service/cart_waiter.html
-msgid "Your cart is empty."
-msgstr "Twój koszyk jest pusty."
-
-#: service/templates/service/cart_waiter.html
-msgid "Browse menu"
-msgstr "Przeglądaj menu"
-
-#: service/templates/service/cart_waiter.html
-msgid "Order details"
-msgstr "Szczegóły zamówienia"
-
-#: service/templates/service/cart_waiter.html
-msgid "Select waiter..."
-msgstr "Wybierz kelnera..."
-
-#: service/templates/service/cart_waiter.html
-msgid "Note"
-msgstr "Uwaga"
-
-#: service/templates/service/cart_waiter.html
-msgid "optional"
-msgstr "opcjonalne"
-
-#: service/templates/service/cart_waiter.html
-msgid "Additional note..."
-msgstr "Dodatkowa uwaga..."
-
-#: service/templates/service/cart_waiter.html
-msgid "Guest count"
-msgstr "Liczba gości"
-
-#: service/templates/service/cart_waiter.html
-msgid "Add to order"
-msgstr "Dodaj do zamówienia"
-
-#: service/templates/service/cart_waiter.html
-msgid "Place order"
-msgstr "Złóż zamówienie"
-
-#: service/templates/service/cart_waiter.html
-msgid "Cancel order and clear cart?"
-msgstr "Anulować zamówienie i wyczyścić koszyk?"
-
-#: service/templates/service/cart_waiter.html
-msgid "Cancel order"
-msgstr "Anuluj zamówienie"
-
-#: service/templates/service/cart_waiter.html
-msgid "Placing order..."
-msgstr "Trwa składanie zamówienia..."
-
-#: service/_views/order_flow/cart.py
-msgid "Waiter not found"
-msgstr "Nie znaleziono kelnera"
-
-#: service/_views/order_flow/cart.py
-msgid "Invalid PIN"
-msgstr "Nieprawidłowy PIN"
-
-#: service/templates/service/cart_waiter.html
-msgid "PIN"
-msgstr "PIN"
+#~ msgid "Shape"
+#~ msgstr "Kształt"
