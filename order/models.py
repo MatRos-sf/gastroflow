@@ -39,8 +39,6 @@ class PaymentMethod(models.TextChoices):
 class Bill(models.Model):
     table = models.ManyToManyField(
         Table,
-        blank=True,
-        null=True,
         help_text=_("Table to which the bill is assigned. Null means take-away"),
     )
     status = models.CharField(
