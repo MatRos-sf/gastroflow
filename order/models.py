@@ -4,6 +4,7 @@ from django.db.models import DecimalField, ExpressionWrapper, F, Sum
 from django.db.models.functions import Coalesce
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 from menu.models import Addition, Item, Location
 from service.models import Table
@@ -11,28 +12,28 @@ from worker.models import Worker
 
 
 class OrderItemStatus(models.TextChoices):
-    WAITING = "waiting", "WAITING"
-    PREPARING = "preparing", "PREPARING"
-    READY = "ready", "READY"
-    CANCELED = "canceled", "CANCELED"
+    WAITING = "waiting", _("Waiting")
+    PREPARING = "preparing", _("Preparing")
+    READY = "ready", _("Ready")
+    CANCELED = "canceled", _("Canceled")
 
 
 class StatusOrder(models.TextChoices):
-    ORDER = "ordering", "ORDERING"
-    PREPARING = "preparing", "PREPARING"
-    READY = "ready", "READY"
-    PAID = "paid", "PAID"
-    CANCELED = "canceled", "CANCELED"
+    ORDER = "ordering", _("Ordering")
+    PREPARING = "preparing", _("Preparing")
+    READY = "ready", _("Ready")
+    PAID = "paid", _("Paid")
+    CANCELED = "canceled", _("Canceled")
 
 
 class StatusBill(models.TextChoices):
-    OPEN = "open", "OPEN"
-    CLOSED = "closed", "CLOSED"
+    OPEN = "open", _("Open")
+    CLOSED = "closed", _("Closed")
 
 
 class PaymentMethod(models.TextChoices):
-    CARD = "card", "Karta"
-    CASH = "cash", "Gotówka"
+    CARD = "card", _("Card")
+    CASH = "cash", _("Cash")
 
 
 class Bill(models.Model):
@@ -40,7 +41,7 @@ class Bill(models.Model):
         Table,
         blank=True,
         null=True,
-        help_text="Table to which the bill is assigned. Null means take-away",
+        help_text=_("Table to which the bill is assigned. Null means take-away"),
     )
     status = models.CharField(
         max_length=10, choices=StatusBill.choices, default=StatusBill.OPEN
@@ -56,7 +57,7 @@ class Bill(models.Model):
         Worker,
         on_delete=models.SET_NULL,
         null=True,
-        help_text="Person who served the customer",
+        help_text=_("Person who served the customer"),
     )
     note = models.CharField(max_length=200, blank=True, null=True)
     discount = models.PositiveIntegerField(
@@ -69,7 +70,7 @@ class Bill(models.Model):
     guest_count = models.PositiveSmallIntegerField(
         default=1,
         validators=[MinValueValidator(1)],
-        help_text="Number of people in one the bill (plates per person)",
+        help_text=_("Number of people in one the bill (plates per person)"),
     )
 
     def __str__(self):
@@ -226,15 +227,15 @@ class Bill(models.Model):
 
 
 class NotificationType(models.TextChoices):
-    ITEM_INFO = "item_info", "Item Info"
-    ORDER_INFO = "order_info", "Order Info"
-    CALL = "call", "Call"
+    ITEM_INFO = "item_info", _("Item Info")
+    ORDER_INFO = "order_info", _("Order Info")
+    CALL = "call", _("Call")
 
 
 class NotificationStatus(models.TextChoices):
-    NONE = "none", "None"
-    WAITING_TO_READ = "waiting_to_read", "Waiting to Read"
-    READ = "read", "Read"
+    NONE = "none", _("None")
+    WAITING_TO_READ = "waiting_to_read", _("Waiting to Read")
+    READ = "read", _("Read")
 
 
 class Notification(models.Model):
@@ -311,18 +312,20 @@ class Order(models.Model):
 
 class OrderBase(models.Model):
     name_snapshot = models.CharField(
-        max_length=150, help_text="Name of dish or additions"
+        max_length=150, help_text=_("Name of dish or additions")
     )
     price_snapshot = models.DecimalField(
         max_digits=5,
         decimal_places=2,
-        help_text="Price of dish or additions when it was ordered",
+        help_text=_("Price of dish or additions when it was ordered"),
     )
     quantity = models.PositiveIntegerField(default=1)
     line_subtotal = models.GeneratedField(
         expression=F("price_snapshot") * F("quantity"),
         output_field=DecimalField(max_digits=12, decimal_places=2),
-        help_text="Subtotal for this item before discount and additions (price × quantity)",
+        help_text=_(
+            "Subtotal for this item before discount and additions (price × quantity)"
+        ),
         db_persist=True,
     )
 

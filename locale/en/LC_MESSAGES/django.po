@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-05 22:14+0100\n"
+"POT-Creation-Date: 2026-03-19 21:02+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,6 +26,1044 @@ msgstr ""
 msgid "English"
 msgstr ""
 
+#: menu/models.py:41 templates/base.html:92
+msgid "Bar"
+msgstr "Bar"
+
+#: menu/models.py:42 templates/base.html:86
+msgid "Kitchen"
+msgstr "Kitchen"
+
+#: menu/models.py:46 menu/models.py:62 menu/models.py:76 menu/models.py:121
+msgid "name"
+msgstr "name"
+
+#: menu/models.py:49 menu/models.py:64 menu/models.py:103
+msgid "category"
+msgstr "category"
+
+#: menu/models.py:50
+msgid "categories"
+msgstr "categories"
+
+#: menu/models.py:68 menu/models.py:110
+msgid "subcategory"
+msgstr "subcategory"
+
+#: menu/models.py:69
+msgid "subcategories"
+msgstr "subcategories"
+
+#: menu/models.py:77 menu/models.py:144
+msgid "price"
+msgstr "price"
+
+#: menu/models.py:79 menu/models.py:142
+msgid "Cash register product ID"
+msgstr "Cash register product ID"
+
+#: menu/models.py:79 menu/models.py:142
+msgid "checkout ID"
+msgstr "checkout ID"
+
+#: menu/models.py:81 menu/models.py:145
+msgid "created at"
+msgstr "created at"
+
+#: menu/models.py:82 menu/models.py:146
+msgid "deleted"
+msgstr "deleted"
+
+#: menu/models.py:83
+msgid "priority"
+msgstr "priority"
+
+#: menu/models.py:87
+msgid "addition"
+msgstr "addition"
+
+#: menu/models.py:88 menu/models.py:131
+msgid "additions"
+msgstr "additions"
+
+#: menu/models.py:118
+msgid "preparation location"
+msgstr "preparation location"
+
+#: menu/models.py:121
+msgid "Item name"
+msgstr "Item name"
+
+#: menu/models.py:124
+msgid "Item description"
+msgstr "Item description"
+
+#: menu/models.py:128
+msgid "description"
+msgstr "description"
+
+#: menu/models.py:137
+msgid "Number of portions available today. None = unlimited, 0 = sold out."
+msgstr "Number of portions available today. None = unlimited, 0 = sold out."
+
+#: menu/models.py:139
+msgid "daily stock"
+msgstr "daily stock"
+
+#: menu/models.py:149
+msgid "item"
+msgstr "item"
+
+#: menu/models.py:150 service/templates/service/order_flow/cart_summary.html:10
+msgid "items"
+msgstr "items"
+
+#: menu/templates/menu/_item_form_extras.html:11
+msgid "New Addition"
+msgstr "New Addition"
+
+#: menu/templates/menu/_item_form_extras.html:18
+#: menu/templates/menu/_item_form_extras.html:81
+#: menu/templates/menu/_item_form_extras.html:114
+#: menu/templates/menu/create-menu-period.html:21
+#: menu/templates/menu/daily-stock-item.html:65
+#: menu/templates/menu/list-item.html:65
+#: menu/templates/menu/list-menu-period.html:25
+#: menu/templates/menu/replenish-item.html:53
+#: menu/templates/menu/update-menu-period.html:21
+#: worker/templates/worker/list-worker.html:16
+msgid "Name"
+msgstr ""
+
+#: menu/templates/menu/_item_form_extras.html:23
+#: menu/templates/menu/detail-item.html:16
+#: menu/templates/menu/list-item.html:66
+msgid "Price"
+msgstr "Price"
+
+#: menu/templates/menu/_item_form_extras.html:33
+#: menu/templates/menu/detail-item.html:20
+msgid "Checkout ID"
+msgstr "Checkout ID"
+
+#: menu/templates/menu/_item_form_extras.html:43
+msgid "Priority"
+msgstr "Priority"
+
+#: menu/templates/menu/_item_form_extras.html:52
+#: menu/templates/menu/_item_form_extras.html:85
+#: menu/templates/menu/_item_form_extras.html:126
+msgid "Something went wrong. Try again."
+msgstr "Something went wrong. Try again."
+
+#: menu/templates/menu/_item_form_extras.html:57
+#: menu/templates/menu/_item_form_extras.html:90
+#: menu/templates/menu/_item_form_extras.html:132
+#: menu/templates/menu/create-item.html:21
+#: menu/templates/menu/create-menu-period.html:129
+#: menu/templates/menu/daily-stock-item.html:152
+#: menu/templates/menu/replenish-item.html:143
+#: menu/templates/menu/update-item.html:21
+#: menu/templates/menu/update-menu-period.html:129
+#: service/templates/service/hall/create-hall.html:24
+#: service/templates/service/hall/update-hall.html:27
+#: worker/templates/worker/create-worker.html:21
+#: worker/templates/worker/update-work-time.html:20
+#: worker/templates/worker/update-worker.html:21
+msgid "Cancel"
+msgstr ""
+
+#: menu/templates/menu/_item_form_extras.html:60
+#: menu/templates/menu/_item_form_extras.html:93
+#: menu/templates/menu/_item_form_extras.html:135
+#: menu/templates/menu/create-item.html:19
+#: menu/templates/menu/create-menu-period.html:127
+#: menu/templates/menu/daily-stock-item.html:153
+#: menu/templates/menu/replenish-item.html:144
+#: menu/templates/menu/update-menu-period.html:127
+#: service/templates/service/hall/create-hall.html:22
+#: service/templates/service/hall/update-hall.html:25
+#: worker/templates/worker/create-worker.html:19
+msgid "Save"
+msgstr ""
+
+#: menu/templates/menu/_item_form_extras.html:74
+msgid "New Category"
+msgstr "New Category"
+
+#: menu/templates/menu/_item_form_extras.html:107
+msgid "New Subcategory"
+msgstr "New Subcategory"
+
+#: menu/templates/menu/_item_form_extras.html:118
+#: menu/templates/menu/daily-stock-item.html:22
+#: menu/templates/menu/detail-item.html:39
+#: menu/templates/menu/list-item.html:22
+msgid "Category"
+msgstr "Category"
+
+#: menu/templates/menu/create-item.html:4
+#: menu/templates/menu/create-item.html:12
+msgid "Add Item"
+msgstr "Add Item"
+
+#: menu/templates/menu/create-item.html:13
+msgid "Fill in the details and save the menu item"
+msgstr "Fill in the details and save the menu item"
+
+#: menu/templates/menu/create-menu-period.html:4
+msgid "Create Menu Period"
+msgstr "Create Menu Period"
+
+#: menu/templates/menu/create-menu-period.html:11
+msgid "Create menu period"
+msgstr "Create menu period"
+
+#: menu/templates/menu/create-menu-period.html:12
+msgid "Define a time window and assign items available during it."
+msgstr "Define a time window and assign items available during it."
+
+#: menu/templates/menu/create-menu-period.html:19
+#: menu/templates/menu/detail-item.html:37
+#: menu/templates/menu/detail-menu-period.html:27
+#: menu/templates/menu/update-menu-period.html:19
+msgid "Details"
+msgstr "Details"
+
+#: menu/templates/menu/create-menu-period.html:27
+#: menu/templates/menu/update-menu-period.html:27
+msgid "e.g. Breakfast, Lunch"
+msgstr "e.g. Breakfast, Lunch"
+
+#: menu/templates/menu/create-menu-period.html:32
+#: menu/templates/menu/detail-menu-period.html:30
+#: menu/templates/menu/update-menu-period.html:32
+msgid "Start time"
+msgstr "Start time"
+
+#: menu/templates/menu/create-menu-period.html:41
+#: menu/templates/menu/detail-menu-period.html:35
+#: menu/templates/menu/update-menu-period.html:41
+msgid "End time"
+msgstr "End time"
+
+#: menu/templates/menu/create-menu-period.html:56
+#: menu/templates/menu/detail-menu-period.html:43
+#: menu/templates/menu/list-menu-period.html:40
+#: menu/templates/menu/update-menu-period.html:56
+msgid "Enabled"
+msgstr "Enabled"
+
+#: menu/templates/menu/create-menu-period.html:64
+#: menu/templates/menu/detail-menu-period.html:55
+#: menu/templates/menu/list-item.html:4 menu/templates/menu/list-item.html:11
+#: menu/templates/menu/list-menu-period.html:27
+#: menu/templates/menu/update-menu-period.html:64
+msgid "Items"
+msgstr "Items"
+
+#: menu/templates/menu/create-menu-period.html:65
+#: menu/templates/menu/create-menu-period.html:140
+#: menu/templates/menu/update-menu-period.html:65
+#: menu/templates/menu/update-menu-period.html:140
+msgid "selected"
+msgstr "selected"
+
+#: menu/templates/menu/create-menu-period.html:71
+#: menu/templates/menu/update-menu-period.html:71
+msgid "Search items..."
+msgstr "Search items..."
+
+#: menu/templates/menu/create-menu-period.html:94
+#: menu/templates/menu/update-menu-period.html:94
+msgid "Select all"
+msgstr "Select all"
+
+#: menu/templates/menu/create-menu-period.html:98
+#: menu/templates/menu/daily-stock-item.html:53
+#: menu/templates/menu/list-item.html:53
+#: menu/templates/menu/update-menu-period.html:98
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:527
+msgid "Clear"
+msgstr ""
+
+#: menu/templates/menu/create-menu-period.html:114
+#: menu/templates/menu/daily-stock-item.html:96
+#: menu/templates/menu/list-item.html:96
+#: menu/templates/menu/update-menu-period.html:114
+#: service/templates/service/order_flow/items_waiter.html:51
+msgid "No items in this category."
+msgstr "No items in this category."
+
+#: menu/templates/menu/create-menu-period.html:120
+#: menu/templates/menu/update-menu-period.html:120
+msgid "No categories found."
+msgstr "No categories found."
+
+#: menu/templates/menu/daily-stock-item.html:4
+msgid "Set Daily Stock"
+msgstr "Set Daily Stock"
+
+#: menu/templates/menu/daily-stock-item.html:11
+#: menu/templates/menu/daily-stock-item.html:133
+#: menu/templates/menu/dashboard.html:52
+#: menu/templates/menu/replenish-item.html:125
+msgid "Set daily stock"
+msgstr "Set daily stock"
+
+#: menu/templates/menu/daily-stock-item.html:16
+#: menu/templates/menu/dashboard.html:43
+#: menu/templates/menu/replenish-item.html:11
+msgid "Replenish stock"
+msgstr "Replenish stock"
+
+#: menu/templates/menu/daily-stock-item.html:24
+#: menu/templates/menu/daily-stock-item.html:38
+#: menu/templates/menu/list-item.html:24 menu/templates/menu/list-item.html:38
+#: menu/templates/menu/replenish-item.html:31
+msgid "All"
+msgstr "All"
+
+#: menu/templates/menu/daily-stock-item.html:34
+#: menu/templates/menu/detail-item.html:24
+#: menu/templates/menu/list-item.html:34 menu/templates/menu/list-item.html:68
+#: menu/templates/menu/replenish-item.html:27
+msgid "Location"
+msgstr "Location"
+
+#: menu/templates/menu/daily-stock-item.html:50
+#: menu/templates/menu/list-item.html:50
+msgid "Filter"
+msgstr "Filter"
+
+#: menu/templates/menu/daily-stock-item.html:64
+#: menu/templates/menu/list-item.html:64
+#: menu/templates/menu/replenish-item.html:52
+msgid "ID"
+msgstr "ID"
+
+#: menu/templates/menu/daily-stock-item.html:66
+#: menu/templates/menu/daily-stock-item.html:140
+#: menu/templates/menu/dashboard.html:37
+#: menu/templates/menu/detail-item.html:28
+#: menu/templates/menu/replenish-item.html:17
+#: menu/templates/menu/replenish-item.html:54
+#: menu/templates/menu/replenish-item.html:131
+msgid "Daily stock"
+msgstr "Daily stock"
+
+#: menu/templates/menu/daily-stock-item.html:90
+msgid "Set stock"
+msgstr "Set stock"
+
+#: menu/templates/menu/daily-stock-item.html:112
+#: menu/templates/menu/list-item.html:112
+#: menu/templates/menu/replenish-item.html:104
+#, python-format
+msgid ""
+"\n"
+"                            Page %(current)s of %(total)s\n"
+"                        "
+msgstr ""
+
+#: menu/templates/menu/daily-stock-item.html:146
+#: menu/templates/menu/replenish-item.html:137
+msgid "Leave empty for unlimited"
+msgstr "Leave empty for unlimited"
+
+#: menu/templates/menu/daily-stock-item.html:147
+#: menu/templates/menu/replenish-item.html:138
+msgid "0 = sold out, empty = unlimited"
+msgstr "0 = sold out, empty = unlimited"
+
+#: menu/templates/menu/dashboard.html:4
+msgid "Menu Management"
+msgstr "Menu Management"
+
+#: menu/templates/menu/dashboard.html:10
+msgid "Menu management"
+msgstr "Menu management"
+
+#: menu/templates/menu/dashboard.html:14
+msgid "Catalog"
+msgstr "Catalog"
+
+#: menu/templates/menu/dashboard.html:20
+#: service/templates/service/order_flow/items_waiter.html:13
+msgid "All items"
+msgstr "All items"
+
+#: menu/templates/menu/dashboard.html:21
+msgid "Browse and edit the full menu catalog."
+msgstr "Browse and edit the full menu catalog."
+
+#: menu/templates/menu/dashboard.html:29 menu/templates/menu/list-item.html:16
+msgid "Add item"
+msgstr "Add item"
+
+#: menu/templates/menu/dashboard.html:30
+msgid "Create a new menu item."
+msgstr "Create a new menu item."
+
+#: menu/templates/menu/dashboard.html:44
+#: menu/templates/menu/replenish-item.html:12
+msgid "Set today's available portions for tracked items."
+msgstr "Set today's available portions for tracked items."
+
+#: menu/templates/menu/dashboard.html:53
+msgid "Configure which items have stock tracking enabled."
+msgstr "Configure which items have stock tracking enabled."
+
+#: menu/templates/menu/dashboard.html:60
+#: menu/templates/menu/list-menu-period.html:11
+msgid "Menu periods"
+msgstr "Menu periods"
+
+#: menu/templates/menu/dashboard.html:66
+msgid "All periods"
+msgstr "All periods"
+
+#: menu/templates/menu/dashboard.html:67
+msgid "View and manage breakfast, lunch, and other time windows."
+msgstr "View and manage breakfast, lunch, and other time windows."
+
+#: menu/templates/menu/dashboard.html:75
+#: menu/templates/menu/list-menu-period.html:16
+msgid "Add period"
+msgstr "Add period"
+
+#: menu/templates/menu/dashboard.html:76
+msgid "Define a new time window and assign items to it."
+msgstr "Define a new time window and assign items to it."
+
+#: menu/templates/menu/detail-item.html:43
+msgid "Subcategory"
+msgstr "Subcategory"
+
+#: menu/templates/menu/detail-item.html:47
+msgid "Description"
+msgstr "Description"
+
+#: menu/templates/menu/detail-item.html:51
+#: menu/templates/menu/list-item.html:67
+#: service/templates/service/order_flow/_modal_view.html:49
+msgid "Additions"
+msgstr "Additions"
+
+#: menu/templates/menu/detail-item.html:61
+msgid "Created at"
+msgstr "Created at"
+
+#: menu/templates/menu/detail-item.html:71
+#: menu/templates/menu/detail-menu-period.html:22
+#: service/templates/service/hall/list-hall.html:35
+#: worker/templates/worker/_worktime_rows.html:11
+msgid "Edit"
+msgstr ""
+
+#: menu/templates/menu/detail-item.html:73
+#: service/templates/service/order_flow/_modal_view.html:70
+#: service/templates/service/order_flow/cart_summary.html:13
+#: service/templates/service/order_flow/table_order.html:11
+msgid "Back"
+msgstr "Back"
+
+#: menu/templates/menu/detail-menu-period.html:15
+#: menu/templates/menu/detail-menu-period.html:45
+#: menu/templates/menu/list-menu-period.html:42
+msgid "Disabled"
+msgstr "Disabled"
+
+#: menu/templates/menu/detail-menu-period.html:40
+#: menu/templates/menu/list-menu-period.html:28
+msgid "Status"
+msgstr "Status"
+
+#: menu/templates/menu/detail-menu-period.html:88
+msgid "No items assigned."
+msgstr "No items assigned."
+
+#: menu/templates/menu/list-item.html:91
+#: menu/templates/menu/list-menu-period.html:47
+msgid "View"
+msgstr "View"
+
+#: menu/templates/menu/list-menu-period.html:4
+msgid "Menu Periods"
+msgstr "Menu Periods"
+
+#: menu/templates/menu/list-menu-period.html:26
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2534
+msgid "Time"
+msgstr ""
+
+#: menu/templates/menu/list-menu-period.html:52
+msgid "No menu periods defined."
+msgstr "No menu periods defined."
+
+#: menu/templates/menu/replenish-item.html:4
+msgid "Replenish Stock"
+msgstr "Replenish Stock"
+
+#: menu/templates/menu/replenish-item.html:20
+msgid "Supply all"
+msgstr "Supply all"
+
+#: menu/templates/menu/replenish-item.html:65
+msgid "Sold out"
+msgstr "Sold out"
+
+#: menu/templates/menu/replenish-item.html:78
+msgid "Supply partly"
+msgstr "Supply partly"
+
+#: menu/templates/menu/replenish-item.html:82
+msgid "Supply"
+msgstr "Supply"
+
+#: menu/templates/menu/replenish-item.html:88
+msgid "No tracked items found."
+msgstr "No tracked items found."
+
+#: menu/templates/menu/update-item.html:4
+msgid "Update Item"
+msgstr "Update Item"
+
+#: menu/templates/menu/update-item.html:12
+#: menu/templates/menu/update-item.html:19
+#: worker/templates/worker/update-work-time.html:18
+#: worker/templates/worker/update-worker.html:19
+msgid "Update"
+msgstr ""
+
+#: menu/templates/menu/update-item.html:13
+msgid "Update the item"
+msgstr "Update the item"
+
+#: menu/templates/menu/update-menu-period.html:4
+msgid "Edit Menu Period"
+msgstr "Edit Menu Period"
+
+#: menu/templates/menu/update-menu-period.html:11
+msgid "Edit menu period"
+msgstr "Edit menu period"
+
+#: menu/views.py:34
+#, python-format
+msgid "Item added: '%(name)s'"
+msgstr "Item added: '%(name)s'"
+
+#: menu/views.py:50
+#, python-format
+msgid "Item '%(name)s' has been updated."
+msgstr "Item '%(name)s' has been updated."
+
+#: menu/views.py:107
+#, python-format
+msgid "Set daily stock for '%(name)s'"
+msgstr "Set daily stock for '%(name)s'"
+
+#: menu/views.py:150
+#, python-format
+msgid "Supplied '%(name)s'"
+msgstr "Supplied '%(name)s'"
+
+#: menu/views.py:159
+#, python-format
+msgid "Supplied %(count)s items"
+msgstr "Supplied %(count)s items"
+
+#: menu/views.py:188
+#, python-format
+msgid "Menu period '%(name)s' created."
+msgstr "Menu period '%(name)s' created."
+
+#: menu/views.py:199
+#, python-format
+msgid "Menu period '%(name)s' updated."
+msgstr "Menu period '%(name)s' updated."
+
+#: order/models.py:15
+msgid "Waiting"
+msgstr "Waiting"
+
+#: order/models.py:16 order/models.py:23
+msgid "Preparing"
+msgstr "Preparing"
+
+#: order/models.py:17 order/models.py:24
+msgid "Ready"
+msgstr "Ready"
+
+#: order/models.py:18 order/models.py:26
+msgid "Canceled"
+msgstr "Canceled"
+
+#: order/models.py:22
+msgid "Ordering"
+msgstr "Ordering"
+
+#: order/models.py:25
+msgid "Paid"
+msgstr "Paid"
+
+#: order/models.py:30
+msgid "Open"
+msgstr "Open"
+
+#: order/models.py:31
+msgid "Closed"
+msgstr "Closed"
+
+#: order/models.py:35
+msgid "Card"
+msgstr "Card"
+
+#: order/models.py:36
+msgid "Cash"
+msgstr "Cash"
+
+#: order/models.py:44
+msgid "Table to which the bill is assigned. Null means take-away"
+msgstr "Table to which the bill is assigned. Null means take-away"
+
+#: order/models.py:60
+msgid "Person who served the customer"
+msgstr "Person who served the customer"
+
+#: order/models.py:73
+msgid "Number of people in one the bill (plates per person)"
+msgstr "Number of people in one the bill (plates per person)"
+
+#: order/models.py:230
+msgid "Item Info"
+msgstr "Item Info"
+
+#: order/models.py:231
+msgid "Order Info"
+msgstr "Order Info"
+
+#: order/models.py:232
+msgid "Call"
+msgstr "Call"
+
+#: order/models.py:236
+msgid "None"
+msgstr "None"
+
+#: order/models.py:237
+msgid "Waiting to Read"
+msgstr "Waiting to Read"
+
+#: order/models.py:238
+msgid "Read"
+msgstr "Read"
+
+#: order/models.py:315
+msgid "Name of dish or additions"
+msgstr "Name of dish or additions"
+
+#: order/models.py:320
+msgid "Price of dish or additions when it was ordered"
+msgstr "Price of dish or additions when it was ordered"
+
+#: order/models.py:326
+msgid "Subtotal for this item before discount and additions (price × quantity)"
+msgstr "Subtotal for this item before discount and additions (price × quantity)"
+
+#: service/_views/order_flow/cart.py:137
+msgid "Bill not found"
+msgstr "Bill not found"
+
+#: service/_views/order_flow/cart.py:158
+msgid "Waiter not found"
+msgstr "Waiter not found"
+
+#: service/_views/order_flow/cart.py:162
+msgid "Invalid PIN"
+msgstr "Invalid PIN"
+
+#: service/_views/order_flow/cart.py:168
+msgid "Guest count must be an integer!"
+msgstr "Guest count must be an integer!"
+
+#: service/_views/order_flow/cart.py:170
+msgid "Guest count must be greater than 0"
+msgstr "Guest count must be greater than 0"
+
+#: service/_views/order_flow/cart.py:204
+msgid "Missing required session data"
+msgstr "Missing required session data"
+
+#: service/_views/order_flow/cart.py:222
+#, python-format
+msgid "%(item)s is sold out."
+msgstr "%(item)s is sold out."
+
+#: service/_views/order_flow/cart.py:226
+#, python-format
+msgid "%(item)s: only %(n)d portion(s) left."
+msgstr "%(item)s: only %(n)d portion(s) left."
+
+#: service/_views/order_flow/cart.py:234
+msgid "An error occurred while creating the order"
+msgstr "An error occurred while creating the order"
+
+#: service/_views/order_flow/cart.py:239
+#, python-format
+msgid "Order #%(pk)s completed."
+msgstr "Order #%(pk)s completed."
+
+#: service/_views/order_flow/cart.py:241
+#, python-format
+msgid "Order #%(pk)s updated."
+msgstr "Order #%(pk)s updated."
+
+#: service/_views/order_flow/table_select.py:18
+msgid "Select a table to proceed to the order"
+msgstr "Select a table to proceed to the order"
+
+#: service/_views/table_view.py:32
+#, python-format
+msgid "Hall '%(name)s' created."
+msgstr "Hall '%(name)s' created."
+
+#: service/_views/table_view.py:46
+#, python-format
+msgid "Hall '%(name)s' updated."
+msgstr "Hall '%(name)s' updated."
+
+#: service/forms.py:12
+msgid "Aspect ratio — width"
+msgstr "Aspect ratio — width"
+
+#: service/forms.py:13
+msgid "Aspect ratio — height"
+msgstr "Aspect ratio — height"
+
+#: service/forms.py:16
+msgid "e.g. 2 for a 2:1 (wide) room"
+msgstr "e.g. 2 for a 2:1 (wide) room"
+
+#: service/forms.py:17
+msgid "e.g. 1 for a 2:1 (wide) room"
+msgstr "e.g. 1 for a 2:1 (wide) room"
+
+#: service/models.py:6
+msgid "1×1"
+msgstr "1×1"
+
+#: service/models.py:7
+msgid "1×2"
+msgstr "1×2"
+
+#: service/models.py:8
+msgid "1×3"
+msgstr "1×3"
+
+#: service/templates/service/hall/create-hall.html:4
+#: service/templates/service/hall/create-hall.html:12
+msgid "Create hall"
+msgstr "Create hall"
+
+#: service/templates/service/hall/create-hall.html:11
+#: service/templates/service/hall/floor-editor.html:10
+#: service/templates/service/hall/list-hall.html:4
+#: service/templates/service/hall/list-hall.html:8
+#: service/templates/service/hall/update-hall.html:11
+msgid "Halls"
+msgstr "Halls"
+
+#: service/templates/service/hall/create-hall.html:33
+#: service/templates/service/hall/update-hall.html:36
+msgid "Canvas preview"
+msgstr "Canvas preview"
+
+#: service/templates/service/hall/create-hall.html:34
+msgid "Shows how the floor plan canvas will be shaped."
+msgstr "Shows how the floor plan canvas will be shaped."
+
+#: service/templates/service/hall/floor-editor.html:4
+#: service/templates/service/hall/list-hall.html:38
+msgid "Floor editor"
+msgstr "Floor editor"
+
+#: service/templates/service/hall/floor-editor.html:13
+#: service/templates/service/hall/list-hall.html:27
+msgid "Ratio"
+msgstr "Ratio"
+
+#: service/templates/service/hall/floor-editor.html:17
+msgid "Add table"
+msgstr "Add table"
+
+#: service/templates/service/hall/floor-editor.html:28
+#: service/templates/service/hall/floor-editor.html:205
+msgid "Save layout"
+msgstr "Save layout"
+
+#: service/templates/service/hall/floor-editor.html:33
+msgid ""
+"Drag to move · Double-click to rename · Click size badge to change size · × "
+"to remove"
+msgstr ""
+"Drag to move · Double-click to rename · Click size badge to change size · × "
+"to remove"
+
+#: service/templates/service/hall/floor-editor.html:102
+msgid "Click to change size"
+msgstr "Click to change size"
+
+#: service/templates/service/hall/floor-editor.html:118
+#: service/templates/service/order_flow/cart_summary.html:64
+msgid "Remove"
+msgstr "Remove"
+
+#: service/templates/service/hall/floor-editor.html:129
+msgid "Table name:"
+msgstr "Table name:"
+
+#: service/templates/service/hall/floor-editor.html:171
+msgid "Saving…"
+msgstr "Saving…"
+
+#: service/templates/service/hall/floor-editor.html:193
+msgid "Saved"
+msgstr "Saved"
+
+#: service/templates/service/hall/floor-editor.html:196
+msgid "Error saving"
+msgstr "Error saving"
+
+#: service/templates/service/hall/floor-editor.html:200
+msgid "Network error"
+msgstr "Network error"
+
+#: service/templates/service/hall/list-hall.html:10
+msgid "Add hall"
+msgstr "Add hall"
+
+#: service/templates/service/hall/list-hall.html:21
+msgid "Active"
+msgstr "Active"
+
+#: service/templates/service/hall/list-hall.html:23
+msgid "Inactive"
+msgstr "Inactive"
+
+#: service/templates/service/hall/list-hall.html:29
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:484
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:491
+msgid "Order"
+msgstr ""
+
+#: service/templates/service/hall/list-hall.html:31
+msgid "tables"
+msgstr "tables"
+
+#: service/templates/service/hall/list-hall.html:49
+msgid "No halls yet."
+msgstr "No halls yet."
+
+#: service/templates/service/hall/list-hall.html:51
+msgid "Create your first hall"
+msgstr "Create your first hall"
+
+#: service/templates/service/hall/update-hall.html:4
+#: service/templates/service/hall/update-hall.html:14
+msgid "Edit hall"
+msgstr "Edit hall"
+
+#: service/templates/service/hall/update-hall.html:37
+msgid "Updates as you change the ratio fields."
+msgstr "Updates as you change the ratio fields."
+
+#: service/templates/service/hall/update-hall.html:48
+msgid "Open floor editor"
+msgstr "Open floor editor"
+
+#: service/templates/service/order_flow/_modal_view.html:25
+msgid "Close"
+msgstr ""
+
+#: service/templates/service/order_flow/_modal_view.html:35
+msgid "Quantity"
+msgstr ""
+
+#: service/templates/service/order_flow/_modal_view.html:44
+#: service/templates/service/order_flow/cart_summary.html:114
+msgid "Note"
+msgstr "Note"
+
+#: service/templates/service/order_flow/_modal_view.html:73
+msgid "Add"
+msgstr ""
+
+#: service/templates/service/order_flow/cart_summary.html:4
+#: service/templates/service/order_flow/cart_summary.html:9
+#: service/templates/service/order_flow/items_waiter.html:37
+msgid "Cart"
+msgstr "Cart"
+
+#: service/templates/service/order_flow/cart_summary.html:20
+msgid "Your cart is empty."
+msgstr "Your cart is empty."
+
+#: service/templates/service/order_flow/cart_summary.html:22
+msgid "Browse menu"
+msgstr "Browse menu"
+
+#: service/templates/service/order_flow/cart_summary.html:80
+msgid "Order details"
+msgstr "Order details"
+
+#: service/templates/service/order_flow/cart_summary.html:86
+#: worker/models.py:12
+msgid "Waiter"
+msgstr ""
+
+#: service/templates/service/order_flow/cart_summary.html:89
+msgid "Select waiter..."
+msgstr "Select waiter..."
+
+#: service/templates/service/order_flow/cart_summary.html:101
+msgid "PIN"
+msgstr "PIN"
+
+#: service/templates/service/order_flow/cart_summary.html:115
+msgid "optional"
+msgstr "optional"
+
+#: service/templates/service/order_flow/cart_summary.html:121
+msgid "Additional note..."
+msgstr "Additional note..."
+
+#: service/templates/service/order_flow/cart_summary.html:125
+msgid "Guest count"
+msgstr "Guest count"
+
+#: service/templates/service/order_flow/cart_summary.html:137
+msgid "Add to order"
+msgstr "Add to order"
+
+#: service/templates/service/order_flow/cart_summary.html:139
+msgid "Place order"
+msgstr "Place order"
+
+#: service/templates/service/order_flow/cart_summary.html:148
+msgid "Cancel order and clear cart?"
+msgstr "Cancel order and clear cart?"
+
+#: service/templates/service/order_flow/cart_summary.html:149
+msgid "Cancel order"
+msgstr "Cancel order"
+
+#: service/templates/service/order_flow/cart_summary.html:179
+msgid "Placing order..."
+msgstr "Placing order..."
+
+#: service/templates/service/order_flow/items_waiter.html:4
+#: service/templates/service/order_flow/items_waiter.html:9
+#: templates/base.html:66
+msgid "Menu"
+msgstr "Menu"
+
+#: service/templates/service/order_flow/items_waiter.html:21
+msgid "Period"
+msgstr "Period"
+
+#: service/templates/service/order_flow/table_order.html:4
+#: service/templates/service/order_flow/table_order.html:9
+msgid "Choose table"
+msgstr "Choose table"
+
+#: service/templates/service/order_flow/table_order.html:16
+msgid "No halls configured."
+msgstr "No halls configured."
+
+#: service/templates/service/order_flow/table_order.html:58
+msgid "No tables in this hall."
+msgstr "No tables in this hall."
+
+#: service/templates/service/order_flow/table_order.html:65
+#: service/templates/service/order_flow/table_order.html:180
+msgid "No table selected"
+msgstr "No table selected"
+
+#: service/templates/service/order_flow/table_order.html:69
+msgid "Proceed to order"
+msgstr "Proceed to order"
+
+#: service/templates/service/order_flow/table_order.html:187
+msgid "Selected"
+msgstr "Selected"
+
+#: templates/base.html:57
+msgid "New alerts"
+msgstr ""
+
+#: templates/base.html:75
+msgid "Service"
+msgstr ""
+
+#: templates/base.html:80
+msgid "Hall"
+msgstr ""
+
+#: templates/base.html:98
+msgid "Notifications"
+msgstr ""
+
+#: templates/base.html:105
+msgid "Management"
+msgstr ""
+
+#: templates/base.html:109
+msgid "Edit menu"
+msgstr ""
+
+#: templates/base.html:113
+msgid "Change status"
+msgstr ""
+
+#: templates/base.html:117
+msgid "Order history"
+msgstr ""
+
+#: templates/base.html:121
+msgid "Bills"
+msgstr ""
+
+#: templates/base.html:125
+msgid "Reports"
+msgstr ""
+
+#: templates/base.html:135 templates/base.html:144
+#: worker/templates/worker/list-worker.html:4
+#: worker/templates/worker/list-worker.html:11
+msgid "Workers"
+msgstr ""
+
+#: templates/base.html:138 worker/templates/worker/clock-in.html:4
+msgid "Clock in"
+msgstr ""
+
+#: templates/base.html:141 worker/templates/worker/clock-out.html:4
+msgid "Clock out"
+msgstr ""
+
+#: templates/base.html:151
+msgid "Add worker"
+msgstr ""
+
+#: templates/base.html:175
+msgid "Admin"
+msgstr ""
+
+#: templates/base.html:180
+msgid "Logout"
+msgstr ""
+
 #: templates/registration/logged_out.html:4
 msgid "Logged out"
 msgstr ""
@@ -38,7 +1076,7 @@ msgstr ""
 msgid "You have been successfully logged out."
 msgstr ""
 
-#: templates/registration/logged_out.html:14
+#: templates/registration/logged_out.html:13
 msgid "Sign in again"
 msgstr ""
 
@@ -54,7 +1092,7 @@ msgstr ""
 msgid "Sign in to continue"
 msgstr ""
 
-#: templates/registration/login.html:20
+#: templates/registration/login.html:19
 msgid "Sign in"
 msgstr ""
 
@@ -736,10 +1774,6 @@ msgid ""
 "invalid time."
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2534
-msgid "Time"
-msgstr ""
-
 #: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2642
 msgid "URL"
 msgstr ""
@@ -923,11 +1957,6 @@ msgid_plural "Please submit at least %(num)d forms."
 msgstr[0] ""
 msgstr[1] ""
 
-#: venv/lib/python3.12/site-packages/django/forms/formsets.py:484
-#: venv/lib/python3.12/site-packages/django/forms/formsets.py:491
-msgid "Order"
-msgstr ""
-
 #: venv/lib/python3.12/site-packages/django/forms/formsets.py:499
 msgid "Delete"
 msgstr ""
@@ -971,10 +2000,6 @@ msgstr ""
 msgid ""
 "%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
 "may be ambiguous or it may not exist."
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/widgets.py:527
-msgid "Clear"
 msgstr ""
 
 #: venv/lib/python3.12/site-packages/django/forms/widgets.py:528
@@ -1583,9 +2608,9 @@ msgid ""
 "Message Django's middlewares"
 msgstr ""
 
-#: worker/models.py:12
-msgid "Waiter"
-msgstr ""
+#: worker/forms.py:24
+msgid "Finish time must be after start time."
+msgstr "Finish time must be after start time."
 
 #: worker/models.py:13
 msgid "Chef"
@@ -1623,20 +2648,12 @@ msgstr ""
 msgid "pin"
 msgstr ""
 
-#: worker/templates/worker/_worktime_rows.html:9
-msgid "Edit"
-msgstr ""
-
-#: worker/templates/worker/_worktime_rows.html:16
+#: worker/templates/worker/_worktime_rows.html:18
 msgid "No work times recorded."
 msgstr ""
 
-#: worker/templates/worker/_worktime_rows.html:26
+#: worker/templates/worker/_worktime_rows.html:28
 msgid "Show more"
-msgstr ""
-
-#: worker/templates/worker/clock-in.html:4
-msgid "Clock in"
 msgstr ""
 
 #: worker/templates/worker/clock-in.html:12
@@ -1648,11 +2665,8 @@ msgid "Choose your name to start your shift"
 msgstr ""
 
 #: worker/templates/worker/clock-in.html:25
+#: worker/templates/worker/list-worker.html:33
 msgid "No workers available — time to hire someone!"
-msgstr ""
-
-#: worker/templates/worker/clock-out.html:4
-msgid "Clock out"
 msgstr ""
 
 #: worker/templates/worker/clock-out.html:12
@@ -1676,27 +2690,6 @@ msgstr ""
 msgid "Fill in the details and save the profile"
 msgstr ""
 
-#: worker/templates/worker/create-worker.html:19
-msgid "Save"
-msgstr ""
-
-#: worker/templates/worker/create-worker.html:21
-#: worker/templates/worker/update-work-time.html:20
-msgid "Cancel"
-msgstr ""
-
-#: worker/templates/worker/update-worker.html:12
-msgid "Update employee"
-msgstr ""
-
-#: worker/templates/worker/update-worker.html:13
-msgid "Edit the details and save the profile"
-msgstr ""
-
-#: worker/templates/worker/update-worker.html:19 worker/templates/worker/update-work-time.html:18
-msgid "Update"
-msgstr ""
-
 #: worker/templates/worker/detail-worker.html:17
 msgid "Salary"
 msgstr ""
@@ -1717,6 +2710,10 @@ msgstr ""
 msgid "Finish"
 msgstr ""
 
+#: worker/templates/worker/list-worker.html:17
+msgid "Position"
+msgstr ""
+
 #: worker/templates/worker/update-work-time.html:4
 msgid "Update work time"
 msgstr ""
@@ -1725,797 +2722,55 @@ msgstr ""
 msgid "Update Work Time"
 msgstr ""
 
-#: worker/views.py:65
+#: worker/templates/worker/update-worker.html:4
+#: worker/templates/worker/update-worker.html:12
+msgid "Update employee"
+msgstr ""
+
+#: worker/templates/worker/update-worker.html:13
+msgid "Edit the details and save the profile"
+msgstr ""
+
+#: worker/views.py:70
+#, fuzzy
+#| msgid "Item '%(name)s' has been updated."
+msgid "Worker detail has been updated!"
+msgstr "Item '%(name)s' has been updated."
+
+#: worker/views.py:83
 msgid "Work time has been successfully updated!"
 msgstr ""
 
-#: worker/views.py:86
+#: worker/views.py:104
 #, python-format
 msgid "Have a great shift, %(name)s!"
 msgstr ""
 
-#: worker/views.py:115
+#: worker/views.py:133
 #, python-format
 msgid "Goodbye, %(name)s!"
 msgstr ""
 
-#: worker/templates/worker/list-worker.html:11
-msgid "Workers"
-msgstr ""
+#~ msgid "Page %(current)s of %(total)s"
+#~ msgstr "Page %(current)s of %(total)s"
 
-#: worker/templates/worker/list-worker.html:16
-msgid "Name"
-msgstr ""
+#~ msgid "Wide rectangle (default)"
+#~ msgstr "Wide rectangle (default)"
 
-#: worker/templates/worker/list-worker.html:17
-msgid "Position"
-msgstr ""
+#~ msgid "Standard rectangle"
+#~ msgstr "Standard rectangle"
 
-#: templates/base.html menu/templates/menu/list.html
-msgid "Menu"
-msgstr "Menu"
+#~ msgid "Square"
+#~ msgstr "Square"
 
-#: templates/base.html
-msgid "New alerts"
-msgstr ""
+#~ msgid "Tall rectangle"
+#~ msgstr "Tall rectangle"
 
-#: templates/base.html
-msgid "Service"
-msgstr ""
+#~ msgid "Width"
+#~ msgstr "Width"
 
-#: templates/base.html
-msgid "Management"
-msgstr ""
+#~ msgid "Height"
+#~ msgstr "Height"
 
-#: templates/base.html
-msgid "Hall"
-msgstr ""
-
-#: templates/base.html menu/models.py
-msgid "Kitchen"
-msgstr "Kitchen"
-
-#: templates/base.html menu/models.py
-msgid "Bar"
-msgstr "Bar"
-
-#: templates/base.html
-msgid "Notifications"
-msgstr ""
-
-#: templates/base.html
-msgid "Edit menu"
-msgstr ""
-
-#: templates/base.html
-msgid "Change status"
-msgstr ""
-
-#: templates/base.html
-msgid "Order history"
-msgstr ""
-
-#: templates/base.html
-msgid "Bills"
-msgstr ""
-
-#: templates/base.html
-msgid "Reports"
-msgstr ""
-
-#: templates/base.html
-msgid "Add worker"
-msgstr ""
-
-#: templates/base.html
-msgid "Admin"
-msgstr ""
-
-#: templates/base.html
-msgid "Logout"
-msgstr ""
-
-#: worker/forms.py
-msgid "Finish time must be after start time."
-msgstr "Finish time must be after start time."
-
-#: menu/models.py
-msgid "name"
-msgstr "name"
-
-#: menu/models.py
-msgid "category"
-msgstr "category"
-
-#: menu/models.py
-msgid "categories"
-msgstr "categories"
-
-#: menu/models.py
-msgid "subcategory"
-msgstr "subcategory"
-
-#: menu/models.py
-msgid "subcategories"
-msgstr "subcategories"
-
-#: menu/models.py
-msgid "price"
-msgstr "price"
-
-#: menu/models.py
-msgid "checkout ID"
-msgstr "checkout ID"
-
-#: menu/models.py
-msgid "Cash register product ID"
-msgstr "Cash register product ID"
-
-#: menu/models.py
-msgid "created at"
-msgstr "created at"
-
-#: menu/models.py
-msgid "deleted"
-msgstr "deleted"
-
-#: menu/models.py
-msgid "priority"
-msgstr "priority"
-
-#: menu/models.py
-msgid "addition"
-msgstr "addition"
-
-#: menu/models.py
-msgid "additions"
-msgstr "additions"
-
-#: menu/models.py
-msgid "preparation location"
-msgstr "preparation location"
-
-#: menu/models.py
-msgid "Item name"
-msgstr "Item name"
-
-#: menu/models.py
-msgid "description"
-msgstr "description"
-
-#: menu/models.py
-msgid "Item description"
-msgstr "Item description"
-
-#: menu/models.py
-msgid "Number of portions available today. None = unlimited, 0 = sold out."
-msgstr "Number of portions available today. None = unlimited, 0 = sold out."
-
-#: menu/models.py
-msgid "daily stock"
-msgstr "daily stock"
-
-#: menu/models.py
-msgid "item"
-msgstr "item"
-
-#: menu/models.py
-msgid "items"
-msgstr "items"
-
-#: menu/views.py
-msgid "Item added: '%(name)s'"
-msgstr "Item added: '%(name)s'"
-
-#: menu/views.py
-msgid "Item '%(name)s' has been updated."
-msgstr "Item '%(name)s' has been updated."
-
-#: menu/templates/menu/update-item.html
-msgid "Update Item"
-msgstr "Update Item"
-
-#: menu/templates/menu/update-item.html
-msgid "Update the item"
-msgstr "Update the item"
-
-#: menu/templates/menu/detail.html
-msgid "Details"
-msgstr "Details"
-
-#: menu/templates/menu/detail.html
-msgid "Location"
-msgstr "Location"
-
-#: menu/templates/menu/detail.html
-msgid "Daily stock"
-msgstr "Daily stock"
-
-#: menu/templates/menu/detail.html
-msgid "Back"
-msgstr "Back"
-
-#: menu/templates/menu/detail.html
-msgid "Price"
-msgstr "Price"
-
-#: menu/templates/menu/detail.html
-msgid "Subcategory"
-msgstr "Subcategory"
-
-#: menu/templates/menu/detail.html
-msgid "Description"
-msgstr "Description"
-
-#: menu/templates/menu/detail.html
-msgid "Additions"
-msgstr "Additions"
-
-#: menu/templates/menu/detail.html
-msgid "Created at"
-msgstr "Created at"
-
-#: menu/templates/menu/list.html
-msgid "Items"
-msgstr "Items"
-
-#: menu/templates/menu/list.html
-msgid "Add item"
-msgstr "Add item"
-
-#: menu/templates/menu/list.html
-msgid "View"
-msgstr "View"
-
-#: menu/templates/menu/list.html
-msgid "No items in this category."
-msgstr "No items in this category."
-
-#: menu/templates/menu/list.html
-msgid "Filter"
-msgstr "Filter"
-
-#: menu/templates/menu/list.html
-msgid "All"
-msgstr "All"
-
-#: menu/templates/menu/list.html
-msgid "Page %(current)s of %(total)s"
-msgstr "Page %(current)s of %(total)s"
-
-#: menu/templates/menu/create-item.html
-msgid "Add Item"
-msgstr "Add Item"
-
-#: menu/templates/menu/create-item.html
-msgid "Fill in the details and save the menu item"
-msgstr "Fill in the details and save the menu item"
-
-#: menu/templates/menu/create-item.html
-msgid "New Addition"
-msgstr "New Addition"
-
-#: menu/templates/menu/create-item.html
-msgid "Checkout ID"
-msgstr "Checkout ID"
-
-#: menu/templates/menu/create-item.html
-msgid "Priority"
-msgstr "Priority"
-
-#: menu/templates/menu/create-item.html
-msgid "Something went wrong. Try again."
-msgstr "Something went wrong. Try again."
-
-#: menu/templates/menu/create-item.html
-msgid "New Category"
-msgstr "New Category"
-
-#: menu/templates/menu/create-item.html
-msgid "New Subcategory"
-msgstr "New Subcategory"
-
-#: menu/templates/menu/create-item.html
-msgid "Category"
-msgstr "Category"
-
-#: menu/templates/menu/replenish-item.html
-msgid "Replenish Stock"
-msgstr "Replenish Stock"
-
-#: menu/templates/menu/replenish-item.html
-msgid "Replenish stock"
-msgstr "Replenish stock"
-
-#: menu/templates/menu/replenish-item.html
-msgid "Set today's available portions for tracked items."
-msgstr "Set today's available portions for tracked items."
-
-#: menu/templates/menu/replenish-item.html
-msgid "Supply all"
-msgstr "Supply all"
-
-#: menu/templates/menu/replenish-item.html
-msgid "ID"
-msgstr "ID"
-
-#: menu/templates/menu/replenish-item.html
-msgid "Sold out"
-msgstr "Sold out"
-
-#: menu/templates/menu/replenish-item.html
-msgid "Supply partly"
-msgstr "Supply partly"
-
-#: menu/templates/menu/replenish-item.html
-msgid "Supply"
-msgstr "Supply"
-
-#: menu/templates/menu/replenish-item.html
-msgid "No tracked items found."
-msgstr "No tracked items found."
-
-#: menu/templates/menu/replenish-item.html
-msgid "Set daily stock"
-msgstr "Set daily stock"
-
-#: menu/templates/menu/replenish-item.html
-msgid "Leave empty for unlimited"
-msgstr "Leave empty for unlimited"
-
-#: menu/templates/menu/replenish-item.html
-msgid "0 = sold out, empty = unlimited"
-msgstr "0 = sold out, empty = unlimited"
-
-#: menu/templates/menu/daily-stock-item.html
-msgid "Set Daily Stock"
-msgstr "Set Daily Stock"
-
-#: menu/templates/menu/daily-stock-item.html
-msgid "Set stock"
-msgstr "Set stock"
-
-#: menu/views
-msgid "Set daily stock for '%(name)s'"
-msgstr "Set daily stock for '%(name)s'"
-
-#: menu/views
-msgid "Supplied '%(name)s'"
-msgstr "Supplied '%(name)s'"
-
-#: menu/views
-msgid "Supplied %(count)s items"
-msgstr "Supplied %(count)s items"
-
-#: menu/templates/menu/create-menu-period.html
-msgid "Create Menu Period"
-msgstr "Create Menu Period"
-
-#: menu/templates/menu/create-menu-period.html
-msgid "Create menu period"
-msgstr "Create menu period"
-
-#: menu/templates/menu/create-menu-period.html
-msgid "Define a time window and assign items available during it."
-msgstr "Define a time window and assign items available during it."
-
-#: menu/templates/menu/create-menu-period.html
-msgid "e.g. Breakfast, Lunch"
-msgstr "e.g. Breakfast, Lunch"
-
-#: menu/templates/menu/create-menu-period.html
-msgid "Start time"
-msgstr "Start time"
-
-#: menu/templates/menu/create-menu-period.html
-msgid "End time"
-msgstr "End time"
-
-#: menu/templates/menu/create-menu-period.html
-msgid "Enabled"
-msgstr "Enabled"
-
-#: menu/templates/menu/create-menu-period.html
-msgid "selected"
-msgstr "selected"
-
-#: menu/templates/menu/create-menu-period.html
-msgid "Search items..."
-msgstr "Search items..."
-
-#: menu/templates/menu/create-menu-period.html
-msgid "Select all"
-msgstr "Select all"
-
-#: menu/templates/menu/create-menu-period.html
-msgid "No categories found."
-msgstr "No categories found."
-
-#: menu/views
-msgid "Menu period '%(name)s' created."
-msgstr "Menu period '%(name)s' created."
-
-#: menu/templates/menu/update-menu-period.html
-msgid "Edit Menu Period"
-msgstr "Edit Menu Period"
-
-#: menu/templates/menu/update-menu-period.html
-msgid "Edit menu period"
-msgstr "Edit menu period"
-
-#: menu/templates/menu/detail-menu-period.html
-msgid "Disabled"
-msgstr "Disabled"
-
-#: menu/templates/menu/detail-menu-period.html
-msgid "Status"
-msgstr "Status"
-
-#: menu/templates/menu/detail-menu-period.html
-msgid "No items assigned."
-msgstr "No items assigned."
-
-#: menu/views
-msgid "Menu period '%(name)s' updated."
-msgstr "Menu period '%(name)s' updated."
-
-#: menu/templates/menu/list-menu-period.html
-msgid "Menu Periods"
-msgstr "Menu Periods"
-
-#: menu/templates/menu/list-menu-period.html
-msgid "Menu periods"
-msgstr "Menu periods"
-
-#: menu/templates/menu/list-menu-period.html
-msgid "Add period"
-msgstr "Add period"
-
-#: menu/templates/menu/list-menu-period.html
-msgid "No menu periods defined."
-msgstr "No menu periods defined."
-
-#: menu/templates/menu/dashboard.html
-msgid "Menu Management"
-msgstr "Menu Management"
-
-#: menu/templates/menu/dashboard.html
-msgid "Menu management"
-msgstr "Menu management"
-
-#: menu/templates/menu/dashboard.html
-msgid "Catalog"
-msgstr "Catalog"
-
-#: menu/templates/menu/dashboard.html
-msgid "All items"
-msgstr "All items"
-
-#: menu/templates/menu/dashboard.html
-msgid "Browse and edit the full menu catalog."
-msgstr "Browse and edit the full menu catalog."
-
-#: menu/templates/menu/dashboard.html
-msgid "Create a new menu item."
-msgstr "Create a new menu item."
-
-#: menu/templates/menu/dashboard.html
-msgid "Configure which items have stock tracking enabled."
-msgstr "Configure which items have stock tracking enabled."
-
-#: menu/templates/menu/dashboard.html
-msgid "All periods"
-msgstr "All periods"
-
-#: menu/templates/menu/dashboard.html
-msgid "View and manage breakfast, lunch, and other time windows."
-msgstr "View and manage breakfast, lunch, and other time windows."
-
-#: menu/templates/menu/dashboard.html
-msgid "Define a new time window and assign items to it."
-msgstr "Define a new time window and assign items to it."
-
-#: service/models.py
-msgid "1×1"
-msgstr "1×1"
-
-#: service/models.py
-msgid "1×2"
-msgstr "1×2"
-
-#: service/models.py
-msgid "1×3"
-msgstr "1×3"
-
-#: service/forms.py
-msgid "Aspect ratio — width"
-msgstr "Aspect ratio — width"
-
-#: service/forms.py
-msgid "Aspect ratio — height"
-msgstr "Aspect ratio — height"
-
-#: service/forms.py
-msgid "e.g. 2 for a 2:1 (wide) room"
-msgstr "e.g. 2 for a 2:1 (wide) room"
-
-#: service/forms.py
-msgid "e.g. 1 for a 2:1 (wide) room"
-msgstr "e.g. 1 for a 2:1 (wide) room"
-
-#: service/_views/table_view.py
-msgid "Hall '%(name)s' created."
-msgstr "Hall '%(name)s' created."
-
-#: service/_views/table_view.py
-msgid "Hall '%(name)s' updated."
-msgstr "Hall '%(name)s' updated."
-
-#: service/templates/service/hall/list-hall.html
-msgid "Halls"
-msgstr "Halls"
-
-#: service/templates/service/hall/list-hall.html
-msgid "Add hall"
-msgstr "Add hall"
-
-#: service/templates/service/hall/list-hall.html
-msgid "Active"
-msgstr "Active"
-
-#: service/templates/service/hall/list-hall.html
-msgid "Inactive"
-msgstr "Inactive"
-
-#: service/templates/service/hall/list-hall.html
-msgid "Ratio"
-msgstr "Ratio"
-
-#: service/templates/service/hall/list-hall.html
-msgid "tables"
-msgstr "tables"
-
-#: service/templates/service/hall/list-hall.html
-msgid "Floor editor"
-msgstr "Floor editor"
-
-#: service/templates/service/hall/list-hall.html
-msgid "No halls yet."
-msgstr "No halls yet."
-
-#: service/templates/service/hall/list-hall.html
-msgid "Create your first hall"
-msgstr "Create your first hall"
-
-#: service/templates/service/hall/create-hall.html
-#: service/templates/service/hall/update-hall.html
-msgid "Create hall"
-msgstr "Create hall"
-
-#: service/templates/service/hall/create-hall.html
-#: service/templates/service/hall/update-hall.html
-msgid "Canvas preview"
-msgstr "Canvas preview"
-
-#: service/templates/service/hall/create-hall.html
-#: service/templates/service/hall/update-hall.html
-msgid "Updates as you change the ratio fields."
-msgstr "Updates as you change the ratio fields."
-
-#: service/templates/service/hall/create-hall.html
-#: service/templates/service/hall/update-hall.html
-msgid "Shows how the floor plan canvas will be shaped."
-msgstr "Shows how the floor plan canvas will be shaped."
-
-
-#: service/templates/service/hall/create-hall.html
-msgid "Wide rectangle (default)"
-msgstr "Wide rectangle (default)"
-
-#: service/templates/service/hall/create-hall.html
-msgid "Standard rectangle"
-msgstr "Standard rectangle"
-
-#: service/templates/service/hall/create-hall.html
-msgid "Square"
-msgstr "Square"
-
-#: service/templates/service/hall/create-hall.html
-msgid "Tall rectangle"
-msgstr "Tall rectangle"
-
-#: service/templates/service/hall/create-hall.html
-msgid "Width"
-msgstr "Width"
-
-#: service/templates/service/hall/create-hall.html
-msgid "Height"
-msgstr "Height"
-
-#: service/templates/service/hall/create-hall.html
-msgid "Shape"
-msgstr "Shape"
-
-#: service/templates/service/hall/update-hall.html
-msgid "Edit hall"
-msgstr "Edit hall"
-
-#: service/templates/service/hall/update-hall.html
-msgid "Open floor editor"
-msgstr "Open floor editor"
-
-#: service/templates/service/hall/floor-editor.html
-msgid "Add table"
-msgstr "Add table"
-
-#: service/templates/service/hall/floor-editor.html
-msgid "Save layout"
-msgstr "Save layout"
-
-#: service/templates/service/hall/floor-editor.html
-msgid "Drag to move · Double-click to rename · Click size badge to change size · × to remove"
-msgstr "Drag to move · Double-click to rename · Click size badge to change size · × to remove"
-
-#: service/templates/service/hall/floor-editor.html
-msgid "Remove"
-msgstr "Remove"
-
-#: service/templates/service/hall/floor-editor.html
-msgid "Click to change size"
-msgstr "Click to change size"
-
-#: service/templates/service/hall/floor-editor.html
-msgid "Table name:"
-msgstr "Table name:"
-
-#: service/templates/service/hall/floor-editor.html
-msgid "Saving…"
-msgstr "Saving…"
-
-#: service/templates/service/hall/floor-editor.html
-msgid "Saved"
-msgstr "Saved"
-
-#: service/templates/service/hall/floor-editor.html
-msgid "Error saving"
-msgstr "Error saving"
-
-#: service/templates/service/hall/floor-editor.html
-msgid "Network error"
-msgstr "Network error"
-
-#: service/templates/service/table_order.html
-msgid "Choose table"
-msgstr "Choose table"
-
-#: service/templates/service/table_order.html
-msgid "No halls configured."
-msgstr "No halls configured."
-
-#: service/templates/service/table_order.html
-msgid "No tables in this hall."
-msgstr "No tables in this hall."
-
-#: service/templates/service/table_order.html
-msgid "No table selected"
-msgstr "No table selected"
-
-#: service/templates/service/table_order.html
-msgid "Selected"
-msgstr "Selected"
-
-#: service/templates/service/table_order.html
-msgid "Proceed to order"
-msgstr "Proceed to order"
-
-#: service/_views/order_flow/table_select.py
-msgid "Select a table to proceed to the order"
-msgstr "Select a table to proceed to the order"
-
-#: service/templates/service/order_flow/items_waiter.html
-msgid "Period"
-msgstr "Period"
-
-#: service/templates/service/order_flow/items_waiter.html
-msgid "Cart"
-msgstr "Cart"
-
-#: service/_views/order_flow/cart.py
-msgid "Bill not found"
-msgstr "Bill not found"
-
-#: service/_views/order_flow/cart.py
-msgid "Missing required session data"
-msgstr "Missing required session data"
-
-#: service/_views/order_flow/cart.py
-msgid "Guest count must be an integer!"
-msgstr "Guest count must be an integer!"
-
-#: service/_views/order_flow/cart.py
-msgid "Guest count must be greater than 0"
-msgstr "Guest count must be greater than 0"
-
-#: service/_views/order_flow/cart.py
-msgid "%(item)s is sold out."
-msgstr "%(item)s is sold out."
-
-#: service/_views/order_flow/cart.py
-msgid "%(item)s: only %(n)d portion(s) left."
-msgstr "%(item)s: only %(n)d portion(s) left."
-
-#: service/_views/order_flow/cart.py
-msgid "An error occurred while creating the order"
-msgstr "An error occurred while creating the order"
-
-#: service/_views/order_flow/cart.py
-msgid "Order #%(pk)s completed."
-msgstr "Order #%(pk)s completed."
-
-#: service/_views/order_flow/cart.py
-msgid "Order #%(pk)s updated."
-msgstr "Order #%(pk)s updated."
-
-#: service/templates/service/cart_waiter.html
-msgid "Your cart is empty."
-msgstr "Your cart is empty."
-
-#: service/templates/service/cart_waiter.html
-msgid "Browse menu"
-msgstr "Browse menu"
-
-#: service/templates/service/cart_waiter.html
-msgid "Order details"
-msgstr "Order details"
-
-#: service/templates/service/cart_waiter.html
-msgid "Select waiter..."
-msgstr "Select waiter..."
-
-#: service/templates/service/cart_waiter.html
-msgid "Note"
-msgstr "Note"
-
-#: service/templates/service/cart_waiter.html
-msgid "optional"
-msgstr "optional"
-
-#: service/templates/service/cart_waiter.html
-msgid "Additional note..."
-msgstr "Additional note..."
-
-#: service/templates/service/cart_waiter.html
-msgid "Guest count"
-msgstr "Guest count"
-
-#: service/templates/service/cart_waiter.html
-msgid "Add to order"
-msgstr "Add to order"
-
-#: service/templates/service/cart_waiter.html
-msgid "Place order"
-msgstr "Place order"
-
-#: service/templates/service/cart_waiter.html
-msgid "Cancel order and clear cart?"
-msgstr "Cancel order and clear cart?"
-
-#: service/templates/service/cart_waiter.html
-msgid "Cancel order"
-msgstr "Cancel order"
-
-#: service/templates/service/cart_waiter.html
-msgid "Placing order..."
-msgstr "Placing order..."
-
-#: service/_views/order_flow/cart.py
-msgid "Waiter not found"
-msgstr "Waiter not found"
-
-#: service/_views/order_flow/cart.py
-msgid "Invalid PIN"
-msgstr "Invalid PIN"
-
-#: service/templates/service/cart_waiter.html
-msgid "PIN"
-msgstr "PIN"
+#~ msgid "Shape"
+#~ msgstr "Shape"
