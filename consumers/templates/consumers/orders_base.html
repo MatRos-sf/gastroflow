@@ -1,0 +1,321 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% block title %}
+    {% block station_title %}
+        {% trans "Orders" %}
+    {% endblock station_title %}
+{% endblock title %}
+{% block content %}
+    <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+        <h1 class="h4 fw-bold mb-0">
+            {% block station_heading %}
+                {% trans "Orders" %}
+            {% endblock station_heading %}
+        </h1>
+        <span id="ws-status" class="badge rounded-pill bg-secondary px-3 py-2">{% trans "Connecting…" %}</span>
+    </div>
+    <div id="orders-container"
+         class="d-flex flex-wrap gap-3 align-items-start"></div>
+    <div id="empty-state"
+         class="card border-0 rounded-4 shadow-sm"
+         style="display:none">
+        <div class="card-body p-5 text-center text-secondary">
+            <p class="mb-0 fs-5">{% trans "No pending orders" %}</p>
+        </div>
+    </div>
+    <audio id="notification-sound"
+           src="{% static 'sounds/notification.mp3' %}"
+           preload="auto"></audio>
+    <audio id="alert-sound" src="{% static 'sounds/alert.mp3' %}" preload="auto"></audio>
+{% endblock content %}
+{% block extra_js %}
+    <style>
+#orders-container .order-card {
+    flex: 1 1 340px;
+    max-width: 420px;
+    font-size: 1.05rem;
+}
+.item-row.is-done .item-name {
+    text-decoration: line-through;
+    opacity: 0.45;
+}
+.item-row.is-removed .item-name {
+    text-decoration: line-through;
+    color: #dc3545;
+}
+.order-card .card-header { font-size: 1.1rem; }
+@keyframes flash-alert {
+    0%, 100% { opacity: 1; }
+    25%, 75%  { opacity: 0.15; }
+    50%       { opacity: 1; }
+}
+@keyframes flash-table {
+    0%, 100% { background-color: inherit; }
+    30%, 70% { background-color: #fff3cd; }
+}
+.flashing       { animation: flash-alert 0.6s ease 3; }
+.flashing-table { animation: flash-table 0.7s ease 3; }
+{% block extra_css %}{% endblock %}
+    </style>
+    <script>
+const WS_URL = `ws://${window.location.host}/ws/{% block ws_path %}{% endblock %}/`;
+
+const I18N = {
+    connected:    "{% trans 'Connected' %}",
+    connError:    "{% trans 'Connection error' %}",
+    disconnected: "{% trans 'Disconnected — reconnecting…' %}",
+    table:        "{% trans 'Table' %}",
+    wait:         "{% trans 'Wait' %}",
+    note:         "{% trans 'Note' %}",
+    preparing:    "{% trans 'Preparing' %}",
+    ready:        "{% trans 'Ready' %}",
+    done:         "{% trans 'Done' %}",
+    removed:      "{% trans 'REMOVED' %}",
+};
+
+const STATUS_COLORS = {
+    order:     { header: "bg-warning text-dark",  badge: "bg-warning text-dark" },
+    preparing: { header: "bg-primary text-white", badge: "bg-primary"           },
+    ready:     { header: "bg-success text-white", badge: "bg-success"           },
+};
+
+let socket;
+
+// ── WebSocket ──
+
+function connect() {
+    socket = new WebSocket(WS_URL);
+
+    socket.onopen  = () => setWsStatus(I18N.connected, "bg-success");
+    socket.onerror = () => setWsStatus(I18N.connError, "bg-danger");
+    socket.onclose = () => {
+        setWsStatus(I18N.disconnected, "bg-danger");
+        setTimeout(connect, 3000);
+    };
+
+    socket.onmessage = (e) => {
+        const msg = JSON.parse(e.data);
+        switch (msg.type) {
+            case "initial_orders":
+                msg.orders.forEach(renderOrder);
+                refreshEmptyState();
+                break;
+            case "new_order":
+                renderOrder(msg.order);
+                playSound();
+                refreshEmptyState();
+                break;
+            case "order_status_update":
+                updateOrderStatus(msg.order_id, msg.new_status);
+                break;
+            case "item_remove":
+                markItemRemoved(msg.item_id);
+                playAlertSound();
+                break;
+            case "order_remove":
+                removeOrder(msg.order_id);
+                playAlertSound();
+                break;
+            case "change_table":
+                updateOrderTable(msg.order_id, msg.new_table);
+                playAlertSound();
+                break;
+        }
+    };
+}
+
+setInterval(() => {
+    if (socket?.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ action: "ping" }));
+    }
+}, 30_000);
+
+connect();
+
+// ── Rendering — override in child templates ────────────────────────────────────
+
+{% block render_order %}
+function renderOrder(order) {
+    if (document.getElementById(`order-${order.id}`)) return;
+
+    const colors = STATUS_COLORS[order.status] ?? STATUS_COLORS.order;
+    const itemsHtml = order.order_items.map(item => renderItemRow(order.id, item)).join("");
+
+    const card = document.createElement("div");
+    card.className = "order-card card border-0 rounded-4 shadow";
+    card.id = `order-${order.id}`;
+    card.innerHTML = `
+        <div class="card-header rounded-top-4 ${colors.header} px-3 py-2">
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-bold table-label">${I18N.table}: ${escHtml(order.table)}</span>
+                <span id="status-${order.id}" class="badge bg-white bg-opacity-25 fw-normal">${order.status}</span>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-1">
+                <small class="opacity-75">${escHtml(order.sender)}</small>
+                <small class="opacity-75">${I18N.wait}: <span class="waiting-time" data-created-at="${order.created_at}" id="waiting-${order.id}">0m 0s</span></small>
+            </div>
+            ${order.note ? `<div class="mt-1"><small class="fw-semibold opacity-75">${I18N.note}:</small> <small class="fst-italic opacity-90">${escHtml(order.note)}</small></div>` : ""}
+        </div>
+        <ul class="list-group list-group-flush" id="items-${order.id}">
+            ${itemsHtml}
+        </ul>
+        <div class="card-footer d-flex gap-2 bg-transparent pt-2 pb-3 px-3">
+            <button class="btn btn-warning rounded-pill flex-fill fw-semibold" onclick="sendStatus(${order.id}, 'order_preparing')">
+                ${I18N.preparing}
+            </button>
+            <button class="btn btn-success rounded-pill flex-fill fw-semibold" onclick="sendStatus(${order.id}, 'order_ready')">
+                ${I18N.ready}
+            </button>
+        </div>`;
+
+    document.getElementById("orders-container").appendChild(card);
+}
+
+function renderItemRow(orderId, item) {
+    const isReady   = item.status === "ready";
+    const doneClass = isReady ? "is-done" : "";
+    const noteHtml  = item.note
+        ? `<br><small class="text-secondary">${escHtml(item.note)}</small>`
+        : "";
+    const additionsHtml = item.additions?.length
+        ? item.additions.map(a =>
+            `<li class="text-secondary">+ ${escHtml(a.name_snapshot)} ×${a.quantity}</li>`
+          ).join("")
+        : "";
+    const doneBtn = isReady ? "" : `
+        <button class="btn btn-outline-success btn-sm rounded-pill px-3 flex-shrink-0" onclick="itemDone(${orderId}, ${item.id}, this)">
+            ${I18N.done}
+        </button>`;
+
+    return `
+        <li class="list-group-item item-row ${doneClass}" id="item-${item.id}">
+            <div class="d-flex justify-content-between align-items-start gap-2">
+                <div class="item-name">
+                    <span class="fw-semibold">
+                        ${escHtml(item.name_snapshot)}
+                        <span class="badge bg-secondary rounded-pill ms-1">×${item.quantity}</span>
+                    </span>
+                    ${noteHtml}
+                    ${additionsHtml ? `<ul class="mb-0 ps-3 small mt-1">${additionsHtml}</ul>` : ""}
+                </div>
+                ${doneBtn}
+            </div>
+        </li>`;
+}
+{% endblock render_order %}
+
+// ── Actions ────────────────────────────────────────────────────────────────────
+
+function sendStatus(orderId, action) {
+    socket.send(JSON.stringify({ action, order_id: orderId }));
+}
+
+function itemDone(orderId, itemId, btn) {
+    btn.disabled = true;
+    socket.send(JSON.stringify({ action: "item_done", order_id: orderId, item_id: itemId }));
+    markItemDone(itemId);
+}
+
+// ── State updates ──────────────────────────────────────────────────────────────
+
+function updateOrderStatus(orderId, newStatus) {
+    const card = document.getElementById(`order-${orderId}`);
+    if (!card) return;
+    const colors = STATUS_COLORS[newStatus] ?? STATUS_COLORS.order;
+    const header = card.querySelector(".card-header");
+    Object.values(STATUS_COLORS).forEach(c => header.classList.remove(...c.header.split(" ")));
+    header.classList.add(...colors.header.split(" "));
+    const statusBadge = document.getElementById(`status-${orderId}`);
+    if (statusBadge) statusBadge.textContent = newStatus;
+
+    if (newStatus === "ready") {
+        card.style.transition = "opacity 1.5s";
+        card.style.opacity = "0.4";
+        setTimeout(() => { card.remove(); refreshEmptyState(); }, 6_000);
+    }
+}
+
+function markItemDone(itemId) {
+    const row = document.getElementById(`item-${itemId}`);
+    if (!row) return;
+    row.classList.add("is-done");
+    row.querySelector("button")?.remove();
+}
+
+function markItemRemoved(itemId) {
+    const row = document.getElementById(`item-${itemId}`);
+    if (!row) return;
+    row.classList.remove("is-done");
+    row.classList.add("is-removed", "flashing");
+    row.addEventListener("animationend", () => row.classList.remove("flashing"), { once: true });
+    row.querySelector("button")?.remove();
+    const badge = document.createElement("span");
+    badge.className = "badge bg-danger ms-2";
+    badge.textContent = I18N.removed;
+    row.querySelector(".item-name")?.appendChild(badge);
+}
+
+function removeOrder(orderId) {
+    const card = document.getElementById(`order-${orderId}`);
+    if (!card) return;
+    card.classList.add("flashing");
+    card.addEventListener("animationend", () => {
+        card.style.transition = "opacity 0.5s";
+        card.style.opacity = "0";
+        setTimeout(() => { card.remove(); refreshEmptyState(); }, 500);
+    }, { once: true });
+}
+
+function updateOrderTable(orderId, newTable) {
+    const card = document.getElementById(`order-${orderId}`);
+    if (!card) return;
+    const label = card.querySelector(".table-label");
+    if (label) label.textContent = `${I18N.table}: ${newTable}`;
+    const header = card.querySelector(".card-header");
+    header.classList.add("flashing-table");
+    header.addEventListener("animationend", () => header.classList.remove("flashing-table"), { once: true });
+}
+
+// ── Helpers ────────────────────────────────────────────────────────────────────
+
+function refreshEmptyState() {
+    const has = document.getElementById("orders-container").children.length > 0;
+    document.getElementById("empty-state").style.display = has ? "none" : "";
+}
+
+function setWsStatus(text, cls) {
+    const el = document.getElementById("ws-status");
+    el.textContent = text;
+    el.className = `badge rounded-pill px-3 py-2 ${cls}`;
+}
+
+function playSound() {
+    document.getElementById("notification-sound")?.play().catch(() => {});
+}
+
+function playAlertSound() {
+    const el = document.getElementById("alert-sound");
+    if (!el) return;
+    el.currentTime = 0;
+    el.play().catch(() => {});
+}
+
+function escHtml(str) {
+    return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g , "&lt;") .replace( />/g, "&gt;")
+        .replace(/"/g, "&quot;");
+}
+
+function updateWaitingTimes() {
+    document.querySelectorAll(".waiting-time").forEach(span => {
+        const diff = Date.now() - new Date(span.dataset.createdAt);
+        const s = Math.floor(diff / 1000);
+        span.textContent = `${Math.floor(s / 60)}m ${s % 60}s`;
+    });
+}
+setInterval(updateWaitingTimes, 1000);
+
+{% block extra_functions %}{% endblock %}
+    </script>
+{% endblock extra_js %}
