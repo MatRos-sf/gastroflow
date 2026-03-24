@@ -1,5 +1,5 @@
 from asgiref.sync import async_to_sync
-from django.test import TransactionTestCase
+from django.test import TestCase, TransactionTestCase
 from model_bakery import baker
 
 from consumers.queries import get_unserved_orders
@@ -10,7 +10,7 @@ from order.models import StatusOrder
 class GetUnservedOrdersTests(TransactionTestCase):
     def setUp(self):
         self.worker = baker.make("worker.Worker")
-        self.bill = baker.make("order.Bill", service=self.worker)
+        self.bill = baker.make("order.Bill", waiter=self.worker)
 
     def _call(self, category):
         return async_to_sync(get_unserved_orders)(category)
@@ -88,3 +88,49 @@ class GetUnservedOrdersTests(TransactionTestCase):
         result = self._call(Location.KITCHEN)
 
         self.assertEqual(result, [])
+
+
+class GetUnservedOrdersQueryCountTests(TestCase):
+    """Verifies the queryset uses exactly 4 DB queries regardless of data size."""
+
+    def setUp(self):
+        self.worker = baker.make("worker.Worker")
+        self.bill = baker.make("order.Bill", waiter=self.worker)
+        table = baker.make("service.Table")
+        self.bill.table.add(table)
+
+    def _call(self, category):
+        return async_to_sync(get_unserved_orders)(category)
+
+    def test_single_order_no_items_costs_3_queries(self):
+        baker.make(
+            "order.Order",
+            bill=self.bill,
+            status=StatusOrder.ORDER,
+            category=Location.KITCHEN,
+        )
+
+        with self.assertNumQueries(3):
+            self._call(Location.KITCHEN)
+
+    def test_multiple_orders_with_items_costs_4_queries(self):
+        for _ in range(3):
+            order = baker.make(
+                "order.Order",
+                bill=self.bill,
+                status=StatusOrder.ORDER,
+                category=Location.KITCHEN,
+            )
+            items = baker.make(
+                "order.OrderItem", order=order, price_snapshot="10.00", _quantity=2
+            )
+            for item in items:
+                baker.make(
+                    "order.OrderItemAddition",
+                    order_item=item,
+                    price_snapshot="2.00",
+                    _quantity=2,
+                )
+
+        with self.assertNumQueries(4):
+            self._call(Location.KITCHEN)
