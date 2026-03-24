@@ -2751,6 +2751,46 @@ msgstr ""
 msgid "Goodbye, %(name)s!"
 msgstr ""
 
+#: consumers/templates/consumers/orders_base.html
+msgid "Orders"
+msgstr "Orders"
+
+#: consumers/templates/consumers/orders_base.html
+msgid "Connecting…"
+msgstr "Connecting…"
+
+#: consumers/templates/consumers/orders_base.html
+msgid "No pending orders"
+msgstr "No pending orders"
+
+#: consumers/templates/consumers/orders_base.html
+msgid "Connected"
+msgstr "Connected"
+
+#: consumers/templates/consumers/orders_base.html
+msgid "Connection error"
+msgstr "Connection error"
+
+#: consumers/templates/consumers/orders_base.html
+msgid "Disconnected — reconnecting…"
+msgstr "Disconnected — reconnecting…"
+
+#: consumers/templates/consumers/orders_base.html
+msgid "Table"
+msgstr "Table"
+
+#: consumers/templates/consumers/orders_base.html
+msgid "Wait"
+msgstr "Wait"
+
+#: consumers/templates/consumers/orders_base.html
+msgid "Done"
+msgstr "Done"
+
+#: consumers/templates/consumers/orders_base.html
+msgid "REMOVED"
+msgstr "REMOVED"
+
 #~ msgid "Page %(current)s of %(total)s"
 #~ msgstr "Page %(current)s of %(total)s"
 

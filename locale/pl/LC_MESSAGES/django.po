@@ -2807,6 +2807,46 @@ msgstr "Miłej zmiany, %(name)s!"
 msgid "Goodbye, %(name)s!"
 msgstr "Do widzenia, %(name)s!"
 
+#: consumers/templates/consumers/orders_base.html
+msgid "Orders"
+msgstr "Zamówienia"
+
+#: consumers/templates/consumers/orders_base.html
+msgid "Connecting…"
+msgstr "Łączenie…"
+
+#: consumers/templates/consumers/orders_base.html
+msgid "No pending orders"
+msgstr "Brak oczekujących zamówień"
+
+#: consumers/templates/consumers/orders_base.html
+msgid "Connected"
+msgstr "Połączono"
+
+#: consumers/templates/consumers/orders_base.html
+msgid "Connection error"
+msgstr "Błąd połączenia"
+
+#: consumers/templates/consumers/orders_base.html
+msgid "Disconnected — reconnecting…"
+msgstr "Rozłączono — ponowne łączenie…"
+
+#: consumers/templates/consumers/orders_base.html
+msgid "Table"
+msgstr "Stolik"
+
+#: consumers/templates/consumers/orders_base.html
+msgid "Wait"
+msgstr "Oczekiwanie"
+
+#: consumers/templates/consumers/orders_base.html
+msgid "Done"
+msgstr "Zrobione"
+
+#: consumers/templates/consumers/orders_base.html
+msgid "REMOVED"
+msgstr "USUNIĘTO"
+
 #, fuzzy
 #~| msgid "last name"
 #~ msgid "Asystent"
