@@ -3,7 +3,7 @@ from django.db.models import Prefetch
 
 from consumers.serializers import serialize_order
 from menu.models import Location
-from order.models import Order, OrderItem, StatusOrder
+from order.models import Notification, NotificationStatus, Order, OrderItem, StatusOrder
 
 
 def _get_unserved_orders(category: Location) -> list[dict]:
@@ -28,4 +28,21 @@ def _get_unserved_orders(category: Location) -> list[dict]:
     return [serialize_order(order) for order in qs]
 
 
+def _get_unread_notifications():
+    """Fetch unread notifications"""
+    qs = Notification.objects.filter(
+        status=NotificationStatus.WAITING_TO_READ
+    ).order_by("last_update")
+    return [
+        {
+            "id": noti.id,
+            "message": noti.message,
+            "notification_type": noti.notification_type,
+            "last_update": noti.last_update.isoformat(),
+        }
+        for noti in qs
+    ]
+
+
 get_unserved_orders = sync_to_async(_get_unserved_orders)
+get_unread_notifications = sync_to_async(_get_unread_notifications)
