@@ -10,3 +10,8 @@ def bar_orders_view(request):
 @login_required
 def kitchen_orders_view(request):
     return render(request, "consumers/kitchen/orders.html")
+
+
+@login_required
+def notifications_view(request):
+    return render(request, "consumers/waiter_notification.html")
