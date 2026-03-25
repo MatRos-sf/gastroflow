@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+    {% trans "Notifications" %}
+{% endblock title %}
+{% block content %}
+    <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+        <h1 class="h4 fw-bold mb-0">{% trans "Notifications" %}</h1>
+        <div class="d-flex gap-2 align-items-center">
+            <button id="btn-read-all"
+                    class="btn btn-outline-secondary btn-sm rounded-pill"
+                    style="display:none">{% trans "Read all" %}</button>
+            <span id="ws-status" class="badge rounded-pill bg-secondary px-3 py-2">{% trans "Connecting…" %}</span>
+        </div>
+    </div>
+    <div id="notifications-container" class="d-flex flex-column gap-3"></div>
+    <div id="empty-state"
+         class="card border-0 rounded-4 shadow-sm"
+         style="display:none">
+        <div class="card-body p-5 text-center text-secondary">
+            <p class="mb-0 fs-5">{% trans "No pending notifications" %}</p>
+        </div>
+    </div>
+{% endblock content %}
+{% block extra_js %}
+    <script>
+const WS_URL = `ws://${window.location.host}/ws/notifications/`;
+
+const I18N = {
+    connected:    "{% trans 'Connected' %}",
+    connError:    "{% trans 'Connection error' %}",
+    disconnected: "{% trans 'Disconnected — reconnecting…' %}",
+};
+
+let socket;
+let notifications = {};
+
+function connect() {
+    socket = new WebSocket(WS_URL);
+    socket.onopen  = () => setWsStatus(I18N.connected, "bg-success");
+    socket.onerror = () => setWsStatus(I18N.connError, "bg-danger");
+    socket.onclose = () => {
+        setWsStatus(I18N.disconnected, "bg-danger");
+        setTimeout(connect, 3000);
+    };
+    socket.onmessage = (e) => {
+        const msg = JSON.parse(e.data);
+        switch (msg.type) {
+            case "initial_notifications":
+                msg.notifications.forEach(n => {
+                    notifications[n.id] = n;
+                    renderNotification(n);
+                });
+                refreshState();
+                break;
+            case "new_notification":
+                notifications[msg.id] = msg;
+                renderNotification(msg);
+                refreshState();
+                break;
+            case "read_notification":
+                removeNotification(msg.id);
+                break;
+            case "read_all_notifications":
+                msg.ids.forEach(id => removeNotification(id));
+                refreshState();
+                break;
+        }
+    };
+}
+
+setInterval(() => {
+    if (socket?.readyState === WebSocket.OPEN) {
+        socket.send(JSON.stringify({ action: "ping" }));
+    }
+}, 30_000);
+
+connect();
+
+function renderNotification(n) {
+    if (document.getElementById(`notification-${n.id}`)) return;
+
+    const card = document.createElement("div");
+    card.id = `notification-${n.id}`;
+    card.className = "card border-0 rounded-4 shadow-sm";
+    card.style.cursor = "pointer";
+    card.innerHTML = `
+        <div class="card-body d-flex align-items-center gap-3 p-3">
+            <span class="text-secondary small text-nowrap" id="time-${n.id}" style="min-width:80px;text-align:right">${timeDiff(n.last_update)}</span>
+            <span class="fw-semibold flex-grow-1 fs-4">${escHtml(n.message)}</span>
+        </div>`;
+    card.addEventListener("click", () => {
+        socket.send(JSON.stringify({ action: "read_notification", id: n.id }));
+    });
+
+    document.getElementById("notifications-container").prepend(card);
+}
+
+function removeNotification(id) {
+    delete notifications[id];
+    document.getElementById(`notification-${id}`)?.remove();
+}
+
+function refreshState() {
+    const hasItems = Object.keys(notifications).length > 0;
+    document.getElementById("empty-state").style.display = hasItems ? "none" : "";
+    document.getElementById("btn-read-all").style.display = hasItems ? "" : "none";
+}
+
+document.getElementById("btn-read-all").addEventListener("click", () => {
+    const ids = Object.keys(notifications).map(Number);
+    if (!ids.length) return;
+    socket.send(JSON.stringify({ action: "read_all_notification", ids }));
+});
+
+setInterval(() => {
+    Object.values(notifications).forEach(n => {
+        const el = document.getElementById(`time-${n.id}`);
+        if (el) el.textContent = timeDiff(n.last_update);
+    });
+}, 1000);
+
+function timeDiff(isoStr) {
+    const s = Math.floor((Date.now() - new Date(isoStr)) / 1000);
+    return `${Math.floor(s / 60)}m ${s % 60}s`;
+}
+
+function setWsStatus(text, cls) {
+    const el = document.getElementById("ws-status");
+    el.textContent = text;
+    el.className = `badge rounded-pill px-3 py-2 ${cls}`;
+}
+
+function escHtml(str) {
+    return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g , "&lt;") .replace( />/g, "&gt;")
+        .replace(/"/g, "&quot;");
+}
+    </script>
+{% endblock extra_js %}
