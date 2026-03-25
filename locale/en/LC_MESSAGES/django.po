@@ -2814,3 +2814,9 @@ msgstr "REMOVED"
 
 #~ msgid "Shape"
 #~ msgstr "Shape"
+
+msgid "with"
+msgstr "with"
+
+msgid "is ready"
+msgstr "is ready"

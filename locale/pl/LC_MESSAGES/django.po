@@ -2875,3 +2875,9 @@ msgstr "USUNIĘTO"
 
 #~ msgid "Shape"
 #~ msgstr "Kształt"
+
+msgid "with"
+msgstr "z"
+
+msgid "is ready"
+msgstr "jest gotowe"
