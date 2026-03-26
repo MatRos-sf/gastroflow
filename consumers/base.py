@@ -136,7 +136,10 @@ class BaseConsumer(AsyncWebsocketConsumer):
             return
 
         await OrderItem.objects.filter(id=item_id).aupdate(status=OrderItemStatus.READY)
-        await dispatch_item_done_notification(order_id, item_id)
+        language = self.scope.get("cookies", {}).get(
+            settings.LANGUAGE_COOKIE_NAME, settings.LANGUAGE_CODE
+        )
+        await dispatch_item_done_notification(order_id, item_id, language)
 
     async def _update_order_status(self, order_id: int, new_status: str) -> None:
         await sync_to_async(update_batch_order_items_status)(order_id, new_status)

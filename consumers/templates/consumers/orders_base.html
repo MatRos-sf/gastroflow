@@ -58,7 +58,7 @@
 {% block extra_css %}{% endblock %}
     </style>
     <script>
-const WS_URL = `ws://${window.location.host}/ws/{% block ws_path %}{% endblock %}/`;
+const WS_URL = `ws://${window.location.host}/ws/{{ ws_path }}/`;
 
 const I18N = {
     connected:    "{% trans 'Connected' %}",

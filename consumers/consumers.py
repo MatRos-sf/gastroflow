@@ -1,4 +1,4 @@
-from consumers.base import BaseConsumer
+from consumers.base import BaseConsumer, BaseNotificationConsumer
 from menu.models import Location
 
 
@@ -10,3 +10,7 @@ class BarOrderConsumer(BaseConsumer):
 class OrderConsumer(BaseConsumer):
     GROUP_NAME = "kitchen_orders"
     CATEGORY = Location.KITCHEN
+
+
+class NotificationConsumer(BaseNotificationConsumer):
+    GROUP_NAME = "notifications"
