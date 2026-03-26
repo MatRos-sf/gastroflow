@@ -2820,3 +2820,12 @@ msgstr "with"
 
 msgid "is ready"
 msgstr "is ready"
+
+msgid "call"
+msgstr "calls for"
+
+msgid "Call waiter"
+msgstr "Call waiter"
+
+msgid "No active waiters"
+msgstr "No active waiters"

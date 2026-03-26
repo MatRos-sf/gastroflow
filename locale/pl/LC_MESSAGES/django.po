@@ -2881,3 +2881,12 @@ msgstr "z"
 
 msgid "is ready"
 msgstr "jest gotowe"
+
+msgid "call"
+msgstr "wzywa"
+
+msgid "Call waiter"
+msgstr "Wezwij kelnera"
+
+msgid "No active waiters"
+msgstr "Brak aktywnych kelnerów"
