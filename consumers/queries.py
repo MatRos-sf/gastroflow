@@ -1,9 +1,11 @@
 from asgiref.sync import sync_to_async
 from django.db.models import Prefetch
+from django.utils import timezone
 
 from consumers.serializers import serialize_order
 from menu.models import Location
 from order.models import Notification, NotificationStatus, Order, OrderItem, StatusOrder
+from worker.models import Worker
 
 
 def _get_unserved_orders(category: Location) -> list[dict]:
@@ -44,5 +46,18 @@ def _get_unread_notifications():
     ]
 
 
+def _get_available_waiters() -> list[dict]:
+    today = timezone.now().date()
+    return list(
+        Worker.objects.filter(
+            worktime__start_time__date=today,
+            worktime__finish_time__isnull=True,
+        )
+        .distinct()
+        .values("id", "first_name", "last_name")
+    )
+
+
 get_unserved_orders = sync_to_async(_get_unserved_orders)
 get_unread_notifications = sync_to_async(_get_unread_notifications)
+get_available_waiters = sync_to_async(_get_available_waiters)

@@ -6,8 +6,13 @@ from asgiref.sync import sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.conf import settings
 
-from consumers.queries import get_unread_notifications, get_unserved_orders
+from consumers.queries import (
+    get_available_waiters,
+    get_unread_notifications,
+    get_unserved_orders,
+)
 from consumers.services import (
+    dispatch_call_waiter_notification,
     dispatch_item_done_notification,
     dispatch_order_ready_notification,
 )
@@ -32,6 +37,7 @@ class ConsumerActionType(StrEnum):
     ORDER_REMOVE = "order_remove"
     ITEM_REMOVE = "item_remove"
     CHANGE_TABLE = "change_table"
+    CALL_WAITER = "call_waiter"
     NEW_ORDER = "new_order"
     NEW_NOTIFICATION = "new_notification"
     READ_NOTIFICATION = "read_notification"
@@ -49,9 +55,12 @@ class BaseConsumer(AsyncWebsocketConsumer):
         logger.info(f"Connected to {self.CATEGORY} orders group: {self.GROUP_NAME}")
 
         orders = await get_unserved_orders(self.CATEGORY)
+        waiters = await get_available_waiters()
 
         await self.send(
-            text_data=json.dumps({"type": "initial_orders", "orders": orders})
+            text_data=json.dumps(
+                {"type": "initial_orders", "orders": orders, "waiters": waiters}
+            )
         )
 
     async def disconnect(self, close_code):
@@ -119,6 +128,29 @@ class BaseConsumer(AsyncWebsocketConsumer):
 
     async def handle_ping(self, data: dict) -> None:
         logger.debug(f"[{self.CATEGORY}] Received ping, connection is active.")
+
+    async def handle_call_waiter(self, data: dict) -> None:
+        waiter_name = data.get("first_name")
+        waiter_id = data.get("id")
+
+        if not waiter_id or not waiter_name:
+            await self.send(
+                text_data=json.dumps(
+                    {
+                        "type": "error",
+                        "action": "call_waiter",
+                        "message": "Missing first_name or id",
+                    }
+                )
+            )
+            return
+
+        language = self.scope.get("cookies", {}).get(
+            settings.LANGUAGE_COOKIE_NAME, settings.LANGUAGE_CODE
+        )
+        await dispatch_call_waiter_notification(
+            waiter_name, waiter_id, self.CATEGORY.label, language
+        )
 
     async def handle_item_done(self, data: dict):
         order_id = data.get("order_id")

@@ -12,7 +12,30 @@
                 {% trans "Orders" %}
             {% endblock station_heading %}
         </h1>
-        <span id="ws-status" class="badge rounded-pill bg-secondary px-3 py-2">{% trans "Connecting…" %}</span>
+        <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-warning rounded-pill fw-semibold px-3"
+                    data-bs-toggle="modal"
+                    data-bs-target="#callWaiterModal">{% trans "Call waiter" %}</button>
+            <span id="ws-status" class="badge rounded-pill bg-secondary px-3 py-2">{% trans "Connecting…" %}</span>
+        </div>
+    </div>
+    <div class="modal fade"
+         id="callWaiterModal"
+         tabindex="-1"
+         aria-labelledby="callWaiterModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow">
+                <div class="modal-header border-0 pb-0">
+                    <h5 class="modal-title fw-bold" id="callWaiterModalLabel">{% trans "Call waiter" %}</h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="{% trans 'Close' %}"></button>
+                </div>
+                <div class="modal-body pt-2" id="waiter-list"></div>
+            </div>
+        </div>
     </div>
     <div id="orders-container"
          class="d-flex flex-wrap gap-3 align-items-start"></div>
@@ -71,6 +94,7 @@ const I18N = {
     ready:        "{% trans 'Ready' %}",
     done:         "{% trans 'Done' %}",
     removed:      "{% trans 'REMOVED' %}",
+    noWaiters:    "{% trans 'No active waiters' %}",
 };
 
 const STATUS_COLORS = {
@@ -99,6 +123,7 @@ function connect() {
             case "initial_orders":
                 msg.orders.forEach(renderOrder);
                 refreshEmptyState();
+                renderWaiterList(msg.waiters || []);
                 break;
             case "new_order":
                 renderOrder(msg.order);
@@ -315,6 +340,28 @@ function updateWaitingTimes() {
     });
 }
 setInterval(updateWaitingTimes, 1000);
+
+// ── Call waiter ────────────────────────────────────────────────────────────────
+
+function renderWaiterList(waiters) {
+    const container = document.getElementById("waiter-list");
+    if (!waiters.length) {
+        container.innerHTML = `<p class="text-secondary text-center py-2">${I18N.noWaiters}</p>`;
+        return;
+    }
+    container.innerHTML = waiters.map(w => `
+        <button class="btn btn-outline-secondary rounded-pill w-100 mb-2 fw-semibold" data-waiter-id="${w.id}" data-waiter-name="${escHtml(w.first_name)}" onclick="callWaiter(this)">
+            ${escHtml(w.first_name)} ${escHtml(w.last_name)}
+        </button>
+    `).join("");
+}
+
+function callWaiter(btn) {
+    const id = parseInt(btn.dataset.waiterId);
+    const firstName = btn.dataset.waiterName;
+    socket.send(JSON.stringify({ action: "call_waiter", id, first_name: firstName }));
+    bootstrap.Modal.getInstance(document.getElementById("callWaiterModal")).hide();
+}
 
 {% block extra_functions %}{% endblock %}
     </script>

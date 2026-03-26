@@ -80,14 +80,15 @@ connect();
 function renderNotification(n) {
     if (document.getElementById(`notification-${n.id}`)) return;
 
+    const isCall = n.notification_type === "call";
     const card = document.createElement("div");
     card.id = `notification-${n.id}`;
-    card.className = "card border-0 rounded-4 shadow-sm";
+    card.className = `card border-0 rounded-4 shadow-sm ${isCall ? "bg-warning" : ""}`;
     card.style.cursor = "pointer";
     card.innerHTML = `
         <div class="card-body d-flex align-items-center gap-3 p-3">
-            <span class="text-secondary small text-nowrap" id="time-${n.id}" style="min-width:80px;text-align:right">${timeDiff(n.last_update)}</span>
-            <span class="fw-semibold flex-grow-1 fs-4">${escHtml(n.message)}</span>
+            <span class="${isCall ? "text-dark opacity-75" : "text-secondary"} small text-nowrap" id="time-${n.id}" style="min-width:80px;text-align:right">${timeDiff(n.last_update)}</span>
+            <span class="fw-semibold flex-grow-1 fs-4 ${isCall ? "text-dark" : ""}">${escHtml(n.message)}</span>
         </div>`;
     card.addEventListener("click", () => {
         socket.send(JSON.stringify({ action: "read_notification", id: n.id }));

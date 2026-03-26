@@ -7,7 +7,13 @@ from django.db.models import Q
 from django.utils import translation
 from django.utils.translation import gettext as _
 
-from order.models import NotificationStatus, Order, OrderItem
+from order.models import (
+    Notification,
+    NotificationStatus,
+    NotificationType,
+    Order,
+    OrderItem,
+)
 from worker.models import Worker
 
 KITCHEN_GROUP = "kitchen_orders"
@@ -142,6 +148,43 @@ def _fetch_and_update_order_notification(order_id: int, language: str) -> dict |
     except Order.DoesNotExist:
         logger.error(f"Order {order_id} not found.")
         return None
+
+
+def _create_call_notification(
+    worker_name: str, worker_id: int, location, language: str = settings.LANGUAGE_CODE
+) -> dict:
+    with translation.override(language):
+        msg = f"{str(location)} {_('call')} {worker_name}"
+        notification = Notification.objects.create(
+            worker_id=worker_id,
+            message=msg,
+            notification_type=NotificationType.CALL,
+            status=NotificationStatus.WAITING_TO_READ,
+        )
+
+        return {
+            "id": notification.id,
+            "message": notification.message,
+            "notification_type": notification.notification_type,
+            "last_update": notification.last_update.isoformat(),
+        }
+
+
+async def dispatch_call_waiter_notification(
+    worker_name: str, worker_id: int, location, language: str = settings.LANGUAGE_CODE
+):
+    notification_data = await sync_to_async(_create_call_notification)(
+        worker_name, worker_id, location, language
+    )
+
+    if not notification_data:
+        return
+
+    channel_layer = get_channel_layer()
+    await channel_layer.group_send(
+        "notifications",
+        {"type": "new_notification", **notification_data},
+    )
 
 
 async def dispatch_order_ready_notification(
