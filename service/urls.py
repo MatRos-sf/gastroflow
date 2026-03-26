@@ -34,9 +34,6 @@ urlpatterns = [
     ),
     path("bill/<int:pk>/change-table", views.change_table, name="change-table"),
     path(
-        "service/notifications/", views.waiter_notification, name="waiter-notifications"
-    ),
-    path(
         "api/notifications/check/",
         views.check_notifications,
         name="check-notifications",

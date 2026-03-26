@@ -1,29 +1,16 @@
 import logging
-from typing import Iterable, Optional
 
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
 from django.contrib import messages
-from django.db import transaction
-from django.db.models import Q, QuerySet
 from django.http import HttpResponseNotFound, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.utils import timezone
-from django.views.generic import ListView, View
+from django.views.generic import View
 
-from menu.models import Item, Location, MenuType
+from consumers.services import broadcast_change_table
+from menu.models import Item, MenuType
 from order.forms import ChangeBillTableForm
-from order.models import (
-    Bill,
-    Notification,
-    NotificationStatus,
-    Order,
-    OrderItem,
-    OrderItemAddition,
-)
-from tools.session import SessionInfo, clear_session, split_items_by_location
-from worker.models import Position, Worker
+from order.models import Bill, Notification, NotificationStatus
+from tools.session import clear_session
 
 from .models import Table
 
@@ -147,10 +134,6 @@ def table_settle_view(request):
     )
 
 
-def waiter_notification(request):
-    return render(request, "service/waiter_notifications.html")
-
-
 def add_order_to_bill(request, pk: int):
     bill = Bill.objects.get(pk=pk)
     if not bill:
@@ -162,7 +145,9 @@ def add_order_to_bill(request, pk: int):
 
 
 def check_notifications(request):
-    has_new = Notification.objects.filter(status=NotificationStatus.WAIT).exists()
+    has_new = Notification.objects.filter(
+        status=NotificationStatus.WAITING_TO_READ
+    ).exists()
     return JsonResponse({"has_new": has_new})
 
 
@@ -173,6 +158,9 @@ def change_table(request, pk: int):
         if form.is_valid():
             form.save(bill)
             messages.success(request, "Stolik został zmieniony!")
+            new_table = bill.str_tables()
+            for order in bill.orders.all():
+                broadcast_change_table(order.pk, new_table)
             return redirect(bill.get_absolute_url())
     else:
         form = ChangeBillTableForm(initial={"table": bill.table.all()})

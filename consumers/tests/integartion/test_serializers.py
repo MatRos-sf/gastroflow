@@ -1,17 +1,15 @@
-from unittest.mock import patch
-
 from django.test import TestCase
 from model_bakery import baker
 
 from consumers.serializers import serialize_items_from_order, serialize_order
 from menu.models import Location
-from order.models import NotificationStatus, StatusOrder
+from order.models import OrderItemStatus, StatusOrder
 
 
 class SerializeItemsFromOrderTests(TestCase):
     def setUp(self):
         self.worker = baker.make("worker.Worker")
-        self.bill = baker.make("order.Bill", service=self.worker)
+        self.bill = baker.make("order.Bill", waiter=self.worker)
         self.order = baker.make("order.Order", bill=self.bill)
 
     def test_serializes_single_item(self):
@@ -57,46 +55,30 @@ class SerializeItemsFromOrderTests(TestCase):
 
         self.assertEqual(result, [])
 
-    def test_is_done_true_when_notification_status_wait(self):
-        item = baker.make(
+    def test_status_is_waiting_by_default(self):
+        baker.make(
             "order.OrderItem",
             order=self.order,
             name_snapshot="Soup",
             price_snapshot="10.00",
         )
-        notification = item.notification
-        notification.status = NotificationStatus.WAIT
-        notification.save()
 
         result = serialize_items_from_order(self.order)
 
-        self.assertTrue(result[0]["is_done"])
+        self.assertEqual(result[0]["status"], OrderItemStatus.WAITING)
 
-    def test_is_done_false_when_notification_status_prepare(self):
+    def test_status_is_ready_when_item_status_is_ready(self):
         baker.make(
             "order.OrderItem",
             order=self.order,
             name_snapshot="Salad",
             price_snapshot="8.00",
+            status=OrderItemStatus.READY,
         )
 
         result = serialize_items_from_order(self.order)
 
-        self.assertFalse(result[0]["is_done"])
-
-    @patch("consumers.serializers.get_status_notification", return_value=None)
-    def test_is_done_false_when_notification_missing(self, mock_get_status):
-        baker.make(
-            "order.OrderItem",
-            order=self.order,
-            name_snapshot="Gofr",
-            price_snapshot="12.00",
-        )
-
-        result = serialize_items_from_order(self.order)
-
-        self.assertFalse(result[0]["is_done"])
-        mock_get_status.assert_called_once()
+        self.assertEqual(result[0]["status"], OrderItemStatus.READY)
 
     def test_includes_additions_in_name_snapshot(self):
         item = baker.make(
@@ -114,14 +96,13 @@ class SerializeItemsFromOrderTests(TestCase):
 
         result = serialize_items_from_order(self.order)
 
-        self.assertIn("Nutella", result[0]["name_snapshot"])
+        self.assertEqual(result[0]["additions"][0]["name_snapshot"], "Nutella")
 
 
 class SerializeOrderTests(TestCase):
     def setUp(self):
-        self.user = baker.make("auth.User", username="adam")
-        self.worker = baker.make("worker.Worker", user=self.user)
-        self.bill = baker.make("order.Bill", service=self.worker)
+        self.worker = baker.make("worker.Worker", first_name="Adam", last_name="Smith")
+        self.bill = baker.make("order.Bill", waiter=self.worker)
 
     def test_serializes_order_with_all_fields(self):
         table = baker.make("service.Table", name="5")
@@ -136,7 +117,7 @@ class SerializeOrderTests(TestCase):
         result = serialize_order(order)
 
         self.assertEqual(result["id"], order.pk)
-        self.assertEqual(result["sender"], "adam")
+        self.assertEqual(result["sender"], "Adam Smith")
         self.assertEqual(result["table"], "5")
         self.assertEqual(result["status"], StatusOrder.ORDER)
         self.assertIn("order_items", result)
