@@ -26,7 +26,6 @@ urlpatterns = [
         name="remove-from-cart",
     ),
     path("cart/clear", views.clear_cart, name="cart-clear"),
-    path("order/table/settle", views.table_settle_view, name="table-settle"),
     path(
         "order/table/settle/bill/<int:pk>",
         views.add_order_to_bill,
