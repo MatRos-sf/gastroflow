@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+    {% if action == "order" %}
+        {% trans "Add to order" %}
+    {% else %}
+        {% trans "Settle bill" %}
+    {% endif %}
+{% endblock title %}
+{% block content %}
+    <div class="table-order-page">
+        <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
+            <h1 class="h4 fw-bold mb-0">
+                {% if action == "add-to-order" %}
+                    {% trans "Add to order" %}
+                {% elif action == "close-bill" %}
+                    {% trans "Close a bill" %}
+                {% else %}
+                    {% trans "Base view and redirect to open-bill-list " %}
+                {% endif %}
+            </h1>
+            <a href="{% url 'service:menu-waiter' %}"
+               class="btn btn-outline-secondary rounded-pill px-4">← {% trans "Back" %}</a>
+        </div>
+        {% if not halls %}
+            <div class="card border-0 rounded-4 shadow-sm">
+                <div class="card-body p-5 text-center text-secondary">
+                    <p class="mb-0">{% trans "No halls configured." %}</p>
+                </div>
+            </div>
+        {% else %}
+            {% if halls|length > 1 %}
+                <ul class="nav nav-tabs mb-2" id="hallTabs" role="tablist">
+                    {% for hall in halls %}
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link {% if forloop.first %}active{% endif %} fw-semibold"
+                                    id="tab-{{ hall.pk }}"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#hall-{{ hall.pk }}"
+                                    type="button"
+                                    role="tab">{{ hall.name }}</button>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <div class="tab-content canvas-tab-content" id="hallTabContent">
+                {% for hall in halls %}
+                    <div class="tab-pane fade {% if forloop.first %}show active{% endif %} canvas-tab-pane"
+                         id="hall-{{ hall.pk }}"
+                         role="tabpanel">
+                        <div class="floor-canvas"
+                             data-aspect-w="{{ hall.aspect_w }}"
+                             data-aspect-h="{{ hall.aspect_h }}"
+                             style="aspect-ratio: {{ hall.aspect_w }} / {{ hall.aspect_h }}">
+                            {% for table in hall.tables.all %}
+                                <button type="button"
+                                        class="floor-table {% if not table.is_occupied %}floor-table--occupied{% endif %}"
+                                        data-pk="{{ table.pk }}"
+                                        data-size="{{ table.size }}"
+                                        data-x="{{ table.x|stringformat:'.6f' }}"
+                                        data-y="{{ table.y|stringformat:'.6f' }}"
+                                        {% if not table.is_occupied %}disabled{% endif %}>{{ table.name }}</button>
+                            {% empty %}
+                                <p class="text-secondary text-center mt-4 small">{% trans "No tables in this hall." %}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            <p id="selection-hint" class="text-secondary small mt-2 mb-0">{% trans "Select an occupied table" %}</p>
+        {% endif %}
+    </div>
+{% endblock title %}
+{% block extra_js %}
+    <style>
+.table-order-page {
+    height: calc(100dvh - 70px - 2rem);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+.canvas-tab-content {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+.canvas-tab-pane {
+    display: none;
+    flex: 1;
+    min-height: 0;
+    align-items: center;
+    justify-content: center;
+}
+.canvas-tab-pane.show.active { display: flex !important; }
+.floor-canvas {
+    position: relative;
+    background: #f8f9fa;
+    border: 2px solid #dee2e6;
+    border-radius: 12px;
+    overflow: hidden;
+    max-width: 100%;
+    max-height: 100%;
+    width: 100%;
+}
+.floor-table {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    background: #0d6efd;
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: clamp(0.55rem, 1.3vw, 0.9rem);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(13,110,253,.3);
+    transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+    touch-action: manipulation;
+    padding: 0 4px;
+    text-align: center;
+    word-break: break-all;
+}
+.floor-table:hover:not(.floor-table--occupied) {
+    background: #0b5ed7;
+    box-shadow: 0 4px 14px rgba(13,110,253,.45);
+}
+.floor-table--occupied {
+    background: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+    </style>
+    <script>
+const BILL_LIST_URL = "{% url 'open-bill-list' %}";
+const ACTION = "{{ action }}";
+const SIZE_WIDTHS = { "1x1": 8, "1x2": 16, "1x3": 24 };
+
+document.querySelectorAll(".floor-canvas").forEach(canvas => {
+    const aw = parseInt(canvas.dataset.aspectW);
+    const ah = parseInt(canvas.dataset.aspectH);
+    const unitH = 8 * aw / ah;
+    canvas.querySelectorAll(".floor-table").forEach(btn => {
+        btn.style.left   = parseFloat(btn.dataset.x) + "%";
+        btn.style.top    = parseFloat(btn.dataset.y) + "%";
+        btn.style.width  = (SIZE_WIDTHS[btn.dataset.size] || 8) + "%";
+        btn.style.height = unitH + "%";
+    });
+});
+
+document.querySelectorAll(".floor-table:not([disabled])").forEach(btn => {
+    btn.addEventListener("click", () => {
+        window.location.href = `${BILL_LIST_URL}?table=${btn.dataset.pk}&action=${ACTION}`;
+    });
+});
+    </script>
+{% endblock extra_js %}
