@@ -12,8 +12,6 @@ from order.forms import ChangeBillTableForm
 from order.models import Bill, Notification, NotificationStatus
 from tools.session import clear_session
 
-from .models import Table
-
 logger = logging.getLogger(__name__)
 
 
@@ -117,21 +115,6 @@ def clear_cart(request):
     messages.success(request, "Zamówienie zostało anulowane!")
 
     return redirect("service:menu-waiter")
-
-
-def table_settle_view(request):
-    """
-    View for tables where are only tables booking.
-    """
-    action = request.GET.get("action", "").lower()
-    if not action or action not in ["bill", "order"]:
-        action = "bill"
-
-    return render(
-        request,
-        "service/table_settle.html",
-        {"tables": Table.objects.filter(is_active=True), "action": action},
-    )
 
 
 def add_order_to_bill(request, pk: int):

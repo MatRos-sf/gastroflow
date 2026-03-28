@@ -26,9 +26,9 @@
                type="button">Stwórz zamówienie</a>
             <a class="btn btn-primary waiter-btn"
                type="button"
-               href="{% url 'service:table-settle' %}?action=order">Dodaj do zamówienia</a>
+               href="{% url 'service:order-select-table' %}?action=add-to-order">Dodaj do zamówienia</a>
             <button class="btn btn-primary waiter-btn" type="button" disabled>Edytuj zamówienie</button>
-            <a href="{% url 'service:table-settle' %}"
+            <a href="{% url 'service:order-select-table' %}?action=close-bill"
                class="btn btn-primary waiter-btn"
                type="button">Rozliczenie</a>
         </div>
