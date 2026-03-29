@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Prefetch
 from django.http import JsonResponse
@@ -98,6 +99,7 @@ class ItemReplenishView(LoginRequiredMixin, ItemBaseListView):
         return super().get_queryset().filter(daily_stock__isnull=False)
 
 
+@login_required
 def set_daily_stock(request, pk: int):
     if request.method == "POST":
         item = get_object_or_404(Item, pk=pk)
@@ -108,6 +110,7 @@ def set_daily_stock(request, pk: int):
     return redirect("gf-menu:item-daily-stock")
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def addition_quick_create(request):
     if request.method == "POST":
         name = request.POST.get("name", "").strip()
@@ -122,6 +125,7 @@ def addition_quick_create(request):
     return JsonResponse({"error": "invalid"}, status=400)
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def category_quick_create(request):
     if request.method == "POST":
         name = request.POST.get("name", "").strip()
@@ -131,6 +135,7 @@ def category_quick_create(request):
     return JsonResponse({"error": "invalid"}, status=400)
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def subcategory_quick_create(request):
     if request.method == "POST":
         name = request.POST.get("name", "").strip()
@@ -142,6 +147,7 @@ def subcategory_quick_create(request):
     return JsonResponse({"error": "invalid"}, status=400)
 
 
+@login_required
 def supply_item(request, pk: int):
     if request.method == "POST":
         item = get_object_or_404(Item, pk=pk)
@@ -151,6 +157,7 @@ def supply_item(request, pk: int):
     return redirect("gf-menu:item-replenish")
 
 
+@login_required
 def supply_all_items(request):
     if request.method == "POST":
         updated = Item.objects.filter(
