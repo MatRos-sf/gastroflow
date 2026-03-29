@@ -2890,3 +2890,33 @@ msgstr "Wezwij kelnera"
 
 msgid "No active waiters"
 msgstr "Brak aktywnych kelnerów"
+
+msgid "Open Bills"
+msgstr "Otwarte rachunki"
+
+msgid "Additions are not shown in this view."
+msgstr "Dodatki nie są widoczne w tym widoku."
+
+msgid "No open bills to close."
+msgstr "Brak otwartych rachunków do zamknięcia."
+
+msgid "No open bills to add to."
+msgstr "Brak otwartych rachunków do których można dodać zamówienie."
+
+msgid "Adding to bill"
+msgstr "Dodawanie do rachunku"
+
+msgid "Quantity must be an integer!"
+msgstr "Ilość musi być liczbą całkowitą!"
+
+msgid "Quantity must be greater than 0"
+msgstr "Ilość musi być większa niż 0"
+
+msgid "Some additions were not found, ids: %(ids)s"
+msgstr "Nie znaleziono wszystkich dodatków, o id: %(ids)s"
+
+msgid "Item not found"
+msgstr "Nie znaleziono produktu"
+
+msgid "Item added to order"
+msgstr "Dodano danie do zamówienia"

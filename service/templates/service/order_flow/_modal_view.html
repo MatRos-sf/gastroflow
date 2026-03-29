@@ -12,7 +12,6 @@ Availability: daily_stock None or >0 = available, daily_stock == 0 = sold out.
         <span class="badge bg-warning text-dark ms-1">{{ item.daily_stock }}</span>
     {% endif %}
 </button>
-
 <div class="modal fade"
      id="modal-{{ item.id }}"
      tabindex="-1"
@@ -22,13 +21,15 @@ Availability: daily_stock None or >0 = available, daily_stock == 0 = sold out.
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title fw-bold" id="modalLabel-{{ item.id }}">{{ item.name }}</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% trans "Close" %}"></button>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="{% trans "Close" %}"></button>
             </div>
             <div class="modal-body">
-                {% if item.description %}
-                    <p class="text-secondary small mb-3">{{ item.description }}</p>
-                {% endif %}
-                <form method="post" action="{% url 'service:cart-add' %}?category={{ item.category_id }}">
+                {% if item.description %}<p class="text-secondary small mb-3">{{ item.description }}</p>{% endif %}
+                <form method="post"
+                      action="{% url 'service:cart-add-item' %}?category={{ item.category_id }}">
                     {% csrf_token %}
                     <input type="hidden" name="item_id" value="{{ item.id }}">
                     <div class="mb-3">
@@ -66,12 +67,10 @@ Availability: daily_stock None or >0 = available, daily_stock == 0 = sold out.
                         {% endif %}
                     {% endwith %}
                     <div class="modal-footer px-0 pb-0">
-                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">
-                            {% trans "Back" %}
-                        </button>
-                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">
-                            {% trans "Add" %}
-                        </button>
+                        <button type="button"
+                                class="btn btn-outline-secondary rounded-pill px-4"
+                                data-bs-dismiss="modal">{% trans "Back" %}</button>
+                        <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">{% trans "Add" %}</button>
                     </div>
                 </form>
             </div>

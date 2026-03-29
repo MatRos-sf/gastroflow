@@ -4,6 +4,7 @@ from . import views
 from ._views.order_flow.cart import CartSummaryView
 from ._views.order_flow.menu import MenuWaiterView
 from ._views.order_flow.table_select import table_select_view
+from ._views.service import CartAddView
 from ._views.table_view import (
     HallCreateView,
     HallFloorEditorView,
@@ -19,7 +20,7 @@ urlpatterns = [
     path("order/select/table", table_select_view, name="order-select-table"),
     path("order/select/items", MenuWaiterView.as_view(), name="order-select-items"),
     path("order/cart/summary/", CartSummaryView.as_view(), name="order-cart-summary"),
-    path("cart/add/", views.CartAddView.as_view(), name="cart-add"),
+    path("service/cart/add/", CartAddView.as_view(), name="cart-add-item"),
     path(
         "api/remove-from-cart/<int:index>/",
         views.api_remove_from_cart,
