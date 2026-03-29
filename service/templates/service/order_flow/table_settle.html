@@ -134,8 +134,7 @@
 }
     </style>
     <script>
-const BILL_LIST_URL = "{% url 'open-bill-list' %}";
-const ACTION = "{{ action|escapejs }}";
+const BILL_LIST_TEMPLATE = "{% url 'open-bill-list' action=action table=0 %}";
 const SIZE_WIDTHS = { "1x1": 8, "1x2": 16, "1x3": 24 };
 
 document.querySelectorAll(".floor-canvas").forEach(canvas => {
@@ -152,7 +151,7 @@ document.querySelectorAll(".floor-canvas").forEach(canvas => {
 
 document.querySelectorAll(".floor-table:not([disabled])").forEach(btn => {
     btn.addEventListener("click", () => {
-        window.location.href = `${BILL_LIST_URL}?table=${btn.dataset.pk}&action=${ACTION}`;
+        window.location.href = BILL_LIST_TEMPLATE.replace("/0/", `/${btn.dataset.pk}/`);
     });
 });
     </script>

@@ -2829,3 +2829,33 @@ msgstr "Call waiter"
 
 msgid "No active waiters"
 msgstr "No active waiters"
+
+msgid "Open Bills"
+msgstr "Open Bills"
+
+msgid "Additions are not shown in this view."
+msgstr "Additions are not shown in this view."
+
+msgid "No open bills to close."
+msgstr "No open bills to close."
+
+msgid "No open bills to add to."
+msgstr "No open bills to add to."
+
+msgid "Adding to bill"
+msgstr "Adding to bill"
+
+msgid "Quantity must be an integer!"
+msgstr "Quantity must be an integer!"
+
+msgid "Quantity must be greater than 0"
+msgstr "Quantity must be greater than 0"
+
+msgid "Some additions were not found, ids: %(ids)s"
+msgstr "Some additions were not found, ids: %(ids)s"
+
+msgid "Item not found"
+msgstr "Item not found"
+
+msgid "Item added to order"
+msgstr "Item added to order"

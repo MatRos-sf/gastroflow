@@ -13,7 +13,9 @@
                                 <strong>Price:</strong> {{ item.price }} zł
                             </p>
                             {% if item.is_available %}
-                                <form method="post" action="{% url 'cart-add' item.id %}" class="mt-auto">
+                                <form method="post"
+                                      action="{% url 'cart-add-item' item.id %}"
+                                      class="mt-auto">
                                     {% csrf_token %}
                                     <div class="mb-3">
                                         <label for="quantity_{{ item.id }}" class="form-label">Quantity:</label>
