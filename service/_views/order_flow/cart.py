@@ -29,9 +29,7 @@ def create_order(bill: Bill, items: Iterable[dict], **kwargs):
 
     for item in items:
         menu_item = (
-            Item.objects.select_for_update()
-            .only("daily_stock")
-            .get(pk=item["item_id"])
+            Item.objects.select_for_update().only("daily_stock").get(pk=item["item_id"])
         )
         if menu_item.daily_stock is not None:
             if menu_item.daily_stock < item["quantity"]:
@@ -57,7 +55,9 @@ def create_order(bill: Bill, items: Iterable[dict], **kwargs):
                 quantity=item["quantity"],
             )
 
-    group_name = "kitchen_orders" if kwargs["category"] == Location.KITCHEN else "bar_orders"
+    group_name = (
+        "kitchen_orders" if kwargs["category"] == Location.KITCHEN else "bar_orders"
+    )
     _send_payload_to_recipient(order.pk, group_name, str(bill.waiter))
 
 
@@ -82,7 +82,9 @@ def _get_order_details(order_id: int, sender: str) -> Optional[dict]:
         "table": order.bill.str_tables(),
         "status": order.status,
         "order_items": order_items,
-        "created_at": timezone.localtime(order.created_at).strftime("%Y-%m-%d %H:%M:%S"),
+        "created_at": timezone.localtime(order.created_at).strftime(
+            "%Y-%m-%d %H:%M:%S"
+        ),
     }
 
 
@@ -97,7 +99,6 @@ def _send_payload_to_recipient(pk: int, group_name: str, sender: str):
     )
 
 
-
 class CartSummaryView(View):
     template_name = "service/order_flow/cart_summary.html"
 
@@ -105,14 +106,20 @@ class CartSummaryView(View):
         cart = request.session.get("cart", [])
         waiters = Worker.objects.filter(position=Position.WAITER, is_active=True)
         waiters_with_pin = list(
-            waiters.exclude(pin__isnull=True).exclude(pin="").values_list("pk", flat=True)
+            waiters.exclude(pin__isnull=True)
+            .exclude(pin="")
+            .values_list("pk", flat=True)
         )
-        return render(request, self.template_name, {
-            "cart": cart,
-            "waiters": waiters,
-            "selected_waiter": request.session.get("waiter"),
-            "waiters_with_pin": waiters_with_pin,
-        })
+        return render(
+            request,
+            self.template_name,
+            {
+                "cart": cart,
+                "waiters": waiters,
+                "selected_waiter": request.session.get("waiter"),
+                "waiters_with_pin": waiters_with_pin,
+            },
+        )
 
     def _get_session_info(self) -> SessionInfo:
         return SessionInfo(
@@ -127,8 +134,13 @@ class CartSummaryView(View):
     ) -> bool:
         return not (cart and waiter and tables)
 
-    def _capture_bill_model(
-        self, bill: int, tables: list, waiter: int, note: str, guest_count: int
+    def _get_or_create_bill_model(
+        self,
+        bill: int | None,
+        tables: list,
+        waiter: int,
+        note: str,
+        guest_count: int | None,
     ) -> Bill:
         if bill:
             try:
@@ -184,12 +196,14 @@ class CartSummaryView(View):
         session_info = self._get_session_info()
         note = request.POST.get("note", "")
         is_init_bill = not session_info.bill
+        guest_count: None | int = None
 
-        try:
-            guest_count = self._guest_count_validator()
-        except ValidatorError as e:
-            messages.error(request, str(e))
-            return redirect("service:order-cart-summary")
+        if is_init_bill:
+            try:
+                guest_count = self._guest_count_validator()
+            except ValidatorError as e:
+                messages.error(request, str(e))
+                return redirect("service:order-cart-summary")
 
         if session_info.waiter:
             try:
@@ -206,7 +220,7 @@ class CartSummaryView(View):
 
         try:
             with transaction.atomic():
-                bill = self._capture_bill_model(
+                bill = self._get_or_create_bill_model(
                     session_info.bill,
                     session_info.tables,
                     session_info.waiter,
@@ -219,11 +233,14 @@ class CartSummaryView(View):
             return redirect("service:order-cart-summary")
         except StockError as e:
             if e.available == 0:
-                messages.error(request, _("%(item)s is sold out.") % {"item": e.item_name})
+                messages.error(
+                    request, _("%(item)s is sold out.") % {"item": e.item_name}
+                )
             else:
                 messages.error(
                     request,
-                    _("%(item)s: only %(n)d portion(s) left.") % {
+                    _("%(item)s: only %(n)d portion(s) left.")
+                    % {
                         "item": e.item_name,
                         "n": e.available,
                     },
