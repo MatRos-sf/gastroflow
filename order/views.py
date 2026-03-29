@@ -53,11 +53,6 @@ def pin_required(view_func):
     return wrapper
 
 
-# class OrderMenuView(ListView):
-#     model = Item
-#     template_name = "order/order_menu.html"
-
-
 def item_list(request):
     items = Item.objects.all()
     return render(request, "order/order_menu.html", {"object_list": items})
