@@ -3,9 +3,8 @@ import logging
 import os
 from typing import Any
 
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
 from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.db.utils import IntegrityError
 from django.http import Http404, HttpRequest
@@ -16,6 +15,7 @@ from django.views.decorators.http import require_POST
 from django.views.generic import DeleteView, DetailView, ListView, View
 from django_filters.views import FilterView
 
+from consumers.services import broadcast_item_remove
 from menu.models import Location
 from model_utils import get_order_additions_summary, get_order_items_summary
 from tools.converter import convert_date_from_str_to_date
@@ -259,48 +259,33 @@ def close_bill(request, pk):
     return redirect("service:menu-waiter")
 
 
-def send_delete_order_item_to_kitchen(pk_order, pk_item):
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)(
-        "kitchen_orders",
-        {
-            "type": "delete_item",
-            "order_data": {"order_id": pk_order, "item_id": pk_item},
-        },
-    )
-
-
 def delete_order_item(request: HttpRequest, pk_order: int, pk_item: int):
     object_item = OrderItem.objects.get(pk=pk_item)
     object_name = object_item.full_name_snapshot
     object_location = object_item.menu_item.preparation_location
     object_item.delete()
-    messages.success(
-        request,
-        f"Usunięto {object_name}."
-        + (
-            "Poproś kuchnię o odświerzenie strony"
-            if object_location == Location.KITCHEN
-            else ""
-        ),
-    )
-    # TODO: should inform about deleted Kitchen
-    # if object_location == Location.KITCHEN:
-    #     print("Try to send")
-    #     send_delete_order_item_to_kitchen(pk_order, pk_item)
+    messages.success(request, f"Usunięto {object_name}.")
+    broadcast_item_remove(pk_order, pk_item, object_location)
     return redirect("bill-detail", pk=pk_order)
 
 
-class ReadyOrderListView(FilterView):
+class ReadyOrderListView(LoginRequiredMixin, FilterView):
+    """Basic view show previous preparing orders"""
+
     model = Order
-    template_name = "order/order_history.html"
+    template_name = "order/order_ready_history.html"
     context_object_name = "items"
     filterset_class = OrderFilter
     paginate_by = 20
 
     def get_queryset(self):
-        qs = super().get_queryset()
-        return qs.filter(status=OrderItemStatus.READY).order_by("-created_at")
+        qs = (
+            Order.objects.select_related("bill")
+            .prefetch_related("order_items", "order_items__order_item_additions")
+            .filter(status=OrderItemStatus.READY)
+            .order_by("-created_at")
+        )
+        return qs
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)

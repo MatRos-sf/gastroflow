@@ -1,5 +1,6 @@
 import django_filters
 from django.forms import Select
+from django.utils.translation import gettext_lazy as _
 
 from menu.models import Location
 
@@ -10,9 +11,9 @@ class OrderFilter(django_filters.FilterSet):
     category = django_filters.ChoiceFilter(
         choices=Location.choices,
         lookup_expr="exact",
-        empty_label="Wszystkie",
+        empty_label=_("All"),
         widget=Select(attrs={"class": "form-select", "onchange": "this.form.submit()"}),
-        label="Wybierz lokalizacje",
+        label=_("Choose localization"),
     )
 
     class Meta:

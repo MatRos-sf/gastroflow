@@ -2920,3 +2920,24 @@ msgstr "Nie znaleziono produktu"
 
 msgid "Item added to order"
 msgstr "Dodano danie do zamówienia"
+
+msgid "Recently served"
+msgstr "Ostatnio wydane"
+
+msgid "Choose localization"
+msgstr "Wybierz lokalizację"
+
+msgid "No orders for this day."
+msgstr "Brak zamówień w tym dniu."
+
+msgid "Page navigation"
+msgstr "Nawigacja stron"
+
+msgid "Previous"
+msgstr "Poprzedni"
+
+msgid "Next"
+msgstr "Dalej"
+
+msgid "Last"
+msgstr "Ostatnia"

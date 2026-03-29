@@ -2859,3 +2859,24 @@ msgstr "Item not found"
 
 msgid "Item added to order"
 msgstr "Item added to order"
+
+msgid "Recently served"
+msgstr "Recently served"
+
+msgid "Choose localization"
+msgstr "Choose localization"
+
+msgid "No orders for this day."
+msgstr "No orders for this day."
+
+msgid "Page navigation"
+msgstr "Page navigation"
+
+msgid "Previous"
+msgstr "Previous"
+
+msgid "Next"
+msgstr "Next"
+
+msgid "Last"
+msgstr "Last"
