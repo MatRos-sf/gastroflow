@@ -1,7 +1,7 @@
 import logging
 
 from django.contrib import messages
-from django.http import HttpResponseNotFound, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from consumers.services import broadcast_change_table
@@ -31,16 +31,6 @@ def clear_cart(request):
     messages.success(request, "Zamówienie zostało anulowane!")
 
     return redirect("service:menu-waiter")
-
-
-def add_order_to_bill(request, pk: int):
-    bill = Bill.objects.get(pk=pk)
-    if not bill:
-        return HttpResponseNotFound("<h1>Page not found!</h1>")
-    request.session["bill"] = pk
-    request.session["tables"] = [t.pk for t in bill.table.all()]
-    request.session["waiter"] = str(bill.waiter.pk)
-    return redirect("service:order-select-items")
 
 
 def check_notifications(request):

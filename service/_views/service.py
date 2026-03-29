@@ -1,11 +1,13 @@
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import View
 
 from menu.models import Item, MenuType
+from order.models import Bill
 from tools.exceptions import ValidatorError
 
 
@@ -84,3 +86,13 @@ class CartAddView(LoginRequiredMixin, View):
         messages.success(request, _("Item added to order"))
 
         return redirect(f"{reverse('service:order-select-items')}?category={category}")
+
+
+@login_required
+def select_existing_bill(request, pk: int):
+    bill = get_object_or_404(Bill, pk=pk)
+
+    request.session["bill"] = pk
+    request.session["tables"] = [t.pk for t in bill.table.all()]
+    request.session["waiter"] = str(bill.waiter.pk)
+    return redirect("service:order-select-items")
