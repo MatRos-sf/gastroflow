@@ -25,7 +25,6 @@ from .filters import OrderFilter
 from .forms import DateForm
 from .models import (
     Bill,
-    Item,
     Order,
     OrderItem,
     OrderItemStatus,
@@ -37,7 +36,7 @@ from .tasks import generate_report_and_send_email_task
 
 logger = logging.getLogger(__name__)
 
-
+#TODO: remove it !
 def pin_required(view_func):
     def wrapper(request, *args, **kwargs):
         pin = os.getenv("PIN")
@@ -51,11 +50,6 @@ def pin_required(view_func):
         return render(request, "order/pin_form.html")
 
     return wrapper
-
-
-def item_list(request):
-    items = Item.objects.all()
-    return render(request, "order/order_menu.html", {"object_list": items})
 
 
 class ReportView(View):
@@ -145,25 +139,26 @@ class BillListView(ListView):
             .order_by("-created_at")
         )
 
-
-class OpenBillListView(ListView):
+class ActionBillListView(ListView):
     model = Bill
-    template_name = "service/bill_list.html"
+    template_name = "order/bill_list.html"
 
     def get_queryset(self):
-        queryset = Bill.objects.filter(status=StatusBill.OPEN)
-        table_pk = self.request.GET.get("table")
-        if table_pk:
-            queryset = queryset.filter(table__pk=table_pk)
+        table = self.kwargs.get("table")
+        queryset = Bill.objects.filter(status=StatusBill.OPEN, table__pk=table).prefetch_related(
+            "table",
+            "orders__order_items__item"
+        )
         return queryset
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        action = self.request.GET.get("action", "").lower()
-        if not action or action not in ["bill", "order"]:
-            data["action"] = "bill"
-        else:
-            data["action"] = action
+        action = self.kwargs.get("action", "").lower()
+
+        if action not in ["close-bill", "add-to-order"]:
+            return Http404(f"{action} does not exist!")
+
+        data["action"] = action
         return data
 
 
