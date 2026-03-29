@@ -11,7 +11,7 @@ class SessionInfo:
     cart: list
     tables: list
     waiter: int
-    bill: int
+    bill: int | None
 
 
 def split_items_by_location(cart_items: list[dict]) -> tuple[list[dict], list[dict]]:
