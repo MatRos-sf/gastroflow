@@ -1,10 +1,11 @@
 from django.urls import path
 
+import order._views.bill_views as _views
+
 from .views import (
     ActionBillListView,
     BillDeleteView,
     BillDetailView,
-    BillListView,
     ExtendBillDetailView,
     ReadyOrderListView,
     ReportSelectionView,
@@ -24,8 +25,8 @@ url_report_pattern = [
 ]
 
 urlpatterns = [
+    path("bill/", _views.BillListView.as_view(), name="list-bill"),
     path("update/discount/<int:pk>", update_discount, name="update-discount"),
-    path("summary", BillListView.as_view(), name="summary-bill"),
     path("<int:pk>/delete/", BillDeleteView.as_view(), name="bill-delete"),
     path("<int:pk>/detail", BillDetailView.as_view(), name="bill-detail"),
     path("<int:pk>/extend", ExtendBillDetailView.as_view(), name="extend-bill-detail"),

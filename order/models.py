@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import DecimalField, ExpressionWrapper, F, Sum
@@ -82,16 +84,19 @@ class Bill(models.Model):
         return ", ".join(str(table.name) for table in self.table.all())
 
     # TODO: deprecated ?
-    @property
-    def total(self):
-        s = self.bill_summary_view()
-        return s["total"] - s["cost_discount"]
-
-    # TODO: deprecated ?
     def close(self):
         self.status = StatusBill.CLOSED
         self.closed_at = timezone.now()
         self.save()
+
+    def compute_total(self):
+        total = Decimal("0.00")
+        for order in self.orders.all():
+            for item in order.order_items.all():
+                total += item.line_subtotal
+                for additions in item.order_item_additions.all():
+                    total += additions.line_subtotal
+        return total
 
     # #TODO: deprecated ?
     # def _distribute_discount_proportionally(

@@ -1,59 +1,103 @@
 {% extends "base.html" %}
 {% load i18n %}
 {% block title %}
-    {% trans "Open Bills" %}
-    {% if object_list %}— {{ object_list.0.str_tables }}{% endif %}
+    {% trans "Bills" %}
 {% endblock title %}
 {% block content %}
     <div class="container-fluid px-3 py-3">
         <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
-            <div class="text-center flex-grow-1">
-                <h1 class="h4 fw-bold mb-0">
-                    {% trans "Open Bills" %} - {% trans "Table" %} {{ request.resolver_match.kwargs.table }}
-                </h1>
-                <p class="text-secondary small mb-0">{% trans "Additions are not shown in this view." %}</p>
-            </div>
-            <a href="{% url 'service:menu-waiter' %}"
-               class="btn btn-outline-secondary rounded-pill px-4">← {% trans "Back" %}</a>
+            <h1 class="h4 fw-bold mb-0">{% trans "Bills" %}</h1>
+            <form method="get" class="d-flex align-items-center gap-2 flex-wrap">
+                {{ filter.form.created_at }}
+                {{ filter.form.table }}
+                <button type="submit" class="btn btn-primary rounded-pill px-4">{% trans "Filter" %}</button>
+                {% if request.GET.created_at or request.GET.table %}
+                    <a href="?" class="btn btn-outline-secondary rounded-pill px-4">{% trans "Clear" %}</a>
+                {% endif %}
+            </form>
         </div>
         {% if object_list %}
             <div class="row g-3">
                 {% for bill in object_list %}
                     <div class="col-12 col-sm-6 col-lg-4">
                         <div class="card border-0 rounded-4 shadow h-100">
-                            <div class="card-body d-flex flex-column gap-2 p-4">
-                                <div class="text-secondary small">
-                                    <span>{% trans "Waiter" %}: {{ bill.waiter }}</span>
-                                    <span class="ms-2">· {{ bill.created_at|date:"H:i" }}</span>
-                                </div>
-                                {% if bill.note %}<p class="text-secondary small mb-0">{{ bill.note }}</p>{% endif %}
-                                <ul class="list-unstyled small mb-0">
-                                    {% for order in bill.orders.all %}
-                                        {% for order_item in order.order_items.all %}<li>{{ order_item }}</li>{% endfor %}
+                            <div class="card-header fw-bold d-flex justify-content-between align-items-center">
+                                <span>{% trans "Bill" %} #{{ bill.id }}</span>
+                                <span class="text-muted fw-normal small">
+                                    {% with tables=bill.table.all %}
+                                        {% if tables %}
+                                            {% for t in tables %}
+                                                {{ t.hall.name }} · {{ t.name }}
+                                                {% if not forloop.last %},{% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            {% trans "Take-away" %}
+                                        {% endif %}
+                                    {% endwith %}
+                                </span>
+                            </div>
+                            <div class="list-group list-group-flush">
+                                {% for order in bill.orders.all %}
+                                    {% for item in order.order_items.all %}
+                                        {% with dropdown_id="additions-"|add:bill.id|stringformat:"s"|add:"-"|add:order.id|stringformat:"s"|add:"-"|add:forloop.counter|stringformat:"s" %}
+                                            {% if item.order_item_additions.exists %}
+                                                <div class="dropdown">
+                                                    <div class="list-group-item d-flex justify-content-between"
+                                                         role="button"
+                                                         data-bs-toggle="dropdown"
+                                                         aria-expanded="false"
+                                                         id="{{ dropdown_id }}">
+                                                        <span>{{ item.name_snapshot }} <span class="text-muted small">▾</span></span>
+                                                        <span>{{ item.line_subtotal }} zł</span>
+                                                    </div>
+                                                    <ul class="dropdown-menu w-100 shadow-sm"
+                                                        aria-labelledby="{{ dropdown_id }}">
+                                                        {% for addition in item.order_item_additions.all %}
+                                                            <li class="dropdown-item d-flex justify-content-between text-muted small">
+                                                                <span>+ {{ addition.name_snapshot }}</span>
+                                                                <span>{{ addition.line_subtotal }} zł</span>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            {% else %}
+                                                <div class="list-group-item d-flex justify-content-between">
+                                                    <span>{{ item.name_snapshot }}</span>
+                                                    <span>{{ item.line_subtotal }} zł</span>
+                                                </div>
+                                            {% endif %}
+                                        {% endwith %}
                                     {% endfor %}
-                                </ul>
-                                <div class="mt-auto pt-2">
-                                    {% if action == "close-bill" %}
-                                        <a href="{% url 'extend-bill-detail' bill.id %}"
-                                           class="btn btn-primary rounded-pill w-100">{% trans "Details" %}</a>
-                                    {% else %}
-                                        <a href="{% url 'service:bill-add-order' bill.id %}"
-                                           class="btn btn-primary rounded-pill w-100">{% trans "Add to order" %}</a>
-                                    {% endif %}
-                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="card-footer d-flex justify-content-between fw-bold">
+                                <span>{% trans "Total" %}</span>
+                                <span>{{ bill.compute_total }} zł</span>
                             </div>
                         </div>
                     </div>
                 {% endfor %}
             </div>
+            {% if is_paginated %}
+                <nav class="mt-4 d-flex justify-content-center gap-2"
+                     aria-label='{% trans "Pagination" %}'>
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}"
+                           class="btn btn-outline-secondary rounded-pill px-4">← {% trans "Previous" %}</a>
+                    {% endif %}
+                    <span class="btn btn-light rounded-pill px-4 disabled">
+                        {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                    </span>
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}"
+                           class="btn btn-outline-secondary rounded-pill px-4">{% trans "Next" %} →</a>
+                    {% endif %}
+                </nav>
+            {% endif %}
         {% else %}
             <div class="card border-0 rounded-4 shadow-sm">
                 <div class="card-body p-5 text-center text-secondary">
-                    {% if action == "close-bill" %}
-                        <p class="mb-0">{% trans "No open bills to close." %}</p>
-                    {% else %}
-                        <p class="mb-0">{% trans "No open bills to add to." %}</p>
-                    {% endif %}
+                    <p class="mb-0">{% trans "No bills found." %}</p>
                 </div>
             </div>
         {% endif %}

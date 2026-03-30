@@ -1,10 +1,19 @@
 from logging import getLogger
 
 from django.db import transaction
-from django.db.models import Q
+from django.db.models import Prefetch, Q, QuerySet
 from django.utils import timezone
 
-from order.models import Order, OrderItem, OrderItemStatus, StatusOrder
+from order.models import (
+    Bill,
+    Notification,
+    NotificationStatus,
+    Order,
+    OrderItem,
+    OrderItemStatus,
+    StatusOrder,
+)
+from service.models import Table
 
 logger = getLogger(__name__)
 
@@ -38,10 +47,6 @@ def update_batch_order_items_status(order_id: int, status: OrderItemStatus) -> N
     elif status == StatusOrder.READY:
         OrderItem.objects.filter(order=order).update(
             status=OrderItemStatus.READY,
-            finished_at=timezone.now(),
-        )
-        OrderItem.objects.filter(order=order, started_at__isnull=True).update(
-            started_at=timezone.now(),
         )
         order.finished_at = timezone.now()
 
@@ -50,3 +55,18 @@ def update_batch_order_items_status(order_id: int, status: OrderItemStatus) -> N
 
     order.save()
     logger.info(f"Order with ID {order_id} was updated to {status}.")
+
+
+def update_batch_notifications_status(
+    notification_ids: list[int], status: NotificationStatus
+) -> None:
+    Notification.objects.filter(id__in=notification_ids).update(
+        status=status, last_update=timezone.now()
+    )
+
+
+def get_bills_with_totals() -> QuerySet[Bill]:
+    return Bill.objects.prefetch_related(
+        "orders__order_items__order_item_additions",
+        Prefetch("table", queryset=Table.objects.select_related("hall")),
+    ).order_by("-created_at")
