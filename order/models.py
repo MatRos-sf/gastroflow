@@ -29,13 +29,22 @@ class StatusOrder(models.TextChoices):
 
 
 class StatusBill(models.TextChoices):
+    """
+    Bill status lifecycle:
+        * OPEN: bill active, table occupied, not paid
+        * CLOSED: bill paid, table unoccupied
+        * CLOSED_AND_OCCUPIED: bill paid, table still occupied
+    """
+
     OPEN = "open", _("Open")
     CLOSED = "closed", _("Closed")
+    CLOSED_AND_OCCUPIED = "closed_and_occupied", _("Closed and occupied")
 
 
 class PaymentMethod(models.TextChoices):
     CARD = "card", _("Card")
     CASH = "cash", _("Cash")
+    CASH_AND_CARD = "cash_and_card", _("Cash and card")
 
 
 class Bill(models.Model):
@@ -44,7 +53,7 @@ class Bill(models.Model):
         help_text=_("Table to which the bill is assigned. Null means take-away"),
     )
     status = models.CharField(
-        max_length=10, choices=StatusBill.choices, default=StatusBill.OPEN
+        max_length=19, choices=StatusBill.choices, default=StatusBill.OPEN
     )
     created_at = models.DateTimeField(auto_now_add=True)
     paid_at = models.DateTimeField(
@@ -64,9 +73,8 @@ class Bill(models.Model):
         default=0, validators=[MinValueValidator(0), MaxValueValidator(100)]
     )
     payment_method = models.CharField(
-        max_length=10, choices=PaymentMethod.choices, default=PaymentMethod.CARD
+        max_length=13, choices=PaymentMethod.choices, default=None, null=True
     )
-
     guest_count = models.PositiveSmallIntegerField(
         default=1,
         validators=[MinValueValidator(1)],

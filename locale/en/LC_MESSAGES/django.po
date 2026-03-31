@@ -607,21 +607,29 @@ msgstr "Ordering"
 msgid "Paid"
 msgstr "Paid"
 
-#: order/models.py:30
+#: order/models.py:32
 msgid "Open"
 msgstr "Open"
 
-#: order/models.py:31
+#: order/models.py:33
 msgid "Closed"
 msgstr "Closed"
 
-#: order/models.py:35
+#: order/models.py:34
+msgid "Closed and occupied"
+msgstr "Closed and occupied"
+
+#: order/models.py:38
 msgid "Card"
 msgstr "Card"
 
-#: order/models.py:36
+#: order/models.py:39
 msgid "Cash"
 msgstr "Cash"
+
+#: order/models.py:40
+msgid "Cash and card"
+msgstr "Cash and card"
 
 #: order/models.py:44
 msgid "Table to which the bill is assigned. Null means take-away"
@@ -2880,3 +2888,18 @@ msgstr "Next"
 
 msgid "Last"
 msgstr "Last"
+
+msgid "Bill"
+msgstr "Bill"
+
+msgid "Take-away"
+msgstr "Take-away"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Pagination"
+msgstr "Pagination"
+
+msgid "No bills found."
+msgstr "No bills found."
