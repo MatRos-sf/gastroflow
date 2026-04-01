@@ -80,12 +80,26 @@ class Bill(models.Model):
         validators=[MinValueValidator(1)],
         help_text=_("Number of people in one the bill (plates per person)"),
     )
+    is_printed = models.BooleanField(default=False)
+    printed_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"Bill {self.id} - Table {self.table or 'take-away'}"
 
     def get_absolute_url(self):
-        return reverse("bill-detail", args=[str(self.id)])
+        return reverse("detail-bill", args=[str(self.id)])
+
+    @property
+    def is_open(self) -> bool:
+        return self.status == StatusBill.OPEN
+
+    @property
+    def is_closed(self) -> bool:
+        return self.status == StatusBill.CLOSED
+
+    @property
+    def is_closed_and_occupied(self) -> bool:
+        return self.status == StatusBill.CLOSED_AND_OCCUPIED
 
     # TODO: deprecated ?
     def str_tables(self):
@@ -270,13 +284,15 @@ class Notification(models.Model):
     last_update = models.DateTimeField(auto_now=True)
 
     @property
-    def tables(self) -> str:
+    def tables(self) -> str | None:
         if not self.order and self.item:
-            return ""
+            qs = self.item.order.bill.tables.all()
+            return ",".join(table.name for table in qs)
         if self.order:
-            return "Tables form set order #TODO"
+            qs = self.order.bill.tables.all()
+            return ",".join(table.name for table in qs)
 
-        return "Tables form set item #TODO"
+        return None
 
 
 class Order(models.Model):
@@ -375,6 +391,12 @@ class OrderItem(OrderBase):
     def raw_cost(self):
         """Cost without additions"""
         return self.price_snapshot * self.quantity
+
+    @property
+    def additions_str(self):
+        return ", ".join(
+            addition.name_snapshot for addition in self.order_item_additions.all()
+        )
 
     # #TODO: deprecated?
     # @property

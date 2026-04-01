@@ -2964,3 +2964,87 @@ msgstr "Stronicowanie"
 
 msgid "No bills found."
 msgstr "Brak rachunków."
+
+msgid "Table(s)"
+msgstr "Stolik(i)"
+
+msgid "Guests"
+msgstr "Goście"
+
+msgid "Created"
+msgstr "Utworzono"
+
+msgid "Discount"
+msgstr "Rabat"
+
+msgid "All dishes ready"
+msgstr "Wszystkie dania gotowe"
+
+msgid "Preparing time"
+msgstr "Czas przygotowania"
+
+msgid "Payment method"
+msgstr "Metoda płatności"
+
+msgid "Paid at"
+msgstr "Zapłacono o"
+
+msgid "Closed at"
+msgstr "Zamknięto o"
+
+msgid "Remove order"
+msgstr "Usuń zamówienie"
+
+msgid "Close bill"
+msgstr "Zamknij rachunek"
+
+msgid "Edit bill"
+msgstr "Edytuj rachunek"
+
+msgid "Change table"
+msgstr "Zmień stolik"
+
+msgid "Add discount"
+msgstr "Dodaj rabat"
+
+msgid "Remove bill"
+msgstr "Usuń rachunek"
+
+msgid "Remove item"
+msgstr "Usuń pozycję"
+
+msgid "This action cannot be undone. The bill will be updated."
+msgstr "Tej operacji nie można cofnąć. Rachunek zostanie zaktualizowany."
+
+msgid "This action cannot be undone. All items in this order will be removed."
+msgstr "Tej operacji nie można cofnąć. Wszystkie pozycje zamówienia zostaną usunięte."
+
+msgid "Are you sure you want to remove:"
+msgstr "Czy na pewno chcesz usunąć:"
+
+msgid "Are you sure you want to remove order"
+msgstr "Czy na pewno chcesz usunąć zamówienie"
+
+msgid "Print bill"
+msgstr "Drukuj rachunek"
+
+msgid "Cannot close a bill that is already closed."
+msgstr "Nie można zamknąć rachunku, który jest już zamknięty."
+
+msgid "Invalid form data."
+msgstr "Nieprawidłowe dane formularza."
+
+msgid "Tables have been released."
+msgstr "Stoliki zostały zwolnione."
+
+msgid "Bill is being prepared for printing."
+msgstr "Trwa przygotowanie do wydruku paragonu."
+
+msgid "Bill #%(pk)s has been closed. %(msg)s"
+msgstr "Rachunek #%(pk)s został zamknięty. %(msg)s"
+
+msgid "Bill printed at"
+msgstr "Rachunek wydrukowano o"
+
+msgid "Close bill and release tables"
+msgstr "Zamknij rachunek i zwolnij stoliki"

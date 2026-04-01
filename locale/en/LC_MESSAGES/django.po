@@ -2903,3 +2903,87 @@ msgstr "Pagination"
 
 msgid "No bills found."
 msgstr "No bills found."
+
+msgid "Table(s)"
+msgstr "Table(s)"
+
+msgid "Guests"
+msgstr "Guests"
+
+msgid "Created"
+msgstr "Created"
+
+msgid "Discount"
+msgstr "Discount"
+
+msgid "All dishes ready"
+msgstr "All dishes ready"
+
+msgid "Preparing time"
+msgstr "Preparing time"
+
+msgid "Payment method"
+msgstr "Payment method"
+
+msgid "Paid at"
+msgstr "Paid at"
+
+msgid "Closed at"
+msgstr "Closed at"
+
+msgid "Remove order"
+msgstr "Remove order"
+
+msgid "Close bill"
+msgstr "Close bill"
+
+msgid "Edit bill"
+msgstr "Edit bill"
+
+msgid "Change table"
+msgstr "Change table"
+
+msgid "Add discount"
+msgstr "Add discount"
+
+msgid "Remove bill"
+msgstr "Remove bill"
+
+msgid "Remove item"
+msgstr "Remove item"
+
+msgid "This action cannot be undone. The bill will be updated."
+msgstr "This action cannot be undone. The bill will be updated."
+
+msgid "This action cannot be undone. All items in this order will be removed."
+msgstr "This action cannot be undone. All items in this order will be removed."
+
+msgid "Are you sure you want to remove:"
+msgstr "Are you sure you want to remove:"
+
+msgid "Are you sure you want to remove order"
+msgstr "Are you sure you want to remove order"
+
+msgid "Print bill"
+msgstr "Print bill"
+
+msgid "Cannot close a bill that is already closed."
+msgstr "Cannot close a bill that is already closed."
+
+msgid "Invalid form data."
+msgstr "Invalid form data."
+
+msgid "Tables have been released."
+msgstr "Tables have been released."
+
+msgid "Bill is being prepared for printing."
+msgstr "Bill is being prepared for printing."
+
+msgid "Bill #%(pk)s has been closed. %(msg)s"
+msgstr "Bill #%(pk)s has been closed. %(msg)s"
+
+msgid "Bill printed at"
+msgstr "Bill printed at"
+
+msgid "Close bill and release tables"
+msgstr "Close bill and release tables"

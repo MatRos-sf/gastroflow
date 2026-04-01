@@ -1,7 +1,8 @@
 from django import forms
 from django.utils.timezone import now
+from django.utils.translation import gettext_lazy as _
 
-from order.models import Bill
+from order.models import Bill, StatusBill
 from service.models import Table
 
 
@@ -58,3 +59,16 @@ class ChangeBillTableForm(forms.Form):
     def save(self, bill):
         bill.table.set(self.cleaned_data["table"])
         return bill
+
+
+class BillCloseForm(forms.ModelForm):
+    status = forms.ChoiceField(
+        choices=[c for c in StatusBill.choices if c[0] != StatusBill.OPEN]
+    )
+    print_bill = forms.BooleanField(
+        required=False, initial=False, label=_("Print bill")
+    )
+
+    class Meta:
+        model = Bill
+        fields = ["status", "payment_method"]

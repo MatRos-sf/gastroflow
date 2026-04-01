@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load i18n %}
+{% load i18n crispy_forms_tags %}
 {% block title %}
     {% trans "Bill" %} #{{ object.id }}
 {% endblock title %}
@@ -17,7 +17,7 @@
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item d-flex justify-content-between">
                             <span class="text-muted">{% trans "Status" %}</span>
-                            <span class="fw-semibold">{{ object.status }}</span>
+                            <span class="fw-semibold">{{ object.get_status_display }}</span>
                         </li>
                         <li class="list-group-item d-flex justify-content-between">
                             <span class="text-muted">{% trans "Table(s)" %}</span>
@@ -80,6 +80,12 @@
                                 <span>{{ object.closed_at|date:"Y-m-d H:i" }}</span>
                             </li>
                         {% endif %}
+                        {% if object.is_printed %}
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-muted">{% trans "Bill printed at" %}</span>
+                                <span class="text-success">{{ object.printed_at }}</span>
+                            </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
@@ -138,7 +144,16 @@
                     </div>
                 </div>
                 <div class="d-flex gap-2 mt-3 flex-wrap">
-                    <a class="btn btn-outline-secondary rounded-pill px-4" href="#">{% trans "Close bill" %}</a>
+                    {% if object.is_open %}
+                        <button class="btn btn-outline-secondary rounded-pill px-4"
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#closeBillModal">{% trans "Close bill" %}</button>
+                    {% elif object.is_closed_and_occupied %}
+                        <button class="btn btn-outline-secondary rounded-pill px-4"
+                                type="button"
+                                disabled>{% trans "Close bill and release tables" %}</button>
+                    {% endif %}
                     <button class="btn btn-outline-secondary rounded-pill px-4"
                             type="button"
                             disabled>{% trans "Edit bill" %}</button>
@@ -153,6 +168,35 @@
                             disabled>{% trans "Remove bill" %}</button>
                 </div>
             </div>
+        </div>
+    </div>
+    {# ── Modal: close bill ── #}
+    <div class="modal fade"
+         id="closeBillModal"
+         tabindex="-1"
+         aria-labelledby="closeBillModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post"
+                  class="modal-content rounded-4"
+                  action="{% url 'close-bill' object.id %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="closeBillModalLabel">{% trans "Close bill" %} #{{ object.id }}</h5>
+                    <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label=''{% trans "Close" %}'>
+                    </button>
+                </div>
+                <div class="modal-body">{{ close_form|crispy }}</div>
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-outline-secondary rounded-pill"
+                            data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <button type="submit" class="btn btn-success rounded-pill">{% trans "Close bill" %}</button>
+                </div>
+            </form>
         </div>
     </div>
     {# ── Modal: delete item ── #}
