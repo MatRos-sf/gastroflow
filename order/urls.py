@@ -24,7 +24,12 @@ url_report_pattern = [
 urlpatterns = [
     path("bill/", _views.BillListView.as_view(), name="list-bill"),
     path("bill/<int:pk>/", _views.BillDetailView.as_view(), name="detail-bill"),
-    path("bill/<int:pk>/close/", _views.close_bill, name="close-bill"),
+    path("bill/<int:pk>/close/", _views.process_bill_closure, name="close-bill"),
+    path(
+        "bill/<int:pk>/close-with-release/",
+        _views.close_bill_with_release,
+        name="bill-close-release",
+    ),
     path("update/discount/<int:pk>", update_discount, name="update-discount"),
     path("<int:pk>/delete/", BillDeleteView.as_view(), name="bill-delete"),
     path(

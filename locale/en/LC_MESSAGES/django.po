@@ -2987,3 +2987,9 @@ msgstr "Bill printed at"
 
 msgid "Close bill and release tables"
 msgstr "Close bill and release tables"
+
+msgid "Cannot close bill and release tables when status bill is different than closed and occupied."
+msgstr "Cannot close bill and release tables when status bill is different than closed and occupied."
+
+msgid "Bill #%(pk)s has been closed and tables have been released."
+msgstr "Bill #%(pk)s has been closed and tables have been released."

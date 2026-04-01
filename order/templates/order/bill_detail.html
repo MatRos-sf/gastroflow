@@ -150,9 +150,14 @@
                                 data-bs-toggle="modal"
                                 data-bs-target="#closeBillModal">{% trans "Close bill" %}</button>
                     {% elif object.is_closed_and_occupied %}
-                        <button class="btn btn-outline-secondary rounded-pill px-4"
-                                type="button"
-                                disabled>{% trans "Close bill and release tables" %}</button>
+                        <form method="post"
+                              class="d-inline"
+                              action="{% url 'close-close-release' object.pk %}">
+                            {% csrf_token %}
+                            <button class="btn btn-outline-secondary rounded-pill px-4" type="submit">
+                                {% trans "Close bill and release tables" %}
+                            </button>
+                        </form>
                     {% endif %}
                     <button class="btn btn-outline-secondary rounded-pill px-4"
                             type="button"

@@ -3,7 +3,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404, redirect
-from django.utils import timezone
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 from django.views.generic import DetailView
@@ -13,7 +12,7 @@ from order.filters import BillListFilter
 from order.forms import BillCloseForm
 from order.models import Bill, StatusBill
 from order.queries import get_bills_with_totals, get_orders_display_data
-from service.queries import release_tables
+from service.queries import process_bill_closure, release_tables
 
 
 class BillListView(LoginRequiredMixin, FilterView):
@@ -58,15 +57,15 @@ def close_bill(request, pk):
         return redirect("detail-bill", pk=pk)
 
     do_print = form.cleaned_data.get("print_bill", False)
-    closed_bill = form.save(commit=False)
-    closed_bill.status = form.cleaned_data["status"]
-    closed_bill.closed_at = timezone.now()
-    closed_bill.save(update_fields=["status", "payment_method", "closed_at"])
+    process_bill_closure(
+        bill=bill,
+        status=form.cleaned_data["status"],
+        payment_method=form.cleaned_data["payment_method"],
+    )
 
     msg = ""
-    if closed_bill.status == StatusBill.CLOSED:
-        closed_bill.refresh_from_db()
-        release_tables(closed_bill)
+    if bill.status == StatusBill.CLOSED:
+        release_tables(bill)
         msg = _("Tables have been released.")
 
     if do_print:
@@ -76,6 +75,31 @@ def close_bill(request, pk):
     messages.success(
         request,
         _("Bill #%(pk)s has been closed. %(msg)s") % {"pk": bill.pk, "msg": msg},
+    )
+
+    return redirect("detail-bill", pk=pk)
+
+
+@login_required
+@require_POST
+def close_bill_with_release(request, pk):
+    bill = get_object_or_404(Bill, pk=pk)
+    if bill.status != StatusBill.CLOSED_AND_OCCUPIED:
+        messages.error(
+            request,
+            _(
+                "Cannot close bill and release tables when status bill is different than closed and occupied."
+            ),
+        )
+        return redirect("detail-bill", pk=pk)
+
+    process_bill_closure(bill, StatusBill.CLOSED)
+    release_tables(bill)
+
+    messages.success(
+        request,
+        _("Bill #%(pk)s has been closed and tables have been released.")
+        % {"pk": bill.pk},
     )
 
     return redirect("detail-bill", pk=pk)
