@@ -34,8 +34,7 @@
                                 </ul>
                                 <div class="mt-auto pt-2">
                                     {% if action == "close-bill" %}
-                                        <a href="{% url 'extend-bill-detail' bill.id %}"
-                                           class="btn btn-primary rounded-pill w-100">{% trans "Details" %}</a>
+                                        <a href="#" class="btn btn-primary rounded-pill w-100">{% trans "Details" %}</a>
                                     {% else %}
                                         <a href="{% url 'service:bill-add-order' bill.id %}"
                                            class="btn btn-primary rounded-pill w-100">{% trans "Add to order" %}</a>
