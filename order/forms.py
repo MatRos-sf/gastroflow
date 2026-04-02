@@ -72,3 +72,9 @@ class BillCloseForm(forms.ModelForm):
     class Meta:
         model = Bill
         fields = ["status", "payment_method"]
+
+
+class BillDiscountForm(forms.ModelForm):
+    class Meta:
+        model = Bill
+        fields = ["discount"]

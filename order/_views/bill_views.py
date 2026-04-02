@@ -1,3 +1,5 @@
+from decimal import ROUND_HALF_UP, Decimal
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -9,7 +11,7 @@ from django.views.generic import DetailView
 from django_filters.views import FilterView
 
 from order.filters import BillListFilter
-from order.forms import BillCloseForm
+from order.forms import BillCloseForm, BillDiscountForm
 from order.models import Bill, StatusBill
 from order.queries import get_bills_with_totals, get_orders_display_data
 from service.queries import process_bill_closure, release_tables
@@ -40,6 +42,13 @@ class BillDetailView(LoginRequiredMixin, DetailView):
         context["preparing_time"] = preparing_time
         context["all_order_status"] = all_order_status
         context["close_form"] = BillCloseForm()
+        context["discount_form"] = BillDiscountForm()
+        total = obj.compute_total()
+        context["total"] = total
+        if obj.discount:
+            context["discounted_total"] = (
+                total * (1 - Decimal(obj.discount) / 100)
+            ).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
         return context
 
 
@@ -102,4 +111,26 @@ def close_bill_with_release(request, pk):
         % {"pk": bill.pk},
     )
 
+    return redirect("detail-bill", pk=pk)
+
+
+@login_required
+@require_POST
+def add_discount(request, pk: int):
+    """
+    Update discount field for bill. Only allowed when bill is open.
+    """
+    bill = get_object_or_404(Bill, pk=pk)
+    if bill.status != StatusBill.OPEN:
+        messages.error(request, _("Cannot add a discount to a bill that is not open."))
+        return redirect("detail-bill", pk=pk)
+
+    form = BillDiscountForm(request.POST, instance=bill)
+    if not form.is_valid():
+        messages.error(request, _("Invalid form data. Discount must be 0–100."))
+        return redirect("detail-bill", pk=pk)
+
+    form.save()
+
+    messages.success(request, _("Discount has been applied."))
     return redirect("detail-bill", pk=pk)

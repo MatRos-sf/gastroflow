@@ -3054,3 +3054,12 @@ msgstr "Nie można zamknąć rachunku i zwolnić stolików, gdy status rachunku 
 
 msgid "Bill #%(pk)s has been closed and tables have been released."
 msgstr "Rachunek #%(pk)s został zamknięty, a stoliki zostały zwolnione."
+
+msgid "Cannot add a discount to a bill that is not open."
+msgstr "Nie można dodać zniżki do rachunku, który nie jest otwarty."
+
+msgid "Invalid form data. Discount must be 0–100."
+msgstr "Nieprawidłowe dane formularza. Zniżka musi wynosić od 0 do 100."
+
+msgid "Discount has been applied."
+msgstr "Zniżka została zastosowana."

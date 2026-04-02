@@ -140,7 +140,14 @@
                     </div>
                     <div class="card-footer d-flex justify-content-between fw-bold">
                         <span>{% trans "Total" %}</span>
-                        <span>{{ object.compute_total }} zł</span>
+                        <span>
+                            {% if object.discount %}
+                                <span class="text-decoration-line-through text-muted fw-normal me-2">{{ total }} zł</span>
+                                <span class="text-success">{{ discounted_total }} zł</span>
+                            {% else %}
+                                {{ total }} zł
+                            {% endif %}
+                        </span>
                     </div>
                 </div>
                 <div class="d-flex gap-2 mt-3 flex-wrap">
@@ -165,9 +172,12 @@
                     <button class="btn btn-outline-secondary rounded-pill px-4"
                             type="button"
                             disabled>{% trans "Change table" %}</button>
-                    <button class="btn btn-outline-secondary rounded-pill px-4"
-                            type="button"
-                            disabled>{% trans "Add discount" %}</button>
+                    {% if object.is_open %}
+                        <button class="btn btn-outline-secondary rounded-pill px-4"
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#discountModal">{% trans "Add discount" %}</button>
+                    {% endif %}
                     <button class="btn btn-outline-secondary rounded-pill px-4"
                             type="button"
                             disabled>{% trans "Remove bill" %}</button>
@@ -274,6 +284,38 @@
             </form>
         </div>
     </div>
+    {# ── Modal: add discount ── #}
+    {% if object.is_open %}
+        <div class="modal fade"
+             id="discountModal"
+             tabindex="-1"
+             aria-labelledby="discountModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <form method="post"
+                      class="modal-content rounded-4"
+                      action="{% url 'add-discount' object.id %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold" id="discountModalLabel">
+                            {% trans "Add discount" %} — {% trans "Bill" %} #{{ object.id }}
+                        </h5>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label='{% trans "Close" %}'></button>
+                    </div>
+                    <div class="modal-body">{{ discount_form|crispy }}</div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-outline-secondary rounded-pill"
+                                data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                        <button type="submit" class="btn btn-success rounded-pill">{% trans "Apply discount" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
     {% block extra_js %}
         <script>
       document.addEventListener("DOMContentLoaded", function () {
