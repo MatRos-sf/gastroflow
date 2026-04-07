@@ -2,19 +2,25 @@ from decimal import ROUND_HALF_UP, Decimal
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse_lazy
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
-from django.views.generic import DetailView
+from django.views.generic import DeleteView, DetailView
 from django_filters.views import FilterView
 
+from consumers.services import broadcast_order_remove
 from order.filters import BillListFilter
 from order.forms import BillCloseForm, BillDiscountForm
-from order.models import Bill, StatusBill
+from order.models import Bill, Order, StatusBill, StatusOrder
 from order.queries import get_bills_with_totals, get_orders_display_data
-from service.queries import process_bill_closure, release_tables
+from service.queries import (
+    process_bill_closure,
+    release_tables,
+    release_tables_for_open_bill,
+)
 
 
 class BillListView(LoginRequiredMixin, FilterView):
@@ -134,3 +140,40 @@ def add_discount(request, pk: int):
 
     messages.success(request, _("Discount has been applied."))
     return redirect("detail-bill", pk=pk)
+
+
+class BillDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Bill
+    success_url = reverse_lazy("list-bill")
+
+    def test_func(self):
+        self.object = self.get_object()
+        if self.object.status == StatusBill.OPEN:
+            return True
+        elif self.request.user.is_superuser:
+            return True
+        messages.error(
+            self.request,
+            _(
+                "You cannot delete a bill that is not open. Only superusers can delete bills."
+            ),
+        )
+        return False
+
+    def _remove_order(self, order: Order):
+        order_pk = order.pk
+        order_status = order.status
+        order.delete()
+        if order_status in [StatusOrder.ORDER, StatusOrder.PREPARING]:
+            broadcast_order_remove(order_pk)
+
+    def post(self, request, *args, **kwargs):
+        bill_pk = self.object.pk
+        orders = self.object.orders.all()
+
+        for order in orders:
+            self._remove_order(order)
+
+        release_tables_for_open_bill(self.object)
+        messages.success(request, _("Removed bill %(pk)s.") % {"pk": bill_pk})
+        return super().post(request, *args, **kwargs)

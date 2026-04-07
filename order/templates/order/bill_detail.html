@@ -181,9 +181,12 @@
                                 data-bs-toggle="modal"
                                 data-bs-target="#discountModal">{% trans "Add discount" %}</button>
                     {% endif %}
-                    <button class="btn btn-outline-secondary rounded-pill px-4"
-                            type="button"
-                            disabled>{% trans "Remove bill" %}</button>
+                    {% if object.is_open or request.user.is_superuser %}
+                        <button class="btn btn-outline-danger rounded-pill px-4"
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteBillModal">{% trans "Remove bill" %}</button>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -319,6 +322,38 @@
             </div>
         </div>
     {% endif %}
+    {# ── Modal: delete bill ── #}
+    <div class="modal fade"
+         id="deleteBillModal"
+         tabindex="-1"
+         aria-labelledby="deleteBillModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post"
+                  class="modal-content rounded-4"
+                  action="{% url 'delete-bill' object.pk %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="deleteBillModalLabel">{% trans "Remove bill" %} #{{ object.id }}</h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label='{% trans "Close" %}'></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger rounded-3 mb-0">
+                        {% trans "This action cannot be undone. All orders and items in this bill will be removed." %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-outline-secondary rounded-pill"
+                            data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <button type="submit" class="btn btn-danger rounded-pill">{% trans "Remove bill" %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
     {% block extra_js %}
         <script>
       document.addEventListener("DOMContentLoaded", function () {

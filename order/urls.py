@@ -5,7 +5,6 @@ import order._views.order_views as _views_order
 
 from .views import (
     ActionBillListView,
-    BillDeleteView,
     ReadyOrderListView,
     ReportSelectionView,
     ReportView,
@@ -23,6 +22,7 @@ url_report_pattern = [
 urlpatterns = [
     path("bill/", _views.BillListView.as_view(), name="list-bill"),
     path("bill/<int:pk>/", _views.BillDetailView.as_view(), name="detail-bill"),
+    path("bill/<int:pk>/delete/", _views.BillDeleteView.as_view(), name="delete-bill"),
     path("bill/<int:pk>/close/", _views.close_bill, name="close-bill"),
     path("bill/<int:pk>/discount/", _views.add_discount, name="add-discount"),
     path(
@@ -35,7 +35,6 @@ urlpatterns = [
         _views_order.delete_ordered_item,
         name="delete-order-item",
     ),
-    path("<int:pk>/delete/", BillDeleteView.as_view(), name="bill-delete"),
     path("ready/", ReadyOrderListView.as_view(), name="ready-order-list"),
     path(
         "action/<str:action>/<int:table>/",
