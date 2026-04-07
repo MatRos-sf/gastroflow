@@ -3,6 +3,7 @@ from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
 from order.models import Bill, StatusBill
+from worker.models import Position, Worker
 
 
 class DateForm(forms.Form):
@@ -43,6 +44,40 @@ class DateForm(forms.Form):
             raise forms.ValidationError(
                 "Data początkowa nie może być późniejsza niż końcowa."
             )
+
+        return cleaned_data
+
+
+class BillEditForm(forms.ModelForm):
+    pin = forms.CharField(
+        max_length=4,
+        required=False,
+        label=_("PIN"),
+        widget=forms.PasswordInput(attrs={"inputmode": "numeric", "maxlength": "4"}),
+    )
+
+    class Meta:
+        model = Bill
+        fields = ["waiter", "guest_count"]
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["waiter"].queryset = Worker.objects.filter(
+            position=Position.WAITER, is_active=True
+        )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        waiter = cleaned_data.get("waiter")
+        pin = cleaned_data.get("pin")
+
+        if waiter and waiter.pin:
+            if not pin:
+                raise forms.ValidationError(
+                    {"pin": _("PIN is required for this waiter.")}
+                )
+            if pin != waiter.pin:
+                raise forms.ValidationError({"pin": _("Invalid PIN.")})
 
         return cleaned_data
 

@@ -23,6 +23,7 @@ urlpatterns = [
     path("bill/", _views.BillListView.as_view(), name="list-bill"),
     path("bill/<int:pk>/", _views.BillDetailView.as_view(), name="detail-bill"),
     path("bill/<int:pk>/delete/", _views.BillDeleteView.as_view(), name="delete-bill"),
+    path("bill/<int:pk>/edit/", _views.edit_bill, name="edit-bill"),
     path("bill/<int:pk>/close/", _views.close_bill, name="close-bill"),
     path("bill/<int:pk>/discount/", _views.add_discount, name="add-discount"),
     path(

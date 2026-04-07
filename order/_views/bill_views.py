@@ -13,7 +13,7 @@ from django_filters.views import FilterView
 
 from consumers.services import broadcast_order_remove
 from order.filters import BillListFilter
-from order.forms import BillCloseForm, BillDiscountForm
+from order.forms import BillCloseForm, BillDiscountForm, BillEditForm
 from order.models import Bill, Order, StatusBill, StatusOrder
 from order.queries import get_bills_with_totals, get_orders_display_data
 from service.forms import ChangeBillTableForm
@@ -22,6 +22,7 @@ from service.queries import (
     release_tables,
     release_tables_for_open_bill,
 )
+from worker.models import Position, Worker
 
 
 class BillListView(LoginRequiredMixin, FilterView):
@@ -53,6 +54,13 @@ class BillDetailView(LoginRequiredMixin, DetailView):
         context["change_table_form"] = ChangeBillTableForm(
             initial={"table": obj.table.all()}
         )
+        context["edit_bill_form"] = BillEditForm(instance=obj)
+        context["waiters_with_pin"] = list(
+            Worker.objects.filter(position=Position.WAITER, is_active=True)
+            .exclude(pin__isnull=True)
+            .exclude(pin="")
+            .values_list("pk", flat=True)
+        )
         total = obj.compute_total()
         context["total"] = total
         if obj.discount:
@@ -60,6 +68,26 @@ class BillDetailView(LoginRequiredMixin, DetailView):
                 total * (1 - Decimal(obj.discount) / 100)
             ).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
         return context
+
+
+@login_required
+@require_POST
+def edit_bill(request, pk: int):
+    bill = get_object_or_404(Bill, pk=pk)
+    if not bill.is_open:
+        messages.error(request, _("Cannot edit a closed bill."))
+        return redirect("detail-bill", pk=pk)
+
+    form = BillEditForm(request.POST, instance=bill)
+    if form.is_valid():
+        form.save()
+        messages.success(request, _("Bill has been updated."))
+    else:
+        for errors in form.errors.values():
+            for error in errors:
+                messages.error(request, error)
+
+    return redirect("detail-bill", pk=pk)
 
 
 @login_required

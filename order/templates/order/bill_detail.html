@@ -87,6 +87,18 @@
                             </li>
                         {% endif %}
                     </ul>
+                    {% if object.is_open %}
+                        <div class="card-footer d-flex gap-2 flex-wrap">
+                            <button class="btn btn-outline-secondary btn-sm rounded-pill"
+                                    type="button"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editBillModal">{% trans "Edit bill" %}</button>
+                            <button class="btn btn-outline-secondary btn-sm rounded-pill"
+                                    type="button"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#changeTableModal">{% trans "Change table" %}</button>
+                        </div>
+                    {% endif %}
                 </div>
             </div>
             <div class="col-12 col-lg-8">
@@ -171,15 +183,6 @@
                                 {% trans "Close bill and release tables" %}
                             </button>
                         </form>
-                    {% endif %}
-                    <button class="btn btn-outline-secondary rounded-pill px-4"
-                            type="button"
-                            disabled>{% trans "Edit bill" %}</button>
-                    {% if object.is_open %}
-                        <button class="btn btn-outline-secondary rounded-pill px-4"
-                                type="button"
-                                data-bs-toggle="modal"
-                                data-bs-target="#changeTableModal">{% trans "Change table" %}</button>
                     {% endif %}
                     {% if object.is_open %}
                         <button class="btn btn-outline-secondary rounded-pill px-4"
@@ -328,6 +331,48 @@
             </div>
         </div>
     {% endif %}
+    {# ── Modal: edit bill ── #}
+    {% if object.is_open %}
+        <div class="modal fade"
+             id="editBillModal"
+             tabindex="-1"
+             aria-labelledby="editBillModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <form method="post"
+                      class="modal-content rounded-4"
+                      action="{% url 'edit-bill' object.pk %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold" id="editBillModalLabel">{% trans "Edit bill" %} #{{ object.id }}</h5>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label='{% trans "Close" %}'></button>
+                    </div>
+                    <div class="modal-body">
+                        {{ edit_bill_form|crispy }}
+                        <div id="pinField" style="display:none">
+                            <label class="form-label fw-semibold" for="id_pin">{% trans "PIN" %}</label>
+                            <input type="password"
+                                   name="pin"
+                                   id="id_pin"
+                                   class="form-control"
+                                   inputmode="numeric"
+                                   maxlength="4"
+                                   autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-outline-secondary rounded-pill"
+                                data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                        <button type="submit" class="btn btn-success rounded-pill">{% trans "Save" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
     {# ── Modal: change table ── #}
     {% if object.is_open %}
         <div class="modal fade"
@@ -421,6 +466,24 @@
           const form = document.getElementById("deleteOrderForm");
           form.action = button.getAttribute("data-url");
         });
+
+        const WAITERS_WITH_PIN = new Set({{ waiters_with_pin|safe }});
+        const waiterSelect = document.getElementById("id_waiter");
+        const pinField = document.getElementById("pinField");
+        const pinInput = document.getElementById("id_pin");
+
+        function togglePin() {
+          const pk = parseInt(waiterSelect.value);
+          const needsPin = WAITERS_WITH_PIN.has(pk);
+          pinField.style.display = needsPin ? "" : "none";
+          pinInput.required = needsPin;
+          if (!needsPin) pinInput.value = "";
+        }
+
+        if (waiterSelect) {
+          waiterSelect.addEventListener("change", togglePin);
+          togglePin();
+        }
       });
         </script>
     {% endblock extra_js %}
