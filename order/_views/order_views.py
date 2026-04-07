@@ -6,8 +6,38 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 
 from consumers.services import broadcast_item_remove, broadcast_order_remove
-from order.models import OrderItem
+from order.models import Bill, Order, OrderItem, StatusBill
 from service.queries import release_tables_for_open_bill
+
+
+def can_delete_bill(request: HttpRequest, bill: Bill):
+    if bill.status == StatusBill.OPEN:
+        return True
+    elif request.user.is_superuser:
+        return True
+    return False
+
+
+@login_required
+@require_POST
+def delete_order(request: HttpRequest, pk: int):
+    order = get_object_or_404(Order, pk=pk)
+    bill = order.bill
+    if not can_delete_bill(request, bill):
+        messages.error(request, _("You do not have permission to delete this order."))
+        return redirect("detail-bill", pk=bill.pk)
+
+    order.delete()
+    messages.success(request, _("Removed %(pk)s.") % {"pk": pk})
+    broadcast_order_remove(pk)
+
+    if bill.orders.count() == 0:
+        release_tables_for_open_bill(bill)
+        bill.delete()
+        messages.success(request, _("Removed empty bill %(pk)s.") % {"pk": bill.pk})
+        return redirect("list-bill")
+
+    return redirect("detail-bill", pk=bill.pk)
 
 
 @login_required

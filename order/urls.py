@@ -30,6 +30,7 @@ urlpatterns = [
         _views.close_bill_with_release,
         name="bill-close-release",
     ),
+    path("<int:pk>/delete/", _views_order.delete_order, name="delete-order"),
     path(
         "item/<int:pk_item>/delete/",
         _views_order.delete_ordered_item,

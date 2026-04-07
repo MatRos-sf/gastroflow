@@ -106,7 +106,10 @@
                                                 class="btn btn-outline-danger btn-sm rounded-pill"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#deleteOrderModal"
-                                                data-order-id="{{ item.order }}">{% trans "Remove order" %}</button>
+                                                data-order-id="{{ item.order }}"
+                                                data-url="{% url 'delete-order' item.order %}">
+                                            {% trans "Remove order" %}
+                                        </button>
                                     </div>
                                 </div>
                             {% else %}
@@ -381,7 +384,7 @@
             '{% trans "Are you sure you want to remove order" %} #' + orderId + "?";
 
           const form = document.getElementById("deleteOrderForm");
-          form.action = `/order/${billId}/delete-order/${orderId}`;
+          form.action = button.getAttribute("data-url");
         });
       });
         </script>
