@@ -123,7 +123,10 @@
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#deleteOrderItemModal"
                                                     data-item-id="{{ item.pk }}"
-                                                    data-item-name="{{ item.name }}">{% trans "Remove" %}</button>
+                                                    data-item-name="{{ item.name }}"
+                                                    data-url="{% url 'delete-order-item' item.pk %}">
+                                                {% trans "Remove" %}
+                                            </button>
                                         </div>
                                     </div>
                                     {% for addition in item.additions %}
@@ -330,7 +333,7 @@
             '{% trans "Are you sure you want to remove:" %} ' + itemName + "?";
 
           const form = document.getElementById("deleteOrderItemForm");
-          form.action = `/order/${billId}/delete/${itemId}`;
+          form.action = button.getAttribute("data-url");
         });
 
         const orderModal = document.getElementById("deleteOrderModal");

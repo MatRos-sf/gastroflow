@@ -1,6 +1,7 @@
 from django.urls import path
 
 import order._views.bill_views as _views
+import order._views.order_views as _views_order
 
 from .views import (
     ActionBillListView,
@@ -8,7 +9,6 @@ from .views import (
     ReadyOrderListView,
     ReportSelectionView,
     ReportView,
-    delete_order_item,
     generate_report,
 )
 
@@ -30,12 +30,12 @@ urlpatterns = [
         _views.close_bill_with_release,
         name="bill-close-release",
     ),
-    path("<int:pk>/delete/", BillDeleteView.as_view(), name="bill-delete"),
     path(
-        "<int:pk_order>/delete/<int:pk_item>",
-        delete_order_item,
+        "item/<int:pk_item>/delete/",
+        _views_order.delete_ordered_item,
         name="delete-order-item",
     ),
+    path("<int:pk>/delete/", BillDeleteView.as_view(), name="bill-delete"),
     path("ready/", ReadyOrderListView.as_view(), name="ready-order-list"),
     path(
         "action/<str:action>/<int:table>/",
