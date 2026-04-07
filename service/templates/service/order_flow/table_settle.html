@@ -134,7 +134,7 @@
 }
     </style>
     <script>
-const BILL_LIST_TEMPLATE = "{% url 'open-bill-list' action=action table=0 %}";
+const BILL_LIST_TEMPLATE = "{% url 'service:open-bill-list' action=action table=0 %}";
 const SIZE_WIDTHS = { "1x1": 8, "1x2": 16, "1x3": 24 };
 
 document.querySelectorAll(".floor-canvas").forEach(canvas => {

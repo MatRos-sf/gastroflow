@@ -3,13 +3,7 @@ from django.urls import path
 import order._views.bill_views as _views
 import order._views.order_views as _views_order
 
-from .views import (
-    ActionBillListView,
-    ReadyOrderListView,
-    ReportSelectionView,
-    ReportView,
-    generate_report,
-)
+from .views import ReadyOrderListView, ReportSelectionView, ReportView, generate_report
 
 # TODO: name app "order"
 
@@ -38,9 +32,4 @@ urlpatterns = [
         name="delete-order-item",
     ),
     path("ready/", ReadyOrderListView.as_view(), name="ready-order-list"),
-    path(
-        "action/<str:action>/<int:table>/",
-        ActionBillListView.as_view(),
-        name="open-bill-list",
-    ),
 ] + url_report_pattern

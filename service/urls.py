@@ -1,6 +1,7 @@
 from django.urls import path
 
 from . import views
+from ._views.action import ActionBillListView
 from ._views.order_flow.cart import CartSummaryView
 from ._views.order_flow.menu import MenuWaiterView
 from ._views.order_flow.table_select import table_select_view
@@ -26,6 +27,11 @@ urlpatterns = [
         "service/bill/<int:pk>/add-order/",
         select_existing_bill,
         name="bill-add-order",
+    ),
+    path(
+        "action/<str:action>/<int:table>/",
+        ActionBillListView.as_view(),
+        name="open-bill-list",
     ),
     path(
         "api/remove-from-cart/<int:index>/",

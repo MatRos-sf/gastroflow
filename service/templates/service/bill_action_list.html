@@ -25,6 +25,7 @@
                                 <div class="text-secondary small">
                                     <span>{% trans "Waiter" %}: {{ bill.waiter }}</span>
                                     <span class="ms-2">· {{ bill.created_at|date:"H:i" }}</span>
+                                    <span class="ms-2">· #{{ bill.pk }}</span>
                                 </div>
                                 {% if bill.note %}<p class="text-secondary small mb-0">{{ bill.note }}</p>{% endif %}
                                 <ul class="list-unstyled small mb-0">
@@ -34,7 +35,8 @@
                                 </ul>
                                 <div class="mt-auto pt-2">
                                     {% if action == "close-bill" %}
-                                        <a href="#" class="btn btn-primary rounded-pill w-100">{% trans "Details" %}</a>
+                                        <a href="{% url 'detail-bill' bill.pk %}"
+                                           class="btn btn-primary rounded-pill w-100">{% trans "Details" %}</a>
                                     {% else %}
                                         <a href="{% url 'service:bill-add-order' bill.id %}"
                                            class="btn btn-primary rounded-pill w-100">{% trans "Add to order" %}</a>
