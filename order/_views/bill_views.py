@@ -16,6 +16,7 @@ from order.filters import BillListFilter
 from order.forms import BillCloseForm, BillDiscountForm
 from order.models import Bill, Order, StatusBill, StatusOrder
 from order.queries import get_bills_with_totals, get_orders_display_data
+from service.forms import ChangeBillTableForm
 from service.queries import (
     process_bill_closure,
     release_tables,
@@ -49,6 +50,9 @@ class BillDetailView(LoginRequiredMixin, DetailView):
         context["all_order_status"] = all_order_status
         context["close_form"] = BillCloseForm()
         context["discount_form"] = BillDiscountForm()
+        context["change_table_form"] = ChangeBillTableForm(
+            initial={"table": obj.table.all()}
+        )
         total = obj.compute_total()
         context["total"] = total
         if obj.discount:

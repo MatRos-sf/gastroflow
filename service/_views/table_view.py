@@ -1,13 +1,18 @@
 import json
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 from django.views.generic import CreateView, DetailView, ListView, UpdateView
 
+from consumers.services import broadcast_change_table
+from order.models import Bill
+from service.forms import ChangeBillTableForm
+from service.queries import change_bill_tables
 from tools.views.permission import BossPermissionMixin
 
 from ..forms import HallForm
@@ -102,3 +107,21 @@ def hall_floor_editor_save(request, pk):
                 created[temp_id] = obj.pk
 
     return JsonResponse({"ok": True, "created": created})
+
+
+@login_required
+def change_table(request, pk: int):
+    bill = get_object_or_404(Bill, pk=pk)
+    if request.method == "POST":
+        form = ChangeBillTableForm(request.POST)
+        if form.is_valid():
+            change_bill_tables(bill, list(form.cleaned_data["table"]))
+            messages.success(request, _("Table has been changed."))
+            new_table = bill.str_tables()
+            for order in bill.orders.all():
+                broadcast_change_table(order.pk, new_table)
+            return redirect("detail-bill", pk=bill.pk)
+    else:
+        form = ChangeBillTableForm(initial={"table": bill.table.all()})
+
+    return render(request, "service/change_table.html", {"form": form, "bill": bill})

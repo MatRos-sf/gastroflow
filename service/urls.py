@@ -10,6 +10,7 @@ from ._views.table_view import (
     HallFloorEditorView,
     HallListView,
     HallUpdateView,
+    change_table,
     hall_floor_editor_save,
 )
 
@@ -32,7 +33,7 @@ urlpatterns = [
         name="remove-from-cart",
     ),
     path("cart/clear", views.clear_cart, name="cart-clear"),
-    path("bill/<int:pk>/change-table", views.change_table, name="change-table"),
+    path("bill/<int:pk>/change-table/", change_table, name="change-table"),
     path(
         "api/notifications/check/",
         views.check_notifications,

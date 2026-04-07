@@ -3,7 +3,6 @@ from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
 
 from order.models import Bill, StatusBill
-from service.models import Table
 
 
 class DateForm(forms.Form):
@@ -46,19 +45,6 @@ class DateForm(forms.Form):
             )
 
         return cleaned_data
-
-
-class ChangeBillTableForm(forms.Form):
-    table = forms.ModelMultipleChoiceField(
-        queryset=Table.objects.filter(is_active=True)
-    )
-
-    class Meta:
-        model = Bill
-
-    def save(self, bill):
-        bill.table.set(self.cleaned_data["table"])
-        return bill
 
 
 class BillCloseForm(forms.ModelForm):

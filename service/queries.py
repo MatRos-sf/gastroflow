@@ -30,6 +30,28 @@ def release_tables_for_open_bill(bill: Bill) -> None:
             _release_table(table)
 
 
+def change_bill_tables(bill: Bill, new_tables: list[Table]) -> None:
+    old_tables = set(bill.table.all())
+    new_tables_set = set(new_tables)
+
+    bill.table.set(new_tables)
+
+    for table in old_tables - new_tables_set:
+        if (
+            not Bill.objects.filter(
+                table=table,
+                status__in=[StatusBill.OPEN, StatusBill.CLOSED_AND_OCCUPIED],
+            )
+            .exclude(pk=bill.pk)
+            .exists()
+        ):
+            _release_table(table)
+
+    for table in new_tables_set - old_tables:
+        table.is_occupied = True
+        table.save(update_fields=["is_occupied"])
+
+
 def process_bill_closure(
     bill: Bill,
     status: str,

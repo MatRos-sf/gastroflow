@@ -175,9 +175,12 @@
                     <button class="btn btn-outline-secondary rounded-pill px-4"
                             type="button"
                             disabled>{% trans "Edit bill" %}</button>
-                    <button class="btn btn-outline-secondary rounded-pill px-4"
-                            type="button"
-                            disabled>{% trans "Change table" %}</button>
+                    {% if object.is_open %}
+                        <button class="btn btn-outline-secondary rounded-pill px-4"
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#changeTableModal">{% trans "Change table" %}</button>
+                    {% endif %}
                     {% if object.is_open %}
                         <button class="btn btn-outline-secondary rounded-pill px-4"
                                 type="button"
@@ -320,6 +323,38 @@
                                 class="btn btn-outline-secondary rounded-pill"
                                 data-bs-dismiss="modal">{% trans "Cancel" %}</button>
                         <button type="submit" class="btn btn-success rounded-pill">{% trans "Apply discount" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+    {# ── Modal: change table ── #}
+    {% if object.is_open %}
+        <div class="modal fade"
+             id="changeTableModal"
+             tabindex="-1"
+             aria-labelledby="changeTableModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <form method="post"
+                      class="modal-content rounded-4"
+                      action="{% url 'service:change-table' object.pk %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold" id="changeTableModalLabel">
+                            {% trans "Change table" %} — {% trans "Bill" %} #{{ object.id }}
+                        </h5>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label='{% trans "Close" %}'></button>
+                    </div>
+                    <div class="modal-body">{{ change_table_form|crispy }}</div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-outline-secondary rounded-pill"
+                                data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                        <button type="submit" class="btn btn-success rounded-pill">{% trans "Save" %}</button>
                     </div>
                 </form>
             </div>
