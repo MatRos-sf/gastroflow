@@ -1,12 +1,12 @@
 from django.urls import path
 
-from . import views
 from ._views.action import ActionBillListView
 from ._views.order_flow.cart import CartSummaryView
 from ._views.order_flow.menu import MenuWaiterView
 from ._views.order_flow.table_select import table_select_view
 from ._views.service import (
     CartAddView,
+    clear_cart,
     main_menu_view,
     remove_item_from_cart,
     select_existing_bill,
@@ -52,7 +52,7 @@ urlpatterns = [
         ActionBillListView.as_view(),
         name="open-bill-list",
     ),
-    path("cart/clear", views.clear_cart, name="cart-clear"),
+    path("cart/clear", clear_cart, name="cart-clear"),
     path("bill/<int:pk>/change-table/", change_table, name="change-table"),
     path("halls/", HallListView.as_view(), name="hall-list"),
     path("halls/create/", HallCreateView.as_view(), name="hall-create"),

@@ -3078,3 +3078,6 @@ msgstr "Aktywne rachunki"
 
 msgid "Day summary"
 msgstr "Podsumowanie dnia"
+
+msgid "Order has been cancelled."
+msgstr "Zamówienie zostało anulowane."

@@ -12,6 +12,7 @@ from menu.models import Item, MenuType
 from order.models import Bill
 from order.queries import get_recent_unread_notifications
 from tools.exceptions import ValidatorError
+from tools.session import clear_session
 
 
 @login_required
@@ -121,3 +122,11 @@ def remove_item_from_cart(request, index):
         request.session["cart"] = cart
         request.session.modified = True
     return redirect("service:order-cart-summary")
+
+
+@login_required
+def clear_cart(request):
+    clear_session(request, ["cart", "tables", "waiter", "bill"])
+    messages.success(request, _("Order has been cancelled."))
+
+    return redirect("service:main-menu")
