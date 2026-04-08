@@ -259,4 +259,4 @@ class CartSummaryView(View):
         )
         logger.info("Bill #%s created by waiter %s", bill.pk, session_info.waiter)
         clear_session(self.request, ["cart", "tables", "waiter", "bill"])
-        return redirect("service:menu-waiter")
+        return redirect("service:main-menu")

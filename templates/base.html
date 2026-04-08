@@ -32,10 +32,10 @@
         <nav class="navbar navbar-dark bg-dark fixed-top {% if request.user.is_superuser %}navbar-superuser{% endif %}">
             <div class="container-fluid d-flex justify-content-between align-items-center">
                 <a class="navbar-brand fw-bold {% if request.user.is_superuser %}text-warning{% endif %}"
-                   href="{% url 'service:menu-waiter' %}">Frisztek</a>
+                   href="{% url 'service:main-menu' %}">Frisztek</a>
                 <div class="d-flex justify-content-center flex-grow-1">
                     {% if request.session.cart %}
-                        <a href="{% url 'service:cart' %}"
+                        <a href="{% url 'service:order-cart-summary' %}"
                            class="btn btn-outline-light position-relative">
                             🛒
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
@@ -75,25 +75,25 @@
                             <small class="nav-section-label text-uppercase text-secondary px-3 fw-bold">{% trans "Service" %}</small>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'service:menu-waiter' %}"
-                               class="nav-link {% if request.resolver_match.url_name == 'menu-waiter' %}text-warning fw-bold{% endif %}">
+                            <a href="{% url 'service:main-menu' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'main-menu' %}text-warning fw-bold{% endif %}">
                                 {% trans "Hall" %}
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'kitchen-orders' %}"
+                            <a href="{% url 'gf-display:kitchen-orders' %}"
                                class="nav-link {% if request.resolver_match.url_name == 'kitchen-orders' %}text-warning fw-bold{% endif %}">
                                 {% trans "Kitchen" %}
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'bar-orders' %}"
+                            <a href="{% url 'gf-display:bar-orders' %}"
                                class="nav-link {% if request.resolver_match.url_name == 'bar-orders' %}text-warning fw-bold{% endif %}">
                                 {% trans "Bar" %}
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'service:waiter-notifications' %}"
+                            <a href="{% url 'gf-display:waiter-notifications' %}"
                                class="nav-link {% if request.resolver_match.url_name == 'waiter-notifications' %}text-warning fw-bold{% endif %}">
                                 {% trans "Notifications" %}
                             </a>
@@ -105,20 +105,20 @@
                             <small class="nav-section-label text-uppercase text-secondary px-3 fw-bold">{% trans "Management" %}</small>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'gf-menu:item-list' %}"
-                               class="nav-link {% if request.resolver_match.url_name == 'item-list' %}text-warning fw-bold{% endif %}">{% trans "Edit menu" %}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{% url 'gf-menu:available' %}"
-                               class="nav-link {% if request.resolver_match.url_name == 'available' %}text-warning fw-bold{% endif %}">{% trans "Change status" %}</a>
-                        </li>
-                        <li class="nav-item">
                             <a href="{% url 'ready-order-list' %}"
                                class="nav-link {% if request.resolver_match.url_name == 'ready-order-list' %}text-warning fw-bold{% endif %}">{% trans "Order history" %}</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'summary-bill' %}"
-                               class="nav-link {% if request.resolver_match.url_name == 'summary-bill' %}text-warning fw-bold{% endif %}">{% trans "Bills" %}</a>
+                            <a href="{% url 'list-bill' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'list-bill' %}text-warning fw-bold{% endif %}">{% trans "Bills" %}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'gf-menu:item-list' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'item-list' %}text-warning fw-bold{% endif %}">{% trans "Edit menu" %}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#"
+                               class="nav-link {% if request.resolver_match.url_name == 'available' %}text-warning fw-bold{% endif %}">{% trans "Change status" %}</a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'report-selection' %}"

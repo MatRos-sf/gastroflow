@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import View
@@ -9,6 +9,11 @@ from django.views.generic import View
 from menu.models import Item, MenuType
 from order.models import Bill
 from tools.exceptions import ValidatorError
+
+
+@login_required
+def main_menu_view(request):
+    return render(request, "service/order_flow/main_menu.html")
 
 
 class CartAddView(LoginRequiredMixin, View):

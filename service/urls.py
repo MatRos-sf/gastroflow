@@ -5,7 +5,7 @@ from ._views.action import ActionBillListView
 from ._views.order_flow.cart import CartSummaryView
 from ._views.order_flow.menu import MenuWaiterView
 from ._views.order_flow.table_select import table_select_view
-from ._views.service import CartAddView, select_existing_bill
+from ._views.service import CartAddView, main_menu_view, select_existing_bill
 from ._views.table_view import (
     HallCreateView,
     HallFloorEditorView,
@@ -18,7 +18,7 @@ from ._views.table_view import (
 app_name = "service"
 
 urlpatterns = [
-    path("", views.menu_waiter, name="menu-waiter"),
+    path("", main_menu_view, name="main-menu"),
     path("order/select/table", table_select_view, name="order-select-table"),
     path("order/select/items", MenuWaiterView.as_view(), name="order-select-items"),
     path("order/cart/summary/", CartSummaryView.as_view(), name="order-cart-summary"),

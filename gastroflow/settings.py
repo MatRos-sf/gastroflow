@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import os
-import sys
 from pathlib import Path
 
 import environ
@@ -148,7 +147,7 @@ USE_TZ = True
 
 
 # Auth redirects
-LOGIN_REDIRECT_URL = "service:menu-waiter"
+LOGIN_REDIRECT_URL = "service:main-menu"
 LOGOUT_REDIRECT_URL = "login"
 LOGIN_URL = "login"
 
@@ -179,11 +178,6 @@ CHANNEL_LAYERS = {
     },
 }
 
-if DEBUG and not TESTING:
-    DEBUG_TOOLBAR_CONFIG = {
-        "SHOW_TOOLBAR_CALLBACK": lambda request: True,
-    }
-    SILKY_PYTHON_PROFILER = True
 
 CELERY_TIMEZONE = "Europe/Warsaw"
 CELERY_TASK_TRACK_STARTED = True

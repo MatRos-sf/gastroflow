@@ -3063,3 +3063,18 @@ msgstr "Nieprawidłowe dane formularza. Zniżka musi wynosić od 0 do 100."
 
 msgid "Discount has been applied."
 msgstr "Zniżka została zastosowana."
+
+msgid "Waiter Menu"
+msgstr "Menu kelnera"
+
+msgid "What do you want to do?"
+msgstr "Co chcesz zrobić?"
+
+msgid "Create order"
+msgstr "Stwórz zamówienie"
+
+msgid "Active bills"
+msgstr "Aktywne rachunki"
+
+msgid "Day summary"
+msgstr "Podsumowanie dnia"
