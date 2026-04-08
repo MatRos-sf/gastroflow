@@ -2,13 +2,13 @@
 {% load i18n %}
 {% block title %}
     {% trans "Choose table" %}
-{% endblock %}
+{% endblock title %}
 {% block content %}
     <div class="table-order-page">
         <div class="d-flex align-items-center justify-content-between mb-2 flex-wrap gap-2">
             <h1 class="h4 fw-bold mb-0">{% trans "Choose table" %}</h1>
             <a href="{% url 'service:menu-waiter' %}"
-               class="btn btn-outline-secondary rounded-pill px-4">&larr; {% trans "Back" %}</a>
+               class="btn btn-outline-secondary rounded-pill px-4">← {% trans "Back" %}</a>
         </div>
         {% if not halls %}
             <div class="card border-0 rounded-4 shadow-sm">
@@ -48,12 +48,11 @@
                                  style="aspect-ratio: {{ hall.aspect_w }} / {{ hall.aspect_h }}">
                                 {% for table in hall.tables.all %}
                                     <button type="button"
-                                            class="floor-table {% if table.is_occupied %}floor-table--occupied{% endif %}"
+                                            class="floor-table"
                                             data-pk="{{ table.pk }}"
                                             data-size="{{ table.size }}"
                                             data-x="{{ table.x|stringformat:'.6f' }}"
-                                            data-y="{{ table.y|stringformat:'.6f' }}"
-                                            {% if table.is_occupied %}disabled{% endif %}>{{ table.name }}</button>
+                                            data-y="{{ table.y|stringformat:'.6f' }}">{{ table.name }}</button>
                                 {% empty %}
                                     <p class="text-secondary text-center mt-4 small">{% trans "No tables in this hall." %}</p>
                                 {% endfor %}
@@ -66,12 +65,12 @@
                     <button type="submit"
                             id="btn-submit"
                             class="btn btn-primary rounded-pill px-5 fw-bold"
-                            disabled>{% trans "Proceed to order" %} &rarr;</button>
+                            disabled>{% trans "Proceed to order" %} →</button>
                 </div>
             </form>
         {% endif %}
     </div>
-{% endblock %}
+{% endblock content %}
 {% block extra_js %}
     <style>
 /* ── Viewport fit ── */
@@ -203,4 +202,4 @@ document.querySelectorAll(".floor-table:not(.floor-table--occupied)").forEach(bt
     });
 });
     </script>
-{% endblock %}
+{% endblock extra_js %}
