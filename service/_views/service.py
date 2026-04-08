@@ -111,3 +111,13 @@ def select_existing_bill(request, pk: int):
     request.session["tables"] = [t.pk for t in bill.table.all()]
     request.session["waiter"] = str(bill.waiter.pk)
     return redirect("service:order-select-items")
+
+
+@login_required
+def remove_item_from_cart(request, index):
+    cart = request.session.get("cart", [])
+    if cart:
+        cart.pop(index)
+        request.session["cart"] = cart
+        request.session.modified = True
+    return redirect("service:order-cart-summary")

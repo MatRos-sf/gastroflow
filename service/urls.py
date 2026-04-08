@@ -8,6 +8,7 @@ from ._views.order_flow.table_select import table_select_view
 from ._views.service import (
     CartAddView,
     main_menu_view,
+    remove_item_from_cart,
     select_existing_bill,
     unread_notifications_api,
 )
@@ -21,6 +22,19 @@ from ._views.table_view import (
 )
 
 app_name = "service"
+
+api_urlpatterns = [
+    path(
+        "api/remove-from-cart/<int:index>/",
+        remove_item_from_cart,
+        name="remove-from-cart",
+    ),
+    path(
+        "api/notifications/check/",
+        unread_notifications_api,
+        name="check-notifications",
+    ),
+]
 
 urlpatterns = [
     path("", main_menu_view, name="main-menu"),
@@ -38,18 +52,8 @@ urlpatterns = [
         ActionBillListView.as_view(),
         name="open-bill-list",
     ),
-    path(
-        "api/remove-from-cart/<int:index>/",
-        views.api_remove_from_cart,
-        name="remove-from-cart",
-    ),
     path("cart/clear", views.clear_cart, name="cart-clear"),
     path("bill/<int:pk>/change-table/", change_table, name="change-table"),
-    path(
-        "api/notifications/check/",
-        unread_notifications_api,
-        name="check-notifications",
-    ),
     path("halls/", HallListView.as_view(), name="hall-list"),
     path("halls/create/", HallCreateView.as_view(), name="hall-create"),
     path("halls/<int:pk>/update/", HallUpdateView.as_view(), name="hall-update"),
@@ -63,4 +67,4 @@ urlpatterns = [
         hall_floor_editor_save,
         name="hall-floor-editor-save",
     ),
-]
+] + api_urlpatterns
