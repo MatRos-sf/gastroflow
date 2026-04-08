@@ -1,10 +1,10 @@
 from django.urls import path
 
-from ._views.action import ActionBillListView
-from ._views.order_flow.cart import CartSummaryView
-from ._views.order_flow.menu import MenuWaiterView
-from ._views.order_flow.table_select import table_select_view
-from ._views.service import (
+from .views.action import ActionBillListView
+from .views.order_flow.cart import CartSummaryView
+from .views.order_flow.menu import MenuWaiterView
+from .views.order_flow.table_select import table_select_view
+from .views.service import (
     CartAddView,
     clear_cart,
     main_menu_view,
@@ -12,7 +12,7 @@ from ._views.service import (
     select_existing_bill,
     unread_notifications_api,
 )
-from ._views.table_view import (
+from .views.table_view import (
     HallCreateView,
     HallFloorEditorView,
     HallListView,
