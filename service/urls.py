@@ -5,7 +5,12 @@ from ._views.action import ActionBillListView
 from ._views.order_flow.cart import CartSummaryView
 from ._views.order_flow.menu import MenuWaiterView
 from ._views.order_flow.table_select import table_select_view
-from ._views.service import CartAddView, main_menu_view, select_existing_bill
+from ._views.service import (
+    CartAddView,
+    main_menu_view,
+    select_existing_bill,
+    unread_notifications_api,
+)
 from ._views.table_view import (
     HallCreateView,
     HallFloorEditorView,
@@ -42,7 +47,7 @@ urlpatterns = [
     path("bill/<int:pk>/change-table/", change_table, name="change-table"),
     path(
         "api/notifications/check/",
-        views.check_notifications,
+        unread_notifications_api,
         name="check-notifications",
     ),
     path("halls/", HallListView.as_view(), name="hall-list"),

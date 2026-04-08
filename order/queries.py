@@ -59,6 +59,15 @@ def update_batch_order_items_status(order_id: int, status: OrderItemStatus) -> N
     logger.info(f"Order with ID {order_id} was updated to {status}.")
 
 
+def get_recent_unread_notifications(limit: int = 3) -> list[dict]:
+    qs = Notification.objects.filter(
+        status=NotificationStatus.WAITING_TO_READ
+    ).order_by("-created_at")[:limit]
+    return [
+        {"message": n.message, "notification_type": n.notification_type} for n in qs
+    ]
+
+
 def update_batch_notifications_status(
     notification_ids: list[int], status: NotificationStatus
 ) -> None:

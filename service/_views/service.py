@@ -1,19 +1,29 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django.views.decorators.http import require_GET
 from django.views.generic import View
 
 from menu.models import Item, MenuType
 from order.models import Bill
+from order.queries import get_recent_unread_notifications
 from tools.exceptions import ValidatorError
 
 
 @login_required
 def main_menu_view(request):
     return render(request, "service/order_flow/main_menu.html")
+
+
+@login_required
+@require_GET
+def unread_notifications_api(request):
+    notifications = get_recent_unread_notifications()
+    return JsonResponse({"notifications": notifications})
 
 
 class CartAddView(LoginRequiredMixin, View):

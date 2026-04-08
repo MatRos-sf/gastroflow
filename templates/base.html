@@ -19,12 +19,41 @@
             body {
                 padding-top: 70px;
             }
+            body.has-notifications {
+                padding-top: 110px;
+            }
             .nav-section-label {
                 font-size: .65rem;
                 letter-spacing: .08em;
             }
             .navbar-superuser {
                 border-bottom: 3px solid var(--bs-warning);
+            }
+            @keyframes ticker {
+                0%   { transform: translateX(100vw); }
+                100% { transform: translateX(-100%); }
+            }
+            #notification-banner {
+                position: fixed;
+                top: 56px;
+                left: 0;
+                right: 0;
+                z-index: 1029;
+                background: #ffc107;
+                color: #212529;
+                font-weight: 600;
+                padding: .55rem 0;
+                text-decoration: none;
+                overflow: hidden;
+                white-space: nowrap;
+                display: none;
+            }
+            #notification-banner:hover {
+                background: #ffca2c;
+            }
+            #notification-banner-text {
+                display: inline-block;
+                animation: ticker 18s linear infinite;
             }
         </style>
     </head>
@@ -183,6 +212,10 @@
                 </div>
             </div>
         </nav>
+        <a id="notification-banner"
+           href="{% url 'gf-display:waiter-notifications' %}">
+            <span id="notification-banner-text"></span>
+        </a>
         <div class="container mt-3">
             {% if messages %}
                 {% for message in messages %}
@@ -212,20 +245,29 @@
                 const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
                 const ws = new WebSocket(`${protocol}//${window.location.host}/ws/notifications/`);
                 const dot = document.getElementById("menu-dot");
-                const unread = new Set();
+                const banner = document.getElementById("notification-banner");
+                const bannerText = document.getElementById("notification-banner-text");
+
+                async function refreshBanner() {
+                    try {
+                    const response = await fetch("{% url 'service:check-notifications' %}");
+                    const data = await response.json();
+                    const hasAny = data.notifications.length > 0;
+                    dot.style.display = hasAny ? "block" : "none";
+                    banner.style.display = hasAny ? "block" : "none";
+                    document.body.classList.toggle("has-notifications", hasAny);
+                    if (hasAny) {
+                        bannerText.textContent = data.notifications
+                            .map(n => n.message || n.notification_type)
+                            .join("   •   ");
+                    }
+                    } catch (error) {
+                        console.error("Error checking notifications:", error);
+                    }
+                }
 
                 ws.onmessage = function (event) {
-                    const data = JSON.parse(event.data);
-
-                    if (data.type === "initial_notifications") {
-                        data.notifications.forEach(n => unread.add(n.id));
-                    } else if (data.type === "new_notification") {
-                        unread.add(data.id);
-                    } else if (data.type === "notification_seen") {
-                        unread.delete(data.notification_id);
-                    }
-
-                    dot.style.display = unread.size > 0 ? "block" : "none";
+                    refreshBanner();
                 };
 
                 ws.onclose = function () {
