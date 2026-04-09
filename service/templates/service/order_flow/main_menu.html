@@ -22,9 +22,9 @@
                            class="btn btn-outline-primary rounded-pill fw-bold py-3 fs-4">
                             {% trans "Active bills" %}
                         </a>
-                        <button class="btn btn-outline-secondary rounded-pill fw-bold py-3 fs-4"
-                                type="button"
-                                disabled>{% trans "Day summary" %}</button>
+                        <a class="btn btn-outline-primary rounded-pill fw-bold py-3 fs-4"
+                           type="button"
+                           href="{% url 'report' %}">{% trans "Day summary" %}</a>
                     </div>
                 </div>
             </div>
