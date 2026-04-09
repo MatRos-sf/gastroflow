@@ -17,6 +17,29 @@ def duration_hhmmss(value):
     return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
 
+@register.filter
+def duration_human(value):
+    """
+    Format a timedelta into a human-readable string.
+
+    Examples:
+        1h 28min  — when >= 1 hour
+        5min 32s  — when >= 1 minute
+        32s       — when < 1 minute
+        —         — when value is None
+    """
+    if value is None:
+        return "—"
+    total_seconds = int(value.total_seconds())
+    hours, rem = divmod(total_seconds, 3600)
+    minutes, seconds = divmod(rem, 60)
+    if hours:
+        return f"{hours}h {minutes}min"
+    if minutes:
+        return f"{minutes}min {seconds}s"
+    return f"{seconds}s"
+
+
 @register.simple_tag(takes_context=True)
 def param_replace(context, **kwargs):
     """

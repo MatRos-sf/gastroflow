@@ -2,13 +2,14 @@ from django.urls import path
 
 import order._views.bill_views as _views
 import order._views.order_views as _views_order
+import order._views.report_views as _views_report
 
-from .views import ReadyOrderListView, ReportSelectionView, ReportView, generate_report
+from .views import ReadyOrderListView, ReportSelectionView, generate_report
 
 # TODO: name app "order"
 
 url_report_pattern = [
-    path("report", ReportView.as_view(), name="report"),
+    path("report/", _views_report.ReportDispatchView.as_view(), name="report"),
     path("report/generate/<str:from_to>/", generate_report, name="report-generate"),
     path("report-selection/", ReportSelectionView.as_view(), name="report-selection"),
 ]
