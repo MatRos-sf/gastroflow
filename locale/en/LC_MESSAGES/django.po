@@ -2993,3 +2993,36 @@ msgstr "Cannot close bill and release tables when status bill is different than 
 
 msgid "Bill #%(pk)s has been closed and tables have been released."
 msgstr "Bill #%(pk)s has been closed and tables have been released."
+
+msgid "Daily Report"
+msgstr "Daily Report"
+
+msgid "All time"
+msgstr "All time"
+
+msgid "closed"
+msgstr "closed"
+
+msgid "total"
+msgstr "total"
+
+msgid "open"
+msgstr "open"
+
+msgid "Bills today"
+msgstr "Bills today"
+
+msgid "All closed"
+msgstr "All closed"
+
+msgid "Not printed"
+msgstr "Not printed"
+
+msgid "Order items"
+msgstr "Order items"
+
+msgid "pending"
+msgstr "pending"
+
+msgid "Avg preparation time"
+msgstr "Avg preparation time"

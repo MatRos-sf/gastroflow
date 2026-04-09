@@ -3081,3 +3081,36 @@ msgstr "Podsumowanie dnia"
 
 msgid "Order has been cancelled."
 msgstr "Zamówienie zostało anulowane."
+
+msgid "Daily Report"
+msgstr "Raport dzienny"
+
+msgid "All time"
+msgstr "Cały okres"
+
+msgid "closed"
+msgstr "zamkniętych"
+
+msgid "total"
+msgstr "łącznie"
+
+msgid "open"
+msgstr "otwartych"
+
+msgid "Bills today"
+msgstr "Rachunki dzisiaj"
+
+msgid "All closed"
+msgstr "Wszystkie zamknięte"
+
+msgid "Not printed"
+msgstr "Niewydrukowane"
+
+msgid "Order items"
+msgstr "Pozycje zamówień"
+
+msgid "pending"
+msgstr "oczekuje"
+
+msgid "Avg preparation time"
+msgstr "Średni czas przygotowania"
