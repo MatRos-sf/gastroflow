@@ -10,9 +10,9 @@ from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 
 from model_utils import get_order_additions_summary, get_order_items_summary
-from order.raport import generate_summary_report
+from order.report import generate_summary_report
 from tools.converter import convert_date_from_str_to_date
-from tools.raport_calculator import CALCULATOR_COLLECTION
+from tools.report_calculator import CALCULATOR_COLLECTION
 from tools.report_generator import GenerateReport
 from tools.spreadsheet.spreadsheet import ManagerSpreadsheet
 
