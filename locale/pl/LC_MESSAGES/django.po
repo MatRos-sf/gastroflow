@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-19 21:02+0100\n"
+"POT-Creation-Date: 2026-04-10 21:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,21 +20,137 @@ msgstr ""
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
-#: gastroflow/settings.py:136
-msgid "Polish"
-msgstr ""
-
-#: gastroflow/settings.py:137
-msgid "English"
-msgstr ""
-
-#: menu/models.py:41 templates/base.html:92
+#: consumers/templates/consumers/bar/orders.html:4
+#: consumers/templates/consumers/bar/orders.html:7 menu/models.py:41
+#: order/templates/order/order_ready_history.html:16
+#: order/templates/order/report/report.html:126
+#: order/templates/order/report/report.html:196
+#: order/templates/order/report/report_base.html:106
+#: order/templates/order/report/report_base.html:132 templates/base.html:121
 msgid "Bar"
 msgstr "Bar"
 
-#: menu/models.py:42 templates/base.html:86
+#: consumers/templates/consumers/kitchen/orders.html:4
+#: consumers/templates/consumers/kitchen/orders.html:7 menu/models.py:42
+#: order/templates/order/order_ready_history.html:14
+#: order/templates/order/report/report.html:114
+#: order/templates/order/report/report.html:188
+#: order/templates/order/report/report_base.html:94
+#: order/templates/order/report/report_base.html:124 templates/base.html:115
 msgid "Kitchen"
 msgstr "Kuchnia"
+
+#: consumers/templates/consumers/orders_base.html:5
+#: consumers/templates/consumers/orders_base.html:12
+msgid "Orders"
+msgstr "Zamówienia"
+
+#: consumers/templates/consumers/orders_base.html:18
+#: consumers/templates/consumers/orders_base.html:30
+msgid "Call waiter"
+msgstr "Wezwij kelnera"
+
+#: consumers/templates/consumers/orders_base.html:19
+#: consumers/templates/consumers/waiter_notification.html:13
+msgid "Connecting…"
+msgstr "Łączenie…"
+
+#: consumers/templates/consumers/orders_base.html:34
+#: order/templates/order/bill_detail.html:219
+#: order/templates/order/bill_detail.html:250
+#: order/templates/order/bill_detail.html:285
+#: order/templates/order/bill_detail.html:321
+#: order/templates/order/bill_detail.html:351
+#: order/templates/order/bill_detail.html:395
+#: order/templates/order/bill_detail.html:424
+#: service/templates/service/order_flow/_modal_view.html:27
+msgid "Close"
+msgstr ""
+
+#: consumers/templates/consumers/orders_base.html:46
+msgid "No pending orders"
+msgstr "Brak oczekujących zamówień"
+
+#: consumers/templates/consumers/orders_base.html:87
+#: consumers/templates/consumers/waiter_notification.html:30
+msgid "Connected"
+msgstr "Połączono"
+
+#: consumers/templates/consumers/orders_base.html:88
+#: consumers/templates/consumers/waiter_notification.html:31
+msgid "Connection error"
+msgstr "Błąd połączenia"
+
+#: consumers/templates/consumers/orders_base.html:89
+#: consumers/templates/consumers/waiter_notification.html:32
+msgid "Disconnected — reconnecting…"
+msgstr "Rozłączono — ponowne łączenie…"
+
+#: consumers/templates/consumers/orders_base.html:90
+#: order/templates/order/order_ready_history.html:43
+#: service/templates/service/bill_action_list.html:12
+msgid "Table"
+msgstr "Stolik"
+
+#: consumers/templates/consumers/orders_base.html:91
+msgid "Wait"
+msgstr "Oczekiwanie"
+
+#: consumers/templates/consumers/orders_base.html:92
+#: order/templates/order/bill_detail.html:41
+#: order/templates/order/order_ready_history.html:53
+#: service/templates/service/order_flow/_modal_view.html:45
+#: service/templates/service/order_flow/cart_summary.html:105
+msgid "Note"
+msgstr "Uwaga"
+
+#: consumers/templates/consumers/orders_base.html:93 order/models.py:18
+#: order/models.py:25
+msgid "Preparing"
+msgstr "Przygotowywane"
+
+#: consumers/templates/consumers/orders_base.html:94 order/models.py:19
+#: order/models.py:26
+msgid "Ready"
+msgstr "Gotowe"
+
+#: consumers/templates/consumers/orders_base.html:95
+msgid "Done"
+msgstr "Zrobione"
+
+#: consumers/templates/consumers/orders_base.html:96
+msgid "REMOVED"
+msgstr "USUNIĘTO"
+
+#: consumers/templates/consumers/orders_base.html:97
+msgid "No active waiters"
+msgstr "Brak aktywnych kelnerów"
+
+#: consumers/templates/consumers/waiter_notification.html:4
+#: consumers/templates/consumers/waiter_notification.html:8
+#: templates/base.html:127
+msgid "Notifications"
+msgstr "Powiadomienia"
+
+#: consumers/templates/consumers/waiter_notification.html:12
+#, fuzzy
+#| msgid "Read"
+msgid "Read all"
+msgstr "Odczytane"
+
+#: consumers/templates/consumers/waiter_notification.html:21
+#, fuzzy
+#| msgid "Notifications"
+msgid "No pending notifications"
+msgstr "Powiadomienia"
+
+#: gastroflow/settings.py:135
+msgid "Polish"
+msgstr ""
+
+#: gastroflow/settings.py:136
+msgid "English"
+msgstr ""
 
 #: menu/models.py:46 menu/models.py:62 menu/models.py:76 menu/models.py:121
 msgid "name"
@@ -116,7 +232,13 @@ msgstr "dzienny stan"
 msgid "item"
 msgstr "produkt"
 
-#: menu/models.py:150 service/templates/service/order_flow/cart_summary.html:10
+#: menu/models.py:150 order/templates/order/report/report.html:107
+#: order/templates/order/report/report.html:116
+#: order/templates/order/report/report.html:128
+#: order/templates/order/report/report_base.html:87
+#: order/templates/order/report/report_base.html:96
+#: order/templates/order/report/report_base.html:108
+#: service/templates/service/order_flow/cart_summary.html:10
 msgid "items"
 msgstr "produkty"
 
@@ -167,6 +289,14 @@ msgstr "Coś poszło nie tak. Spróbuj ponownie."
 #: menu/templates/menu/replenish-item.html:143
 #: menu/templates/menu/update-item.html:21
 #: menu/templates/menu/update-menu-period.html:129
+#: order/templates/order/bill_detail.html:226
+#: order/templates/order/bill_detail.html:261
+#: order/templates/order/bill_detail.html:296
+#: order/templates/order/bill_detail.html:327
+#: order/templates/order/bill_detail.html:369
+#: order/templates/order/bill_detail.html:401
+#: order/templates/order/bill_detail.html:434
+#: service/templates/service/change_table.html:22
 #: service/templates/service/hall/create-hall.html:24
 #: service/templates/service/hall/update-hall.html:27
 #: worker/templates/worker/create-worker.html:21
@@ -183,6 +313,9 @@ msgstr "Anuluj"
 #: menu/templates/menu/daily-stock-item.html:153
 #: menu/templates/menu/replenish-item.html:144
 #: menu/templates/menu/update-menu-period.html:127
+#: order/templates/order/bill_detail.html:370
+#: order/templates/order/bill_detail.html:402
+#: service/templates/service/change_table.html:23
 #: service/templates/service/hall/create-hall.html:22
 #: service/templates/service/hall/update-hall.html:25
 #: worker/templates/worker/create-worker.html:19
@@ -229,6 +362,8 @@ msgstr "Zdefiniuj przedział czasowy i przypisz dostępne w nim pozycje."
 #: menu/templates/menu/detail-item.html:37
 #: menu/templates/menu/detail-menu-period.html:27
 #: menu/templates/menu/update-menu-period.html:19
+#: order/templates/order/bill_detail.html:16
+#: service/templates/service/bill_action_list.html:39
 msgid "Details"
 msgstr "Szczegóły"
 
@@ -261,6 +396,7 @@ msgstr "Aktywny"
 #: menu/templates/menu/list-item.html:4 menu/templates/menu/list-item.html:11
 #: menu/templates/menu/list-menu-period.html:27
 #: menu/templates/menu/update-menu-period.html:64
+#: order/templates/order/bill_detail.html:106
 msgid "Items"
 msgstr "Pozycje"
 
@@ -285,6 +421,7 @@ msgstr "Zaznacz wszystkie"
 #: menu/templates/menu/daily-stock-item.html:53
 #: menu/templates/menu/list-item.html:53
 #: menu/templates/menu/update-menu-period.html:98
+#: order/templates/order/bill_list.html:15
 #: venv/lib/python3.12/site-packages/django/forms/widgets.py:527
 msgid "Clear"
 msgstr "Wyczyść"
@@ -322,7 +459,7 @@ msgstr "Uzupełnij magazyn"
 #: menu/templates/menu/daily-stock-item.html:24
 #: menu/templates/menu/daily-stock-item.html:38
 #: menu/templates/menu/list-item.html:24 menu/templates/menu/list-item.html:38
-#: menu/templates/menu/replenish-item.html:31
+#: menu/templates/menu/replenish-item.html:31 order/filters.py:16
 msgid "All"
 msgstr "Wszystkie"
 
@@ -335,6 +472,8 @@ msgstr "Lokalizacja"
 
 #: menu/templates/menu/daily-stock-item.html:50
 #: menu/templates/menu/list-item.html:50
+#: order/templates/order/bill_list.html:13
+#: order/templates/order/report/report.html:29
 msgid "Filter"
 msgstr "Filtruj"
 
@@ -449,7 +588,7 @@ msgstr "Opis"
 
 #: menu/templates/menu/detail-item.html:51
 #: menu/templates/menu/list-item.html:67
-#: service/templates/service/order_flow/_modal_view.html:49
+#: service/templates/service/order_flow/_modal_view.html:50
 msgid "Additions"
 msgstr "Dodatki"
 
@@ -465,9 +604,13 @@ msgid "Edit"
 msgstr "Edytuj"
 
 #: menu/templates/menu/detail-item.html:73
-#: service/templates/service/order_flow/_modal_view.html:70
+#: order/templates/order/bill_detail.html:11
+#: service/templates/service/bill_action_list.html:17
+#: service/templates/service/change_table.html:11
+#: service/templates/service/order_flow/_modal_view.html:72
 #: service/templates/service/order_flow/cart_summary.html:13
 #: service/templates/service/order_flow/table_order.html:11
+#: service/templates/service/order_flow/table_settle.html:23
 msgid "Back"
 msgstr "Wróć"
 
@@ -479,6 +622,7 @@ msgstr "Nieaktywny"
 
 #: menu/templates/menu/detail-menu-period.html:40
 #: menu/templates/menu/list-menu-period.html:28
+#: order/templates/order/bill_detail.html:19
 msgid "Status"
 msgstr "Status"
 
@@ -551,213 +695,609 @@ msgstr "Edytuj okres menu"
 msgid "Edit menu period"
 msgstr "Edytuj okres menu"
 
-#: menu/views.py:34
+#: menu/views.py:35
 #, python-format
 msgid "Item added: '%(name)s'"
 msgstr "Pozycja została dodana: '%(name)s'"
 
-#: menu/views.py:50
+#: menu/views.py:51
 #, python-format
 msgid "Item '%(name)s' has been updated."
 msgstr "Pozycja '%(name)s' została zaktualizowana."
 
-#: menu/views.py:107
+#: menu/views.py:109
 #, python-format
 msgid "Set daily stock for '%(name)s'"
 msgstr "Ustawiono dzienny stan dla '%(name)s'"
 
-#: menu/views.py:150
+#: menu/views.py:156
 #, python-format
 msgid "Supplied '%(name)s'"
 msgstr "Uzupełniono '%(name)s'"
 
-#: menu/views.py:159
+#: menu/views.py:166
 #, python-format
 msgid "Supplied %(count)s items"
 msgstr "Uzupełniono %(count)s pozycji"
 
-#: menu/views.py:188
+#: menu/views.py:195
 #, python-format
 msgid "Menu period '%(name)s' created."
 msgstr "Okres menu '%(name)s' został utworzony."
 
-#: menu/views.py:199
+#: menu/views.py:206
 #, python-format
 msgid "Menu period '%(name)s' updated."
 msgstr "Okres menu '%(name)s' został zaktualizowany."
 
-#: order/models.py:15
-#: order/models.py:15
+#: order/_views/bill_views.py:78
+msgid "Cannot edit a closed bill."
+msgstr ""
+
+#: order/_views/bill_views.py:84
+#, fuzzy
+#| msgid "Work time has been successfully updated!"
+msgid "Bill has been updated."
+msgstr "Czas pracy został pomyślnie zaktualizowany!"
+
+#: order/_views/bill_views.py:98
+msgid "Cannot close a bill that is already closed."
+msgstr "Nie można zamknąć rachunku, który jest już zamknięty."
+
+#: order/_views/bill_views.py:103
+msgid "Invalid form data."
+msgstr "Nieprawidłowe dane formularza."
+
+#: order/_views/bill_views.py:116 order/_views/order_views.py:68
+msgid "Tables have been released."
+msgstr "Stoliki zostały zwolnione."
+
+#: order/_views/bill_views.py:120
+msgid "Bill is being prepared for printing."
+msgstr "Trwa przygotowanie do wydruku paragonu."
+
+#: order/_views/bill_views.py:124
+#, python-format
+msgid "Bill #%(pk)s has been closed. %(msg)s"
+msgstr "Rachunek #%(pk)s został zamknięty. %(msg)s"
+
+#: order/_views/bill_views.py:138
+msgid ""
+"Cannot close bill and release tables when status bill is different than "
+"closed and occupied."
+msgstr ""
+"Nie można zamknąć rachunku i zwolnić stolików, gdy status rachunku jest inny "
+"niż zamknięty i zajęty."
+
+#: order/_views/bill_views.py:148
+#, python-format
+msgid "Bill #%(pk)s has been closed and tables have been released."
+msgstr "Rachunek #%(pk)s został zamknięty, a stoliki zostały zwolnione."
+
+#: order/_views/bill_views.py:163
+msgid "Cannot add a discount to a bill that is not open."
+msgstr "Nie można dodać zniżki do rachunku, który nie jest otwarty."
+
+#: order/_views/bill_views.py:168
+msgid "Invalid form data. Discount must be 0–100."
+msgstr "Nieprawidłowe dane formularza. Zniżka musi wynosić od 0 do 100."
+
+#: order/_views/bill_views.py:173
+msgid "Discount has been applied."
+msgstr "Zniżka została zastosowana."
+
+#: order/_views/bill_views.py:190
+msgid ""
+"You cannot delete a bill that is not open. Only superusers can delete bills."
+msgstr ""
+
+#: order/_views/bill_views.py:210
+#, fuzzy, python-format
+#| msgid "Remove bill"
+msgid "Removed bill %(pk)s."
+msgstr "Usuń rachunek"
+
+#: order/_views/order_views.py:27
+msgid "You do not have permission to delete this order."
+msgstr ""
+
+#: order/_views/order_views.py:31
+#, python-format
+msgid "Removed %(pk)s."
+msgstr ""
+
+#: order/_views/order_views.py:37 order/_views/order_views.py:70
+#, python-format
+msgid "Removed empty bill %(pk)s."
+msgstr ""
+
+#: order/_views/order_views.py:56
+#, fuzzy, python-format
+#| msgid "Item added: '%(name)s'"
+msgid "Removed %(name)s."
+msgstr "Pozycja została dodana: '%(name)s'"
+
+#: order/_views/order_views.py:64
+#, fuzzy, python-format
+#| msgid "Remove order"
+msgid "Removed empty order %(pk)s."
+msgstr "Usuń zamówienie"
+
+#: order/filters.py:18
+msgid "Choose localization"
+msgstr "Wybierz lokalizację"
+
+#: order/forms.py:54 order/templates/order/bill_detail.html:356
+#: service/templates/service/order_flow/cart_summary.html:92
+msgid "PIN"
+msgstr "PIN"
+
+#: order/forms.py:76
+#, fuzzy
+#| msgid "No orders for this day."
+msgid "PIN is required for this waiter."
+msgstr "Brak zamówień w tym dniu."
+
+#: order/forms.py:79
+#, fuzzy
+#| msgid "Invalid PIN"
+msgid "Invalid PIN."
+msgstr "Nieprawidłowy PIN"
+
+#: order/forms.py:89
+msgid "Print bill"
+msgstr "Drukuj rachunek"
+
+#: order/models.py:17
 msgid "Waiting"
 msgstr "Oczekuje"
 
-#: order/models.py:16 order/models.py:23
-msgid "Preparing"
-msgstr "Przygotowywane"
-
-#: order/models.py:17 order/models.py:24
-msgid "Ready"
-msgstr "Gotowe"
-
-#: order/models.py:18 order/models.py:26
+#: order/models.py:20 order/models.py:28
 msgid "Canceled"
 msgstr "Anulowane"
 
-#: order/models.py:22
+#: order/models.py:24
 msgid "Ordering"
 msgstr "Zamówienie"
 
-#: order/models.py:25
+#: order/models.py:27
 msgid "Paid"
 msgstr "Zapłacone"
 
-#: order/models.py:32
+#: order/models.py:39
 msgid "Open"
 msgstr "Otwarte"
 
-#: order/models.py:33
+#: order/models.py:40
 msgid "Closed"
 msgstr "Zamknięte"
 
-#: order/models.py:34
+#: order/models.py:41
 msgid "Closed and occupied"
 msgstr "Zamknięte i zajęte"
 
-#: order/models.py:38
+#: order/models.py:45 order/templates/order/report/report.html:74
+#: order/templates/order/report/report.html:166
+#: order/templates/order/report/report_base.html:54
 msgid "Card"
 msgstr "Karta"
 
-#: order/models.py:39
+#: order/models.py:46 order/templates/order/report/report.html:82
+#: order/templates/order/report/report.html:174
+#: order/templates/order/report/report_base.html:62
 msgid "Cash"
 msgstr "Gotówka"
 
-#: order/models.py:40
+#: order/models.py:47
 msgid "Cash and card"
 msgstr "Gotówka i karta"
 
-#: order/models.py:44
+#: order/models.py:53
 msgid "Table to which the bill is assigned. Null means take-away"
 msgstr "Stolik przypisany do rachunku. Null oznacza zamówienie na wynos"
 
-#: order/models.py:60
+#: order/models.py:69
 msgid "Person who served the customer"
 msgstr "Osoba, która obsłużyła klienta"
 
-#: order/models.py:73
+#: order/models.py:81
 msgid "Number of people in one the bill (plates per person)"
 msgstr "Liczba osób na rachunku (talerze na osobę)"
 
-#: order/models.py:230
+#: order/models.py:255
 msgid "Item Info"
 msgstr "Info o pozycji"
 
-#: order/models.py:231
+#: order/models.py:256
 msgid "Order Info"
 msgstr "Info o zamówieniu"
 
-#: order/models.py:232
+#: order/models.py:257
 msgid "Call"
 msgstr "Wezwanie"
 
-#: order/models.py:236
+#: order/models.py:261
 msgid "None"
 msgstr "Brak"
 
-#: order/models.py:237
+#: order/models.py:262
 msgid "Waiting to Read"
 msgstr "Oczekuje na odczytanie"
 
-#: order/models.py:238
+#: order/models.py:263
 msgid "Read"
 msgstr "Odczytane"
 
-#: order/models.py:315
+#: order/models.py:342
 msgid "Name of dish or additions"
 msgstr "Nazwa dania lub dodatku"
 
-#: order/models.py:320
+#: order/models.py:347
 msgid "Price of dish or additions when it was ordered"
 msgstr "Cena dania lub dodatku w momencie zamówienia"
 
-#: order/models.py:326
+#: order/models.py:354
 msgid "Subtotal for this item before discount and additions (price × quantity)"
-msgstr "Suma częściowa dla tej pozycji przed rabatem i dodatkami (cena × ilość)"
+msgstr ""
+"Suma częściowa dla tej pozycji przed rabatem i dodatkami (cena × ilość)"
 
-#: service/_views/order_flow/cart.py:137
-msgid "Bill not found"
-msgstr "Nie znaleziono rachunku"
+#: order/templates/order/bill_detail.html:4
+#: order/templates/order/bill_detail.html:9
+#: order/templates/order/bill_detail.html:316
+#: order/templates/order/bill_detail.html:390
+#: order/templates/order/bill_list.html:28
+#: service/templates/service/change_table.html:4
+#: service/templates/service/change_table.html:9
+msgid "Bill"
+msgstr "Rachunek"
 
-#: service/_views/order_flow/cart.py:158
-msgid "Waiter not found"
-msgstr "Nie znaleziono kelnera"
+#: order/templates/order/bill_detail.html:23
+msgid "Table(s)"
+msgstr "Stolik(i)"
 
-#: service/_views/order_flow/cart.py:162
-msgid "Invalid PIN"
-msgstr "Nieprawidłowy PIN"
+#: order/templates/order/bill_detail.html:24
+#: order/templates/order/bill_list.html:39
+msgid "Take-away"
+msgstr "Na wynos"
 
-#: service/_views/order_flow/cart.py:168
-msgid "Guest count must be an integer!"
-msgstr "Liczba gości musi być liczbą całkowitą!"
+#: order/templates/order/bill_detail.html:28
+#: order/templates/order/report/report.html:225
+#: service/templates/service/bill_action_list.html:26
+#: service/templates/service/order_flow/cart_summary.html:77
+#: worker/models.py:12
+msgid "Waiter"
+msgstr "Kelner"
 
-#: service/_views/order_flow/cart.py:170
-msgid "Guest count must be greater than 0"
-msgstr "Liczba gości musi być większa niż 0"
+#: order/templates/order/bill_detail.html:32
+#: order/templates/order/report/report.html:66
+#: order/templates/order/report/report.html:227
+#: order/templates/order/report/report_base.html:46
+msgid "Guests"
+msgstr "Goście"
 
-#: service/_views/order_flow/cart.py:204
-msgid "Missing required session data"
-msgstr "Brak wymaganych danych w sesji"
+#: order/templates/order/bill_detail.html:36
+msgid "Created"
+msgstr "Utworzono"
 
-#: service/_views/order_flow/cart.py:222
-#, python-format
-msgid "%(item)s is sold out."
-msgstr "%(item)s jest wyprzedany."
+#: order/templates/order/bill_detail.html:47
+msgid "Discount"
+msgstr "Rabat"
 
-#: service/_views/order_flow/cart.py:226
-#, python-format
-msgid "%(item)s: only %(n)d portion(s) left."
-msgstr "%(item)s: zostało tylko %(n)d porcji."
+#: order/templates/order/bill_detail.html:52
+msgid "All dishes ready"
+msgstr "Wszystkie dania gotowe"
 
-#: service/_views/order_flow/cart.py:234
-msgid "An error occurred while creating the order"
-msgstr "Wystąpił błąd podczas tworzenia zamówienia"
+#: order/templates/order/bill_detail.html:54
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:867
+msgid "Yes"
+msgstr ""
 
-#: service/_views/order_flow/cart.py:239
-#, python-format
-msgid "Order #%(pk)s completed."
-msgstr "Zamówienie na rachunek #%(pk)s zostało ukończone."
+#: order/templates/order/bill_detail.html:56
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:868
+msgid "No"
+msgstr ""
 
-#: service/_views/order_flow/cart.py:241
-#, python-format
-msgid "Order #%(pk)s updated."
-msgstr "Zamówienie na rachunek #%(pk)s zostało zaktualizowane."
+#: order/templates/order/bill_detail.html:61
+msgid "Preparing time"
+msgstr "Czas przygotowania"
 
-#: service/_views/order_flow/table_select.py:18
-msgid "Select a table to proceed to the order"
-msgstr "Wybierz stolik aby przejść do zamówienia"
+#: order/templates/order/bill_detail.html:67
+msgid "Payment method"
+msgstr "Metoda płatności"
 
-#: service/_views/table_view.py:32
-#, python-format
-msgid "Hall '%(name)s' created."
-msgstr "Sala '%(name)s' została utworzona."
+#: order/templates/order/bill_detail.html:73
+msgid "Paid at"
+msgstr "Zapłacono o"
 
-#: service/_views/table_view.py:46
-#, python-format
-msgid "Hall '%(name)s' updated."
-msgstr "Sala '%(name)s' została zaktualizowana."
+#: order/templates/order/bill_detail.html:79
+msgid "Closed at"
+msgstr "Zamknięto o"
 
-#: service/forms.py:12
+#: order/templates/order/bill_detail.html:85
+msgid "Bill printed at"
+msgstr "Rachunek wydrukowano o"
+
+#: order/templates/order/bill_detail.html:95
+#: order/templates/order/bill_detail.html:347
+msgid "Edit bill"
+msgstr "Edytuj rachunek"
+
+#: order/templates/order/bill_detail.html:99
+#: order/templates/order/bill_detail.html:390
+#: service/templates/service/change_table.html:4
+#: service/templates/service/change_table.html:9
+msgid "Change table"
+msgstr "Zmień stolik"
+
+#: order/templates/order/bill_detail.html:113
+#: service/templates/service/hall/list-hall.html:29
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:484
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:491
+msgid "Order"
+msgstr ""
+
+#: order/templates/order/bill_detail.html:123
+#: order/templates/order/bill_detail.html:281
+msgid "Remove order"
+msgstr "Usuń zamówienie"
+
+#: order/templates/order/bill_detail.html:143
+#: order/templates/order/bill_detail.html:262
+#: order/templates/order/bill_detail.html:297
+#: service/templates/service/hall/floor-editor.html:118
+#: service/templates/service/order_flow/cart_summary.html:54
+msgid "Remove"
+msgstr "Usuń"
+
+#: order/templates/order/bill_detail.html:156
+#, fuzzy
+#| msgid "items"
+msgid "No items."
+msgstr "produkty"
+
+#: order/templates/order/bill_detail.html:160
+#: order/templates/order/bill_list.html:79
+#: order/templates/order/report/report.html:105
+#: order/templates/order/report/report_base.html:85
+msgid "Total"
+msgstr "Suma"
+
+#: order/templates/order/bill_detail.html:176
+#: order/templates/order/bill_detail.html:215
+#: order/templates/order/bill_detail.html:227
+#: service/templates/service/order_flow/table_settle.html:7
+msgid "Close bill"
+msgstr "Zamknij rachunek"
+
+#: order/templates/order/bill_detail.html:183
+msgid "Close bill and release tables"
+msgstr "Zamknij rachunek i zwolnij stoliki"
+
+#: order/templates/order/bill_detail.html:191
+#: order/templates/order/bill_detail.html:316
+msgid "Add discount"
+msgstr "Dodaj rabat"
+
+#: order/templates/order/bill_detail.html:197
+#: order/templates/order/bill_detail.html:420
+#: order/templates/order/bill_detail.html:435
+msgid "Remove bill"
+msgstr "Usuń rachunek"
+
+#: order/templates/order/bill_detail.html:246
+msgid "Remove item"
+msgstr "Usuń pozycję"
+
+#: order/templates/order/bill_detail.html:255
+msgid "This action cannot be undone. The bill will be updated."
+msgstr "Tej operacji nie można cofnąć. Rachunek zostanie zaktualizowany."
+
+#: order/templates/order/bill_detail.html:290
+msgid "This action cannot be undone. All items in this order will be removed."
+msgstr ""
+"Tej operacji nie można cofnąć. Wszystkie pozycje zamówienia zostaną usunięte."
+
+#: order/templates/order/bill_detail.html:328
+#, fuzzy
+#| msgid "Add discount"
+msgid "Apply discount"
+msgstr "Dodaj rabat"
+
+#: order/templates/order/bill_detail.html:428
+#, fuzzy
+#| msgid ""
+#| "This action cannot be undone. All items in this order will be removed."
+msgid ""
+"This action cannot be undone. All orders and items in this bill will be "
+"removed."
+msgstr ""
+"Tej operacji nie można cofnąć. Wszystkie pozycje zamówienia zostaną usunięte."
+
+#: order/templates/order/bill_detail.html:451
+msgid "Are you sure you want to remove:"
+msgstr "Czy na pewno chcesz usunąć:"
+
+#: order/templates/order/bill_detail.html:464
+msgid "Are you sure you want to remove order"
+msgstr "Czy na pewno chcesz usunąć zamówienie"
+
+#: order/templates/order/bill_list.html:4
+#: order/templates/order/bill_list.html:9
+#: order/templates/order/report/report.html:45
+#: order/templates/order/report/report.html:226
+#: order/templates/order/report/report_base.html:25 templates/base.html:142
+msgid "Bills"
+msgstr "Rachunki"
+
+#: order/templates/order/bill_list.html:88
+msgid "Pagination"
+msgstr "Stronicowanie"
+
+#: order/templates/order/bill_list.html:91
+#: order/templates/order/order_ready_history.html:78
+msgid "Previous"
+msgstr "Poprzedni"
+
+#: order/templates/order/bill_list.html:98
+#: order/templates/order/order_ready_history.html:98
+msgid "Next"
+msgstr "Dalej"
+
+#: order/templates/order/bill_list.html:105
+msgid "No bills found."
+msgstr "Brak rachunków."
+
+#: order/templates/order/order_ready_history.html:7
+msgid "Recently served"
+msgstr "Ostatnio wydane"
+
+#: order/templates/order/order_ready_history.html:64
+msgid "No orders for this day."
+msgstr "Brak zamówień w tym dniu."
+
+#: order/templates/order/order_ready_history.html:69
+msgid "Page navigation"
+msgstr "Nawigacja stron"
+
+#: order/templates/order/order_ready_history.html:74
+#: worker/templates/worker/detail-worker.html:36
+msgid "Start"
+msgstr "Początek"
+
+#: order/templates/order/order_ready_history.html:102
+msgid "Last"
+msgstr "Ostatnia"
+
+#: order/templates/order/report/report.html:4
+#: order/templates/order/report/report_base.html:4
+#: order/templates/order/report/report_base.html:10
+msgid "Daily Report"
+msgstr "Raport dzienny"
+
+#: order/templates/order/report/report.html:10
+msgid "Daily Report Admin"
+msgstr "Raport dzienny (Admin)"
+
+#: order/templates/order/report/report.html:13
+#: order/templates/order/report/report_base.html:15
+msgid "All time"
+msgstr "Cały okres"
+
+#: order/templates/order/report/report.html:21
+msgid "From"
+msgstr "Od"
+
+#: order/templates/order/report/report.html:25
+msgid "To"
+msgstr "Do"
+
+#: order/templates/order/report/report.html:48
+#: order/templates/order/report/report_base.html:28
+msgid "closed"
+msgstr "zamkniętych"
+
+#: order/templates/order/report/report.html:51
+#: order/templates/order/report/report_base.html:31
+msgid "total"
+msgstr "łącznie"
+
+#: order/templates/order/report/report.html:53
+#: order/templates/order/report/report_base.html:33
+msgid "open"
+msgstr "otwartych"
+
+#: order/templates/order/report/report.html:55
+#: order/templates/order/report/report_base.html:35
+msgid "Bills today"
+msgstr "Rachunki dzisiaj"
+
+#: order/templates/order/report/report.html:57
+#: order/templates/order/report/report_base.html:37
+msgid "All closed"
+msgstr "Wszystkie zamknięte"
+
+#: order/templates/order/report/report.html:90
+#: order/templates/order/report/report.html:158
+#: order/templates/order/report/report_base.html:70
+msgid "Not printed"
+msgstr "Niewydrukowane"
+
+#: order/templates/order/report/report.html:100
+#: order/templates/order/report/report_base.html:80
+msgid "Order items"
+msgstr "Pozycje zamówień"
+
+#: order/templates/order/report/report.html:118
+#: order/templates/order/report/report.html:130
+#: order/templates/order/report/report_base.html:98
+#: order/templates/order/report/report_base.html:110
+msgid "pending"
+msgstr "oczekuje"
+
+#: order/templates/order/report/report.html:139
+msgid "Earnings"
+msgstr "Przychody"
+
+#: order/templates/order/report/report.html:142
+msgid "Total earn"
+msgstr "Łączny przychód"
+
+#: order/templates/order/report/report.html:150
+msgid "Printed"
+msgstr "Wydrukowane"
+
+#: order/templates/order/report/report.html:183
+#: order/templates/order/report/report_base.html:119
+msgid "Avg preparation time"
+msgstr "Średni czas przygotowania"
+
+#: order/templates/order/report/report.html:206
+msgid "Orders by hour"
+msgstr "Zamówienia wg godzin"
+
+#: order/templates/order/report/report.html:218
+msgid "Waiter stats"
+msgstr "Statystyki kelnerów"
+
+#: order/templates/order/report/report.html:248
+msgid "Worker salary"
+msgstr "Wynagrodzenia pracowników"
+
+#: order/templates/order/report/report.html:255
+msgid "Worker"
+msgstr "Pracownik"
+
+#: order/templates/order/report/report.html:256
+#: worker/templates/worker/list-worker.html:17
+msgid "Position"
+msgstr "Stanowisko"
+
+#: order/templates/order/report/report.html:257
+msgid "Hours"
+msgstr "Godziny"
+
+#: order/templates/order/report/report.html:258
+#: worker/templates/worker/detail-worker.html:17
+msgid "Salary"
+msgstr "Wynagrodzenie"
+
+#: order/templates/order/report/report.html:267
+msgid "working"
+msgstr "pracuje"
+
+#: service/forms.py:28
 msgid "Aspect ratio — width"
 msgstr "Proporcje — szerokość"
 
-#: service/forms.py:13
+#: service/forms.py:29
 msgid "Aspect ratio — height"
 msgstr "Proporcje — wysokość"
 
-#: service/forms.py:16
+#: service/forms.py:32
 msgid "e.g. 2 for a 2:1 (wide) room"
 msgstr "np. 2 dla sali 2:1 (szerokiej)"
 
-#: service/forms.py:17
+#: service/forms.py:33
 msgid "e.g. 1 for a 2:1 (wide) room"
 msgstr "np. 1 dla sali 2:1 (szerokiej)"
 
@@ -772,6 +1312,31 @@ msgstr "1×2"
 #: service/models.py:8
 msgid "1×3"
 msgstr "1×3"
+
+#: service/templates/service/bill_action_list.html:4
+#: service/templates/service/bill_action_list.html:12
+msgid "Open Bills"
+msgstr "Otwarte rachunki"
+
+#: service/templates/service/bill_action_list.html:14
+msgid "Additions are not shown in this view."
+msgstr "Dodatki nie są widoczne w tym widoku."
+
+#: service/templates/service/bill_action_list.html:42
+#: service/templates/service/order_flow/cart_summary.html:128
+#: service/templates/service/order_flow/main_menu.html:19
+#: service/templates/service/order_flow/table_settle.html:5
+#: service/templates/service/order_flow/table_settle.html:15
+msgid "Add to order"
+msgstr "Dodaj do zamówienia"
+
+#: service/templates/service/bill_action_list.html:54
+msgid "No open bills to close."
+msgstr "Brak otwartych rachunków do zamknięcia."
+
+#: service/templates/service/bill_action_list.html:56
+msgid "No open bills to add to."
+msgstr "Brak otwartych rachunków do których można dodać zamówienie."
 
 #: service/templates/service/hall/create-hall.html:4
 #: service/templates/service/hall/create-hall.html:12
@@ -826,11 +1391,6 @@ msgstr ""
 msgid "Click to change size"
 msgstr "Kliknij, aby zmienić rozmiar"
 
-#: service/templates/service/hall/floor-editor.html:118
-#: service/templates/service/order_flow/cart_summary.html:64
-msgid "Remove"
-msgstr "Usuń"
-
 #: service/templates/service/hall/floor-editor.html:129
 msgid "Table name:"
 msgstr "Nazwa stolika:"
@@ -863,12 +1423,6 @@ msgstr "Aktywna"
 msgid "Inactive"
 msgstr "Nieaktywna"
 
-#: service/templates/service/hall/list-hall.html:29
-#: venv/lib/python3.12/site-packages/django/forms/formsets.py:484
-#: venv/lib/python3.12/site-packages/django/forms/formsets.py:491
-msgid "Order"
-msgstr ""
-
 #: service/templates/service/hall/list-hall.html:31
 msgid "tables"
 msgstr "stoliki"
@@ -894,18 +1448,9 @@ msgstr "Aktualizuje się po zmianie proporcji."
 msgid "Open floor editor"
 msgstr "Otwórz edytor sali"
 
-#: service/templates/service/order_flow/_modal_view.html:25
-msgid "Close"
-msgstr ""
-
-#: service/templates/service/order_flow/_modal_view.html:35
+#: service/templates/service/order_flow/_modal_view.html:36
 msgid "Quantity"
 msgstr ""
-
-#: service/templates/service/order_flow/_modal_view.html:44
-#: service/templates/service/order_flow/cart_summary.html:114
-msgid "Note"
-msgstr "Uwaga"
 
 #: service/templates/service/order_flow/_modal_view.html:73
 msgid "Add"
@@ -917,66 +1462,57 @@ msgstr ""
 msgid "Cart"
 msgstr "Koszyk"
 
-#: service/templates/service/order_flow/cart_summary.html:20
+#: service/templates/service/order_flow/cart_summary.html:18
 msgid "Your cart is empty."
 msgstr "Twój koszyk jest pusty."
 
-#: service/templates/service/order_flow/cart_summary.html:22
+#: service/templates/service/order_flow/cart_summary.html:20
 msgid "Browse menu"
 msgstr "Przeglądaj menu"
 
-#: service/templates/service/order_flow/cart_summary.html:80
+#: service/templates/service/order_flow/cart_summary.html:68
 msgid "Order details"
 msgstr "Szczegóły zamówienia"
 
-#: service/templates/service/order_flow/cart_summary.html:86
-#: worker/models.py:12
-msgid "Waiter"
-msgstr "Kelner"
+#: service/templates/service/order_flow/cart_summary.html:71
+msgid "Adding to bill"
+msgstr "Dodawanie do rachunku"
 
-#: service/templates/service/order_flow/cart_summary.html:89
+#: service/templates/service/order_flow/cart_summary.html:82
 msgid "Select waiter..."
 msgstr "Wybierz kelnera..."
 
-#: service/templates/service/order_flow/cart_summary.html:101
-msgid "PIN"
-msgstr "PIN"
-
-#: service/templates/service/order_flow/cart_summary.html:115
+#: service/templates/service/order_flow/cart_summary.html:106
 msgid "optional"
 msgstr "opcjonalne"
 
-#: service/templates/service/order_flow/cart_summary.html:121
+#: service/templates/service/order_flow/cart_summary.html:112
 msgid "Additional note..."
 msgstr "Dodatkowa uwaga..."
 
-#: service/templates/service/order_flow/cart_summary.html:125
+#: service/templates/service/order_flow/cart_summary.html:115
 msgid "Guest count"
 msgstr "Liczba gości"
 
-#: service/templates/service/order_flow/cart_summary.html:137
-msgid "Add to order"
-msgstr "Dodaj do zamówienia"
-
-#: service/templates/service/order_flow/cart_summary.html:139
+#: service/templates/service/order_flow/cart_summary.html:130
 msgid "Place order"
 msgstr "Złóż zamówienie"
 
-#: service/templates/service/order_flow/cart_summary.html:148
+#: service/templates/service/order_flow/cart_summary.html:138
 msgid "Cancel order and clear cart?"
 msgstr "Anulować zamówienie i wyczyścić koszyk?"
 
-#: service/templates/service/order_flow/cart_summary.html:149
+#: service/templates/service/order_flow/cart_summary.html:139
 msgid "Cancel order"
 msgstr "Anuluj zamówienie"
 
-#: service/templates/service/order_flow/cart_summary.html:179
+#: service/templates/service/order_flow/cart_summary.html:167
 msgid "Placing order..."
 msgstr "Trwa składanie zamówienia..."
 
 #: service/templates/service/order_flow/items_waiter.html:4
 #: service/templates/service/order_flow/items_waiter.html:9
-#: templates/base.html:66
+#: templates/base.html:95
 msgid "Menu"
 msgstr "Menu"
 
@@ -984,95 +1520,218 @@ msgstr "Menu"
 msgid "Period"
 msgstr "Okres"
 
+#: service/templates/service/order_flow/main_menu.html:4
+msgid "Waiter Menu"
+msgstr "Menu kelnera"
+
+#: service/templates/service/order_flow/main_menu.html:11
+msgid "What do you want to do?"
+msgstr "Co chcesz zrobić?"
+
+#: service/templates/service/order_flow/main_menu.html:15
+msgid "Create order"
+msgstr "Stwórz zamówienie"
+
+#: service/templates/service/order_flow/main_menu.html:23
+msgid "Active bills"
+msgstr "Aktywne rachunki"
+
+#: service/templates/service/order_flow/main_menu.html:27
+msgid "Day summary"
+msgstr "Podsumowanie dnia"
+
 #: service/templates/service/order_flow/table_order.html:4
 #: service/templates/service/order_flow/table_order.html:9
 msgid "Choose table"
 msgstr "Wybierz stolik"
 
 #: service/templates/service/order_flow/table_order.html:16
+#: service/templates/service/order_flow/table_settle.html:28
 msgid "No halls configured."
 msgstr "Brak skonfigurowanych sal."
 
-#: service/templates/service/order_flow/table_order.html:58
+#: service/templates/service/order_flow/table_order.html:57
+#: service/templates/service/order_flow/table_settle.html:64
 msgid "No tables in this hall."
 msgstr "Brak stolików w tej sali."
 
-#: service/templates/service/order_flow/table_order.html:65
-#: service/templates/service/order_flow/table_order.html:180
+#: service/templates/service/order_flow/table_order.html:64
+#: service/templates/service/order_flow/table_order.html:179
 msgid "No table selected"
 msgstr "Nie wybrano stolika"
 
-#: service/templates/service/order_flow/table_order.html:69
+#: service/templates/service/order_flow/table_order.html:68
 msgid "Proceed to order"
 msgstr "Przejdź do zamówienia"
 
-#: service/templates/service/order_flow/table_order.html:187
+#: service/templates/service/order_flow/table_order.html:186
 msgid "Selected"
 msgstr "Wybrano"
 
-#: templates/base.html:57
+#: service/templates/service/order_flow/table_settle.html:17
+#, fuzzy
+#| msgid "Close bill"
+msgid "Close a bill"
+msgstr "Zamknij rachunek"
+
+#: service/templates/service/order_flow/table_settle.html:19
+msgid "Base view and redirect to open-bill-list "
+msgstr ""
+
+#: service/templates/service/order_flow/table_settle.html:70
+#, fuzzy
+#| msgid "Closed and occupied"
+msgid "Select an occupied table"
+msgstr "Zamknięte i zajęte"
+
+#: service/views/order_flow/cart.py:149
+msgid "Bill not found"
+msgstr "Nie znaleziono rachunku"
+
+#: service/views/order_flow/cart.py:170
+msgid "Waiter not found"
+msgstr "Nie znaleziono kelnera"
+
+#: service/views/order_flow/cart.py:174
+msgid "Invalid PIN"
+msgstr "Nieprawidłowy PIN"
+
+#: service/views/order_flow/cart.py:180
+msgid "Guest count must be an integer!"
+msgstr "Liczba gości musi być liczbą całkowitą!"
+
+#: service/views/order_flow/cart.py:182
+msgid "Guest count must be greater than 0"
+msgstr "Liczba gości musi być większa niż 0"
+
+#: service/views/order_flow/cart.py:218
+msgid "Missing required session data"
+msgstr "Brak wymaganych danych w sesji"
+
+#: service/views/order_flow/cart.py:237
+#, python-format
+msgid "%(item)s is sold out."
+msgstr "%(item)s jest wyprzedany."
+
+#: service/views/order_flow/cart.py:242
+#, python-format
+msgid "%(item)s: only %(n)d portion(s) left."
+msgstr "%(item)s: zostało tylko %(n)d porcji."
+
+#: service/views/order_flow/cart.py:251
+msgid "An error occurred while creating the order"
+msgstr "Wystąpił błąd podczas tworzenia zamówienia"
+
+#: service/views/order_flow/cart.py:256
+#, python-format
+msgid "Order #%(pk)s completed."
+msgstr "Zamówienie na rachunek #%(pk)s zostało ukończone."
+
+#: service/views/order_flow/cart.py:258
+#, python-format
+msgid "Order #%(pk)s updated."
+msgstr "Zamówienie na rachunek #%(pk)s zostało zaktualizowane."
+
+#: service/views/order_flow/table_select.py:24
+msgid "Select a table to proceed to the order"
+msgstr "Wybierz stolik aby przejść do zamówienia"
+
+#: service/views/service.py:56
+msgid "Quantity must be an integer!"
+msgstr "Ilość musi być liczbą całkowitą!"
+
+#: service/views/service.py:59
+msgid "Quantity must be greater than 0"
+msgstr "Ilość musi być większa niż 0"
+
+#: service/views/service.py:71
+#, python-format
+msgid "Some additions were not found, ids: %(ids)s"
+msgstr "Nie znaleziono wszystkich dodatków, o id: %(ids)s"
+
+#: service/views/service.py:84 service/views/service.py:97
+msgid "Item not found"
+msgstr "Nie znaleziono produktu"
+
+#: service/views/service.py:102
+msgid "Item added to order"
+msgstr "Dodano danie do zamówienia"
+
+#: service/views/service.py:130
+msgid "Order has been cancelled."
+msgstr "Zamówienie zostało anulowane."
+
+#: service/views/table_view.py:37
+#, python-format
+msgid "Hall '%(name)s' created."
+msgstr "Sala '%(name)s' została utworzona."
+
+#: service/views/table_view.py:51
+#, python-format
+msgid "Hall '%(name)s' updated."
+msgstr "Sala '%(name)s' została zaktualizowana."
+
+#: service/views/table_view.py:119
+#, fuzzy
+#| msgid "Tables have been released."
+msgid "Table has been changed."
+msgstr "Stoliki zostały zwolnione."
+
+#: templates/base.html:86
 msgid "New alerts"
 msgstr "Nowe powiadomienia"
 
-#: templates/base.html:75
+#: templates/base.html:104
 msgid "Service"
 msgstr "Obsługa"
 
-#: templates/base.html:80
+#: templates/base.html:109
 msgid "Hall"
 msgstr "Sala"
 
-#: templates/base.html:98
-msgid "Notifications"
-msgstr "Powiadomienia"
-
-#: templates/base.html:105
+#: templates/base.html:134
 msgid "Management"
 msgstr "Zarządzanie"
 
-#: templates/base.html:109
-msgid "Edit menu"
-msgstr "Edytuj menu"
-
-#: templates/base.html:113
-msgid "Change status"
-msgstr "Zmień status"
-
-#: templates/base.html:117
+#: templates/base.html:138
 msgid "Order history"
 msgstr "Historia wydań"
 
-#: templates/base.html:121
-msgid "Bills"
-msgstr "Rachunki"
+#: templates/base.html:146
+msgid "Edit menu"
+msgstr "Edytuj menu"
 
-#: templates/base.html:125
+#: templates/base.html:150
+msgid "Change status"
+msgstr "Zmień status"
+
+#: templates/base.html:154
 msgid "Reports"
 msgstr "Raporty"
 
-#: templates/base.html:135 templates/base.html:144
+#: templates/base.html:164 templates/base.html:173
 #: worker/templates/worker/list-worker.html:4
 #: worker/templates/worker/list-worker.html:11
 msgid "Workers"
 msgstr "Pracownicy"
 
-#: templates/base.html:138 worker/templates/worker/clock-in.html:4
+#: templates/base.html:167 worker/templates/worker/clock-in.html:4
 msgid "Clock in"
 msgstr "Rozpocznij pracę"
 
-#: templates/base.html:141 worker/templates/worker/clock-out.html:4
+#: templates/base.html:170 worker/templates/worker/clock-out.html:4
 msgid "Clock out"
 msgstr "Zakończ pracę"
 
-#: templates/base.html:151
+#: templates/base.html:180
 msgid "Add worker"
 msgstr "Dodaj pracownika"
 
-#: templates/base.html:175
+#: templates/base.html:204
 msgid "Admin"
 msgstr "Admin"
 
-#: templates/base.html:180
+#: templates/base.html:209
 msgid "Logout"
 msgstr "Wyloguj"
 
@@ -2062,14 +2721,6 @@ msgstr ""
 msgid "Unknown"
 msgstr ""
 
-#: venv/lib/python3.12/site-packages/django/forms/widgets.py:867
-msgid "Yes"
-msgstr ""
-
-#: venv/lib/python3.12/site-packages/django/forms/widgets.py:868
-msgid "No"
-msgstr ""
-
 #. Translators: Please do not add spaces around commas.
 #: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:873
 msgid "yes,no,maybe"
@@ -2754,10 +3405,6 @@ msgstr "Nowy pracownik"
 msgid "Fill in the details and save the profile"
 msgstr "Wypełnij dane i zapisz profil"
 
-#: worker/templates/worker/detail-worker.html:17
-msgid "Salary"
-msgstr "Wynagrodzenie"
-
 #: worker/templates/worker/detail-worker.html:22
 msgid "Total hours worked"
 msgstr "Łączne przepracowane godziny"
@@ -2766,17 +3413,9 @@ msgstr "Łączne przepracowane godziny"
 msgid "Work times"
 msgstr "Godziny pracy"
 
-#: worker/templates/worker/detail-worker.html:36
-msgid "Start"
-msgstr "Początek"
-
 #: worker/templates/worker/detail-worker.html:37
 msgid "Finish"
 msgstr "Koniec"
-
-#: worker/templates/worker/list-worker.html:17
-msgid "Position"
-msgstr "Stanowisko"
 
 #: worker/templates/worker/update-work-time.html:4
 msgid "Update work time"
@@ -2815,46 +3454,6 @@ msgstr "Miłej zmiany, %(name)s!"
 msgid "Goodbye, %(name)s!"
 msgstr "Do widzenia, %(name)s!"
 
-#: consumers/templates/consumers/orders_base.html
-msgid "Orders"
-msgstr "Zamówienia"
-
-#: consumers/templates/consumers/orders_base.html
-msgid "Connecting…"
-msgstr "Łączenie…"
-
-#: consumers/templates/consumers/orders_base.html
-msgid "No pending orders"
-msgstr "Brak oczekujących zamówień"
-
-#: consumers/templates/consumers/orders_base.html
-msgid "Connected"
-msgstr "Połączono"
-
-#: consumers/templates/consumers/orders_base.html
-msgid "Connection error"
-msgstr "Błąd połączenia"
-
-#: consumers/templates/consumers/orders_base.html
-msgid "Disconnected — reconnecting…"
-msgstr "Rozłączono — ponowne łączenie…"
-
-#: consumers/templates/consumers/orders_base.html
-msgid "Table"
-msgstr "Stolik"
-
-#: consumers/templates/consumers/orders_base.html
-msgid "Wait"
-msgstr "Oczekiwanie"
-
-#: consumers/templates/consumers/orders_base.html
-msgid "Done"
-msgstr "Zrobione"
-
-#: consumers/templates/consumers/orders_base.html
-msgid "REMOVED"
-msgstr "USUNIĘTO"
-
 #, fuzzy
 #~| msgid "last name"
 #~ msgid "Asystent"
@@ -2884,233 +3483,11 @@ msgstr "USUNIĘTO"
 #~ msgid "Shape"
 #~ msgstr "Kształt"
 
-msgid "with"
-msgstr "z"
+#~ msgid "with"
+#~ msgstr "z"
 
-msgid "is ready"
-msgstr "jest gotowe"
+#~ msgid "is ready"
+#~ msgstr "jest gotowe"
 
-msgid "call"
-msgstr "wzywa"
-
-msgid "Call waiter"
-msgstr "Wezwij kelnera"
-
-msgid "No active waiters"
-msgstr "Brak aktywnych kelnerów"
-
-msgid "Open Bills"
-msgstr "Otwarte rachunki"
-
-msgid "Additions are not shown in this view."
-msgstr "Dodatki nie są widoczne w tym widoku."
-
-msgid "No open bills to close."
-msgstr "Brak otwartych rachunków do zamknięcia."
-
-msgid "No open bills to add to."
-msgstr "Brak otwartych rachunków do których można dodać zamówienie."
-
-msgid "Adding to bill"
-msgstr "Dodawanie do rachunku"
-
-msgid "Quantity must be an integer!"
-msgstr "Ilość musi być liczbą całkowitą!"
-
-msgid "Quantity must be greater than 0"
-msgstr "Ilość musi być większa niż 0"
-
-msgid "Some additions were not found, ids: %(ids)s"
-msgstr "Nie znaleziono wszystkich dodatków, o id: %(ids)s"
-
-msgid "Item not found"
-msgstr "Nie znaleziono produktu"
-
-msgid "Item added to order"
-msgstr "Dodano danie do zamówienia"
-
-msgid "Recently served"
-msgstr "Ostatnio wydane"
-
-msgid "Choose localization"
-msgstr "Wybierz lokalizację"
-
-msgid "No orders for this day."
-msgstr "Brak zamówień w tym dniu."
-
-msgid "Page navigation"
-msgstr "Nawigacja stron"
-
-msgid "Previous"
-msgstr "Poprzedni"
-
-msgid "Next"
-msgstr "Dalej"
-
-msgid "Last"
-msgstr "Ostatnia"
-
-msgid "Bill"
-msgstr "Rachunek"
-
-msgid "Take-away"
-msgstr "Na wynos"
-
-msgid "Total"
-msgstr "Suma"
-
-msgid "Pagination"
-msgstr "Stronicowanie"
-
-msgid "No bills found."
-msgstr "Brak rachunków."
-
-msgid "Table(s)"
-msgstr "Stolik(i)"
-
-msgid "Guests"
-msgstr "Goście"
-
-msgid "Created"
-msgstr "Utworzono"
-
-msgid "Discount"
-msgstr "Rabat"
-
-msgid "All dishes ready"
-msgstr "Wszystkie dania gotowe"
-
-msgid "Preparing time"
-msgstr "Czas przygotowania"
-
-msgid "Payment method"
-msgstr "Metoda płatności"
-
-msgid "Paid at"
-msgstr "Zapłacono o"
-
-msgid "Closed at"
-msgstr "Zamknięto o"
-
-msgid "Remove order"
-msgstr "Usuń zamówienie"
-
-msgid "Close bill"
-msgstr "Zamknij rachunek"
-
-msgid "Edit bill"
-msgstr "Edytuj rachunek"
-
-msgid "Change table"
-msgstr "Zmień stolik"
-
-msgid "Add discount"
-msgstr "Dodaj rabat"
-
-msgid "Remove bill"
-msgstr "Usuń rachunek"
-
-msgid "Remove item"
-msgstr "Usuń pozycję"
-
-msgid "This action cannot be undone. The bill will be updated."
-msgstr "Tej operacji nie można cofnąć. Rachunek zostanie zaktualizowany."
-
-msgid "This action cannot be undone. All items in this order will be removed."
-msgstr "Tej operacji nie można cofnąć. Wszystkie pozycje zamówienia zostaną usunięte."
-
-msgid "Are you sure you want to remove:"
-msgstr "Czy na pewno chcesz usunąć:"
-
-msgid "Are you sure you want to remove order"
-msgstr "Czy na pewno chcesz usunąć zamówienie"
-
-msgid "Print bill"
-msgstr "Drukuj rachunek"
-
-msgid "Cannot close a bill that is already closed."
-msgstr "Nie można zamknąć rachunku, który jest już zamknięty."
-
-msgid "Invalid form data."
-msgstr "Nieprawidłowe dane formularza."
-
-msgid "Tables have been released."
-msgstr "Stoliki zostały zwolnione."
-
-msgid "Bill is being prepared for printing."
-msgstr "Trwa przygotowanie do wydruku paragonu."
-
-msgid "Bill #%(pk)s has been closed. %(msg)s"
-msgstr "Rachunek #%(pk)s został zamknięty. %(msg)s"
-
-msgid "Bill printed at"
-msgstr "Rachunek wydrukowano o"
-
-msgid "Close bill and release tables"
-msgstr "Zamknij rachunek i zwolnij stoliki"
-
-msgid "Cannot close bill and release tables when status bill is different than closed and occupied."
-msgstr "Nie można zamknąć rachunku i zwolnić stolików, gdy status rachunku jest inny niż zamknięty i zajęty."
-
-msgid "Bill #%(pk)s has been closed and tables have been released."
-msgstr "Rachunek #%(pk)s został zamknięty, a stoliki zostały zwolnione."
-
-msgid "Cannot add a discount to a bill that is not open."
-msgstr "Nie można dodać zniżki do rachunku, który nie jest otwarty."
-
-msgid "Invalid form data. Discount must be 0–100."
-msgstr "Nieprawidłowe dane formularza. Zniżka musi wynosić od 0 do 100."
-
-msgid "Discount has been applied."
-msgstr "Zniżka została zastosowana."
-
-msgid "Waiter Menu"
-msgstr "Menu kelnera"
-
-msgid "What do you want to do?"
-msgstr "Co chcesz zrobić?"
-
-msgid "Create order"
-msgstr "Stwórz zamówienie"
-
-msgid "Active bills"
-msgstr "Aktywne rachunki"
-
-msgid "Day summary"
-msgstr "Podsumowanie dnia"
-
-msgid "Order has been cancelled."
-msgstr "Zamówienie zostało anulowane."
-
-msgid "Daily Report"
-msgstr "Raport dzienny"
-
-msgid "All time"
-msgstr "Cały okres"
-
-msgid "closed"
-msgstr "zamkniętych"
-
-msgid "total"
-msgstr "łącznie"
-
-msgid "open"
-msgstr "otwartych"
-
-msgid "Bills today"
-msgstr "Rachunki dzisiaj"
-
-msgid "All closed"
-msgstr "Wszystkie zamknięte"
-
-msgid "Not printed"
-msgstr "Niewydrukowane"
-
-msgid "Order items"
-msgstr "Pozycje zamówień"
-
-msgid "pending"
-msgstr "oczekuje"
-
-msgid "Avg preparation time"
-msgstr "Średni czas przygotowania"
+#~ msgid "call"
+#~ msgstr "wzywa"
