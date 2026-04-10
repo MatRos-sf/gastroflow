@@ -1,30 +1,37 @@
 from abc import ABC, abstractmethod
-from datetime import datetime
+from datetime import datetime, timedelta
+from decimal import ROUND_HALF_UP, Decimal
 
 from django.db.models import (
     Aggregate,
     Avg,
     Case,
     Count,
+    DecimalField,
     DurationField,
     ExpressionWrapper,
     F,
     IntegerField,
+    OuterRef,
     Q,
+    Subquery,
     Sum,
     When,
 )
+from django.db.models.functions import Coalesce, ExtractHour
+from django.utils import timezone
 
 from order.models import (
     Bill,
     Location,
     Order,
     OrderItem,
+    OrderItemAddition,
     PaymentMethod,
     StatusBill,
     StatusOrder,
 )
-from tools.data_set import BillSummary, SummaryProtocol
+from worker.models import WorkTime
 
 
 class ReportCalculator(ABC):
@@ -43,7 +50,7 @@ class ReportCalculator(ABC):
         self,
         from_date: datetime | None = None,
         to_date: datetime | None = None,
-        **kwargs
+        **kwargs,
     ):
         raise NotImplementedError("This method should be implemented by subclasses")
 
@@ -75,7 +82,7 @@ class CountBillStatus(ReportCalculator):
         self,
         from_date: datetime | None = None,
         to_date: datetime | None = None,
-        **kwargs
+        **kwargs,
     ):
         qs = Bill.objects
         qs = self.filter_dates(qs, from_date, to_date)
@@ -163,7 +170,7 @@ class OrderItemsQuantity(ReportCalculator):
         self,
         from_date: datetime | None = None,
         to_date: datetime | None = None,
-        **kwargs
+        **kwargs,
     ):
         """
         Returns a dict with:
@@ -185,41 +192,101 @@ class OrderItemsQuantity(ReportCalculator):
         )
 
 
-class BillSummaryCalculator(ReportCalculator):
-    name = "bill_summary"
-
-    def __init__(self, summarizer: SummaryProtocol = BillSummary):
-        self.summarizer = summarizer
+class BillEarnCalculator(ReportCalculator):
+    name = "bill_earn"
+    helper_text = "Bill earn is calculated only by closed bills"
 
     def filter_dates(
         self, qs, from_date: datetime | None = None, to_date: datetime | None = None
     ):
-        pass
+        if not from_date and not to_date:
+            return qs
+        elif from_date and not to_date:
+            return qs.filter(closed_at__date=from_date)
+        elif from_date and to_date:
+            return qs.filter(closed_at__range=(from_date, to_date))
+        else:
+            raise ValueError("Invalid date range")
 
-    def calculate(self, from_date, to_date, **kwargs):
-        qs = (
-            Bill.objects.filter(created_at__range=(from_date, to_date))
-            .prefetch_related(
-                "orders__order_items",
-                "orders__order_items__order_item_additions",
-                "service__user",
-            )
-            .values(
-                "id",
-                "payment_method",
-                "discount",
-                "service__user__username",
-                "guest_count",
-                "orders__order_items__id",
-                "orders__order_items__price_snapshot",
-                "orders__order_items__quantity",
-                "orders__order_items__order_item_additions__pk",
-                "orders__order_items__order_item_additions__price_snapshot",
-            )
-            .all()
+    def calculate(
+        self,
+        from_date: datetime | None = None,
+        to_date: datetime | None = None,
+        **kwargs,
+    ):
+        bill_qs = Bill.objects.filter(status=StatusBill.CLOSED)
+        bill_qs = self.filter_dates(bill_qs, from_date, to_date)
+
+        items_subquery = (
+            OrderItem.objects.filter(order__bill=OuterRef("pk"))
+            .values("order__bill")
+            .annotate(total=Sum("line_subtotal"))
+            .values("total")
         )
-        summary_instance = self.summarizer.parse_from_qs(qs)
-        return summary_instance.summary()
+
+        additions_subquery = (
+            OrderItemAddition.objects.filter(order_item__order__bill=OuterRef("pk"))
+            .values("order_item__order__bill")
+            .annotate(total=Sum("line_subtotal"))
+            .values("total")
+        )
+
+        decimal_field = DecimalField(max_digits=12, decimal_places=2)
+
+        bill_qs = (
+            bill_qs.annotate(
+                items_total=Coalesce(
+                    Subquery(items_subquery, output_field=decimal_field),
+                    Decimal("0.00"),
+                ),
+                additions_total=Coalesce(
+                    Subquery(additions_subquery, output_field=decimal_field),
+                    Decimal("0.00"),
+                ),
+            )
+            .annotate(
+                bill_earn=ExpressionWrapper(
+                    (F("items_total") + F("additions_total"))
+                    * (100 - F("discount"))
+                    / 100,
+                    output_field=decimal_field,
+                ),
+            )
+            .annotate(
+                bill_earn_no_print=Case(
+                    When(is_printed=False, then=F("bill_earn")),
+                    default=Decimal("0.00"),
+                    output_field=decimal_field,
+                ),
+                bill_earn_print=Case(
+                    When(is_printed=True, then=F("bill_earn")),
+                    default=Decimal("0.00"),
+                    output_field=decimal_field,
+                ),
+                bill_pay_by_card=Case(
+                    When(payment_method=PaymentMethod.CARD, then=F("bill_earn")),
+                    default=Decimal("0.00"),
+                    output_field=decimal_field,
+                ),
+                bill_pay_by_cash=Case(
+                    When(payment_method=PaymentMethod.CASH, then=F("bill_earn")),
+                    default=Decimal("0.00"),
+                    output_field=decimal_field,
+                ),
+            )
+        )
+        result = bill_qs.aggregate(
+            total_earn=Sum("bill_earn", default=Decimal("0.00")),
+            total_no_print=Sum("bill_earn_no_print", default=Decimal("0.00")),
+            total_print=Sum("bill_earn_print", default=Decimal("0.00")),
+            total_card=Sum("bill_pay_by_card", default=Decimal("0.00")),
+            total_cash=Sum("bill_pay_by_cash", default=Decimal("0.00")),
+        )
+        result["total_earn"] = result["total_earn"].quantize(
+            Decimal("0.01"), rounding=ROUND_HALF_UP
+        )
+
+        return result
 
 
 class AvgPreparationTime(ReportCalculator):
@@ -254,7 +321,7 @@ class AvgPreparationTime(ReportCalculator):
         self,
         from_date: datetime | None = None,
         to_date: datetime | None = None,
-        **kwargs
+        **kwargs,
     ):
         qs = Order.objects.exclude(status=StatusOrder.CANCELED)
         qs = self.filter_dates(qs, from_date, to_date)
@@ -265,10 +332,142 @@ class AvgPreparationTime(ReportCalculator):
         }
 
 
+class WaiterStatsCalculator(ReportCalculator):
+    """Per-waiter stats: number of closed bills and total guests served."""
+
+    name = "waiter_stats"
+
+    def filter_dates(
+        self, qs, from_date: datetime | None = None, to_date: datetime | None = None
+    ):
+        if not from_date and not to_date:
+            return qs
+        elif from_date and not to_date:
+            return qs.filter(created_at__date=from_date)
+        elif from_date and to_date:
+            return qs.filter(created_at__range=(from_date, to_date))
+        else:
+            raise ValueError("Invalid date range")
+
+    def calculate(
+        self,
+        from_date: datetime | None = None,
+        to_date: datetime | None = None,
+        **kwargs,
+    ):
+        qs = Bill.objects.filter(status=StatusBill.CLOSED, waiter__isnull=False)
+        qs = self.filter_dates(qs, from_date, to_date)
+
+        return list(
+            qs.values("waiter__id", "waiter__first_name", "waiter__last_name")
+            .annotate(
+                bill_count=Count("id"),
+                guest_count=Sum("guest_count"),
+            )
+            .order_by("-bill_count")
+        )
+
+
+class WorkerSalaryCalculator(ReportCalculator):
+    """Per-worker salary for a given day based on WorkTime records.
+
+    If a worker has not finished their shift yet (finish_time is None),
+    the calculation uses the current time as the end of the shift.
+    """
+
+    name = "worker_salary"
+
+    def filter_dates(
+        self, qs, from_date: datetime | None = None, to_date: datetime | None = None
+    ):
+        if not from_date and not to_date:
+            return qs
+        elif from_date and not to_date:
+            return qs.filter(start_time__date=from_date)
+        elif from_date and to_date:
+            return qs.filter(start_time__date__range=(from_date, to_date))
+        else:
+            raise ValueError("Invalid date range")
+
+    def calculate(
+        self,
+        from_date: datetime | None = None,
+        to_date: datetime | None = None,
+        **kwargs,
+    ):
+        qs = WorkTime.objects.filter(worker__isnull=False).select_related("worker")
+        qs = self.filter_dates(qs, from_date, to_date)
+
+        now = timezone.now()
+        worker_data: dict[int, dict] = {}
+
+        for wt in qs:
+            finish = wt.finish_time or now
+            duration = finish - wt.start_time
+            hours = Decimal(str(duration.total_seconds() / 3600))
+            earn = (hours * wt.salary_snapshot).quantize(
+                Decimal("0.01"), rounding=ROUND_HALF_UP
+            )
+
+            if wt.worker_id not in worker_data:
+                worker_data[wt.worker_id] = {
+                    "name": str(wt.worker),
+                    "position": wt.worker.position,
+                    "total_earn": Decimal("0.00"),
+                    "hours_worked": timedelta(),
+                    "is_working": False,
+                }
+
+            worker_data[wt.worker_id]["total_earn"] += earn
+            worker_data[wt.worker_id]["hours_worked"] += duration
+            if wt.finish_time is None:
+                worker_data[wt.worker_id]["is_working"] = True
+
+        return {"workers": sorted(worker_data.values(), key=lambda w: w["name"])}
+
+
+class HourlyDistributionCalculator(ReportCalculator):
+    """Number of closed bills per hour of the day."""
+
+    name = "hourly_distribution"
+
+    def filter_dates(
+        self, qs, from_date: datetime | None = None, to_date: datetime | None = None
+    ):
+        if not from_date and not to_date:
+            return qs
+        elif from_date and not to_date:
+            return qs.filter(created_at__date=from_date)
+        elif from_date and to_date:
+            return qs.filter(created_at__range=(from_date, to_date))
+        else:
+            raise ValueError("Invalid date range")
+
+    def calculate(
+        self,
+        from_date: datetime | None = None,
+        to_date: datetime | None = None,
+        **kwargs,
+    ):
+        qs = Bill.objects.filter(status=StatusBill.CLOSED)
+        qs = self.filter_dates(qs, from_date, to_date)
+
+        return list(
+            qs.annotate(hour=ExtractHour("created_at"))
+            .values("hour")
+            .annotate(count=Count("id"))
+            .order_by("hour")
+        )
+
+
 CALCULATOR_COLLECTION = [
     CountBillStatus(),
-    # OrderItemsQuantity(),
-    # BillSummaryCalculator(),
+    BillEarnCalculator(),
+    OrderItemsQuantity(),
+    AvgPreparationTime(),
+    WaiterStatsCalculator(),
+    WorkerSalaryCalculator(),
+    HourlyDistributionCalculator(),
 ]
 
 CALCULATOR_BASIC = [CountBillStatus(), OrderItemsQuantity(), AvgPreparationTime()]
