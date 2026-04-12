@@ -72,8 +72,11 @@ class WorkTime(models.Model):
         return None
 
     @property
-    def earnings(self):
-        return self.duration.total_seconds() / 3600 * self.salary_snapshot
+    def earnings(self) -> Decimal | None:
+        duration = self.duration
+        if not self.duration:
+            return None
+        return Decimal(duration.total_seconds() / 3600) * self.salary_snapshot
 
     def __str__(self):
         return f"Worker: {self.duration}"
