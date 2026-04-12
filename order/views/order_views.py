@@ -16,12 +16,10 @@ from service.models import Table
 from service.queries import release_tables_for_open_bill
 
 
-def can_delete_bill(request: HttpRequest, bill: Bill):
+def can_delete_bill(request: HttpRequest, bill: Bill) -> bool:
     if bill.status == StatusBill.OPEN:
         return True
-    elif request.user.is_superuser:
-        return True
-    return False
+    return request.user.is_superuser
 
 
 @login_required
@@ -55,6 +53,11 @@ def delete_ordered_item(request: HttpRequest, pk_item: int):
     release the tables and delete the bill.
     """
     item = get_object_or_404(OrderItem, pk=pk_item)
+    bill = item.order.bill
+    if not can_delete_bill(request, bill):
+        messages.error(request, _("You do not have permission to delete this item."))
+        return redirect("detail-bill", pk=bill.pk)
+
     item_name = item.name_snapshot
     item_location = item.order.category
     order = item.order
