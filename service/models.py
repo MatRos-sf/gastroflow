@@ -1,5 +1,10 @@
+from django.core.cache import cache
 from django.db import models
+from django.db.models.signals import post_delete, post_save
+from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
+
+TABLE_CHOICES_CACHE_KEY = "service:table_choices"
 
 
 class TableSize(models.TextChoices):
@@ -37,3 +42,9 @@ class Table(models.Model):
 
     def __str__(self):
         return self.name
+
+
+@receiver([post_save, post_delete], sender=Table)
+@receiver([post_save, post_delete], sender=Hall)
+def invalidate_table_choices_cache(sender, **kwargs):
+    cache.delete(TABLE_CHOICES_CACHE_KEY)

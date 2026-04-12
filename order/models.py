@@ -111,6 +111,7 @@ class Bill(models.Model):
         self.closed_at = timezone.now()
         self.save()
 
+    @property
     def compute_total(self):
         total = Decimal("0.00")
         for order in self.orders.all():

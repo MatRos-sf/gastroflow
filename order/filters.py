@@ -1,10 +1,11 @@
 import django_filters
 from django import forms
+from django.core.cache import cache
 from django.forms import Select
 from django.utils.translation import gettext_lazy as _
 
 from menu.models import Location
-from service.models import Hall, Table
+from service.models import TABLE_CHOICES_CACHE_KEY, Hall, Table
 
 from .models import Bill, Order
 
@@ -28,10 +29,14 @@ class GroupedTableChoiceField(forms.ModelChoiceField):
 
     @property
     def choices(self):
+        cached = cache.get(TABLE_CHOICES_CACHE_KEY)
+        if cached is not None:
+            return cached
         result = [("", "---------")]
         for hall in Hall.objects.prefetch_related("tables"):
             tables = [(t.pk, t.name) for t in hall.tables.all()]
             result.append((hall.name, tables))
+        cache.set(TABLE_CHOICES_CACHE_KEY, result, timeout=None)
         return result
 
     @choices.setter

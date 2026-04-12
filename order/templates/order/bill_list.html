@@ -45,7 +45,7 @@
                                 {% for order in bill.orders.all %}
                                     {% for item in order.order_items.all %}
                                         {% with dropdown_id="additions-"|add:bill.id|stringformat:"s"|add:"-"|add:order.id|stringformat:"s"|add:"-"|add:forloop.counter|stringformat:"s" %}
-                                            {% if item.order_item_additions.exists %}
+                                            {% if item.order_item_additions.all %}
                                                 <div class="dropdown">
                                                     <div class="list-group-item d-flex justify-content-between"
                                                          role="button"
