@@ -1,39 +1,41 @@
 import logging
 import os
 import tempfile
+from datetime import date
 from pathlib import Path
 
 from celery import shared_task
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
 
-from model_utils import get_order_additions_summary, get_order_items_summary
-from order.report import generate_summary_report
+from order.queries import get_order_additions_detail, get_order_items_detail
 from tools.converter import convert_date_from_str_to_date
-from tools.report_calculator import CALCULATOR_COLLECTION
-from tools.report_generator import GenerateReport
+from tools.spreadsheet.sheets.order_detail import OrderAdditionSheet, OrderItemSheet
 from tools.spreadsheet.spreadsheet import ManagerSpreadsheet
 
 logger = logging.getLogger(__name__)
 
 
+def _build_report_subject(from_date: date | None, to_date: date | None) -> str:
+    if from_date and to_date:
+        return f"Order Report {from_date.strftime('%d.%m.%Y')} - {to_date.strftime('%d.%m.%Y')}"
+    if from_date:
+        return f"Order Report from {from_date.strftime('%d.%m.%Y')}"
+    if to_date:
+        return f"Order Report up to {to_date.strftime('%d.%m.%Y')}"
+    return "Order Report (all time)"
+
+
 @shared_task
-def generate_report_and_send_email_task(from_date: str, to_date: str):
+def generate_report_and_send_email_task(
+    from_date: str | None, to_date: str | None
+) -> str:
     """Generate Excel report and send via email to all staff users."""
-    from_date_obj = convert_date_from_str_to_date(from_date)
-    to_date_obj = convert_date_from_str_to_date(to_date, False)
-    logger.info(f"Generating report for {from_date_obj.date()} to {to_date_obj.date()}")
-    context = {
-        "report": generate_summary_report(
-            from_date_obj, to_date_obj, CALCULATOR_COLLECTION
-        ),
-        "table_report_items": get_order_items_summary(from_date_obj, to_date_obj),
-        "table_report_additions": get_order_additions_summary(
-            from_date_obj, to_date_obj
-        ),
-    }
+    from_date_obj = convert_date_from_str_to_date(from_date) if from_date else None
+    to_date_obj = convert_date_from_str_to_date(to_date, False) if to_date else None
+
+    logger.info(f"Generating report: from={from_date_obj} to={to_date_obj}")
 
     recipient_emails = list(
         User.objects.filter(is_staff=True, is_active=True)
@@ -45,23 +47,52 @@ def generate_report_and_send_email_task(from_date: str, to_date: str):
         logger.warning("No staff users with email found")
         return "No recipients found"
 
-    text_content = render_to_string("emails/report_email.txt", context)
+    subject = _build_report_subject(
+        from_date_obj.date() if from_date_obj else None,
+        to_date_obj.date() if to_date_obj else None,
+    )
+    body = f"{subject}."
 
-    subject = f"Raport Zamówień {from_date_obj.date().strftime('%d.%m.%Y')} - {to_date_obj.date().strftime('%d.%m.%Y')}"
+    items = get_order_items_detail(
+        from_date_obj.date() if from_date_obj else None,
+        to_date_obj.date() if to_date_obj else None,
+    )
+    additions = get_order_additions_detail(
+        from_date_obj.date() if from_date_obj else None,
+        to_date_obj.date() if to_date_obj else None,
+    )
+
+    date_from_str = from_date_obj.date().strftime("%d.%m.%Y") if from_date_obj else None
+    date_to_str = to_date_obj.date().strftime("%d.%m.%Y") if to_date_obj else None
 
     mail = EmailMessage(
         subject=subject,
-        body=text_content,
+        body=body,
         from_email=settings.EMAIL_HOST_USER,
         to=recipient_emails,
     )
+
     with tempfile.TemporaryDirectory() as tmpdir:
         excel_path = os.path.join(
-            tmpdir, ManagerSpreadsheet.create_report_name(from_date_obj, to_date_obj)
+            tmpdir,
+            ManagerSpreadsheet.create_report_name(from_date_obj, to_date_obj),
         )
-        gen = GenerateReport(ManagerSpreadsheet(excel_path))
-
-        gen.generate_report_from_context(context)
+        spreadsheet = ManagerSpreadsheet(excel_path)
+        spreadsheet.add_sheet(
+            "order_items",
+            OrderItemSheet,
+            items,
+            date_from=date_from_str,
+            date_to=date_to_str,
+        )
+        spreadsheet.add_sheet(
+            "order_additions",
+            OrderAdditionSheet,
+            additions,
+            date_from=date_from_str,
+            date_to=date_to_str,
+        )
+        spreadsheet.save()
 
         with open(excel_path, "rb") as excel_file:
             mail.attach(
@@ -71,5 +102,5 @@ def generate_report_and_send_email_task(from_date: str, to_date: str):
             )
         mail.send(fail_silently=False)
 
-        logger.info(f"Report sent successfully to {len(recipient_emails)} recipients")
-        return f"Report sent to {len(recipient_emails)} users"
+    logger.info(f"Report sent to {len(recipient_emails)} recipients")
+    return f"Report sent to {len(recipient_emails)} users"
