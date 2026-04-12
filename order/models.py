@@ -102,8 +102,11 @@ class Bill(models.Model):
         return self.status == StatusBill.CLOSED_AND_OCCUPIED
 
     # TODO: deprecated ?
-    def str_tables(self):
-        return ", ".join(str(table.name) for table in self.table.all())
+    def str_tables(self) -> str:
+        return ", ".join(
+            f"{table.hall.name} · {table.name}"
+            for table in self.table.select_related("hall").all()
+        )
 
     # TODO: deprecated ?
     def close(self):
