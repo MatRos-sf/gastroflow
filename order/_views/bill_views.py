@@ -15,13 +15,13 @@ from consumers.services import broadcast_order_remove
 from order.filters import BillListFilter
 from order.forms import BillCloseForm, BillDiscountForm, BillEditForm
 from order.models import Bill, Order, StatusBill, StatusOrder
-from order.queries import get_bills_with_totals, get_orders_display_data
-from service.forms import ChangeBillTableForm
-from service.queries import (
-    process_bill_closure,
-    release_tables,
-    release_tables_for_open_bill,
+from order.queries import (
+    close_bill_process,
+    get_bills_with_totals,
+    get_orders_display_data,
 )
+from service.forms import ChangeBillTableForm
+from service.queries import release_tables, release_tables_for_open_bill
 from worker.models import Position, Worker
 
 
@@ -104,10 +104,8 @@ def close_bill(request, pk):
         return redirect("detail-bill", pk=pk)
 
     do_print = form.cleaned_data.get("print_bill", False)
-    process_bill_closure(
-        bill=bill,
-        status=form.cleaned_data["status"],
-        payment_method=form.cleaned_data["payment_method"],
+    close_bill_process(
+        bill, form.cleaned_data["status"], form.cleaned_data["payment_method"]
     )
 
     msg = ""
@@ -140,7 +138,7 @@ def close_bill_with_release(request, pk):
         )
         return redirect("detail-bill", pk=pk)
 
-    process_bill_closure(bill, StatusBill.CLOSED)
+    close_bill_process(bill, StatusBill.CLOSED)
     release_tables(bill)
 
     messages.success(

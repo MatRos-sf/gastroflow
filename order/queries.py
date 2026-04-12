@@ -1,9 +1,10 @@
 from datetime import timedelta
+from decimal import Decimal
 from logging import getLogger
 from typing import Any
 
 from django.db import transaction
-from django.db.models import Prefetch, Q, QuerySet
+from django.db.models import DecimalField, ExpressionWrapper, F, Prefetch, Q, QuerySet
 from django.utils import timezone
 
 from order.models import (
@@ -12,10 +13,12 @@ from order.models import (
     NotificationStatus,
     Order,
     OrderItem,
+    OrderItemAddition,
     OrderItemStatus,
     StatusOrder,
 )
 from service.models import Table
+from service.queries import process_bill_closure
 
 logger = getLogger(__name__)
 
@@ -129,3 +132,24 @@ def get_orders_display_data(
 
     all_orders_ready = all(order_statuses) if order_statuses else False
     return items, sum(preparing_time, timedelta()), all_orders_ready
+
+
+@transaction.atomic
+def close_bill_process(
+    bill: Bill, status: str, payment_method: str | None = None
+) -> None:
+    process_bill_closure(bill, status, payment_method)
+
+    multiplier = Decimal(100 - bill.discount) / Decimal(100)
+    expression_wrapper = ExpressionWrapper(
+        F("line_subtotal") * multiplier,
+        output_field=DecimalField(max_digits=12, decimal_places=2),
+    )
+
+    OrderItem.objects.filter(order__bill=bill).update(
+        line_final_total=expression_wrapper
+    )
+
+    OrderItemAddition.objects.filter(order_item__order__bill=bill).update(
+        line_final_total=expression_wrapper
+    )
