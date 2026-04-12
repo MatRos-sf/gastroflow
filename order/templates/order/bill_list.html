@@ -22,11 +22,18 @@
                     <div class="col-12 col-sm-6 col-lg-4">
                         <div class="card border-0 rounded-4 shadow h-100">
                             <div class="card-header fw-bold d-flex justify-content-between align-items-center">
-                                <span>
+                                <span class="d-flex align-items-center gap-2">
                                     <a href="{% url 'detail-bill' bill.id %}"
                                        class="stretched-link text-decoration-none text-reset">
                                         {% trans "Bill" %} #{{ bill.id }}
                                     </a>
+                                    {% if bill.status == "open" %}
+                                        <span class="badge bg-success rounded-pill">{% trans "Open" %}</span>
+                                    {% elif bill.status == "closed_and_occupied" %}
+                                        <span class="badge bg-warning text-dark rounded-pill">{% trans "Occupied" %}</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary rounded-pill">{% trans "Closed" %}</span>
+                                    {% endif %}
                                 </span>
                                 <span class="text-muted fw-normal small">
                                     {% with tables=bill.table.all %}
