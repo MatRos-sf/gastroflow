@@ -84,25 +84,12 @@ class BaseSheetWriter(ABC):
     def write_row(self, **kwargs) -> None:
         pass
 
-    def adjust_columns(
-        self,
-        name_width: Optional[int] = None,
-        quantity_width: int = 12,
-        revenue_width: int = 15,
-    ) -> None:
-        """Adjust column widths based on content."""
-        # Name column - based on content or provided width
-        col_letter = get_column_letter(self._current_col)
-        width = name_width or max(self._max_name_length + 2, 20)
-        self._sheet.column_dimensions[col_letter].width = width
-
-        # Quantity column
-        col_letter = get_column_letter(self._current_col + 1)
-        self._sheet.column_dimensions[col_letter].width = quantity_width
-
-        # Revenue column
-        col_letter = get_column_letter(self._current_col + 2)
-        self._sheet.column_dimensions[col_letter].width = revenue_width
+    def adjust_columns(self, widths: list[int] | None = None) -> None:
+        """Adjust column widths. Uses header-based defaults when widths not provided."""
+        default = [max(len(h) + 4, 12) for h in self.COLUMN_HEADERS]
+        for idx, width in enumerate(widths or default):
+            col = get_column_letter(self._current_col + idx)
+            self._sheet.column_dimensions[col].width = width
 
     def start_new_table(self, column_gap: int = 2) -> None:
         """Start a new table with specified offset from current position."""
