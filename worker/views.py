@@ -14,6 +14,7 @@ from django.views.generic import (
 )
 
 from tools.models.aggregate import total_work_duration
+from tools.views.permission import BossPermissionMixin
 
 from .forms import WorkerForm, WorkTimeForm
 from .models import Worker, WorkTime
@@ -133,3 +134,14 @@ class ClockOutActionView(LoginRequiredMixin, View):
         messages.success(request, _("Goodbye, %(name)s!") % {"name": worker.first_name})
 
         return redirect("gf-worker:worker-clock-out")
+
+
+class WorkTimeNotFinishedListView(BossPermissionMixin, ListView):
+    template_name = "worker/list_worktime_not_finished.html"
+
+    def get_queryset(self):
+        return (
+            WorkTime.objects.filter(finish_time__isnull=True)
+            .select_related("worker")
+            .order_by("-start_time")
+        )

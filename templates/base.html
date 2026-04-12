@@ -179,6 +179,10 @@
                                     <li>
                                         <a class="dropdown-item" href="{% url 'gf-worker:worker-create' %}">{% trans "Add worker" %}</a>
                                     </li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                           href="{% url 'gf-worker:worktime-not-finished' %}">{% trans "Not finished work" %}</a>
+                                    </li>
                                 {% endif %}
                             </ul>
                         </li>

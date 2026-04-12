@@ -10,6 +10,7 @@ from .views import (
     WorkerListView,
     WorkerUpdateView,
     WorkerWorkTimeListView,
+    WorkTimeNotFinishedListView,
     WorkTimeUpdateView,
 )
 
@@ -27,6 +28,11 @@ urlpatterns = [
         "worktime/<int:pk>/update/",
         WorkTimeUpdateView.as_view(),
         name="worktimes-update",
+    ),
+    path(
+        "worktime/not-finished/",
+        WorkTimeNotFinishedListView.as_view(),
+        name="worktime-not-finished",
     ),
     path("clock-in/", ClockInView.as_view(), name="worker-clock-in"),
     path(
