@@ -60,6 +60,11 @@ def process_bill_closure(
     bill.status = status
     bill.closed_at = timezone.now()
     update_fields = ["status", "closed_at"]
+
+    if bill.paid_at is None:
+        bill.paid_at = timezone.now()
+        update_fields.append("paid_at")
+
     if payment_method:
         bill.payment_method = payment_method
         update_fields.append("payment_method")
