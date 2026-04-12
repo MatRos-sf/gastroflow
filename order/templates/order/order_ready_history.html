@@ -40,7 +40,18 @@
                             {{ order.readied_at|date:"d.m.Y H:i" }}
                         {% endif %}
                     </span>
-                    <span class="badge bg-success rounded-pill">{% trans "Table" %}: {{ order.bill.str_tables }}</span>
+                    <span class="badge bg-success rounded-pill">
+                        {% with tables=order.bill.table.all %}
+                            {% if tables %}
+                                {% for t in tables %}
+                                    {{ t.hall.name }} · {{ t.name }}
+                                    {% if not forloop.last %},{% endif %}
+                                {% endfor %}
+                            {% else %}
+                                {% trans "Take-away" %}
+                            {% endif %}
+                        {% endwith %}
+                    </span>
                 </div>
                 <ul class="list-group list-group-flush rounded-bottom-4">
                     {% for item in order.order_items.all %}

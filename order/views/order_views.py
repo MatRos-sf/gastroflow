@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Prefetch
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
@@ -11,6 +12,7 @@ from django_filters.views import FilterView
 from consumers.services import broadcast_item_remove, broadcast_order_remove
 from order.filters import OrderFilter
 from order.models import Bill, Location, Order, OrderItem, OrderItemStatus, StatusBill
+from service.models import Table
 from service.queries import release_tables_for_open_bill
 
 
@@ -90,7 +92,11 @@ class ReadyOrderListView(LoginRequiredMixin, FilterView):
     def get_queryset(self):
         return (
             Order.objects.select_related("bill")
-            .prefetch_related("order_items", "order_items__order_item_additions")
+            .prefetch_related(
+                "order_items",
+                "order_items__order_item_additions",
+                Prefetch("bill__table", queryset=Table.objects.select_related("hall")),
+            )
             .filter(status=OrderItemStatus.READY)
             .order_by("-created_at")
         )
