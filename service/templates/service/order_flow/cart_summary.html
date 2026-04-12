@@ -83,7 +83,7 @@
                                     {% for waiter in waiters %}
                                         <option value="{{ waiter.pk }}"
                                                 {% if selected_waiter == waiter.pk|stringformat:"s" %}selected{% endif %}>
-                                            {{ waiter }}
+                                            {{ waiter.first_name }} {{ waiter.last_name }}
                                         </option>
                                     {% endfor %}
                                 </select>

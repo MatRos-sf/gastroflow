@@ -22,17 +22,20 @@ def get_workers_not_clocked_in_today() -> QuerySet[dict]:
     return workers
 
 
-def get_workers_clocked_in_today() -> QuerySet[dict]:
+def get_workers_clocked_in_today(values: list[str] | None = None) -> QuerySet[dict]:
     """
     Return workers who have started work today and have not finished their shift.
+    Pass a custom `values` list to select specific fields (default: pk, first_name, last_name).
     """
     date_now = timezone.now().date()
+    if not values:
+        values = ["pk", "first_name", "last_name"]
     workers = (
         Worker.objects.filter(
             worktime__start_time__date=date_now, worktime__finish_time__isnull=True
         )
         .distinct()
-        .values("pk", "first_name", "last_name")
+        .values(*values)
     )
 
     return workers

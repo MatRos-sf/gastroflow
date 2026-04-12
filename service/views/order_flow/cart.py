@@ -16,7 +16,8 @@ from order.models import Bill, Order, OrderItem, OrderItemAddition
 from service.exceptions import StockError, ValidatorError
 from service.models import Table
 from tools.session import SessionInfo, clear_session, split_items_by_location
-from worker.models import Position, Worker
+from worker.models import Worker
+from worker.queries import get_workers_clocked_in_today
 
 logger = logging.getLogger(__name__)
 
@@ -104,7 +105,9 @@ class CartSummaryView(View):
 
     def get(self, request):
         cart = request.session.get("cart", [])
-        waiters = Worker.objects.filter(position=Position.WAITER, is_active=True)
+        waiters = get_workers_clocked_in_today(
+            values=["pk", "first_name", "last_name", "pin"]
+        )
         waiters_with_pin = list(
             waiters.exclude(pin__isnull=True)
             .exclude(pin="")
