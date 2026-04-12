@@ -142,8 +142,12 @@
                                class="nav-link {% if request.resolver_match.url_name == 'list-bill' %}text-warning fw-bold{% endif %}">{% trans "Bills" %}</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'gf-menu:item-list' %}"
-                               class="nav-link {% if request.resolver_match.url_name == 'item-list' %}text-warning fw-bold{% endif %}">{% trans "Edit menu" %}</a>
+                            <a href="{% url 'gf-menu:menu-dashboard' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'menu-dashboard' %}text-warning fw-bold{% endif %}">{% trans "Menu manager" %}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'service:hall-list' %}"
+                               class="nav-link {% if request.resolver_match.url_name == 'hall-list' %}text-warning fw-bold{% endif %}">{% trans "Hall manager" %}</a>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'report' %}"
