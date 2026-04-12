@@ -61,7 +61,7 @@ class BillDetailView(LoginRequiredMixin, DetailView):
             .exclude(pin="")
             .values_list("pk", flat=True)
         )
-        total = obj.compute_total()
+        total = obj.compute_total
         context["total"] = total
         if obj.discount:
             context["discounted_total"] = (
