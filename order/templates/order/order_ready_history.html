@@ -31,28 +31,31 @@
         <!-- Orders -->
         {% for order in items %}
             <div class="card border-0 rounded-4 shadow mb-3">
-                <div class="d-flex align-items-center justify-content-between px-4 py-3 border-bottom">
-                    <span class="fw-bold">#{{ order.id }}</span>
-                    <span class="text-secondary small">
-                        {% if order.readied_at|date:"Y-m-d" == today %}
-                            {{ order.readied_at|date:"H:i" }}
-                        {% else %}
-                            {{ order.readied_at|date:"d.m.Y H:i" }}
-                        {% endif %}
-                    </span>
-                    <span class="badge bg-success rounded-pill">
-                        {% with tables=order.bill.table.all %}
-                            {% if tables %}
-                                {% for t in tables %}
-                                    {{ t.hall.name }} · {{ t.name }}
-                                    {% if not forloop.last %},{% endif %}
-                                {% endfor %}
+                <a href="{% url 'detail-bill' order.bill.id %}"
+                   class="text-decoration-none text-reset">
+                    <div class="d-flex align-items-center justify-content-between px-4 py-3 border-bottom">
+                        <span class="fw-bold">#{{ order.id }}</span>
+                        <span class="text-secondary small">
+                            {% if order.readied_at|date:"Y-m-d" == today %}
+                                {{ order.readied_at|date:"H:i" }}
                             {% else %}
-                                {% trans "Take-away" %}
+                                {{ order.readied_at|date:"d.m.Y H:i" }}
                             {% endif %}
-                        {% endwith %}
-                    </span>
-                </div>
+                        </span>
+                        <span class="badge bg-success rounded-pill">
+                            {% with tables=order.bill.table.all %}
+                                {% if tables %}
+                                    {% for t in tables %}
+                                        {{ t.hall.name }} · {{ t.name }}
+                                        {% if not forloop.last %},{% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    {% trans "Take-away" %}
+                                {% endif %}
+                            {% endwith %}
+                        </span>
+                    </div>
+                </a>
                 <ul class="list-group list-group-flush rounded-bottom-4">
                     {% for item in order.order_items.all %}
                         <li class="list-group-item d-flex justify-content-between align-items-center px-4 py-2">
