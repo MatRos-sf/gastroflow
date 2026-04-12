@@ -3493,6 +3493,15 @@ msgstr "Kwota"
 msgid "Undo settlement"
 msgstr "Cofnij rozliczenie"
 
+msgid "Access Forbidden"
+msgstr "Brak dostępu"
+
+msgid "You do not have permission to view this page."
+msgstr "Nie masz uprawnień do wyświetlenia tej strony."
+
+msgid "Go to home"
+msgstr "Strona główna"
+
 #, fuzzy
 #~| msgid "last name"
 #~ msgid "Asystent"

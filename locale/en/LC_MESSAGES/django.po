@@ -3452,6 +3452,15 @@ msgstr "Amount"
 msgid "Undo settlement"
 msgstr "Undo settlement"
 
+msgid "Access Forbidden"
+msgstr "Access Forbidden"
+
+msgid "You do not have permission to view this page."
+msgstr "You do not have permission to view this page."
+
+msgid "Go to home"
+msgstr "Go to home"
+
 #~ msgid "Page %(current)s of %(total)s"
 #~ msgstr "Page %(current)s of %(total)s"
 
