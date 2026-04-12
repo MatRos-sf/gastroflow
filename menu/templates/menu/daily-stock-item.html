@@ -11,7 +11,13 @@
                 <h4 class="fw-bold mb-0">{% trans "Set daily stock" %}</h4>
             </div>
             <!-- Add button -->
-            <div class="d-flex justify-content-end mb-3">
+            <div class="d-flex justify-content-between mb-3">
+                <div class="d-flex gap-2">
+                    <a href="{% url 'gf-display:kitchen-orders' %}"
+                       class="btn btn-outline-secondary rounded-pill">{% trans "Kitchen" %}</a>
+                    <a href="{% url 'gf-display:bar-orders' %}"
+                       class="btn btn-outline-secondary rounded-pill">{% trans "Bar" %}</a>
+                </div>
                 <a href='{% url "gf-menu:item-replenish" %}'
                    class="btn btn-dark rounded-pill px-4">{% trans "Replenish stock" %}</a>
             </div>

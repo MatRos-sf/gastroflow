@@ -12,7 +12,8 @@
                 {% trans "Orders" %}
             {% endblock station_heading %}
         </h1>
-        <div class="d-flex align-items-center gap-2">
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            {% block station_nav %}{% endblock %}
             <button class="btn btn-warning rounded-pill fw-semibold px-3"
                     data-bs-toggle="modal"
                     data-bs-target="#callWaiterModal">{% trans "Call waiter" %}</button>

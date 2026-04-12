@@ -6,3 +6,9 @@
 {% block station_heading %}
     {% trans "Bar" %}
 {% endblock station_heading %}
+{% block station_nav %}
+    <a href="{% url 'ready-order-list' %}?category=bar"
+       class="btn btn-outline-secondary rounded-pill">{% trans "History" %}</a>
+    <a href="{% url 'gf-menu:item-daily-stock' %}"
+       class="btn btn-outline-secondary rounded-pill">{% trans "Daily stock" %}</a>
+{% endblock station_nav %}
