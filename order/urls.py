@@ -4,8 +4,6 @@ import order._views.bill_views as _views
 import order._views.order_views as _views_order
 import order._views.report_views as _views_report
 
-from .views import ReadyOrderListView
-
 # TODO: name app "order"
 
 url_report_pattern = [
@@ -33,5 +31,5 @@ urlpatterns = [
         _views_order.delete_ordered_item,
         name="delete-order-item",
     ),
-    path("ready/", ReadyOrderListView.as_view(), name="ready-order-list"),
+    path("ready/", _views_order.ReadyOrderListView.as_view(), name="ready-order-list"),
 ] + url_report_pattern

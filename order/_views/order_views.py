@@ -1,12 +1,16 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest
 from django.shortcuts import get_object_or_404, redirect
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
+from django_filters.views import FilterView
 
 from consumers.services import broadcast_item_remove, broadcast_order_remove
-from order.models import Bill, Order, OrderItem, StatusBill
+from order.filters import OrderFilter
+from order.models import Bill, Location, Order, OrderItem, OrderItemStatus, StatusBill
 from service.queries import release_tables_for_open_bill
 
 
@@ -72,3 +76,27 @@ def delete_ordered_item(request: HttpRequest, pk_item: int):
             return redirect("list-bill")
 
     return redirect("detail-bill", pk=order.bill.pk)
+
+
+class ReadyOrderListView(LoginRequiredMixin, FilterView):
+    """Basic view show previous preparing orders"""
+
+    model = Order
+    template_name = "order/order_ready_history.html"
+    context_object_name = "items"
+    filterset_class = OrderFilter
+    paginate_by = 20
+
+    def get_queryset(self):
+        return (
+            Order.objects.select_related("bill")
+            .prefetch_related("order_items", "order_items__order_item_additions")
+            .filter(status=OrderItemStatus.READY)
+            .order_by("-created_at")
+        )
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["categories"] = Location.values
+        ctx["today"] = timezone.localdate().strftime("%Y-%m-%d")
+        return ctx
