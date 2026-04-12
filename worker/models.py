@@ -55,6 +55,15 @@ class WorkTime(models.Model):
     start_time = models.DateTimeField()
     finish_time = models.DateTimeField(blank=True, null=True)
     salary_snapshot = models.DecimalField(max_digits=7, decimal_places=2)
+    is_settled = models.BooleanField(
+        default=False,
+        help_text="Indicates whether the order has been settled (payment finalized).",
+    )
+    settled_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="Timestamp of when the worker time was settled. Null if not yet settled.",
+    )
 
     @property
     def duration(self) -> timedelta | None:
