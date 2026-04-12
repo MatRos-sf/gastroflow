@@ -1,12 +1,17 @@
 from typing import Any
 
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.utils import timezone
+from django.utils.translation import gettext as _
+from django.views.decorators.http import require_POST
 from django.views.generic import View
 
 from order.forms import DateForm
 from order.report import generate_summary_report
+from order.tasks import generate_report_and_send_email_task
 from tools.report_calculator import CALCULATOR_BASIC, CALCULATOR_COLLECTION
 
 
@@ -56,3 +61,13 @@ class ReportDispatchView(LoginRequiredMixin, View):
         if request.user.is_superuser:
             return ReportView.as_view()(request, *args, **kwargs)
         return ReportBasicView.as_view()(request, *args, **kwargs)
+
+
+@login_required
+@require_POST
+def generate_report_view(request):
+    from_date = request.POST.get("from_date") or None
+    to_date = request.POST.get("to_date") or None
+    generate_report_and_send_email_task.delay(from_date, to_date)
+    messages.success(request, _("Report is being generated. It will be sent to email."))
+    return redirect("report")
