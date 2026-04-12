@@ -1,7 +1,10 @@
+from datetime import timedelta
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import (
@@ -18,7 +21,13 @@ from tools.views.permission import BossPermissionMixin
 
 from .forms import WorkerForm, WorkTimeForm
 from .models import Worker, WorkTime
-from .queries import get_workers_clocked_in_today, get_workers_not_clocked_in_today
+from .queries import (
+    get_unsettled_work_times,
+    get_workers_clocked_in_today,
+    get_workers_not_clocked_in_today,
+    get_workers_with_unsettled_work_times,
+)
+from .services import settle_work_times, unsettle_work_times
 
 PAGE_SIZE = 10
 
@@ -134,6 +143,71 @@ class ClockOutActionView(LoginRequiredMixin, View):
         messages.success(request, _("Goodbye, %(name)s!") % {"name": worker.first_name})
 
         return redirect("gf-worker:worker-clock-out")
+
+
+class SettlementView(BossPermissionMixin, TemplateView):
+    template_name = "worker/settlement.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["workers"] = get_workers_with_unsettled_work_times()
+        context["work_times"] = get_unsettled_work_times()
+        return context
+
+    def post(self, request, *args, **kwargs):
+        ids = request.POST.getlist("work_time_ids")
+        if ids:
+            settle_work_times([int(pk) for pk in ids])
+        url = reverse("gf-worker:settlement-summary") + f"?ids={','.join(ids)}"
+        return redirect(url)
+
+
+class SettlementRowsView(BossPermissionMixin, TemplateView):
+    template_name = "worker/_settlement_rows.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        worker_pk = self.request.GET.get("worker")
+        date_from = self.request.GET.get("date_from") or None
+        date_to = self.request.GET.get("date_to") or None
+        context["work_times"] = get_unsettled_work_times(
+            worker_pk=int(worker_pk) if worker_pk else None,
+            date_from=date_from,
+            date_to=date_to,
+        )
+        return context
+
+
+class SettlementSummaryView(BossPermissionMixin, TemplateView):
+    template_name = "worker/settlement_summary.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        ids_param = self.request.GET.get("ids", "")
+        ids = [int(pk) for pk in ids_param.split(",") if pk.strip().isdigit()]
+        work_times = list(
+            WorkTime.objects.filter(pk__in=ids)
+            .select_related("worker")
+            .order_by("worker__first_name", "start_time")
+        )
+        total_duration = sum(
+            (wt.duration for wt in work_times if wt.duration), start=timedelta()
+        )
+        total_amount = sum(wt.earnings for wt in work_times if wt.duration)
+        context["work_times"] = work_times
+        context["ids_param"] = ids_param
+        context["total_duration"] = total_duration
+        context["total_amount"] = total_amount
+        return context
+
+
+class SettlementUndoView(BossPermissionMixin, View):
+    def post(self, request, *args, **kwargs):
+        ids_param = request.POST.get("ids", "")
+        ids = [int(pk) for pk in ids_param.split(",") if pk.strip().isdigit()]
+        if ids:
+            unsettle_work_times(ids)
+        return redirect("gf-worker:settlement-list")
 
 
 class WorkTimeNotFinishedListView(BossPermissionMixin, ListView):

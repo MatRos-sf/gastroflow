@@ -3413,6 +3413,45 @@ msgstr ""
 msgid "Goodbye, %(name)s!"
 msgstr ""
 
+msgid "Not Finished Work Times"
+msgstr "Not Finished Work Times"
+
+msgid "All workers clock out."
+msgstr "All workers have clocked out."
+
+msgid "Settlements"
+msgstr "Settlements"
+
+msgid "Unsettled work times"
+msgstr "Unsettled work times"
+
+msgid "Settle selected"
+msgstr "Settle selected"
+
+msgid "Settlement Summary"
+msgstr "Settlement Summary"
+
+msgid "No unsettled work times found."
+msgstr "No unsettled work times found."
+
+msgid "No records."
+msgstr "No records."
+
+msgid "Not finished work"
+msgstr "Not finished work"
+
+msgid "All workers"
+msgstr "All workers"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Amount"
+msgstr "Amount"
+
+msgid "Undo settlement"
+msgstr "Undo settlement"
+
 #~ msgid "Page %(current)s of %(total)s"
 #~ msgstr "Page %(current)s of %(total)s"
 

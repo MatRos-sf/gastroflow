@@ -3454,6 +3454,45 @@ msgstr "Miłej zmiany, %(name)s!"
 msgid "Goodbye, %(name)s!"
 msgstr "Do widzenia, %(name)s!"
 
+msgid "Not Finished Work Times"
+msgstr "Niezakończone czasy pracy"
+
+msgid "All workers clock out."
+msgstr "Wszyscy pracownicy zakończyli pracę."
+
+msgid "Settlements"
+msgstr "Rozliczenia"
+
+msgid "Unsettled work times"
+msgstr "Nierozliczone czasy pracy"
+
+msgid "Settle selected"
+msgstr "Rozlicz zaznaczone"
+
+msgid "Settlement Summary"
+msgstr "Podsumowanie rozliczenia"
+
+msgid "No unsettled work times found."
+msgstr "Nie znaleziono nierozliczonych czasów pracy."
+
+msgid "No records."
+msgstr "Brak rekordów."
+
+msgid "Not finished work"
+msgstr "Niezakończona praca"
+
+msgid "All workers"
+msgstr "Wszyscy pracownicy"
+
+msgid "Date"
+msgstr "Data"
+
+msgid "Amount"
+msgstr "Kwota"
+
+msgid "Undo settlement"
+msgstr "Cofnij rozliczenie"
+
 #, fuzzy
 #~| msgid "last name"
 #~ msgid "Asystent"

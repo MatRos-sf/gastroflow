@@ -1,0 +1,21 @@
+{% load i18n %}
+{% for wt in work_times %}
+    <tr>
+        <td>
+            <input class="form-check-input"
+                   type="checkbox"
+                   name="work_time_ids"
+                   value="{{ wt.pk }}"
+                   checked>
+        </td>
+        <td>{{ wt.worker.first_name }} {{ wt.worker.last_name }}</td>
+        <td>{{ wt.start_time|date:"d.m.Y" }}</td>
+        <td>{{ wt.start_time|date:"H:i" }} – {{ wt.finish_time|date:"H:i" }}</td>
+        <td>{{ wt.duration }}</td>
+        <td class="text-end">{{ wt.earnings|floatformat:2 }} zł</td>
+    </tr>
+{% empty %}
+    <tr>
+        <td colspan="6" class="text-center text-muted py-4">{% trans "No unsettled work times found." %}</td>
+    </tr>
+{% endfor %}
