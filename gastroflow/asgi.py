@@ -19,7 +19,6 @@ from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 
 import consumers.routing
-import service.routing
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gastroflow.settings")
 
@@ -28,10 +27,7 @@ application = ProtocolTypeRouter(
     {
         "http": get_asgi_application(),
         "websocket": AuthMiddlewareStack(
-            URLRouter(
-                consumers.routing.websocket_urlpatterns
-                + service.routing.websocket_urlpatterns
-            )
+            URLRouter(consumers.routing.websocket_urlpatterns)
         ),
     }
 )
