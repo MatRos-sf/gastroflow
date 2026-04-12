@@ -1,3 +1,4 @@
+import datetime
 from datetime import timedelta
 from decimal import Decimal
 from logging import getLogger
@@ -15,6 +16,7 @@ from order.models import (
     OrderItem,
     OrderItemAddition,
     OrderItemStatus,
+    StatusBill,
     StatusOrder,
 )
 from service.models import Table
@@ -132,6 +134,63 @@ def get_orders_display_data(
 
     all_orders_ready = all(order_statuses) if order_statuses else False
     return items, sum(preparing_time, timedelta()), all_orders_ready
+
+
+def get_order_items_detail(
+    from_date: datetime.date, to_date: datetime.date
+) -> QuerySet:
+    return (
+        OrderItem.objects.filter(
+            order__bill__paid_at__date__range=(from_date, to_date),
+            order__bill__status__in=[StatusBill.CLOSED, StatusBill.CLOSED_AND_OCCUPIED],
+        )
+        .annotate(
+            bill_pk=F("order__bill__pk"),
+            paid_at=F("order__bill__paid_at"),
+        )
+        .values(
+            "pk",
+            "bill_pk",
+            "name_snapshot",
+            "quantity",
+            "price_snapshot",
+            "line_subtotal",
+            "line_final_total",
+            "paid_at",
+        )
+        .order_by("-paid_at")
+    )
+
+
+def get_order_additions_detail(
+    from_date: datetime.date, to_date: datetime.date
+) -> QuerySet:
+    return (
+        OrderItemAddition.objects.filter(
+            order_item__order__bill__paid_at__date__range=(from_date, to_date),
+            order_item__order__bill__status__in=[
+                StatusBill.CLOSED,
+                StatusBill.CLOSED_AND_OCCUPIED,
+            ],
+        )
+        .annotate(
+            bill_pk=F("order_item__order__bill__pk"),
+            order_item_pk=F("order_item__pk"),
+            paid_at=F("order_item__order__bill__paid_at"),
+        )
+        .values(
+            "pk",
+            "bill_pk",
+            "order_item_pk",
+            "name_snapshot",
+            "quantity",
+            "price_snapshot",
+            "line_subtotal",
+            "line_final_total",
+            "paid_at",
+        )
+        .order_by("-paid_at")
+    )
 
 
 @transaction.atomic
