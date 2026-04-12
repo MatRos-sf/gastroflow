@@ -136,12 +136,28 @@ def get_orders_display_data(
     return items, sum(preparing_time, timedelta()), all_orders_ready
 
 
+def _build_paid_at_filter(
+    from_date: datetime.date | None,
+    to_date: datetime.date | None,
+    field: str,
+) -> Q:
+    """Build a date filter Q object based on provided date range."""
+    if from_date and to_date:
+        return Q(**{f"{field}__date__range": (from_date, to_date)})
+    if from_date:
+        return Q(**{f"{field}__date": from_date})
+    if to_date:
+        return Q(**{f"{field}__date__lte": to_date})
+    return Q()
+
+
 def get_order_items_detail(
-    from_date: datetime.date, to_date: datetime.date
+    from_date: datetime.date | None,
+    to_date: datetime.date | None,
 ) -> QuerySet:
     return (
         OrderItem.objects.filter(
-            order__bill__paid_at__date__range=(from_date, to_date),
+            _build_paid_at_filter(from_date, to_date, "order__bill__paid_at"),
             order__bill__status__in=[StatusBill.CLOSED, StatusBill.CLOSED_AND_OCCUPIED],
         )
         .annotate(
@@ -163,11 +179,14 @@ def get_order_items_detail(
 
 
 def get_order_additions_detail(
-    from_date: datetime.date, to_date: datetime.date
+    from_date: datetime.date | None,
+    to_date: datetime.date | None,
 ) -> QuerySet:
     return (
         OrderItemAddition.objects.filter(
-            order_item__order__bill__paid_at__date__range=(from_date, to_date),
+            _build_paid_at_filter(
+                from_date, to_date, "order_item__order__bill__paid_at"
+            ),
             order_item__order__bill__status__in=[
                 StatusBill.CLOSED,
                 StatusBill.CLOSED_AND_OCCUPIED,
