@@ -188,6 +188,5 @@ fabric.properties
 # idea folder, uncomment if you don't need it
 # .idea
 
-*/migrations/0*.py
 *.sqlite3
 .idea
