@@ -23,32 +23,18 @@ A single shared account used by all floor staff (waiters, chefs, baristas). Beca
 
 ## Setup — Creating User Accounts
 
-Use the built-in management command to create both accounts on first deployment:
+GastroFlow runs inside Docker. Use `docker compose exec` to run management commands inside the running container.
+
+Use the built-in management command to create the accounts on first deployment:
 
 ```bash
-python manage.py create_users
+docker compose exec web python manage.py create_users \
+    --boss_username Boss \
+    --boss_password your-boss-password \
+    --workers_username Workers \
+    --workers_password your-workers-password
 ```
 
-Credentials are read from environment variables by default (see `.env` configuration below). You can override them via CLI arguments:
+All four arguments are required. If you skip an account's arguments, that account will not be created.
 
-```bash
-python manage.py create_users \
-    --boss_username admin \
-    --boss_password secret \
-    --workers_username staff \
-    --workers_password staffpass
-```
-
-If a user already exists, the command skips creation and prints a warning — it is safe to run multiple times.
-
-### Environment variables
-
-Configure the following in your `.env` file:
-
-```env
-BOSS_USERNAME=Boss
-BOSS_PASSWORD=your-secure-boss-password
-
-WORKERS_USERNAME=Workers
-WORKERS_PASSWORD=your-secure-workers-password
-```
+**The command is safe to run multiple times.** If a user already exists, it is skipped — no data is changed.
