@@ -1,0 +1,28 @@
+# Virtual environment
+venv/
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local databases
+db.sqlite3
+_db.sqlite3
+db_backup.sqlite3
+db_dumps/
+
+# Generated static files — Docker builds them via collectstatic
+staticfiles/
+
+# Secrets — passed to container via docker-compose env_file
+.env
+
+# Git
+.git/
+.gitignore
+
+# Dev-only docs and notes
+README.md
+note.txt
