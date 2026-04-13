@@ -12,10 +12,6 @@ env = environ.Env(
     REDIS_URL=(str, "redis://localhost:6379/0"),
     # Custom app variables
     COMPANY_NAME=(str, "GastroFlow"),
-    BOSS_USERNAME=(str, "Boss"),
-    BOSS_PASSWORD=(str, "GFboss123"),
-    WORKERS_USERNAME=(str, "Workers"),
-    WORKERS_PASSWORD=(str, "GFworkers123"),
     # Email variables
     HOST_EMAIL=(str, ""),
     HOST_PASSWORD=(str, ""),
