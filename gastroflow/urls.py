@@ -6,7 +6,6 @@ urlpatterns = [
     path("i18n/", include("django.conf.urls.i18n")),
     path("accounts/", include("django.contrib.auth.urls")),
     path("admin/", admin.site.urls),
-    path("api-auth/", include("rest_framework.urls")),
     path("menu/", include("menu.urls", namespace="gf-menu")),
     path("order/", include("order.urls")),
     path("", include("service.urls")),

@@ -1,3 +1,4 @@
+psycopg2-binary==2.9.10
 pre_commit==4.2.0
 channels==3.0.5
 crispy-bootstrap5==2025.6
