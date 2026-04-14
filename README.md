@@ -38,3 +38,23 @@ docker compose exec web python manage.py create_users \
 All four arguments are required. If you skip an account's arguments, that account will not be created.
 
 **The command is safe to run multiple times.** If a user already exists, it is skipped — no data is changed.
+
+---
+
+## Setup — Loading the Menu
+
+Menu data is not stored in the repository (it contains restaurant-specific information). You need to load it manually on first deployment.
+
+**Step 1 — Copy your JSON file into the container:**
+
+```bash
+docker compose cp /path/to/your/menu.json web:/app/menu.json
+```
+
+**Step 2 — Run the command:**
+
+```bash
+docker compose exec web python manage.py create_menu /app/menu.json
+```
+
+The file path must be a path inside the container, not your local machine. After copying with `docker compose cp`, the file is available at the path you specified (in this example `/app/menu.json`).
