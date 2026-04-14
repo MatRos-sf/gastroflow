@@ -9,17 +9,6 @@ CATEGORIES_CACHE_KEY = "menu:categories"
 
 
 # TODO: remove
-class MenuType(models.TextChoices):
-    MAIN = "menu", "Menu"
-    MENU_FOR_CHILDREN = "menu dla dzieci", "Menu dla dzieci"
-    DRINK = "napoje", "Napoje"
-    COLD_DRINK = "zimne napoje", "Zimne napoje"
-    DESSERT = "deser", "Deser"
-    OTHER = "inne", "Inne"
-    UNAVAILABLE = "niedostępny", "Niedostępny"
-
-
-# TODO: remove
 class Availability(models.IntegerChoices):
     AVAILABLE = 1, "Available"
     SMALL_AMOUNT = 2, "Small amount"

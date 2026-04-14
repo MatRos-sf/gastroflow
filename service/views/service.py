@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_GET
 from django.views.generic import View
 
-from menu.models import Item, MenuType
+from menu.models import Item
 from order.models import Bill
 from order.queries import get_recent_unread_notifications
 from tools.exceptions import ValidatorError
@@ -78,8 +78,7 @@ class CartAddView(LoginRequiredMixin, View):
         # capture data
         item_id = request.POST.get("item_id", None)
         note = request.POST.get("note", "")
-        category = request.GET.get("category", MenuType.MAIN)
-
+        category = request.GET.get("category")
         if not item_id:
             messages.error(request, _("Item not found"))
             return redirect("service:order-select-items")
