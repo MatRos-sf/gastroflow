@@ -8,13 +8,6 @@ from django.utils.translation import gettext_lazy as _
 CATEGORIES_CACHE_KEY = "menu:categories"
 
 
-# TODO: remove
-class Availability(models.IntegerChoices):
-    AVAILABLE = 1, "Available"
-    SMALL_AMOUNT = 2, "Small amount"
-    UNAVAILABLE = 3, "Unavailable"
-
-
 class Location(models.TextChoices):
     BAR = "bar", _("Bar")
     KITCHEN = "kitchen", _("Kitchen")
