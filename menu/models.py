@@ -20,17 +20,6 @@ class MenuType(models.TextChoices):
 
 
 # TODO: remove
-class SubMenuType(models.TextChoices):
-    COFFEE = "kawa", "Kawa"
-    TEA = "herbata", "Herbata"
-    MATCHA = "matcha", "Matcha"
-    COCKTAIL = "koktajle", "Koktajle"
-    SOFT_DRINK = "pitku", "Pitku"
-    WAFFLE = "gofry", "Gofry"
-    CAKE = "ciasto", "Ciasto"
-
-
-# TODO: remove
 class Availability(models.IntegerChoices):
     AVAILABLE = 1, "Available"
     SMALL_AMOUNT = 2, "Small amount"
