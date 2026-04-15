@@ -83,7 +83,29 @@
                         {% if object.is_printed %}
                             <li class="list-group-item d-flex justify-content-between">
                                 <span class="text-muted">{% trans "Bill printed at" %}</span>
-                                <span class="text-success">{{ object.printed_at }}</span>
+                                <span class="text-success">{{ object.printed_at|date:"Y-m-d H:i" }}</span>
+                            </li>
+                        {% endif %}
+                        {% if receipt %}
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-muted">{% trans "Receipt status" %}</span>
+                                {% if receipt.ok %}
+                                    <span class="badge bg-success rounded-pill">{% trans "OK" %}</span>
+                                {% else %}
+                                    <span class="badge bg-danger rounded-pill">{% trans "Failed" %}</span>
+                                {% endif %}
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-muted">{% trans "Fiscal number (hn)" %}</span>
+                                <span class="fw-semibold font-monospace">{{ receipt.hn }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-muted">{% trans "Session number (bn)" %}</span>
+                                <span class="font-monospace">{{ receipt.bn }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-muted">{% trans "Print time" %}</span>
+                                <span>{{ receipt.took }} ms</span>
                             </li>
                         {% endif %}
                     </ul>
