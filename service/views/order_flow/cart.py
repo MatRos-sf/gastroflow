@@ -7,7 +7,9 @@ from django.contrib import messages
 from django.db import transaction
 from django.db.models import F
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils import timezone
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import View
 
@@ -254,11 +256,17 @@ class CartSummaryView(View):
             messages.error(request, _("An error occurred while creating the order"))
             return redirect("service:order-cart-summary")
 
+        url = reverse("detail-bill", args=[bill.pk])
+        label = (
+            _("Order #%(pk)s completed.")
+            if is_init_bill
+            else _("Order #%(pk)s updated.")
+        )
         messages.success(
             request,
-            _("Order #%(pk)s completed.") % {"pk": bill.pk}
-            if is_init_bill
-            else _("Order #%(pk)s updated.") % {"pk": bill.pk},
+            mark_safe(
+                f'<a href="{url}" class="alert-link">{label % {"pk": bill.pk}}</a>'
+            ),
         )
         logger.info("Bill #%s created by waiter %s", bill.pk, session_info.waiter)
         clear_session(self.request, ["cart", "tables", "waiter", "bill"])
