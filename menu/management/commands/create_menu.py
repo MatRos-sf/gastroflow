@@ -55,6 +55,8 @@ class Command(BaseCommand):
             obj, created = Addition.objects.get_or_create(
                 name=entry["name"],
                 defaults={
+                    "bill_name": entry.get("bill_name"),
+                    "vat": entry.get("vat", 0),
                     "price": entry["price"],
                     "id_checkout": entry["id_checkout"],
                     "priority": entry.get("priority", 1),
@@ -93,6 +95,8 @@ class Command(BaseCommand):
                         "preparation_location", Location.KITCHEN
                     ),
                     "description": entry.get("description", ""),
+                    "bill_name": entry.get("bill_name"),
+                    "vat": entry.get("vat", 0),
                     "id_checkout": entry["id_checkout"],
                     "price": entry["price"],
                 },
