@@ -53,7 +53,28 @@ POSNET_DEV_BILLS_DIR=/app/dev-bills
 
 ---
 
-## Step 3 — Build and run
+## Step 3 — Disable authentication (development only)
+
+POSNET Server has authentication enabled by default. In development, disable it in `posnet/config.json`:
+
+```json
+"auth": {
+    "active": false,
+    ...
+}
+```
+
+> **Note:** Do not disable authentication in production. If you plan to expose POSNET Server outside Docker, set up proper credentials using the `users_file` option.
+
+After changing `config.json`, restart the container (no rebuild needed — the file is mounted as a volume):
+
+```bash
+docker compose restart posnet
+```
+
+---
+
+## Step 4 — Build and run
 
 ```bash
 docker compose build

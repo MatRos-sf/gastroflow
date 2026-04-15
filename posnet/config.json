@@ -123,7 +123,7 @@
         }
     },
     "auth": {
-        "active": true,
+        "active": false,
         "secret": "change-me-in-production",
         "users_file": "users.enc"
     },
