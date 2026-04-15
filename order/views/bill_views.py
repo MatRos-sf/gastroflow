@@ -39,7 +39,7 @@ class BillDetailView(LoginRequiredMixin, DetailView):
     template_name = "order/bill_detail.html"
 
     def get_queryset(self):
-        return get_bills_with_totals().select_related("waiter")
+        return get_bills_with_totals().select_related("waiter", "receipt")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -61,6 +61,7 @@ class BillDetailView(LoginRequiredMixin, DetailView):
             .exclude(pin="")
             .values_list("pk", flat=True)
         )
+        context["receipt"] = getattr(obj, "receipt", None)
         total = obj.compute_total
         context["total"] = total
         if obj.discount:

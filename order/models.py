@@ -125,6 +125,19 @@ class Bill(models.Model):
         return total
 
 
+class BillReceipt(models.Model):
+    bill = models.OneToOneField(Bill, on_delete=models.CASCADE, related_name="receipt")
+    ok = models.BooleanField()
+    hn = models.CharField(max_length=20, help_text=_("Unique fiscal receipt number"))
+    bn = models.CharField(max_length=20, help_text=_("Session receipt number"))
+    took = models.PositiveIntegerField(help_text=_("Print time in ms"))
+    raw_response = models.JSONField(help_text=_("Full POSNET response"))
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self) -> str:
+        return f"Receipt hn={self.hn} for Bill {self.bill.pk}"
+
+
 class NotificationType(models.TextChoices):
     ITEM_INFO = "item_info", _("Item Info")
     ORDER_INFO = "order_info", _("Order Info")

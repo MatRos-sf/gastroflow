@@ -51,6 +51,18 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  posnet:
+    build: ./posnet
+    # No public ports — only accessible inside Docker network by service name "posnet"
+    # Celery connects to http://posnet:3020 internally.
+    # Uncomment below only for local development/debugging:
+    # ports:
+    #   - "3020:3020"
+    #   - "3021:3021"
+    volumes:
+      - ./posnet/config.json:/opt/posnet/config.json:ro
+    restart: unless-stopped
+
   nginx:
     image: nginx:alpine
     ports:

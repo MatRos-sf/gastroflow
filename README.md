@@ -58,3 +58,13 @@ docker compose exec web python manage.py create_menu /app/menu.json
 ```
 
 The file path must be a path inside the container, not your local machine. After copying with `docker compose cp`, the file is available at the path you specified (in this example `/app/menu.json`).
+
+---
+
+## Fiscal Printer (POSNET)
+
+GastroFlow has an integration with POSNET fiscal printers for printing receipts.
+
+> This feature is experimental and was only tested in simulation (developer) mode.
+
+For setup instructions, configuration, and how to get receipt images in development, see [`posnet/README.md`](posnet/README.md).

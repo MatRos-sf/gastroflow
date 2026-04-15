@@ -12,6 +12,7 @@ celery==5.5.3
 redis==6.4.0
 openpyxl==3.1.5
 django-environ
+requests==2.32.3
 
 # Test tools
 model-bakery==1.20.5

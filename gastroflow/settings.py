@@ -182,3 +182,10 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = env("HOST_EMAIL")
 EMAIL_HOST_PASSWORD = env("HOST_PASSWORD")
+
+# POSNET fiscal printer
+POSNET_URL = env("POSNET_URL", default="http://posnet:3020")
+POSNET_SIMULATION = env.bool("POSNET_SIMULATION", default=False)
+POSNET_COMPANY = env("COMPANY_NAME", default="")
+POSNET_ADDRESS = env("ADDRESS", default="")
+POSNET_DEV_BILLS_DIR = env("POSNET_DEV_BILLS_DIR", default=str(BASE_DIR / "dev-bills"))
