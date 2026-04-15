@@ -59,6 +59,10 @@ staticfiles/
 # Private fixtures (restaurant-specific data)
 menu/fixtures/
 
+# POSNET server binary — must be placed manually in posnet/ before building
+posnet/*.tar.gz
+posnet/*.zip
+
 # Flask stuff:
 instance/
 .webassets-cache
