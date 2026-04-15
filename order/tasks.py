@@ -133,7 +133,7 @@ class BillBuilder:
                     {
                         "na": item.item.bill_name,
                         "il": quantity,
-                        "vt": item.item.vat.value,
+                        "vt": item.item.vat,
                         "pr": int(item.price_snapshot * Decimal(100)),
                     }
                 )
@@ -144,7 +144,7 @@ class BillBuilder:
                         {
                             "na": addition.addition.bill_name,
                             "il": quantity,
-                            "vt": addition.addition.vat.value,
+                            "vt": addition.addition.vat,
                             "pr": int(addition.price_snapshot * Decimal(100)),
                         }
                     )
@@ -189,8 +189,21 @@ class BillBuilder:
                 },
                 "footer": {
                     "cashier": waiter_name,
+                    "cashNumber": "00000001",
                     "billNumber": self._bill.pk,
+                    "uniqueNumber": f"SIM{self._bill.pk:010d}",
                 },
+                "vatrates": {
+                    "va": "23,00",
+                    "vb": "8,00",
+                    "vc": "5,00",
+                    "vd": "0,00",
+                    "ve": "101,00",
+                    "vf": "101,00",
+                    "vg": "100,00",
+                },
+                "tid": "000-000-00-00",
+                "number": self._bill.pk,
                 "fiscal": True,
             },
         }
@@ -215,9 +228,12 @@ class BillBuilder:
         url = f"{settings.POSNET_URL}/paragon"
         params = {"simulation": "true"} if settings.POSNET_SIMULATION else {}
 
+        logger.debug(f"POSNET payload: {self._bill_payload}")
         response = requests.post(
             url, json=self._bill_payload, params=params, timeout=30
         )
+        if not response.ok:
+            logger.error(f"POSNET error {response.status_code}: {response.text}")
         response.raise_for_status()
         data = response.json()
 

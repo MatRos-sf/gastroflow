@@ -20,6 +20,7 @@ from order.queries import (
     get_bills_with_totals,
     get_orders_display_data,
 )
+from order.tasks import finalize_bill
 from service.forms import ChangeBillTableForm
 from service.queries import release_tables, release_tables_for_open_bill
 from worker.models import Position, Worker
@@ -115,6 +116,7 @@ def close_bill(request, pk):
         msg = _("Tables have been released.")
 
     if do_print:
+        finalize_bill.delay(bill.pk)
         # TODO: send task to print Bill
         msg += " " + _("Bill is being prepared for printing.")
 
