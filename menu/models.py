@@ -13,6 +13,13 @@ class Location(models.TextChoices):
     KITCHEN = "kitchen", _("Kitchen")
 
 
+class VAT(models.IntegerChoices):
+    VAT_23 = 0, _("23% VAT")
+    VAT_8 = 1, _("8% VAT")
+    VAT_5 = 2, _("2% VAT")
+    VAT_0 = 3, _("0% VAT")
+
+
 class Category(models.Model):
     name = models.CharField(max_length=100, verbose_name=_("name"))
 
@@ -45,6 +52,16 @@ class SubCategory(models.Model):
 
 class Addition(models.Model):
     name = models.CharField(max_length=100, verbose_name=_("name"))
+    bill_name = models.CharField(
+        max_length=40,
+        verbose_name=_("bill name"),
+        blank=True,
+        null=True,
+        help_text=_("Name as it will appear on the bill"),
+    )
+    vat = models.SmallIntegerField(
+        choices=VAT.choices, default=VAT.VAT_23, verbose_name=_("VAT")
+    )
     price = models.DecimalField(max_digits=7, decimal_places=2, verbose_name=_("price"))
     id_checkout = models.PositiveIntegerField(
         help_text=_("Cash register product ID"), verbose_name=_("checkout ID")
@@ -90,6 +107,16 @@ class Item(models.Model):
     )
     name = models.CharField(
         max_length=100, help_text=_("Item name"), verbose_name=_("name")
+    )
+    bill_name = models.CharField(
+        max_length=40,
+        verbose_name=_("bill name"),
+        blank=True,
+        null=True,
+        help_text=_("Name as it will appear on the bill"),
+    )
+    vat = models.SmallIntegerField(
+        choices=VAT.choices, default=VAT.VAT_23, verbose_name=_("VAT")
     )
     description = models.TextField(
         help_text=_("Item description"),
