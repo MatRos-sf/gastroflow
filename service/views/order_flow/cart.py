@@ -1,5 +1,5 @@
 import logging
-from typing import Iterable, Optional
+from typing import Iterable
 
 from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
@@ -8,11 +8,11 @@ from django.db import transaction
 from django.db.models import F
 from django.shortcuts import redirect, render
 from django.urls import reverse
-from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import View
 
+from consumers.serializers import serialize_order
 from menu.models import Item, Location
 from order.models import Bill, Order, OrderItem, OrderItemAddition
 from service.exceptions import StockError, ValidatorError
@@ -61,44 +61,14 @@ def create_order(bill: Bill, items: Iterable[dict], **kwargs):
     group_name = (
         "kitchen_orders" if kwargs["category"] == Location.KITCHEN else "bar_orders"
     )
-    _send_payload_to_recipient(order.pk, group_name, str(bill.waiter))
+    _broadcast_new_order(order, group_name)
 
 
-def _get_order_details(order_id: int, sender: str) -> Optional[dict]:
-    try:
-        order = Order.objects.get(pk=order_id)
-    except Order.DoesNotExist:
-        return None
-
-    order_items = [
-        {
-            "id": item.id,
-            "name_snapshot": item.name_snapshot,
-            "quantity": item.quantity,
-            "note": item.note,
-        }
-        for item in order.order_items.order_by("name_snapshot").all()
-    ]
-    return {
-        "id": order.id,
-        "sender": sender,
-        "table": order.bill.str_tables(),
-        "status": order.status,
-        "order_items": order_items,
-        "created_at": timezone.localtime(order.created_at).strftime(
-            "%Y-%m-%d %H:%M:%S"
-        ),
-    }
-
-
-def _send_payload_to_recipient(pk: int, group_name: str, sender: str):
-    order_detail = _get_order_details(pk, sender)
-    if order_detail is None:
-        return
+def _broadcast_new_order(order: Order, group_name: str) -> None:
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(
         group_name,
-        {"type": "new_order", "order_data": order_detail},
+        {"type": "new_order", "order_data": serialize_order(order)},
     )
 
 
