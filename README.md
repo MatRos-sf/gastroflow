@@ -1,30 +1,32 @@
 # GastroFlow
 
-GastroFlow is a restaurant management system built with Django. It helps restaurant staff take orders, track their status in real time, manage the menu, and close bills — all from a browser.
+GastroFlow is a restaurant management system built with Django. It helps restaurant staff take orders, track their status in real time, manage the menu, and close bills - all from a browser.
 
 The system has three main views running at the same time:
-- **Waiter view** — take orders at the table, track notifications
-- **Kitchen display** — see incoming food orders, mark them as ready
-- **Bar display** — see incoming drink orders, mark them as ready
+- **Waiter view** - take orders at the table, track notifications
+- **Kitchen display** - see incoming food orders, mark them as ready
+- **Bar display** - see incoming drink orders, mark them as ready
 
-When a waiter places an order, the kitchen and bar screens update immediately using WebSockets — no page refresh needed.
+When a waiter places an order, the kitchen and bar screens update immediately using WebSockets - no page refresh needed.
 
 ---
 
 ## Demo
 
 ### Placing an order + Kitchen display (WebSocket)
-
+[Screencast from 29.04.2026 21:24:10.webm](https://github.com/user-attachments/assets/a194508b-6b85-436a-9b4a-43f4b973d288)
 
 ---
 
 ### Creating a hall and adding tables
+[Screencast from 29.04.2026 20:36:43.webm](https://github.com/user-attachments/assets/ed879156-3cdd-482a-a3ea-95def23a6a72)
 
 
 ---
 
-### Order flow — from table to bill
+### Order flow from table to bill
 
+[Screencast from 29.04.2026 20:34:31.webm](https://github.com/user-attachments/assets/bc81cf7f-9402-4760-bcf0-475b8c8235d1)
 
 ---
 
@@ -100,12 +102,12 @@ docker compose up --build -d
 ```
 
 This command starts six services:
-- `db` — PostgreSQL database
-- `redis` — Redis (broker + cache)
-- `web` — Django app (Daphne ASGI server, port 8000 internally)
-- `celery` — Background task worker
-- `posnet` — Fiscal printer service (internal only)
-- `nginx` — Reverse proxy (public port from `WEB_PORT`)
+- `db` - PostgreSQL database
+- `redis` - Redis (broker + cache)
+- `web` - Django app (Daphne ASGI server, port 8000 internally)
+- `celery` - Background task worker
+- `posnet` - Fiscal printer service (internal only)
+- `nginx` - Reverse proxy (public port from `WEB_PORT`)
 
 Django automatically runs `collectstatic` and `migrate` on startup.
 
@@ -159,13 +161,13 @@ The menu has a simple hierarchy:
 Category → SubCategory → Item
 ```
 
-- **Category** — a top-level group, for example "Food" or "Drinks"
-- **SubCategory** — a group inside a category, for example "Pasta" inside "Food"
-- **Item** — a specific dish or drink that can be ordered
+- **Category** - a top-level group, for example "Food" or "Drinks"
+- **SubCategory** - a group inside a category, for example "Pasta" inside "Food"
+- **Item** - a specific dish or drink that can be ordered
   - Has a `price`, `vat` rate, and `preparation_location` (KITCHEN or BAR)
-  - Has `daily_stock` — `null` means unlimited, `0` means sold out
-  - Can have **Additions** — extras like "extra sauce" or "side salad" (ManyToMany)
-- **Addition** — an optional extra that a customer can add to an item
+  - Has `daily_stock` - `null` means unlimited, `0` means sold out
+  - Can have **Additions** - extras like "extra sauce" or "side salad" (ManyToMany)
+- **Addition** - an optional extra that a customer can add to an item
 
 **MenuPeriod** links items to a time range (e.g. "Lunch menu: 11:00–15:00"). Items in a period only appear during that time window.
 
@@ -179,9 +181,9 @@ The restaurant floor is organized like this:
 Hall → Table
 ```
 
-- **Hall** — a section of the restaurant (e.g. "Main room", "Terrace")
-- **Table** — a physical table inside a hall
-  - Has `x` and `y` position (percentage — used to render a visual floor map)
+- **Hall** - a section of the restaurant (e.g. "Main room", "Terrace")
+- **Table** - a physical table inside a hall
+  - Has `x` and `y` position (percentage - used to render a visual floor map)
   - Has `is_occupied` to show if a bill is currently open
 
 ---
@@ -194,28 +196,28 @@ This is the core of the system. The full order flow looks like this:
 Table → Bill → Order → OrderItem → OrderItemAddition
 ```
 
-- **Bill** — opened when a waiter starts serving a table
+- **Bill** - opened when a waiter starts serving a table
   - Links to one or more tables
   - Has a `status`: OPEN → CLOSED
   - Has `payment_method` (card, cash, or both) and optional `discount`
   - Is linked to the `Worker` (waiter) who opened it
-- **Order** — a group of items sent to one location (KITCHEN or BAR)
+- **Order** - a group of items sent to one location (KITCHEN or BAR)
   - One bill can have many orders (e.g. first round of drinks + second round of food)
   - Has a `status`: ORDER → PREPARING → READY → PAID / CANCELED
-- **OrderItem** — a single line in an order (one item × quantity)
-  - Stores `name_snapshot` and `price_snapshot` — the price at the time of ordering (so changing the menu later does not affect past orders)
+- **OrderItem** - a single line in an order (one item × quantity)
+  - Stores `name_snapshot` and `price_snapshot` - the price at the time of ordering (so changing the menu later does not affect past orders)
   - Has its own `status`: WAITING → PREPARING → READY / CANCELED
-- **OrderItemAddition** — an addition attached to a specific order item (e.g. "+extra cheese")
+- **OrderItemAddition** - an addition attached to a specific order item (e.g. "+extra cheese")
   - Also stores a price snapshot
 
 ---
 
 ### Workers
 
-- **Worker** — one real employee (waiter, chef, barista, etc.)
+- **Worker** - one real employee (waiter, chef, barista, etc.)
   - All workers share one Django login (`Workers` account)
   - Individual tracking uses the `Worker` model with an optional 4-digit `pin`
-- **WorkTime** — one shift (clock-in to clock-out)
+- **WorkTime** - one shift (clock-in to clock-out)
   - Stores `salary_snapshot` so a pay rate change does not affect old shifts
   - Has `is_settled` to track if the shift was included in a payroll settlement
 
@@ -223,7 +225,7 @@ Table → Bill → Order → OrderItem → OrderItemAddition
 
 ### Notifications
 
-- **Notification** — a message sent to a worker
+- **Notification** - a message sent to a worker
   - Type: `item_info` (item is ready), `order_info` (full order is ready), or `call` (table called for help)
   - Status: `none` → `waiting_to_read` → `read`
   - A red dot appears in the waiter's navigation bar when there are unread notifications
@@ -238,7 +240,7 @@ GastroFlow uses two application-level accounts instead of individual user accoun
 A superuser account for the restaurant manager. The Boss can manage workers, menu items, orders, and access all reports.
 
 ### Workers
-A single shared account used by all floor staff. Because multiple real employees share this login, individual workers are tracked via the `Worker` model (first name, last name, position, optional PIN) — not via separate Django users.
+A single shared account used by all floor staff. Because multiple real employees share this login, individual workers are tracked via the `Worker` model (first name, last name, position, optional PIN) - not via separate Django users.
 
 | Account | Django superuser | Who uses it |
 |---------|-----------------|-------------|
@@ -247,7 +249,7 @@ A single shared account used by all floor staff. Because multiple real employees
 
 ---
 
-## Setup — Creating User Accounts
+## Setup Creating User Accounts
 
 Use the built-in management command to create the accounts on first deployment:
 
@@ -261,21 +263,21 @@ docker compose exec web python manage.py create_users \
 
 All four arguments are required. If you skip an account's arguments, that account will not be created.
 
-**The command is safe to run multiple times.** If a user already exists, it is skipped — no data is changed.
+**The command is safe to run multiple times.** If a user already exists, it is skipped - no data is changed.
 
 ---
 
-## Setup — Loading the Menu
+## Setup Loading the Menu
 
 Menu data is not stored in the repository (it contains restaurant-specific information). You need to load it manually on first deployment.
 
-**Step 1 — Copy your JSON file into the container:**
+**Step 1 Copy your JSON file into the container:**
 
 ```bash
 docker compose cp /path/to/your/menu.json web:/app/menu.json
 ```
 
-**Step 2 — Run the import command:**
+**Step 2 Run the import command:**
 
 ```bash
 docker compose exec web python manage.py create_menu /app/menu.json
