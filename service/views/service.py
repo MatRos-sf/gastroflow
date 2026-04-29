@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_GET
 from django.views.generic import View
 
-from menu.models import Item
+from menu.models import Addition, Item
 from order.models import Bill
 from order.queries import get_recent_unread_notifications
 from tools.exceptions import ValidatorError
@@ -61,7 +61,7 @@ class CartAddView(LoginRequiredMixin, View):
 
     def _additions_validator(self) -> list[Item]:
         additions_ids = self.request.POST.getlist("additions")
-        additions = Item.objects.filter(id__in=additions_ids)
+        additions = Addition.objects.filter(id__in=additions_ids)
         if len(additions) != len(additions_ids):
             # capture missing additions
             missing_additions = set(additions_ids) - set(
