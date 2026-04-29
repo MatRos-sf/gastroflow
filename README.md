@@ -11,18 +11,33 @@ When a waiter places an order, the kitchen and bar screens update immediately us
 
 ---
 
+## Demo
+
+### Placing an order + Kitchen display (WebSocket)
+
+
+---
+
+### Creating a hall and adding tables
+
+
+---
+
+### Order flow — from table to bill
+
+
+---
+
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Backend | Django (no REST framework — plain views and forms) |
-| Real-time | Django Channels + WebSockets |
-| Async tasks | Celery |
-| Message broker | Redis |
-| Database | PostgreSQL (production) / SQLite (development) |
-| Proxy / static | Nginx |
-| Fiscal printer | POSNET integration via TCP/IP |
-| Containerization | Docker + Docker Compose |
+![Django](https://img.shields.io/badge/Django-5.2.4-092E20?style=for-the-badge&logo=django)
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Django Channels](https://img.shields.io/badge/Django_Channels-3.0.5-092E20?style=for-the-badge&logo=django)
+![Celery](https://img.shields.io/badge/Celery-5.5.3-37814A?style=for-the-badge&logo=celery)
+![Redis](https://img.shields.io/badge/Redis-7-FF4438?style=for-the-badge&logo=redis&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Nginx](https://img.shields.io/badge/Nginx-alpine-009639?style=for-the-badge&logo=nginx&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 
 ---
 
