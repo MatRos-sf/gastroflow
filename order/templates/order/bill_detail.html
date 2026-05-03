@@ -1,130 +1,512 @@
-{% extends "menu/base.html" %}
+{% extends "base.html" %}
+{% load i18n crispy_forms_tags %}
 {% block title %}
-    Rachunek #{{ bill.id }}
+    {% trans "Bill" %} #{{ object.id }}
 {% endblock title %}
 {% block content %}
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-dark text-white">
-            <h1 class="h5 mb-0">Rachunek #{{ bill.id }}</h1>
+    <div class="container-fluid px-3 py-3">
+        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+            <h1 class="h4 fw-bold mb-0">{% trans "Bill" %} #{{ object.id }}</h1>
+            <a href="{% url 'list-bill' %}"
+               class="btn btn-outline-secondary rounded-pill px-4">← {% trans "Back" %}</a>
         </div>
-        <div class="card-body">
-            <p class="text-muted mb-1">
-                <strong>Stworzony:</strong> {{ bill.created_at|date:"Y-m-d H:i" }}
-            </p>
-            {% if bill.closed_at %}
-                <p class="text-muted mb-1">
-                    <strong>Zakończony:</strong> {{ bill.closed_at }}
-                </p>
-                <p class="text-muted mb-1">
-                    <strong>Metoda płatności:</strong> {{ bill.payment_method }}
-                </p>
-            {% endif %}
-            <p class="text-muted mb-1">
-                <strong>Status:</strong> {{ bill.status }}
-            </p>
-            <p class="text-muted mb-1">
-                <strong>Stolik(i):</strong> {{ bill.str_tables }}
-            </p>
-            {% if bill.note %}
-                <p class="text-muted mb-1">
-                    <strong>Notatka:</strong> {{ bill.note }}
-                </p>
-            {% endif %}
+        <div class="row g-3">
+            <div class="col-12 col-lg-4">
+                <div class="card border-0 rounded-4 shadow h-100">
+                    <div class="card-header fw-bold">{% trans "Details" %}</div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="text-muted">{% trans "Status" %}</span>
+                            <span class="fw-semibold">{{ object.get_status_display }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="text-muted">{% trans "Table(s)" %}</span>
+                            {% trans "Take-away" as takeaway_text %}
+                            <span>{{ object.str_tables|default:takeaway_text }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="text-muted">{% trans "Waiter" %}</span>
+                            <span>{{ object.waiter }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="text-muted">{% trans "Guests" %}</span>
+                            <span>{{ object.guest_count }}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="text-muted">{% trans "Created" %}</span>
+                            <span>{{ object.created_at|date:"Y-m-d H:i" }}</span>
+                        </li>
+                        {% if object.note %}
+                            <li class="list-group-item">
+                                <span class="text-muted d-block small">{% trans "Note" %}</span>
+                                <span>{{ object.note }}</span>
+                            </li>
+                        {% endif %}
+                        {% if object.discount %}
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-muted">{% trans "Discount" %}</span>
+                                <span class="text-success">{{ object.discount }}%</span>
+                            </li>
+                        {% endif %}
+                        <li class="list-group-item d-flex justify-content-between">
+                            <span class="text-muted">{% trans "All dishes ready" %}</span>
+                            {% if all_order_status %}
+                                <span class="badge bg-success rounded-pill">{% trans "Yes" %}</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark rounded-pill">{% trans "No" %}</span>
+                            {% endif %}
+                        </li>
+                        {% if preparing_time %}
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-muted">{% trans "Preparing time" %}</span>
+                                <span>{{ preparing_time }}</span>
+                            </li>
+                        {% endif %}
+                        {% if object.payment_method %}
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-muted">{% trans "Payment method" %}</span>
+                                <span>{{ object.payment_method }}</span>
+                            </li>
+                        {% endif %}
+                        {% if object.paid_at %}
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-muted">{% trans "Paid at" %}</span>
+                                <span>{{ object.paid_at|date:"Y-m-d H:i" }}</span>
+                            </li>
+                        {% endif %}
+                        {% if object.closed_at %}
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-muted">{% trans "Closed at" %}</span>
+                                <span>{{ object.closed_at|date:"Y-m-d H:i" }}</span>
+                            </li>
+                        {% endif %}
+                        {% if object.is_printed %}
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-muted">{% trans "Bill printed at" %}</span>
+                                <span class="text-success">{{ object.printed_at|date:"Y-m-d H:i" }}</span>
+                            </li>
+                        {% endif %}
+                        {% if receipt %}
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-muted">{% trans "Receipt status" %}</span>
+                                {% if receipt.ok %}
+                                    <span class="badge bg-success rounded-pill">{% trans "OK" %}</span>
+                                {% else %}
+                                    <span class="badge bg-danger rounded-pill">{% trans "Failed" %}</span>
+                                {% endif %}
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-muted">{% trans "Fiscal number (hn)" %}</span>
+                                <span class="fw-semibold font-monospace">{{ receipt.hn }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-muted">{% trans "Session number (bn)" %}</span>
+                                <span class="font-monospace">{{ receipt.bn }}</span>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span class="text-muted">{% trans "Print time" %}</span>
+                                <span>{{ receipt.took }} ms</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                    {% if object.is_open %}
+                        <div class="card-footer d-flex gap-2 flex-wrap">
+                            <button class="btn btn-outline-secondary btn-sm rounded-pill"
+                                    type="button"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editBillModal">{% trans "Edit bill" %}</button>
+                            <button class="btn btn-outline-secondary btn-sm rounded-pill"
+                                    type="button"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#changeTableModal">{% trans "Change table" %}</button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-12 col-lg-8">
+                <div class="card border-0 rounded-4 shadow">
+                    <div class="card-header fw-bold">{% trans "Items" %}</div>
+                    <div class="list-group list-group-flush">
+                        {% for item in items %}
+                            {% if item.order %}
+                                <div class="list-group-item bg-light">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="fw-bold small text-uppercase text-secondary">{% trans "Order" %} #{{ item.order }}</span>
+                                            <span class="badge bg-secondary rounded-pill">{{ item.category }}</span>
+                                            <span class="badge bg-info text-dark rounded-pill">{{ item.status }}</span>
+                                        </div>
+                                        <button type="button"
+                                                class="btn btn-outline-danger btn-sm rounded-pill"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#deleteOrderModal"
+                                                data-order-id="{{ item.order }}"
+                                                data-url="{% url 'delete-order' item.order %}">
+                                            {% trans "Remove order" %}
+                                        </button>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="list-group-item ps-4">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span>
+                                            <span class="badge bg-secondary rounded-pill me-2">{{ item.quantity }}×</span>
+                                            {{ item.name }}
+                                        </span>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <span class="fw-semibold">{{ item.line_subtotal }} zł</span>
+                                            <button type="button"
+                                                    class="btn btn-outline-danger btn-sm rounded-pill"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#deleteOrderItemModal"
+                                                    data-item-id="{{ item.pk }}"
+                                                    data-item-name="{{ item.name }}"
+                                                    data-url="{% url 'delete-order-item' item.pk %}">
+                                                {% trans "Remove" %}
+                                            </button>
+                                        </div>
+                                    </div>
+                                    {% for addition in item.additions %}
+                                        <div class="d-flex justify-content-between ps-4 text-muted small mt-1">
+                                            <span>+ {{ addition.name }}</span>
+                                            <span>{{ addition.line_subtotal }} zł</span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        {% empty %}
+                            <div class="list-group-item text-center text-muted py-4">{% trans "No items." %}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="card-footer d-flex justify-content-between fw-bold">
+                        <span>{% trans "Total" %}</span>
+                        <span>
+                            {% if object.discount %}
+                                <span class="text-decoration-line-through text-muted fw-normal me-2">{{ total }} zł</span>
+                                <span class="text-success">{{ discounted_total }} zł</span>
+                            {% else %}
+                                {{ total }} zł
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+                <div class="d-flex gap-2 mt-3 flex-wrap">
+                    {% if object.is_open %}
+                        <button class="btn btn-outline-secondary rounded-pill px-4"
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#closeBillModal">{% trans "Close bill" %}</button>
+                    {% elif object.is_closed_and_occupied %}
+                        <form method="post"
+                              class="d-inline"
+                              action="{% url 'close-close-release' object.pk %}">
+                            {% csrf_token %}
+                            <button class="btn btn-outline-secondary rounded-pill px-4" type="submit">
+                                {% trans "Close bill and release tables" %}
+                            </button>
+                        </form>
+                    {% endif %}
+                    {% if object.is_open %}
+                        <button class="btn btn-outline-secondary rounded-pill px-4"
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#discountModal">{% trans "Add discount" %}</button>
+                    {% endif %}
+                    {% if object.is_open or request.user.is_superuser %}
+                        <button class="btn btn-outline-danger rounded-pill px-4"
+                                type="button"
+                                data-bs-toggle="modal"
+                                data-bs-target="#deleteBillModal">{% trans "Remove bill" %}</button>
+                    {% endif %}
+                </div>
+            </div>
         </div>
     </div>
-    <div class="card shadow-sm mb-4">
-        <div class="card-header bg-light">
-            <strong>Pozycje</strong>
-        </div>
-        <div class="card-body p-0">
-            <table class="table mb-0">
-                <thead class="table-dark">
-                    <tr>
-                        <th scope="col">Ilość</th>
-                        <th scope="col">Nazwa</th>
-                        <th scope="col" class="text-end">Akcje</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in items %}
-                        <tr>
-                            <td>{{ item.quantity }}</td>
-                            <td data-item-name="{{ item.name }}">{{ item.name }}</td>
-                            <td class="text-end">
-                                <button type="button"
-                                        class="btn btn-outline-danger btn-sm"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#deleteOrderItemModal"
-                                        data-item-id="{{ item.pk }}">Usuń</button>
-                            </td>
-                        </tr>
-                    {% empty %}
-                        <tr>
-                            <td colspan="3" class="text-center text-muted">Brak pozycji</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="d-flex justify-content-center gap-2">
-        <a href="{% url 'summary-bill' %}"
-           class="btn btn-outline-secondary btn-lg">Wróć</a>
-        <a class="btn btn-success btn-lg"
-           href="{% url 'service:bill-detail' bill.id %}">Rozlicz</a>
-        <button class="btn btn-outline-warning btn-lg" type="button" disabled>Zmień stolik</button>
-    </div>
-    {# ======= Modal deleteOrderItem ======= #}
+    {# ── Modal: close bill ── #}
     <div class="modal fade"
-         id="deleteOrderItemModal"
+         id="closeBillModal"
          tabindex="-1"
-         aria-labelledby="deleteOrderItemModalLabel"
-         data-bill-id="{{ bill.id }}"
+         aria-labelledby="closeBillModalLabel"
          aria-hidden="true">
         <div class="modal-dialog">
             <form method="post"
-                  class="modal-content"
-                  id="deleteOrderItemForm"
-                  action="delete/__ITEM__">
+                  class="modal-content rounded-4"
+                  action="{% url 'close-bill' object.id %}">
                 {% csrf_token %}
                 <div class="modal-header">
-                    <h5 class="modal-title" id="deleteOrderItemModalLabel">Usuń danie z rachunku</h5>
+                    <h5 class="modal-title fw-bold" id="closeBillModalLabel">{% trans "Close bill" %} #{{ object.id }}</h5>
                     <button type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Zamknij"></button>
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label=''{% trans "Close" %}'>
+                    </button>
                 </div>
-                <div class="modal-body">
-                    <p id="deleteItemText" class="mb-2"></p>
-                    <div class="alert alert-warning mb-0">Tej operacji nie można cofnąć. Rachunek ulegnie zmianie.</div>
-                </div>
+                <div class="modal-body">{{ close_form|crispy }}</div>
                 <div class="modal-footer">
                     <button type="button"
-                            class="btn btn-outline-secondary"
-                            data-bs-dismiss="modal">Anuluj</button>
-                    <button type="submit" class="btn btn-danger">Usuń</button>
+                            class="btn btn-outline-secondary rounded-pill"
+                            data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <button type="submit" class="btn btn-success rounded-pill">{% trans "Close bill" %}</button>
                 </div>
             </form>
         </div>
     </div>
-    <script>
-    document.addEventListener("DOMContentLoaded", function () {
-    var deleteModal = document.getElementById('deleteOrderItemModal')
-    deleteModal.addEventListener('show.bs.modal', function (event) {
-        var button = event.relatedTarget;
-        var itemId = button.getAttribute('data-item-id');
-        var billId = deleteModal.getAttribute('data-bill-id');
+    {# ── Modal: delete item ── #}
+    <div class="modal fade"
+         id="deleteOrderItemModal"
+         tabindex="-1"
+         aria-labelledby="deleteOrderItemModalLabel"
+         data-bill-id="{{ object.id }}"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post"
+                  class="modal-content rounded-4"
+                  id="deleteOrderItemForm"
+                  action="delete/__ITEM__">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="deleteOrderItemModalLabel">{% trans "Remove item" %}</h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label='{% trans "Close" %}'></button>
+                </div>
+                <div class="modal-body">
+                    <p id="deleteItemText" class="mb-2"></p>
+                    <div class="alert alert-warning rounded-3 mb-0">
+                        {% trans "This action cannot be undone. The bill will be updated." %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-outline-secondary rounded-pill"
+                            data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <button type="submit" class="btn btn-danger rounded-pill">{% trans "Remove" %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {# ── Modal: delete order ── #}
+    <div class="modal fade"
+         id="deleteOrderModal"
+         tabindex="-1"
+         aria-labelledby="deleteOrderModalLabel"
+         data-bill-id="{{ object.id }}"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post"
+                  class="modal-content rounded-4"
+                  id="deleteOrderForm"
+                  action="">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="deleteOrderModalLabel">{% trans "Remove order" %}</h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label='{% trans "Close" %}'></button>
+                </div>
+                <div class="modal-body">
+                    <p id="deleteOrderText" class="mb-2"></p>
+                    <div class="alert alert-warning rounded-3 mb-0">
+                        {% trans "This action cannot be undone. All items in this order will be removed." %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-outline-secondary rounded-pill"
+                            data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <button type="submit" class="btn btn-danger rounded-pill">{% trans "Remove" %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {# ── Modal: add discount ── #}
+    {% if object.is_open %}
+        <div class="modal fade"
+             id="discountModal"
+             tabindex="-1"
+             aria-labelledby="discountModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <form method="post"
+                      class="modal-content rounded-4"
+                      action="{% url 'add-discount' object.id %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold" id="discountModalLabel">
+                            {% trans "Add discount" %} — {% trans "Bill" %} #{{ object.id }}
+                        </h5>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label='{% trans "Close" %}'></button>
+                    </div>
+                    <div class="modal-body">{{ discount_form|crispy }}</div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-outline-secondary rounded-pill"
+                                data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                        <button type="submit" class="btn btn-success rounded-pill">{% trans "Apply discount" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+    {# ── Modal: edit bill ── #}
+    {% if object.is_open %}
+        <div class="modal fade"
+             id="editBillModal"
+             tabindex="-1"
+             aria-labelledby="editBillModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <form method="post"
+                      class="modal-content rounded-4"
+                      action="{% url 'edit-bill' object.pk %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold" id="editBillModalLabel">{% trans "Edit bill" %} #{{ object.id }}</h5>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label='{% trans "Close" %}'></button>
+                    </div>
+                    <div class="modal-body">
+                        {{ edit_bill_form|crispy }}
+                        <div id="pinField" style="display:none">
+                            <label class="form-label fw-semibold" for="id_pin">{% trans "PIN" %}</label>
+                            <input type="password"
+                                   name="pin"
+                                   id="id_pin"
+                                   class="form-control"
+                                   inputmode="numeric"
+                                   maxlength="4"
+                                   autocomplete="off">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-outline-secondary rounded-pill"
+                                data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                        <button type="submit" class="btn btn-success rounded-pill">{% trans "Save" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+    {# ── Modal: change table ── #}
+    {% if object.is_open %}
+        <div class="modal fade"
+             id="changeTableModal"
+             tabindex="-1"
+             aria-labelledby="changeTableModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <form method="post"
+                      class="modal-content rounded-4"
+                      action="{% url 'service:change-table' object.pk %}">
+                    {% csrf_token %}
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold" id="changeTableModalLabel">
+                            {% trans "Change table" %} — {% trans "Bill" %} #{{ object.id }}
+                        </h5>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label='{% trans "Close" %}'></button>
+                    </div>
+                    <div class="modal-body">{{ change_table_form|crispy }}</div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-outline-secondary rounded-pill"
+                                data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                        <button type="submit" class="btn btn-success rounded-pill">{% trans "Save" %}</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+    {# ── Modal: delete bill ── #}
+    <div class="modal fade"
+         id="deleteBillModal"
+         tabindex="-1"
+         aria-labelledby="deleteBillModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="post"
+                  class="modal-content rounded-4"
+                  action="{% url 'delete-bill' object.pk %}">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="deleteBillModalLabel">{% trans "Remove bill" %} #{{ object.id }}</h5>
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label='{% trans "Close" %}'></button>
+                </div>
+                <div class="modal-body">
+                    <div class="alert alert-danger rounded-3 mb-0">
+                        {% trans "This action cannot be undone. All orders and items in this bill will be removed." %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-outline-secondary rounded-pill"
+                            data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <button type="submit" class="btn btn-danger rounded-pill">{% trans "Remove bill" %}</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% block extra_js %}
+        <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const modal = document.getElementById("deleteOrderItemModal");
+        modal.addEventListener("show.bs.modal", function (event) {
+          const button = event.relatedTarget;
+          const itemId = button.getAttribute("data-item-id");
+          const itemName = button.getAttribute("data-item-name");
+          const billId = modal.getAttribute("data-bill-id");
 
-        var row = button.closest('tr');
-        var nameCell = row.querySelector("td[data-item-name]")
-        var itemName = nameCell.getAttribute('data-item-name');
+          document.getElementById("deleteItemText").textContent =
+            '{% trans "Are you sure you want to remove:" %} ' + itemName + "?";
 
-        var text = document.getElementById('deleteItemText');
-        text.textContent = "Czy na pewno chcesz usunąć danie: " + itemName + " ?";
-        console.log(itemId);
-        var form = document.getElementById('deleteOrderItemForm');
-        form.action = form.action.replace('__ITEM__', itemId);
-    });
-    });
-    </script>
+          const form = document.getElementById("deleteOrderItemForm");
+          form.action = button.getAttribute("data-url");
+        });
+
+        const orderModal = document.getElementById("deleteOrderModal");
+        orderModal.addEventListener("show.bs.modal", function (event) {
+          const button = event.relatedTarget;
+          const orderId = button.getAttribute("data-order-id");
+          const billId = orderModal.getAttribute("data-bill-id");
+
+          document.getElementById("deleteOrderText").textContent =
+            '{% trans "Are you sure you want to remove order" %} #' + orderId + "?";
+
+          const form = document.getElementById("deleteOrderForm");
+          form.action = button.getAttribute("data-url");
+        });
+
+        const WAITERS_WITH_PIN = new Set({{ waiters_with_pin|safe }});
+        const waiterSelect = document.getElementById("id_waiter");
+        const pinField = document.getElementById("pinField");
+        const pinInput = document.getElementById("id_pin");
+
+        function togglePin() {
+          const pk = parseInt(waiterSelect.value);
+          const needsPin = WAITERS_WITH_PIN.has(pk);
+          pinField.style.display = needsPin ? "" : "none";
+          pinInput.required = needsPin;
+          if (!needsPin) pinInput.value = "";
+        }
+
+        if (waiterSelect) {
+          waiterSelect.addEventListener("change", togglePin);
+          togglePin();
+        }
+      });
+        </script>
+    {% endblock extra_js %}
 {% endblock content %}

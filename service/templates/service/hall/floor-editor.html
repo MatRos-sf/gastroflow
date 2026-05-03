@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+    {% trans "Floor editor" %} — {{ hall.name }}
+{% endblock title %}
+{% block content %}
+    <div class="d-flex align-items-center justify-content-between gap-3 mb-3 flex-wrap">
+        <div class="d-flex align-items-center gap-3">
+            <a href="{% url 'service:hall-list' %}"
+               class="btn btn-outline-secondary rounded-pill px-4">← {% trans "Halls" %}</a>
+            <div>
+                <h1 class="h4 fw-bold mb-0">{{ hall.name }}</h1>
+                <small class="text-secondary">{% trans "Ratio" %} {{ hall.aspect_w }}:{{ hall.aspect_h }}</small>
+            </div>
+        </div>
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <div class="btn-group" role="group" aria-label="{% trans "Add table" %}">
+                <button type="button"
+                        class="btn btn-outline-primary"
+                        onclick="addTable('1x1')">+ 1×1</button>
+                <button type="button"
+                        class="btn btn-outline-primary"
+                        onclick="addTable('1x2')">+ 1×2</button>
+                <button type="button"
+                        class="btn btn-outline-primary"
+                        onclick="addTable('1x3')">+ 1×3</button>
+            </div>
+            <button id="btn-save" class="btn btn-primary rounded-pill px-4 fw-bold">{% trans "Save layout" %}</button>
+            <span id="save-status" class="small ms-1"></span>
+        </div>
+    </div>
+    <p class="text-secondary small mb-3">
+        {% trans "Drag to move · Double-click to rename · Click size badge to change size · × to remove" %}
+    </p>
+    <div class="floor-canvas-wrapper">
+        <div id="floor-canvas"></div>
+    </div>
+    {{ tables_json|json_script:"tables-data" }}
+{% endblock content %}
+{% block extra_js %}
+    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <script>
+const canvas = document.getElementById("floor-canvas");
+const SAVE_URL = "{% url 'service:hall-floor-editor-save' hall.pk %}";
+const CSRF = "{{ csrf_token }}";
+
+// Percentage-based sizes so tables scale with the canvas on any screen size.
+// UNIT_W = base unit as % of canvas width.
+// UNIT_H = same physical size expressed as % of canvas height
+//   → UNIT_H = UNIT_W × (aspect_w / aspect_h)
+// Example 2:1 canvas: UNIT_W=8 → UNIT_H=16  (8% of 800px = 64px = 16% of 400px ✓)
+const ASPECT_W = {{ hall.aspect_w }};
+const ASPECT_H = {{ hall.aspect_h }};
+const UNIT_W = 8;                            // % of canvas width
+const UNIT_H = UNIT_W * ASPECT_W / ASPECT_H; // % of canvas height (keeps square shape)
+
+const SIZES = {
+    "1x1": { w: UNIT_W,       h: UNIT_H },
+    "1x2": { w: UNIT_W * 2,   h: UNIT_H },
+    "1x3": { w: UNIT_W * 3,   h: UNIT_H },
+};
+const SIZE_CYCLE = { "1x1": "1x2", "1x2": "1x3", "1x3": "1x1" };
+
+let tableCounter = 0;
+const deletedIds = [];
+
+const initialTables = JSON.parse(document.getElementById("tables-data").textContent);
+initialTables.forEach(t => {
+    addTableElement(t.id, null, t.name, t.x, t.y, t.size || "1x1");
+    tableCounter++;
+});
+
+function addTable(size) {
+    tableCounter++;
+    addTableElement(null, "new_" + tableCounter, tableCounter.toString(), 50, 50, size);
+}
+
+function addTableElement(id, tempId, name, xPct, yPct, size) {
+    const dim = SIZES[size] || SIZES["1x1"];
+
+    const el = document.createElement("div");
+    el.className = "floor-table";
+    el.dataset.id = id ?? "";
+    el.dataset.tempId = tempId ?? "";
+    el.dataset.x = xPct;
+    el.dataset.y = yPct;
+    el.dataset.size = size;
+    el.style.left = xPct + "%";
+    el.style.top = yPct + "%";
+    el.style.width = dim.w + "%";
+    el.style.height = dim.h + "%";
+
+    const label = document.createElement("span");
+    label.className = "floor-table-label";
+    label.textContent = name;
+    el.appendChild(label);
+
+    // Size badge — click to cycle
+    const sizeBadge = document.createElement("span");
+    sizeBadge.className = "floor-table-size";
+    sizeBadge.textContent = size;
+    sizeBadge.title = "{% trans 'Click to change size' %}";
+    sizeBadge.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const next = SIZE_CYCLE[el.dataset.size];
+        const nextDim = SIZES[next];
+        el.dataset.size = next;
+        sizeBadge.textContent = next;
+        el.style.width = nextDim.w + "%";
+        el.style.height = nextDim.h + "%";
+    });
+    el.appendChild(sizeBadge);
+
+    // Delete button
+    const delBtn = document.createElement("button");
+    delBtn.className = "floor-table-delete";
+    delBtn.textContent = "×";
+    delBtn.title = "{% trans 'Remove' %}";
+    delBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const tid = el.dataset.id;
+        if (tid) deletedIds.push(parseInt(tid));
+        el.remove();
+    });
+    el.appendChild(delBtn);
+
+    el.addEventListener("dblclick", (e) => {
+        if (e.target === sizeBadge || e.target === delBtn) return;
+        const newName = prompt("{% trans 'Table name:' %}", label.textContent);
+        if (newName !== null && newName.trim() !== "") {
+            label.textContent = newName.trim();
+        }
+    });
+
+    canvas.appendChild(el);
+    makeDraggable(el);
+}
+
+function makeDraggable(el) {
+    interact(el).draggable({
+        listeners: {
+            move(event) {
+                const rect = canvas.getBoundingClientRect();
+                const newXpx = (parseFloat(el.dataset.x) / 100 * rect.width) + event.dx;
+                const newYpx = (parseFloat(el.dataset.y) / 100 * rect.height) + event.dy;
+                const newX = Math.max(0, Math.min(100, newXpx / rect.width * 100));
+                const newY = Math.max(0, Math.min(100, newYpx / rect.height * 100));
+                el.style.left = newX + "%";
+                el.style.top = newY + "%";
+                el.dataset.x = newX;
+                el.dataset.y = newY;
+            }
+        }
+    });
+}
+
+document.getElementById("btn-save").addEventListener("click", async () => {
+    const btn = document.getElementById("btn-save");
+    const status = document.getElementById("save-status");
+
+    const tables = Array.from(canvas.querySelectorAll(".floor-table")).map(el => ({
+        id: el.dataset.id ? parseInt(el.dataset.id) : null,
+        temp_id: el.dataset.tempId || null,
+        name: el.querySelector(".floor-table-label").textContent.trim(),
+        x: parseFloat(el.dataset.x),
+        y: parseFloat(el.dataset.y),
+        size: el.dataset.size,
+    }));
+
+    btn.disabled = true;
+    btn.textContent = "{% trans 'Saving…' %}";
+    status.textContent = "";
+
+    try {
+        const resp = await fetch(SAVE_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "X-CSRFToken": CSRF },
+            body: JSON.stringify({ tables, deleted_ids: deletedIds }),
+        });
+        const json = await resp.json();
+
+        if (resp.ok && json.ok) {
+            if (json.created) {
+                canvas.querySelectorAll(".floor-table").forEach(el => {
+                    const tempId = el.dataset.tempId;
+                    if (tempId && json.created[tempId]) {
+                        el.dataset.id = json.created[tempId];
+                        el.dataset.tempId = "";
+                    }
+                });
+            }
+            deletedIds.length = 0;
+            status.textContent = "✓ {% trans 'Saved' %}";
+            status.className = "small text-success ms-1";
+        } else {
+            status.textContent = "{% trans 'Error saving' %}";
+            status.className = "small text-danger ms-1";
+        }
+    } catch {
+        status.textContent = "{% trans 'Network error' %}";
+        status.className = "small text-danger ms-1";
+    }
+
+    btn.disabled = false;
+    btn.textContent = "{% trans 'Save layout' %}";
+    setTimeout(() => { status.textContent = ""; }, 3000);
+});
+    </script>
+    <style>
+.floor-table {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    background: #0d6efd;
+    color: white;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: clamp(0.5rem, 1.2vw, 0.85rem);
+    cursor: move;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    touch-action: none;
+    box-shadow: 0 2px 8px rgba(13,110,253,0.35);
+    transition: box-shadow 0.15s;
+}
+.floor-table:hover {
+    box-shadow: 0 4px 16px rgba(13,110,253,0.5);
+}
+.floor-table-label {
+    pointer-events: none;
+    text-align: center;
+    padding: 2px 4px;
+    word-break: break-all;
+}
+.floor-table-size {
+    position: absolute;
+    bottom: -9px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #198754;
+    color: white;
+    border-radius: 20px;
+    font-size: 0.6rem;
+    font-weight: bold;
+    padding: 1px 6px;
+    cursor: pointer;
+    line-height: 1.4;
+    white-space: nowrap;
+}
+.floor-table-size:hover {
+    background: #146c43;
+}
+.floor-table-delete {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 20px;
+    height: 20px;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+}
+.floor-canvas-wrapper { max-width: 860px; }
+#floor-canvas {
+    position: relative;
+    width: 100%;
+    aspect-ratio: {{ hall.aspect_w }}/{{ hall.aspect_h }};
+    background: #f8f9fa;
+    border: 2px solid #dee2e6;
+    border-radius: 16px;
+    overflow: hidden;
+    user-select: none;
+    touch-action: none;
+}
+    </style>
+{% endblock extra_js %}

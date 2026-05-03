@@ -4,118 +4,182 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.db.models import DecimalField, ExpressionWrapper, F, Sum
 from django.db.models.functions import Coalesce
+from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
-from menu.models import Item, Location
+from menu.models import Addition, Item, Location
 from service.models import Table
 from worker.models import Worker
 
 
 class OrderItemStatus(models.TextChoices):
-    WAITING = "waiting", "WAITING"
-    PREPARING = "preparing", "PREPARING"
-    READY = "ready", "READY"
-    CANCELED = "canceled", "CANCELED"
+    WAITING = "waiting", _("Waiting")
+    PREPARING = "preparing", _("Preparing")
+    READY = "ready", _("Ready")
+    CANCELED = "canceled", _("Canceled")
 
 
 class StatusOrder(models.TextChoices):
-    ORDER = "ordering", "ORDERING"
-    PREPARING = "preparing", "PREPARING"
-    READY = "ready", "READY"
-    PAID = "paid", "PAID"
-    CANCELED = "canceled", "CANCELED"
+    ORDER = "ordering", _("Ordering")
+    PREPARING = "preparing", _("Preparing")
+    READY = "ready", _("Ready")
+    PAID = "paid", _("Paid")
+    CANCELED = "canceled", _("Canceled")
 
 
 class StatusBill(models.TextChoices):
-    OPEN = "open", "OPEN"
-    CLOSED = "closed", "CLOSED"
+    """
+    Bill status lifecycle:
+        * OPEN: bill active, table occupied, not paid
+        * CLOSED: bill paid, table unoccupied
+        * CLOSED_AND_OCCUPIED: bill paid, table still occupied
+    """
+
+    OPEN = "open", _("Open")
+    CLOSED = "closed", _("Closed")
+    CLOSED_AND_OCCUPIED = "closed_and_occupied", _("Closed and occupied")
 
 
 class PaymentMethod(models.TextChoices):
-    CARD = "karta", "KARTA"
-    CASH = "gotówka", "GOTÓWKA"
+    CARD = "card", _("Card")
+    CASH = "cash", _("Cash")
+    CASH_AND_CARD = "cash_and_card", _("Cash and card")
 
 
 class Bill(models.Model):
-    table = models.ManyToManyField(Table, blank=True)
+    table = models.ManyToManyField(
+        Table,
+        help_text=_("Table to which the bill is assigned. Null means take-away"),
+    )
     status = models.CharField(
-        max_length=10, choices=StatusBill.choices, default=StatusBill.OPEN
+        max_length=19, choices=StatusBill.choices, default=StatusBill.OPEN
     )
     created_at = models.DateTimeField(auto_now_add=True)
-    closed_at = models.DateTimeField(null=True, blank=True)
-    service = models.ForeignKey(
+    paid_at = models.DateTimeField(
+        null=True, blank=True
+    )  # Customer can pay but occupied table
+    closed_at = models.DateTimeField(
+        null=True, blank=True
+    )  # When customer leave restaurant
+    waiter = models.ForeignKey(
         Worker,
         on_delete=models.SET_NULL,
         null=True,
-        help_text="Person who served the customer",
+        help_text=_("Person who served the customer"),
     )
     note = models.CharField(max_length=200, blank=True, null=True)
     discount = models.PositiveIntegerField(
         default=0, validators=[MinValueValidator(0), MaxValueValidator(100)]
     )
     payment_method = models.CharField(
-        max_length=10, choices=PaymentMethod.choices, default=PaymentMethod.CARD
+        max_length=13, choices=PaymentMethod.choices, default=None, null=True
     )
+    guest_count = models.PositiveSmallIntegerField(
+        default=1,
+        validators=[MinValueValidator(1)],
+        help_text=_("Number of people in one the bill (plates per person)"),
+    )
+    is_printed = models.BooleanField(default=False)
+    printed_at = models.DateTimeField(null=True, blank=True)
 
-    # Payment additional
-    # is_cash
-    # tip
-    # given_money
     def __str__(self):
         return f"Bill {self.id} - Table {self.table or 'take-away'}"
 
-    def str_tables(self):
-        return ", ".join(str(table.name) for table in self.table.all())
+    def get_absolute_url(self):
+        return reverse("detail-bill", args=[str(self.id)])
 
     @property
-    def total(self):
-        s = self.bill_summary_view()
-        return s["total"] - s["cost_discount"]
+    def is_open(self) -> bool:
+        return self.status == StatusBill.OPEN
 
+    @property
+    def is_closed(self) -> bool:
+        return self.status == StatusBill.CLOSED
+
+    @property
+    def is_closed_and_occupied(self) -> bool:
+        return self.status == StatusBill.CLOSED_AND_OCCUPIED
+
+    # TODO: deprecated ?
+    def str_tables(self) -> str:
+        return ", ".join(
+            f"{table.hall.name} · {table.name}"
+            for table in self.table.select_related("hall").all()
+        )
+
+    # TODO: deprecated ?
     def close(self):
         self.status = StatusBill.CLOSED
         self.closed_at = timezone.now()
         self.save()
 
-    def bill_summary_view(self):
-        summary = {}
+    @property
+    def compute_total(self):
         total = Decimal("0.00")
-
-        orders = self.orders.prefetch_related("order_items__order_item_additions")
-        for order in orders:
+        for order in self.orders.all():
             for item in order.order_items.all():
-                # main dish
-                summary.setdefault(
-                    item.name_snapshot,
-                    {
-                        "id": item.menu_item.id_checkout,
-                        "quantity": 0,
-                        "total_cost": Decimal("0.00"),
-                    },
-                )
-                summary[item.name_snapshot]["quantity"] += item.quantity
-                summary[item.name_snapshot]["total_cost"] += item.raw_cost
+                total += item.line_subtotal
+                for additions in item.order_item_additions.all():
+                    total += additions.line_subtotal
+        return total
 
-                total += item.raw_cost
 
-                # check additions
-                for addition in item.order_item_additions.all():
-                    summary.setdefault(
-                        addition.name_snapshot,
-                        {
-                            "id": addition.addition.id_checkout,
-                            "quantity": 0,
-                            "total_cost": Decimal("0.00"),
-                        },
-                    )
-                    summary[addition.name_snapshot]["quantity"] += item.quantity
-                    summary[addition.name_snapshot]["total_cost"] += (
-                        addition.price_snapshot * item.quantity
-                    )
-                    total += addition.price_snapshot * item.quantity
-        cost_discount = (total * self.discount) / 100
+class BillReceipt(models.Model):
+    bill = models.OneToOneField(Bill, on_delete=models.CASCADE, related_name="receipt")
+    ok = models.BooleanField()
+    hn = models.CharField(max_length=20, help_text=_("Unique fiscal receipt number"))
+    bn = models.CharField(max_length=20, help_text=_("Session receipt number"))
+    took = models.PositiveIntegerField(help_text=_("Print time in ms"))
+    raw_response = models.JSONField(help_text=_("Full POSNET response"))
+    created_at = models.DateTimeField(auto_now_add=True)
 
-        return {"total": total, "summary": summary, "cost_discount": cost_discount}
+    def __str__(self) -> str:
+        return f"Receipt hn={self.hn} for Bill {self.bill.pk}"
+
+
+class NotificationType(models.TextChoices):
+    ITEM_INFO = "item_info", _("Item Info")
+    ORDER_INFO = "order_info", _("Order Info")
+    CALL = "call", _("Call")
+
+
+class NotificationStatus(models.TextChoices):
+    NONE = "none", _("None")
+    WAITING_TO_READ = "waiting_to_read", _("Waiting to Read")
+    READ = "read", _("Read")
+
+
+class Notification(models.Model):
+    worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
+    notification_type = models.CharField(
+        max_length=20, choices=NotificationType.choices
+    )
+    item = models.OneToOneField(
+        "order.OrderItem", on_delete=models.CASCADE, null=True, blank=True
+    )
+    order = models.OneToOneField(
+        "order.Order", on_delete=models.CASCADE, null=True, blank=True
+    )
+    status = models.CharField(
+        max_length=20,
+        choices=NotificationStatus.choices,
+        default=NotificationStatus.NONE,
+    )
+    message = models.CharField(max_length=400, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_update = models.DateTimeField(auto_now=True)
+
+    @property
+    def tables(self) -> str | None:
+        if not self.order and self.item:
+            qs = self.item.order.bill.tables.all()
+            return ",".join(table.name for table in qs)
+        if self.order:
+            qs = self.order.bill.tables.all()
+            return ",".join(table.name for table in qs)
+
+        return None
 
 
 class Order(models.Model):
@@ -128,17 +192,23 @@ class Order(models.Model):
     category = models.CharField(default=Location.KITCHEN, choices=Location.choices)
     # Date time fields
     created_at = models.DateTimeField(auto_now_add=True)
-    preparing_at = models.DateTimeField(null=True, blank=True)
     readied_at = models.DateTimeField(null=True, blank=True)
-    paid_at = models.DateTimeField(null=True, blank=True)
     canceled_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f"Order {self.id}"
 
-    # @property
-    # def total(self):
-    #     return self.order_items.aggregate(total=Sum("total_cost"))["total"]
+    def save(self, *args, **kwargs):
+        is_init = self.pk is None
+        super().save(*args, **kwargs)
+        if is_init:
+            create_notification(
+                worker=self.bill.waiter,
+                notification_type=NotificationType.ORDER_INFO,
+                order=self,
+            )
+
+    # TODO: deprecated ?
     def total(self):
         return (
             self.order_items.annotate(
@@ -154,93 +224,90 @@ class Order(models.Model):
         )
 
 
-class NotificationStatus(models.TextChoices):
-    PREPARE = "prepare", "Prepare"  # when kitchen is preparing the order
-    WAIT = "wait", "Wait"  # when the dish waiting to be served
-    SERVE = "serve", "Serve"  # when the dish is served
-
-
-class Notification(models.Model):
-    worker = models.ForeignKey(Worker, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    order_item = models.OneToOneField("order.OrderItem", on_delete=models.CASCADE)
-    status = models.CharField(
-        max_length=20,
-        choices=NotificationStatus.choices,
-        default=NotificationStatus.PREPARE,
+class OrderBase(models.Model):
+    name_snapshot = models.CharField(
+        max_length=150, help_text=_("Name of dish or additions")
     )
-    last_update = models.DateTimeField(auto_now=True)
+    price_snapshot = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        help_text=_("Price of dish or additions when it was ordered"),
+    )
+    quantity = models.PositiveIntegerField(default=1)
+    line_subtotal = models.GeneratedField(
+        expression=F("price_snapshot") * F("quantity"),
+        output_field=DecimalField(max_digits=12, decimal_places=2),
+        help_text=_(
+            "Subtotal for this item before discount and additions (price × quantity)"
+        ),
+        db_persist=True,
+    )
+    line_final_total = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        help_text="Final price after bill discount. Set when  bill is closed.",
+    )
 
-    def __str__(self):
-        return f"@{self.worker} - {self.order_item.name_snapshot} | {self.order_item.order.bill.str_tables()}"
+    class Meta:
+        abstract = True
 
 
-class OrderItem(models.Model):
+class OrderItem(OrderBase):
     order = models.ForeignKey(
         Order, on_delete=models.CASCADE, related_name="order_items"
     )
-    menu_item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    name_snapshot = models.CharField(
-        max_length=150, help_text="Name of dish with additions"
-    )
-    price_snapshot = models.DecimalField(
-        max_digits=5, decimal_places=2, help_text="Price of dish when it was ordered"
-    )
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
     note = models.TextField(null=True, blank=True, max_length=500)
     status = models.CharField(
         max_length=20, choices=OrderItemStatus.choices, default=OrderItemStatus.WAITING
     )
-    created_at = models.DateTimeField(
-        auto_now_add=True, help_text="Datetime order was added"
-    )
-    started_at = models.DateTimeField(
-        null=True, blank=True, help_text="Datetime when the cook started preparing"
-    )
-    finished_at = models.DateTimeField(
-        null=True, blank=True, help_text="Datetime when the cook finished preparing"
-    )
-    quantity = models.PositiveIntegerField(default=1)
 
     def __str__(self):
         return f"{self.name_snapshot} x{self.quantity}"
 
     @property
-    def raw_cost(self):
-        """Cost without additions"""
-        return self.price_snapshot * self.quantity
-
-    @property
-    def total_cost(self):
-        """Cost with additions"""
-        additions = self.order_item_additions.aggregate(
-            additions_sum=Coalesce(Sum("price_snapshot"), 0)
-        )["additions_sum"]
-        return (self.price_snapshot + additions) * self.quantity
-
-    @property
-    def full_name_snapshot(self):
-        additions = self.order_item_additions.all()
-        if additions.exists():
-            additions_names = ", ".join(a.name_snapshot for a in additions)
-            return f"{self.name_snapshot} ({additions_names})"
-        return self.name_snapshot
+    def additions_str(self):
+        return ", ".join(
+            addition.name_snapshot for addition in self.order_item_additions.all()
+        )
 
     def save(self, *args, **kwargs):
         is_init = self.pk is None
-
         super().save(*args, **kwargs)
 
-        # create notification only for new order items
         if is_init:
-            service_worker = getattr(self.order.bill, "service", None)
-            if service_worker is not None:
-                Notification.objects.create(worker=service_worker, order_item=self)
+            create_notification(
+                worker=self.order.bill.waiter,
+                notification_type=NotificationType.ITEM_INFO,
+                item=self,
+            )
 
 
-class OrderItemAddition(models.Model):
+class OrderItemAddition(OrderBase):
     order_item = models.ForeignKey(
         OrderItem, on_delete=models.CASCADE, related_name="order_item_additions"
     )
-    addition = models.ForeignKey(Item, on_delete=models.CASCADE)
-    name_snapshot = models.CharField(max_length=100)
-    price_snapshot = models.DecimalField(max_digits=7, decimal_places=2)
+    addition = models.ForeignKey(Addition, on_delete=models.CASCADE)
+
+
+def create_notification(
+    worker: Worker,
+    notification_type: NotificationType,
+    message: str | None = None,
+    order: Order | None = None,
+    item: OrderItem | None = None,
+    status: NotificationStatus = NotificationStatus.NONE,
+):
+    if order and item:
+        raise ValueError("Order and item cannot be both set")
+
+    return Notification.objects.create(
+        worker=worker,
+        notification_type=notification_type,
+        item=item,
+        order=order,
+        status=status,
+        message=message,
+    )

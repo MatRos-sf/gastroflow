@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+    {{ object.name }}
+{% endblock title %}
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <!-- Header card -->
+            <div class="card border-0 rounded-4 shadow mb-4">
+                <div class="card-body p-4 p-md-5 text-center">
+                    <h3 class="fw-bold mb-1">{{ object.name }}</h3>
+                    <p class="text-muted small mb-4">{{ object.category }}</p>
+                    <div class="d-flex flex-wrap justify-content-center gap-4">
+                        <div>
+                            <small class="text-muted d-block">{% trans "Price" %}</small>
+                            <strong>{{ object.price }} zł</strong>
+                        </div>
+                        <div>
+                            <small class="text-muted d-block">{% trans "Checkout ID" %}</small>
+                            <strong>{{ object.id_checkout }}</strong>
+                        </div>
+                        <div>
+                            <small class="text-muted d-block">{% trans "Location" %}</small>
+                            <strong>{{ object.get_preparation_location_display|default:"—" }}</strong>
+                        </div>
+                        <div>
+                            <small class="text-muted d-block">{% trans "Daily stock" %}</small>
+                            <strong>{{ object.daily_stock|default:"∞" }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Details card -->
+            <div class="card border-0 rounded-4 shadow mb-4">
+                <div class="card-body p-4 p-md-5">
+                    <h5 class="fw-bold mb-4">{% trans "Details" %}</h5>
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4 text-muted fw-normal small">{% trans "Category" %}</dt>
+                        <dd class="col-sm-8">
+                            {{ object.category|default:"—" }}
+                        </dd>
+                        <dt class="col-sm-4 text-muted fw-normal small">{% trans "Subcategory" %}</dt>
+                        <dd class="col-sm-8">
+                            {{ object.sub_menu|default:"—" }}
+                        </dd>
+                        <dt class="col-sm-4 text-muted fw-normal small">{% trans "Description" %}</dt>
+                        <dd class="col-sm-8">
+                            {{ object.description|default:"—" }}
+                        </dd>
+                        <dt class="col-sm-4 text-muted fw-normal small">{% trans "Additions" %}</dt>
+                        <dd class="col-sm-8">
+                            {% if object.additions.exists %}
+                                {% for addition in object.additions.all %}
+                                    <span class="badge bg-secondary rounded-pill me-1">{{ addition.name }}</span>
+                                {% endfor %}
+                            {% else %}
+                                —
+                            {% endif %}
+                        </dd>
+                        <dt class="col-sm-4 text-muted fw-normal small">{% trans "Created at" %}</dt>
+                        <dd class="col-sm-8">
+                            {{ object.created_at|date:"d.m.Y H:i" }}
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <!-- Actions -->
+            <div class="d-flex gap-2 justify-content-center">
+                <a href="{% url 'gf-menu:item-update' object.pk %}"
+                   class="btn btn-dark rounded-pill px-4">{% trans "Edit" %}</a>
+                <a href="{% url 'gf-menu:item-list' %}"
+                   class="btn btn-outline-secondary rounded-pill px-4">{% trans "Back" %}</a>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

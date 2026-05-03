@@ -1,0 +1,3690 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-04-16 00:28+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : (n%10>=2 && n%10<=4) && "
+"(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
+"n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
+
+#: consumers/templates/consumers/bar/orders.html:4
+#: consumers/templates/consumers/bar/orders.html:7 menu/models.py:12
+#: menu/templates/menu/daily-stock-item.html:19
+#: order/templates/order/order_ready_history.html:16
+#: order/templates/order/report/report.html:138
+#: order/templates/order/report/report.html:208
+#: order/templates/order/report/report_base.html:106
+#: order/templates/order/report/report_base.html:132 templates/base.html:121
+msgid "Bar"
+msgstr "Bar"
+
+#: consumers/templates/consumers/bar/orders.html:11
+#: consumers/templates/consumers/kitchen/orders.html:11
+#, fuzzy
+#| msgid "Order history"
+msgid "History"
+msgstr "Historia wydań"
+
+#: consumers/templates/consumers/bar/orders.html:13
+#: consumers/templates/consumers/kitchen/orders.html:13
+#: menu/templates/menu/daily-stock-item.html:72
+#: menu/templates/menu/daily-stock-item.html:146
+#: menu/templates/menu/dashboard.html:37
+#: menu/templates/menu/detail-item.html:28
+#: menu/templates/menu/replenish-item.html:17
+#: menu/templates/menu/replenish-item.html:54
+#: menu/templates/menu/replenish-item.html:131
+msgid "Daily stock"
+msgstr "Dzienny stan"
+
+#: consumers/templates/consumers/kitchen/orders.html:4
+#: consumers/templates/consumers/kitchen/orders.html:7 menu/models.py:13
+#: menu/templates/menu/daily-stock-item.html:17
+#: order/templates/order/order_ready_history.html:14
+#: order/templates/order/report/report.html:126
+#: order/templates/order/report/report.html:200
+#: order/templates/order/report/report_base.html:94
+#: order/templates/order/report/report_base.html:124 templates/base.html:115
+msgid "Kitchen"
+msgstr "Kuchnia"
+
+#: consumers/templates/consumers/orders_base.html:5
+#: consumers/templates/consumers/orders_base.html:12
+msgid "Orders"
+msgstr "Zamówienia"
+
+#: consumers/templates/consumers/orders_base.html:19
+#: consumers/templates/consumers/orders_base.html:31
+msgid "Call waiter"
+msgstr "Wezwij kelnera"
+
+#: consumers/templates/consumers/orders_base.html:20
+#: consumers/templates/consumers/waiter_notification.html:13
+msgid "Connecting…"
+msgstr "Łączenie…"
+
+#: consumers/templates/consumers/orders_base.html:35
+#: order/templates/order/bill_detail.html:241
+#: order/templates/order/bill_detail.html:272
+#: order/templates/order/bill_detail.html:307
+#: order/templates/order/bill_detail.html:343
+#: order/templates/order/bill_detail.html:373
+#: order/templates/order/bill_detail.html:417
+#: order/templates/order/bill_detail.html:446
+#: service/templates/service/order_flow/_modal_view.html:27
+msgid "Close"
+msgstr "Zamknij"
+
+#: consumers/templates/consumers/orders_base.html:47
+msgid "No pending orders"
+msgstr "Brak oczekujących zamówień"
+
+#: consumers/templates/consumers/orders_base.html:88
+#: consumers/templates/consumers/waiter_notification.html:30
+msgid "Connected"
+msgstr "Połączono"
+
+#: consumers/templates/consumers/orders_base.html:89
+#: consumers/templates/consumers/waiter_notification.html:31
+msgid "Connection error"
+msgstr "Błąd połączenia"
+
+#: consumers/templates/consumers/orders_base.html:90
+#: consumers/templates/consumers/waiter_notification.html:32
+msgid "Disconnected — reconnecting…"
+msgstr "Rozłączono — ponowne łączenie…"
+
+#: consumers/templates/consumers/orders_base.html:91
+#: service/templates/service/bill_action_list.html:12
+msgid "Table"
+msgstr "Stolik"
+
+#: consumers/templates/consumers/orders_base.html:92
+msgid "Wait"
+msgstr "Oczekiwanie"
+
+#: consumers/templates/consumers/orders_base.html:93
+#: order/templates/order/bill_detail.html:41
+#: order/templates/order/order_ready_history.html:67
+#: service/templates/service/order_flow/_modal_view.html:45
+#: service/templates/service/order_flow/cart_summary.html:105
+msgid "Note"
+msgstr "Uwaga"
+
+#: consumers/templates/consumers/orders_base.html:94 order/models.py:18
+#: order/models.py:25
+msgid "Preparing"
+msgstr "Przygotowywane"
+
+#: consumers/templates/consumers/orders_base.html:95 order/models.py:19
+#: order/models.py:26
+msgid "Ready"
+msgstr "Gotowe"
+
+#: consumers/templates/consumers/orders_base.html:96
+msgid "Done"
+msgstr "Zrobione"
+
+#: consumers/templates/consumers/orders_base.html:97
+msgid "REMOVED"
+msgstr "USUNIĘTO"
+
+#: consumers/templates/consumers/orders_base.html:98
+msgid "No active waiters"
+msgstr "Brak aktywnych kelnerów"
+
+#: consumers/templates/consumers/waiter_notification.html:4
+#: consumers/templates/consumers/waiter_notification.html:8
+#: templates/base.html:127
+msgid "Notifications"
+msgstr "Powiadomienia"
+
+#: consumers/templates/consumers/waiter_notification.html:12
+#, fuzzy
+#| msgid "Read"
+msgid "Read all"
+msgstr "Odczytane"
+
+#: consumers/templates/consumers/waiter_notification.html:21
+#, fuzzy
+#| msgid "Notifications"
+msgid "No pending notifications"
+msgstr "Powiadomienia"
+
+#: gastroflow/settings.py:127
+msgid "Polish"
+msgstr ""
+
+#: gastroflow/settings.py:128
+msgid "English"
+msgstr ""
+
+#: menu/models.py:17
+msgid "23% VAT"
+msgstr ""
+
+#: menu/models.py:18
+msgid "8% VAT"
+msgstr ""
+
+#: menu/models.py:19
+msgid "2% VAT"
+msgstr ""
+
+#: menu/models.py:20
+msgid "0% VAT"
+msgstr ""
+
+#: menu/models.py:24 menu/models.py:40 menu/models.py:54 menu/models.py:109
+msgid "name"
+msgstr "nazwa"
+
+#: menu/models.py:27 menu/models.py:42 menu/models.py:91
+msgid "category"
+msgstr "kategoria"
+
+#: menu/models.py:28
+msgid "categories"
+msgstr "kategorie"
+
+#: menu/models.py:46 menu/models.py:98
+msgid "subcategory"
+msgstr "podkategoria"
+
+#: menu/models.py:47
+msgid "subcategories"
+msgstr "podkategorie"
+
+#: menu/models.py:57 menu/models.py:113
+#, fuzzy
+#| msgid "Table name:"
+msgid "bill name"
+msgstr "Nazwa stolika:"
+
+#: menu/models.py:60 menu/models.py:116
+msgid "Name as it will appear on the bill"
+msgstr ""
+
+#: menu/models.py:63 menu/models.py:119
+msgid "VAT"
+msgstr ""
+
+#: menu/models.py:65 menu/models.py:142
+msgid "price"
+msgstr "cena"
+
+#: menu/models.py:67 menu/models.py:140
+msgid "Cash register product ID"
+msgstr "Numer produktu w kasie fiskalnej"
+
+#: menu/models.py:67 menu/models.py:140
+msgid "checkout ID"
+msgstr "ID kasy"
+
+#: menu/models.py:69 menu/models.py:143
+msgid "created at"
+msgstr "utworzono"
+
+#: menu/models.py:70 menu/models.py:144
+msgid "deleted"
+msgstr "usunięto"
+
+#: menu/models.py:71
+msgid "priority"
+msgstr "priorytet"
+
+#: menu/models.py:75
+msgid "addition"
+msgstr "dodatek"
+
+#: menu/models.py:76 menu/models.py:129
+msgid "additions"
+msgstr "dodatki"
+
+#: menu/models.py:106
+msgid "preparation location"
+msgstr "miejsce przygotowania"
+
+#: menu/models.py:109
+msgid "Item name"
+msgstr "Nazwa produktu"
+
+#: menu/models.py:122
+msgid "Item description"
+msgstr "Opis produktu"
+
+#: menu/models.py:126
+msgid "description"
+msgstr "opis"
+
+#: menu/models.py:135
+msgid "Number of portions available today. None = unlimited, 0 = sold out."
+msgstr "Liczba porcji dostępnych dziś. None = bez limitu, 0 = wyprzedane."
+
+#: menu/models.py:137
+msgid "daily stock"
+msgstr "dzienny stan"
+
+#: menu/models.py:147
+msgid "item"
+msgstr "produkt"
+
+#: menu/models.py:148 order/templates/order/report/report.html:119
+#: order/templates/order/report/report.html:128
+#: order/templates/order/report/report.html:140
+#: order/templates/order/report/report_base.html:87
+#: order/templates/order/report/report_base.html:96
+#: order/templates/order/report/report_base.html:108
+#: service/templates/service/order_flow/cart_summary.html:10
+msgid "items"
+msgstr "produkty"
+
+#: menu/templates/menu/_item_form_extras.html:11
+msgid "New Addition"
+msgstr "Nowy dodatek"
+
+#: menu/templates/menu/_item_form_extras.html:18
+#: menu/templates/menu/_item_form_extras.html:81
+#: menu/templates/menu/_item_form_extras.html:114
+#: menu/templates/menu/create-menu-period.html:21
+#: menu/templates/menu/daily-stock-item.html:71
+#: menu/templates/menu/list-item.html:65
+#: menu/templates/menu/list-menu-period.html:25
+#: menu/templates/menu/replenish-item.html:53
+#: menu/templates/menu/update-menu-period.html:21
+#: worker/templates/worker/list-worker.html:16
+msgid "Name"
+msgstr "Imię i nazwisko"
+
+#: menu/templates/menu/_item_form_extras.html:23
+#: menu/templates/menu/detail-item.html:16
+#: menu/templates/menu/list-item.html:66
+msgid "Price"
+msgstr "Cena"
+
+#: menu/templates/menu/_item_form_extras.html:33
+#: menu/templates/menu/detail-item.html:20
+msgid "Checkout ID"
+msgstr "ID kasy"
+
+#: menu/templates/menu/_item_form_extras.html:43
+msgid "Priority"
+msgstr "Priorytet"
+
+#: menu/templates/menu/_item_form_extras.html:52
+#: menu/templates/menu/_item_form_extras.html:85
+#: menu/templates/menu/_item_form_extras.html:126
+msgid "Something went wrong. Try again."
+msgstr "Coś poszło nie tak. Spróbuj ponownie."
+
+#: menu/templates/menu/_item_form_extras.html:57
+#: menu/templates/menu/_item_form_extras.html:90
+#: menu/templates/menu/_item_form_extras.html:132
+#: menu/templates/menu/create-item.html:21
+#: menu/templates/menu/create-menu-period.html:129
+#: menu/templates/menu/daily-stock-item.html:158
+#: menu/templates/menu/replenish-item.html:143
+#: menu/templates/menu/update-item.html:21
+#: menu/templates/menu/update-menu-period.html:129
+#: order/templates/order/bill_detail.html:248
+#: order/templates/order/bill_detail.html:283
+#: order/templates/order/bill_detail.html:318
+#: order/templates/order/bill_detail.html:349
+#: order/templates/order/bill_detail.html:391
+#: order/templates/order/bill_detail.html:423
+#: order/templates/order/bill_detail.html:456
+#: service/templates/service/change_table.html:22
+#: service/templates/service/hall/create-hall.html:24
+#: service/templates/service/hall/update-hall.html:27
+#: worker/templates/worker/create-worker.html:21
+#: worker/templates/worker/update-work-time.html:20
+#: worker/templates/worker/update-worker.html:21
+msgid "Cancel"
+msgstr "Anuluj"
+
+#: menu/templates/menu/_item_form_extras.html:60
+#: menu/templates/menu/_item_form_extras.html:93
+#: menu/templates/menu/_item_form_extras.html:135
+#: menu/templates/menu/create-item.html:19
+#: menu/templates/menu/create-menu-period.html:127
+#: menu/templates/menu/daily-stock-item.html:159
+#: menu/templates/menu/replenish-item.html:144
+#: menu/templates/menu/update-menu-period.html:127
+#: order/templates/order/bill_detail.html:392
+#: order/templates/order/bill_detail.html:424
+#: service/templates/service/change_table.html:23
+#: service/templates/service/hall/create-hall.html:22
+#: service/templates/service/hall/update-hall.html:25
+#: worker/templates/worker/create-worker.html:19
+msgid "Save"
+msgstr "Zapisz"
+
+#: menu/templates/menu/_item_form_extras.html:74
+msgid "New Category"
+msgstr "Nowa kategoria"
+
+#: menu/templates/menu/_item_form_extras.html:107
+msgid "New Subcategory"
+msgstr "Nowa podkategoria"
+
+#: menu/templates/menu/_item_form_extras.html:118
+#: menu/templates/menu/daily-stock-item.html:28
+#: menu/templates/menu/detail-item.html:39
+#: menu/templates/menu/list-item.html:22
+msgid "Category"
+msgstr "Kategoria"
+
+#: menu/templates/menu/create-item.html:4
+#: menu/templates/menu/create-item.html:12
+msgid "Add Item"
+msgstr "Dodaj pozycję"
+
+#: menu/templates/menu/create-item.html:13
+msgid "Fill in the details and save the menu item"
+msgstr "Wypełnij dane i zapisz pozycję menu"
+
+#: menu/templates/menu/create-menu-period.html:4
+msgid "Create Menu Period"
+msgstr "Utwórz okres menu"
+
+#: menu/templates/menu/create-menu-period.html:11
+msgid "Create menu period"
+msgstr "Utwórz okres menu"
+
+#: menu/templates/menu/create-menu-period.html:12
+msgid "Define a time window and assign items available during it."
+msgstr "Zdefiniuj przedział czasowy i przypisz dostępne w nim pozycje."
+
+#: menu/templates/menu/create-menu-period.html:19
+#: menu/templates/menu/detail-item.html:37
+#: menu/templates/menu/detail-menu-period.html:27
+#: menu/templates/menu/update-menu-period.html:19
+#: order/templates/order/bill_detail.html:16
+#: service/templates/service/bill_action_list.html:39
+msgid "Details"
+msgstr "Szczegóły"
+
+#: menu/templates/menu/create-menu-period.html:27
+#: menu/templates/menu/update-menu-period.html:27
+msgid "e.g. Breakfast, Lunch"
+msgstr "np. Śniadanie, Obiad"
+
+#: menu/templates/menu/create-menu-period.html:32
+#: menu/templates/menu/detail-menu-period.html:30
+#: menu/templates/menu/update-menu-period.html:32
+msgid "Start time"
+msgstr "Godzina rozpoczęcia"
+
+#: menu/templates/menu/create-menu-period.html:41
+#: menu/templates/menu/detail-menu-period.html:35
+#: menu/templates/menu/update-menu-period.html:41
+msgid "End time"
+msgstr "Godzina zakończenia"
+
+#: menu/templates/menu/create-menu-period.html:56
+#: menu/templates/menu/detail-menu-period.html:43
+#: menu/templates/menu/list-menu-period.html:40
+#: menu/templates/menu/update-menu-period.html:56
+msgid "Enabled"
+msgstr "Aktywny"
+
+#: menu/templates/menu/create-menu-period.html:64
+#: menu/templates/menu/detail-menu-period.html:55
+#: menu/templates/menu/list-item.html:4 menu/templates/menu/list-item.html:11
+#: menu/templates/menu/list-menu-period.html:27
+#: menu/templates/menu/update-menu-period.html:64
+#: order/templates/order/bill_detail.html:128
+msgid "Items"
+msgstr "Pozycje"
+
+#: menu/templates/menu/create-menu-period.html:65
+#: menu/templates/menu/create-menu-period.html:140
+#: menu/templates/menu/update-menu-period.html:65
+#: menu/templates/menu/update-menu-period.html:140
+msgid "selected"
+msgstr "wybranych"
+
+#: menu/templates/menu/create-menu-period.html:71
+#: menu/templates/menu/update-menu-period.html:71
+msgid "Search items..."
+msgstr "Szukaj pozycji..."
+
+#: menu/templates/menu/create-menu-period.html:94
+#: menu/templates/menu/update-menu-period.html:94
+#: worker/templates/worker/settlement.html:47
+msgid "Select all"
+msgstr "Zaznacz wszystkie"
+
+#: menu/templates/menu/create-menu-period.html:98
+#: menu/templates/menu/daily-stock-item.html:59
+#: menu/templates/menu/list-item.html:53
+#: menu/templates/menu/update-menu-period.html:98
+#: order/templates/order/bill_list.html:15
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:527
+msgid "Clear"
+msgstr "Wyczyść"
+
+#: menu/templates/menu/create-menu-period.html:114
+#: menu/templates/menu/daily-stock-item.html:102
+#: menu/templates/menu/list-item.html:96
+#: menu/templates/menu/update-menu-period.html:114
+#: service/templates/service/order_flow/items_waiter.html:51
+msgid "No items in this category."
+msgstr "Brak pozycji w tej kategorii."
+
+#: menu/templates/menu/create-menu-period.html:120
+#: menu/templates/menu/update-menu-period.html:120
+msgid "No categories found."
+msgstr "Nie znaleziono kategorii."
+
+#: menu/templates/menu/daily-stock-item.html:4
+msgid "Set Daily Stock"
+msgstr "Ustaw dzienny stan"
+
+#: menu/templates/menu/daily-stock-item.html:11
+#: menu/templates/menu/daily-stock-item.html:139
+#: menu/templates/menu/dashboard.html:52
+#: menu/templates/menu/replenish-item.html:125
+msgid "Set daily stock"
+msgstr "Ustaw dzienny stan"
+
+#: menu/templates/menu/daily-stock-item.html:22
+#: menu/templates/menu/dashboard.html:43
+#: menu/templates/menu/replenish-item.html:11
+msgid "Replenish stock"
+msgstr "Uzupełnij magazyn"
+
+#: menu/templates/menu/daily-stock-item.html:30
+#: menu/templates/menu/daily-stock-item.html:44
+#: menu/templates/menu/list-item.html:24 menu/templates/menu/list-item.html:38
+#: menu/templates/menu/replenish-item.html:31 order/filters.py:17
+msgid "All"
+msgstr "Wszystkie"
+
+#: menu/templates/menu/daily-stock-item.html:40
+#: menu/templates/menu/detail-item.html:24
+#: menu/templates/menu/list-item.html:34 menu/templates/menu/list-item.html:68
+#: menu/templates/menu/replenish-item.html:27
+msgid "Location"
+msgstr "Lokalizacja"
+
+#: menu/templates/menu/daily-stock-item.html:56
+#: menu/templates/menu/list-item.html:50
+#: order/templates/order/bill_list.html:13
+#: order/templates/order/report/report.html:41
+msgid "Filter"
+msgstr "Filtruj"
+
+#: menu/templates/menu/daily-stock-item.html:70
+#: menu/templates/menu/list-item.html:64
+#: menu/templates/menu/replenish-item.html:52
+msgid "ID"
+msgstr "ID"
+
+#: menu/templates/menu/daily-stock-item.html:96
+msgid "Set stock"
+msgstr "Ustaw stan"
+
+#: menu/templates/menu/daily-stock-item.html:118
+#: menu/templates/menu/list-item.html:112
+#: menu/templates/menu/replenish-item.html:104
+#, python-format
+msgid ""
+"\n"
+"                            Page %(current)s of %(total)s\n"
+"                        "
+msgstr ""
+
+#: menu/templates/menu/daily-stock-item.html:152
+#: menu/templates/menu/replenish-item.html:137
+msgid "Leave empty for unlimited"
+msgstr "Pozostaw puste dla nieograniczonej ilości"
+
+#: menu/templates/menu/daily-stock-item.html:153
+#: menu/templates/menu/replenish-item.html:138
+msgid "0 = sold out, empty = unlimited"
+msgstr "0 = wyprzedane, puste = bez limitu"
+
+#: menu/templates/menu/dashboard.html:4
+msgid "Menu Management"
+msgstr "Zarządzanie menu"
+
+#: menu/templates/menu/dashboard.html:10
+msgid "Menu management"
+msgstr "Zarządzanie menu"
+
+#: menu/templates/menu/dashboard.html:14
+msgid "Catalog"
+msgstr "Katalog"
+
+#: menu/templates/menu/dashboard.html:20
+#: service/templates/service/order_flow/items_waiter.html:13
+msgid "All items"
+msgstr "Wszystkie pozycje"
+
+#: menu/templates/menu/dashboard.html:21
+msgid "Browse and edit the full menu catalog."
+msgstr "Przeglądaj i edytuj pełny katalog menu."
+
+#: menu/templates/menu/dashboard.html:29 menu/templates/menu/list-item.html:16
+msgid "Add item"
+msgstr "Dodaj pozycję"
+
+#: menu/templates/menu/dashboard.html:30
+msgid "Create a new menu item."
+msgstr "Utwórz nową pozycję menu."
+
+#: menu/templates/menu/dashboard.html:44
+#: menu/templates/menu/replenish-item.html:12
+msgid "Set today's available portions for tracked items."
+msgstr "Ustaw dzisiejszą dostępną ilość dla śledzonych pozycji."
+
+#: menu/templates/menu/dashboard.html:53
+msgid "Configure which items have stock tracking enabled."
+msgstr "Skonfiguruj, które pozycje mają włączone śledzenie stanu."
+
+#: menu/templates/menu/dashboard.html:60
+#: menu/templates/menu/list-menu-period.html:11
+msgid "Menu periods"
+msgstr "Okresy menu"
+
+#: menu/templates/menu/dashboard.html:66
+msgid "All periods"
+msgstr "Wszystkie okresy"
+
+#: menu/templates/menu/dashboard.html:67
+msgid "View and manage breakfast, lunch, and other time windows."
+msgstr ""
+"Przeglądaj i zarządzaj śniadaniem, obiadem i innymi przedziałami czasowymi."
+
+#: menu/templates/menu/dashboard.html:75
+#: menu/templates/menu/list-menu-period.html:16
+msgid "Add period"
+msgstr "Dodaj okres"
+
+#: menu/templates/menu/dashboard.html:76
+msgid "Define a new time window and assign items to it."
+msgstr "Zdefiniuj nowy przedział czasowy i przypisz do niego pozycje."
+
+#: menu/templates/menu/detail-item.html:43
+msgid "Subcategory"
+msgstr "Podkategoria"
+
+#: menu/templates/menu/detail-item.html:47
+msgid "Description"
+msgstr "Opis"
+
+#: menu/templates/menu/detail-item.html:51
+#: menu/templates/menu/list-item.html:67
+#: service/templates/service/order_flow/_modal_view.html:50
+msgid "Additions"
+msgstr "Dodatki"
+
+#: menu/templates/menu/detail-item.html:61
+msgid "Created at"
+msgstr "Utworzono"
+
+#: menu/templates/menu/detail-item.html:71
+#: menu/templates/menu/detail-menu-period.html:22
+#: service/templates/service/hall/list-hall.html:35
+#: worker/templates/worker/_worktime_rows.html:11
+#: worker/templates/worker/list_worktime_not_finished.html:36
+msgid "Edit"
+msgstr "Edytuj"
+
+#: menu/templates/menu/detail-item.html:73
+#: order/templates/order/bill_detail.html:11
+#: service/templates/service/bill_action_list.html:17
+#: service/templates/service/change_table.html:11
+#: service/templates/service/order_flow/_modal_view.html:72
+#: service/templates/service/order_flow/cart_summary.html:13
+#: service/templates/service/order_flow/table_order.html:11
+#: service/templates/service/order_flow/table_settle.html:23
+#: worker/templates/worker/settlement_summary.html:57
+msgid "Back"
+msgstr "Wróć"
+
+#: menu/templates/menu/detail-menu-period.html:15
+#: menu/templates/menu/detail-menu-period.html:45
+#: menu/templates/menu/list-menu-period.html:42
+msgid "Disabled"
+msgstr "Nieaktywny"
+
+#: menu/templates/menu/detail-menu-period.html:40
+#: menu/templates/menu/list-menu-period.html:28
+#: order/templates/order/bill_detail.html:19
+msgid "Status"
+msgstr "Status"
+
+#: menu/templates/menu/detail-menu-period.html:88
+msgid "No items assigned."
+msgstr "Brak przypisanych pozycji."
+
+#: menu/templates/menu/list-item.html:91
+#: menu/templates/menu/list-menu-period.html:47
+msgid "View"
+msgstr "Podgląd"
+
+#: menu/templates/menu/list-menu-period.html:4
+msgid "Menu Periods"
+msgstr "Okresy menu"
+
+#: menu/templates/menu/list-menu-period.html:26
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2534
+msgid "Time"
+msgstr ""
+
+#: menu/templates/menu/list-menu-period.html:52
+msgid "No menu periods defined."
+msgstr "Nie zdefiniowano żadnych okresów menu."
+
+#: menu/templates/menu/replenish-item.html:4
+msgid "Replenish Stock"
+msgstr "Uzupełnij magazyn"
+
+#: menu/templates/menu/replenish-item.html:20
+msgid "Supply all"
+msgstr "Uzupełnij wszystko"
+
+#: menu/templates/menu/replenish-item.html:65
+msgid "Sold out"
+msgstr "Wyprzedane"
+
+#: menu/templates/menu/replenish-item.html:78
+msgid "Supply partly"
+msgstr "Uzupełnij częściowo"
+
+#: menu/templates/menu/replenish-item.html:82
+msgid "Supply"
+msgstr "Uzupełnij"
+
+#: menu/templates/menu/replenish-item.html:88
+msgid "No tracked items found."
+msgstr "Nie znaleziono śledzonych pozycji."
+
+#: menu/templates/menu/update-item.html:4
+msgid "Update Item"
+msgstr "Edytuj pozycję"
+
+#: menu/templates/menu/update-item.html:12
+#: menu/templates/menu/update-item.html:19
+#: worker/templates/worker/update-work-time.html:18
+#: worker/templates/worker/update-worker.html:19
+msgid "Update"
+msgstr "Zapisz zmiany"
+
+#: menu/templates/menu/update-item.html:13
+msgid "Update the item"
+msgstr "Zaktualizuj dane pozycji menu"
+
+#: menu/templates/menu/update-menu-period.html:4
+msgid "Edit Menu Period"
+msgstr "Edytuj okres menu"
+
+#: menu/templates/menu/update-menu-period.html:11
+msgid "Edit menu period"
+msgstr "Edytuj okres menu"
+
+#: menu/views.py:35
+#, python-format
+msgid "Item added: '%(name)s'"
+msgstr "Pozycja została dodana: '%(name)s'"
+
+#: menu/views.py:51
+#, python-format
+msgid "Item '%(name)s' has been updated."
+msgstr "Pozycja '%(name)s' została zaktualizowana."
+
+#: menu/views.py:109
+#, python-format
+msgid "Set daily stock for '%(name)s'"
+msgstr "Ustawiono dzienny stan dla '%(name)s'"
+
+#: menu/views.py:156
+#, python-format
+msgid "Supplied '%(name)s'"
+msgstr "Uzupełniono '%(name)s'"
+
+#: menu/views.py:166
+#, python-format
+msgid "Supplied %(count)s items"
+msgstr "Uzupełniono %(count)s pozycji"
+
+#: menu/views.py:195
+#, python-format
+msgid "Menu period '%(name)s' created."
+msgstr "Okres menu '%(name)s' został utworzony."
+
+#: menu/views.py:206
+#, python-format
+msgid "Menu period '%(name)s' updated."
+msgstr "Okres menu '%(name)s' został zaktualizowany."
+
+#: order/filters.py:19
+msgid "Choose localization"
+msgstr "Wybierz lokalizację"
+
+#: order/forms.py:55 order/templates/order/bill_detail.html:378
+#: service/templates/service/order_flow/cart_summary.html:92
+msgid "PIN"
+msgstr "PIN"
+
+#: order/forms.py:77
+#, fuzzy
+#| msgid "No orders for this day."
+msgid "PIN is required for this waiter."
+msgstr "Brak zamówień w tym dniu."
+
+#: order/forms.py:80
+#, fuzzy
+#| msgid "Invalid PIN"
+msgid "Invalid PIN."
+msgstr "Nieprawidłowy PIN"
+
+#: order/forms.py:90
+msgid "Print bill"
+msgstr "Drukuj rachunek"
+
+#: order/models.py:17
+msgid "Waiting"
+msgstr "Oczekuje"
+
+#: order/models.py:20 order/models.py:28
+msgid "Canceled"
+msgstr "Anulowane"
+
+#: order/models.py:24
+msgid "Ordering"
+msgstr "Zamówienie"
+
+#: order/models.py:27
+msgid "Paid"
+msgstr "Zapłacone"
+
+#: order/models.py:39 order/templates/order/bill_list.html:31
+msgid "Open"
+msgstr "Otwarte"
+
+#: order/models.py:40 order/templates/order/bill_list.html:35
+msgid "Closed"
+msgstr "Zamknięte"
+
+#: order/models.py:41
+msgid "Closed and occupied"
+msgstr "Zamknięte i zajęte"
+
+#: order/models.py:45 order/templates/order/report/report.html:86
+#: order/templates/order/report/report.html:178
+#: order/templates/order/report/report_base.html:54
+msgid "Card"
+msgstr "Karta"
+
+#: order/models.py:46 order/templates/order/report/report.html:94
+#: order/templates/order/report/report.html:186
+#: order/templates/order/report/report_base.html:62
+msgid "Cash"
+msgstr "Gotówka"
+
+#: order/models.py:47
+msgid "Cash and card"
+msgstr "Gotówka i karta"
+
+#: order/models.py:53
+msgid "Table to which the bill is assigned. Null means take-away"
+msgstr "Stolik przypisany do rachunku. Null oznacza zamówienie na wynos"
+
+#: order/models.py:69
+msgid "Person who served the customer"
+msgstr "Osoba, która obsłużyła klienta"
+
+#: order/models.py:81
+msgid "Number of people in one the bill (plates per person)"
+msgstr "Liczba osób na rachunku (talerze na osobę)"
+
+#: order/models.py:131
+msgid "Unique fiscal receipt number"
+msgstr ""
+
+#: order/models.py:132
+msgid "Session receipt number"
+msgstr ""
+
+#: order/models.py:133
+#, fuzzy
+#| msgid "Preparing time"
+msgid "Print time in ms"
+msgstr "Czas przygotowania"
+
+#: order/models.py:134
+msgid "Full POSNET response"
+msgstr ""
+
+#: order/models.py:142
+msgid "Item Info"
+msgstr "Info o pozycji"
+
+#: order/models.py:143
+msgid "Order Info"
+msgstr "Info o zamówieniu"
+
+#: order/models.py:144
+msgid "Call"
+msgstr "Wezwanie"
+
+#: order/models.py:148
+msgid "None"
+msgstr "Brak"
+
+#: order/models.py:149
+msgid "Waiting to Read"
+msgstr "Oczekuje na odczytanie"
+
+#: order/models.py:150
+msgid "Read"
+msgstr "Odczytane"
+
+#: order/models.py:229
+msgid "Name of dish or additions"
+msgstr "Nazwa dania lub dodatku"
+
+#: order/models.py:234
+msgid "Price of dish or additions when it was ordered"
+msgstr "Cena dania lub dodatku w momencie zamówienia"
+
+#: order/models.py:241
+msgid "Subtotal for this item before discount and additions (price × quantity)"
+msgstr ""
+"Suma częściowa dla tej pozycji przed rabatem i dodatkami (cena × ilość)"
+
+#: order/templates/order/bill_detail.html:4
+#: order/templates/order/bill_detail.html:9
+#: order/templates/order/bill_detail.html:338
+#: order/templates/order/bill_detail.html:412
+#: order/templates/order/bill_list.html:28
+#: service/templates/service/change_table.html:4
+#: service/templates/service/change_table.html:9
+msgid "Bill"
+msgstr "Rachunek"
+
+#: order/templates/order/bill_detail.html:23
+msgid "Table(s)"
+msgstr "Stolik(i)"
+
+#: order/templates/order/bill_detail.html:24
+#: order/templates/order/bill_list.html:46
+#: order/templates/order/order_ready_history.html:53
+msgid "Take-away"
+msgstr "Na wynos"
+
+#: order/templates/order/bill_detail.html:28
+#: order/templates/order/report/report.html:237
+#: service/templates/service/bill_action_list.html:26
+#: service/templates/service/order_flow/cart_summary.html:77
+#: worker/models.py:12
+msgid "Waiter"
+msgstr "Kelner"
+
+#: order/templates/order/bill_detail.html:32
+#: order/templates/order/report/report.html:78
+#: order/templates/order/report/report.html:239
+#: order/templates/order/report/report_base.html:46
+msgid "Guests"
+msgstr "Goście"
+
+#: order/templates/order/bill_detail.html:36
+msgid "Created"
+msgstr "Utworzono"
+
+#: order/templates/order/bill_detail.html:47
+msgid "Discount"
+msgstr "Rabat"
+
+#: order/templates/order/bill_detail.html:52
+msgid "All dishes ready"
+msgstr "Wszystkie dania gotowe"
+
+#: order/templates/order/bill_detail.html:54
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:867
+msgid "Yes"
+msgstr ""
+
+#: order/templates/order/bill_detail.html:56
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:868
+msgid "No"
+msgstr ""
+
+#: order/templates/order/bill_detail.html:61
+msgid "Preparing time"
+msgstr "Czas przygotowania"
+
+#: order/templates/order/bill_detail.html:67
+msgid "Payment method"
+msgstr "Metoda płatności"
+
+#: order/templates/order/bill_detail.html:73
+msgid "Paid at"
+msgstr "Zapłacono o"
+
+#: order/templates/order/bill_detail.html:79
+msgid "Closed at"
+msgstr "Zamknięto o"
+
+#: order/templates/order/bill_detail.html:85
+msgid "Bill printed at"
+msgstr "Rachunek wydrukowano o"
+
+#: order/templates/order/bill_detail.html:91
+#, fuzzy
+#| msgid "Waiter stats"
+msgid "Receipt status"
+msgstr "Statystyki kelnerów"
+
+#: order/templates/order/bill_detail.html:93
+msgid "OK"
+msgstr ""
+
+#: order/templates/order/bill_detail.html:95
+msgid "Failed"
+msgstr ""
+
+#: order/templates/order/bill_detail.html:99
+msgid "Fiscal number (hn)"
+msgstr ""
+
+#: order/templates/order/bill_detail.html:103
+msgid "Session number (bn)"
+msgstr ""
+
+#: order/templates/order/bill_detail.html:107
+#, fuzzy
+#| msgid "Preparing time"
+msgid "Print time"
+msgstr "Czas przygotowania"
+
+#: order/templates/order/bill_detail.html:117
+#: order/templates/order/bill_detail.html:369
+msgid "Edit bill"
+msgstr "Edytuj rachunek"
+
+#: order/templates/order/bill_detail.html:121
+#: order/templates/order/bill_detail.html:412
+#: service/templates/service/change_table.html:4
+#: service/templates/service/change_table.html:9
+msgid "Change table"
+msgstr "Zmień stolik"
+
+#: order/templates/order/bill_detail.html:135
+#: service/templates/service/hall/list-hall.html:29
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:484
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:491
+msgid "Order"
+msgstr ""
+
+#: order/templates/order/bill_detail.html:145
+#: order/templates/order/bill_detail.html:303
+msgid "Remove order"
+msgstr "Usuń zamówienie"
+
+#: order/templates/order/bill_detail.html:165
+#: order/templates/order/bill_detail.html:284
+#: order/templates/order/bill_detail.html:319
+#: service/templates/service/hall/floor-editor.html:118
+#: service/templates/service/order_flow/cart_summary.html:54
+msgid "Remove"
+msgstr "Usuń"
+
+#: order/templates/order/bill_detail.html:178
+#, fuzzy
+#| msgid "items"
+msgid "No items."
+msgstr "produkty"
+
+#: order/templates/order/bill_detail.html:182
+#: order/templates/order/bill_list.html:86
+#: order/templates/order/report/report.html:117
+#: order/templates/order/report/report_base.html:85
+msgid "Total"
+msgstr "Suma"
+
+#: order/templates/order/bill_detail.html:198
+#: order/templates/order/bill_detail.html:237
+#: order/templates/order/bill_detail.html:249
+#: service/templates/service/order_flow/table_settle.html:7
+msgid "Close bill"
+msgstr "Zamknij rachunek"
+
+#: order/templates/order/bill_detail.html:205
+msgid "Close bill and release tables"
+msgstr "Zamknij rachunek i zwolnij stoliki"
+
+#: order/templates/order/bill_detail.html:213
+#: order/templates/order/bill_detail.html:338
+msgid "Add discount"
+msgstr "Dodaj rabat"
+
+#: order/templates/order/bill_detail.html:219
+#: order/templates/order/bill_detail.html:442
+#: order/templates/order/bill_detail.html:457
+msgid "Remove bill"
+msgstr "Usuń rachunek"
+
+#: order/templates/order/bill_detail.html:268
+msgid "Remove item"
+msgstr "Usuń pozycję"
+
+#: order/templates/order/bill_detail.html:277
+msgid "This action cannot be undone. The bill will be updated."
+msgstr "Tej operacji nie można cofnąć. Rachunek zostanie zaktualizowany."
+
+#: order/templates/order/bill_detail.html:312
+msgid "This action cannot be undone. All items in this order will be removed."
+msgstr ""
+"Tej operacji nie można cofnąć. Wszystkie pozycje zamówienia zostaną usunięte."
+
+#: order/templates/order/bill_detail.html:350
+#, fuzzy
+#| msgid "Add discount"
+msgid "Apply discount"
+msgstr "Dodaj rabat"
+
+#: order/templates/order/bill_detail.html:450
+#, fuzzy
+#| msgid ""
+#| "This action cannot be undone. All items in this order will be removed."
+msgid ""
+"This action cannot be undone. All orders and items in this bill will be "
+"removed."
+msgstr ""
+"Tej operacji nie można cofnąć. Wszystkie pozycje zamówienia zostaną usunięte."
+
+#: order/templates/order/bill_detail.html:473
+msgid "Are you sure you want to remove:"
+msgstr "Czy na pewno chcesz usunąć:"
+
+#: order/templates/order/bill_detail.html:486
+msgid "Are you sure you want to remove order"
+msgstr "Czy na pewno chcesz usunąć zamówienie"
+
+#: order/templates/order/bill_list.html:4
+#: order/templates/order/bill_list.html:9
+#: order/templates/order/report/report.html:57
+#: order/templates/order/report/report.html:238
+#: order/templates/order/report/report_base.html:25 templates/base.html:142
+msgid "Bills"
+msgstr "Rachunki"
+
+#: order/templates/order/bill_list.html:33
+msgid "Occupied"
+msgstr ""
+
+#: order/templates/order/bill_list.html:95
+msgid "Pagination"
+msgstr "Stronicowanie"
+
+#: order/templates/order/bill_list.html:98
+#: order/templates/order/order_ready_history.html:92
+msgid "Previous"
+msgstr "Poprzedni"
+
+#: order/templates/order/bill_list.html:105
+#: order/templates/order/order_ready_history.html:112
+msgid "Next"
+msgstr "Dalej"
+
+#: order/templates/order/bill_list.html:112
+msgid "No bills found."
+msgstr "Brak rachunków."
+
+#: order/templates/order/order_ready_history.html:7
+msgid "Recently served"
+msgstr "Ostatnio wydane"
+
+#: order/templates/order/order_ready_history.html:78
+msgid "No orders for this day."
+msgstr "Brak zamówień w tym dniu."
+
+#: order/templates/order/order_ready_history.html:83
+msgid "Page navigation"
+msgstr "Nawigacja stron"
+
+#: order/templates/order/order_ready_history.html:88
+#: worker/templates/worker/detail-worker.html:36
+#: worker/templates/worker/list_worktime_not_finished.html:24
+msgid "Start"
+msgstr "Początek"
+
+#: order/templates/order/order_ready_history.html:116
+msgid "Last"
+msgstr "Ostatnia"
+
+#: order/templates/order/report/report.html:4
+#: order/templates/order/report/report_base.html:4
+#: order/templates/order/report/report_base.html:10
+msgid "Daily Report"
+msgstr "Raport dzienny"
+
+#: order/templates/order/report/report.html:11
+msgid "Daily Report Admin"
+msgstr "Raport dzienny (Admin)"
+
+#: order/templates/order/report/report.html:17
+#: order/templates/order/report/report_base.html:15
+msgid "All time"
+msgstr "Cały okres"
+
+#: order/templates/order/report/report.html:25
+msgid "Send report to email"
+msgstr ""
+
+#: order/templates/order/report/report.html:33
+#: worker/templates/worker/settlement.html:27
+msgid "From"
+msgstr "Od"
+
+#: order/templates/order/report/report.html:37
+#: worker/templates/worker/settlement.html:31
+msgid "To"
+msgstr "Do"
+
+#: order/templates/order/report/report.html:60
+#: order/templates/order/report/report_base.html:28
+msgid "closed"
+msgstr "zamkniętych"
+
+#: order/templates/order/report/report.html:63
+#: order/templates/order/report/report_base.html:31
+msgid "total"
+msgstr "łącznie"
+
+#: order/templates/order/report/report.html:65
+#: order/templates/order/report/report_base.html:33
+msgid "open"
+msgstr "otwartych"
+
+#: order/templates/order/report/report.html:67
+#: order/templates/order/report/report_base.html:35
+msgid "Bills today"
+msgstr "Rachunki dzisiaj"
+
+#: order/templates/order/report/report.html:69
+#: order/templates/order/report/report_base.html:37
+msgid "All closed"
+msgstr "Wszystkie zamknięte"
+
+#: order/templates/order/report/report.html:102
+#: order/templates/order/report/report.html:170
+#: order/templates/order/report/report_base.html:70
+msgid "Not printed"
+msgstr "Niewydrukowane"
+
+#: order/templates/order/report/report.html:112
+#: order/templates/order/report/report_base.html:80
+msgid "Order items"
+msgstr "Pozycje zamówień"
+
+#: order/templates/order/report/report.html:130
+#: order/templates/order/report/report.html:142
+#: order/templates/order/report/report_base.html:98
+#: order/templates/order/report/report_base.html:110
+msgid "pending"
+msgstr "oczekuje"
+
+#: order/templates/order/report/report.html:151
+msgid "Earnings"
+msgstr "Przychody"
+
+#: order/templates/order/report/report.html:154
+msgid "Total earn"
+msgstr "Łączny przychód"
+
+#: order/templates/order/report/report.html:162
+msgid "Printed"
+msgstr "Wydrukowane"
+
+#: order/templates/order/report/report.html:195
+#: order/templates/order/report/report_base.html:119
+msgid "Avg preparation time"
+msgstr "Średni czas przygotowania"
+
+#: order/templates/order/report/report.html:218
+msgid "Orders by hour"
+msgstr "Zamówienia wg godzin"
+
+#: order/templates/order/report/report.html:230
+msgid "Waiter stats"
+msgstr "Statystyki kelnerów"
+
+#: order/templates/order/report/report.html:260
+msgid "Worker salary"
+msgstr "Wynagrodzenia pracowników"
+
+#: order/templates/order/report/report.html:267
+#: worker/templates/worker/list_worktime_not_finished.html:23
+#: worker/templates/worker/settlement.html:20
+#: worker/templates/worker/settlement.html:55
+#: worker/templates/worker/settlement_summary.html:16
+msgid "Worker"
+msgstr "Pracownik"
+
+#: order/templates/order/report/report.html:268
+#: worker/templates/worker/list-worker.html:17
+msgid "Position"
+msgstr "Stanowisko"
+
+#: order/templates/order/report/report.html:269
+#: worker/templates/worker/settlement.html:57
+#: worker/templates/worker/settlement_summary.html:18
+msgid "Hours"
+msgstr "Godziny"
+
+#: order/templates/order/report/report.html:270
+#: worker/templates/worker/detail-worker.html:17
+msgid "Salary"
+msgstr "Wynagrodzenie"
+
+#: order/templates/order/report/report.html:279
+msgid "working"
+msgstr "pracuje"
+
+#: order/views/bill_views.py:80
+msgid "Cannot edit a closed bill."
+msgstr ""
+
+#: order/views/bill_views.py:86
+#, fuzzy
+#| msgid "Work time has been successfully updated!"
+msgid "Bill has been updated."
+msgstr "Czas pracy został pomyślnie zaktualizowany!"
+
+#: order/views/bill_views.py:100
+msgid "Cannot close a bill that is already closed."
+msgstr "Nie można zamknąć rachunku, który jest już zamknięty."
+
+#: order/views/bill_views.py:105
+msgid "Invalid form data."
+msgstr "Nieprawidłowe dane formularza."
+
+#: order/views/bill_views.py:116 order/views/order_views.py:77
+msgid "Tables have been released."
+msgstr "Stoliki zostały zwolnione."
+
+#: order/views/bill_views.py:121
+msgid "Bill is being prepared for printing."
+msgstr "Trwa przygotowanie do wydruku paragonu."
+
+#: order/views/bill_views.py:125
+#, python-format
+msgid "Bill #%(pk)s has been closed. %(msg)s"
+msgstr "Rachunek #%(pk)s został zamknięty. %(msg)s"
+
+#: order/views/bill_views.py:139
+msgid ""
+"Cannot close bill and release tables when status bill is different than "
+"closed and occupied."
+msgstr ""
+"Nie można zamknąć rachunku i zwolnić stolików, gdy status rachunku jest inny "
+"niż zamknięty i zajęty."
+
+#: order/views/bill_views.py:149
+#, python-format
+msgid "Bill #%(pk)s has been closed and tables have been released."
+msgstr "Rachunek #%(pk)s został zamknięty, a stoliki zostały zwolnione."
+
+#: order/views/bill_views.py:164
+msgid "Cannot add a discount to a bill that is not open."
+msgstr "Nie można dodać zniżki do rachunku, który nie jest otwarty."
+
+#: order/views/bill_views.py:169
+msgid "Invalid form data. Discount must be 0–100."
+msgstr "Nieprawidłowe dane formularza. Zniżka musi wynosić od 0 do 100."
+
+#: order/views/bill_views.py:174
+msgid "Discount has been applied."
+msgstr "Zniżka została zastosowana."
+
+#: order/views/bill_views.py:191
+msgid ""
+"You cannot delete a bill that is not open. Only superusers can delete bills."
+msgstr ""
+
+#: order/views/bill_views.py:211
+#, fuzzy, python-format
+#| msgid "Remove bill"
+msgid "Removed bill %(pk)s."
+msgstr "Usuń rachunek"
+
+#: order/views/order_views.py:31
+msgid "You do not have permission to delete this order."
+msgstr ""
+
+#: order/views/order_views.py:35
+#, python-format
+msgid "Removed %(pk)s."
+msgstr ""
+
+#: order/views/order_views.py:41 order/views/order_views.py:79
+#, python-format
+msgid "Removed empty bill %(pk)s."
+msgstr ""
+
+#: order/views/order_views.py:58
+#, fuzzy
+#| msgid "You do not have permission to view this page."
+msgid "You do not have permission to delete this item."
+msgstr "Nie masz uprawnień do wyświetlenia tej strony."
+
+#: order/views/order_views.py:65
+#, fuzzy, python-format
+#| msgid "Item added: '%(name)s'"
+msgid "Removed %(name)s."
+msgstr "Pozycja została dodana: '%(name)s'"
+
+#: order/views/order_views.py:73
+#, fuzzy, python-format
+#| msgid "Remove order"
+msgid "Removed empty order %(pk)s."
+msgstr "Usuń zamówienie"
+
+#: order/views/report_views.py:72
+msgid "Report is being generated. It will be sent to email."
+msgstr ""
+
+#: service/forms.py:28
+msgid "Aspect ratio — width"
+msgstr "Proporcje — szerokość"
+
+#: service/forms.py:29
+msgid "Aspect ratio — height"
+msgstr "Proporcje — wysokość"
+
+#: service/forms.py:32
+msgid "e.g. 2 for a 2:1 (wide) room"
+msgstr "np. 2 dla sali 2:1 (szerokiej)"
+
+#: service/forms.py:33
+msgid "e.g. 1 for a 2:1 (wide) room"
+msgstr "np. 1 dla sali 2:1 (szerokiej)"
+
+#: service/models.py:11
+msgid "1×1"
+msgstr "1×1"
+
+#: service/models.py:12
+msgid "1×2"
+msgstr "1×2"
+
+#: service/models.py:13
+msgid "1×3"
+msgstr "1×3"
+
+#: service/templates/service/bill_action_list.html:4
+#: service/templates/service/bill_action_list.html:12
+msgid "Open Bills"
+msgstr "Otwarte rachunki"
+
+#: service/templates/service/bill_action_list.html:14
+msgid "Additions are not shown in this view."
+msgstr "Dodatki nie są widoczne w tym widoku."
+
+#: service/templates/service/bill_action_list.html:42
+#: service/templates/service/order_flow/cart_summary.html:128
+#: service/templates/service/order_flow/main_menu.html:19
+#: service/templates/service/order_flow/table_settle.html:5
+#: service/templates/service/order_flow/table_settle.html:15
+msgid "Add to order"
+msgstr "Dodaj do zamówienia"
+
+#: service/templates/service/bill_action_list.html:54
+msgid "No open bills to close."
+msgstr "Brak otwartych rachunków do zamknięcia."
+
+#: service/templates/service/bill_action_list.html:56
+msgid "No open bills to add to."
+msgstr "Brak otwartych rachunków do których można dodać zamówienie."
+
+#: service/templates/service/hall/create-hall.html:4
+#: service/templates/service/hall/create-hall.html:12
+msgid "Create hall"
+msgstr "Utwórz salę"
+
+#: service/templates/service/hall/create-hall.html:11
+#: service/templates/service/hall/floor-editor.html:10
+#: service/templates/service/hall/list-hall.html:4
+#: service/templates/service/hall/list-hall.html:8
+#: service/templates/service/hall/update-hall.html:11
+msgid "Halls"
+msgstr "Sale"
+
+#: service/templates/service/hall/create-hall.html:33
+#: service/templates/service/hall/update-hall.html:36
+msgid "Canvas preview"
+msgstr "Podgląd obszaru"
+
+#: service/templates/service/hall/create-hall.html:34
+msgid "Shows how the floor plan canvas will be shaped."
+msgstr "Pokazuje kształt obszaru planu sali."
+
+#: service/templates/service/hall/floor-editor.html:4
+#: service/templates/service/hall/list-hall.html:38
+msgid "Floor editor"
+msgstr "Edytor sali"
+
+#: service/templates/service/hall/floor-editor.html:13
+#: service/templates/service/hall/list-hall.html:27
+msgid "Ratio"
+msgstr "Proporcje"
+
+#: service/templates/service/hall/floor-editor.html:17
+msgid "Add table"
+msgstr "Dodaj stolik"
+
+#: service/templates/service/hall/floor-editor.html:28
+#: service/templates/service/hall/floor-editor.html:205
+msgid "Save layout"
+msgstr "Zapisz układ"
+
+#: service/templates/service/hall/floor-editor.html:33
+msgid ""
+"Drag to move · Double-click to rename · Click size badge to change size · × "
+"to remove"
+msgstr ""
+"Przeciągnij, aby przesunąć · Dwuklik, aby zmienić nazwę · Kliknij znacznik "
+"rozmiaru, aby zmienić · × usuwa"
+
+#: service/templates/service/hall/floor-editor.html:102
+msgid "Click to change size"
+msgstr "Kliknij, aby zmienić rozmiar"
+
+#: service/templates/service/hall/floor-editor.html:129
+msgid "Table name:"
+msgstr "Nazwa stolika:"
+
+#: service/templates/service/hall/floor-editor.html:171
+msgid "Saving…"
+msgstr "Zapisywanie…"
+
+#: service/templates/service/hall/floor-editor.html:193
+msgid "Saved"
+msgstr "Zapisano"
+
+#: service/templates/service/hall/floor-editor.html:196
+msgid "Error saving"
+msgstr "Błąd zapisu"
+
+#: service/templates/service/hall/floor-editor.html:200
+msgid "Network error"
+msgstr "Błąd sieci"
+
+#: service/templates/service/hall/list-hall.html:10
+msgid "Add hall"
+msgstr "Dodaj salę"
+
+#: service/templates/service/hall/list-hall.html:21
+msgid "Active"
+msgstr "Aktywna"
+
+#: service/templates/service/hall/list-hall.html:23
+msgid "Inactive"
+msgstr "Nieaktywna"
+
+#: service/templates/service/hall/list-hall.html:31
+msgid "tables"
+msgstr "stoliki"
+
+#: service/templates/service/hall/list-hall.html:49
+msgid "No halls yet."
+msgstr "Brak sal."
+
+#: service/templates/service/hall/list-hall.html:51
+msgid "Create your first hall"
+msgstr "Utwórz pierwszą salę"
+
+#: service/templates/service/hall/update-hall.html:4
+#: service/templates/service/hall/update-hall.html:14
+msgid "Edit hall"
+msgstr "Edytuj salę"
+
+#: service/templates/service/hall/update-hall.html:37
+msgid "Updates as you change the ratio fields."
+msgstr "Aktualizuje się po zmianie proporcji."
+
+#: service/templates/service/hall/update-hall.html:48
+msgid "Open floor editor"
+msgstr "Otwórz edytor sali"
+
+#: service/templates/service/order_flow/_modal_view.html:36
+msgid "Quantity"
+msgstr ""
+
+#: service/templates/service/order_flow/_modal_view.html:73
+msgid "Add"
+msgstr ""
+
+#: service/templates/service/order_flow/cart_summary.html:4
+#: service/templates/service/order_flow/cart_summary.html:9
+#: service/templates/service/order_flow/items_waiter.html:37
+msgid "Cart"
+msgstr "Koszyk"
+
+#: service/templates/service/order_flow/cart_summary.html:18
+msgid "Your cart is empty."
+msgstr "Twój koszyk jest pusty."
+
+#: service/templates/service/order_flow/cart_summary.html:20
+msgid "Browse menu"
+msgstr "Przeglądaj menu"
+
+#: service/templates/service/order_flow/cart_summary.html:68
+msgid "Order details"
+msgstr "Szczegóły zamówienia"
+
+#: service/templates/service/order_flow/cart_summary.html:71
+msgid "Adding to bill"
+msgstr "Dodawanie do rachunku"
+
+#: service/templates/service/order_flow/cart_summary.html:82
+msgid "Select waiter..."
+msgstr "Wybierz kelnera..."
+
+#: service/templates/service/order_flow/cart_summary.html:106
+msgid "optional"
+msgstr "opcjonalne"
+
+#: service/templates/service/order_flow/cart_summary.html:112
+msgid "Additional note..."
+msgstr "Dodatkowa uwaga..."
+
+#: service/templates/service/order_flow/cart_summary.html:115
+msgid "Guest count"
+msgstr "Liczba gości"
+
+#: service/templates/service/order_flow/cart_summary.html:130
+msgid "Place order"
+msgstr "Złóż zamówienie"
+
+#: service/templates/service/order_flow/cart_summary.html:138
+msgid "Cancel order and clear cart?"
+msgstr "Anulować zamówienie i wyczyścić koszyk?"
+
+#: service/templates/service/order_flow/cart_summary.html:139
+msgid "Cancel order"
+msgstr "Anuluj zamówienie"
+
+#: service/templates/service/order_flow/cart_summary.html:167
+msgid "Placing order..."
+msgstr "Trwa składanie zamówienia..."
+
+#: service/templates/service/order_flow/items_waiter.html:4
+#: service/templates/service/order_flow/items_waiter.html:9
+#: templates/base.html:95
+msgid "Menu"
+msgstr "Menu"
+
+#: service/templates/service/order_flow/items_waiter.html:21
+msgid "Period"
+msgstr "Okres"
+
+#: service/templates/service/order_flow/main_menu.html:4
+msgid "Waiter Menu"
+msgstr "Menu kelnera"
+
+#: service/templates/service/order_flow/main_menu.html:11
+msgid "What do you want to do?"
+msgstr "Co chcesz zrobić?"
+
+#: service/templates/service/order_flow/main_menu.html:15
+msgid "Create order"
+msgstr "Stwórz zamówienie"
+
+#: service/templates/service/order_flow/main_menu.html:23
+msgid "Active bills"
+msgstr "Aktywne rachunki"
+
+#: service/templates/service/order_flow/main_menu.html:27
+msgid "Day summary"
+msgstr "Podsumowanie dnia"
+
+#: service/templates/service/order_flow/table_order.html:4
+#: service/templates/service/order_flow/table_order.html:9
+msgid "Choose table"
+msgstr "Wybierz stolik"
+
+#: service/templates/service/order_flow/table_order.html:16
+#: service/templates/service/order_flow/table_settle.html:28
+msgid "No halls configured."
+msgstr "Brak skonfigurowanych sal."
+
+#: service/templates/service/order_flow/table_order.html:57
+#: service/templates/service/order_flow/table_settle.html:64
+msgid "No tables in this hall."
+msgstr "Brak stolików w tej sali."
+
+#: service/templates/service/order_flow/table_order.html:64
+#: service/templates/service/order_flow/table_order.html:179
+msgid "No table selected"
+msgstr "Nie wybrano stolika"
+
+#: service/templates/service/order_flow/table_order.html:68
+msgid "Proceed to order"
+msgstr "Przejdź do zamówienia"
+
+#: service/templates/service/order_flow/table_order.html:186
+msgid "Selected"
+msgstr "Wybrano"
+
+#: service/templates/service/order_flow/table_settle.html:17
+#, fuzzy
+#| msgid "Close bill"
+msgid "Close a bill"
+msgstr "Zamknij rachunek"
+
+#: service/templates/service/order_flow/table_settle.html:19
+msgid "Base view and redirect to open-bill-list "
+msgstr ""
+
+#: service/templates/service/order_flow/table_settle.html:70
+#, fuzzy
+#| msgid "Closed and occupied"
+msgid "Select an occupied table"
+msgstr "Zamknięte i zajęte"
+
+#: service/views/order_flow/cart.py:154
+msgid "Bill not found"
+msgstr "Nie znaleziono rachunku"
+
+#: service/views/order_flow/cart.py:175
+msgid "Waiter not found"
+msgstr "Nie znaleziono kelnera"
+
+#: service/views/order_flow/cart.py:179
+msgid "Invalid PIN"
+msgstr "Nieprawidłowy PIN"
+
+#: service/views/order_flow/cart.py:185
+msgid "Guest count must be an integer!"
+msgstr "Liczba gości musi być liczbą całkowitą!"
+
+#: service/views/order_flow/cart.py:187
+msgid "Guest count must be greater than 0"
+msgstr "Liczba gości musi być większa niż 0"
+
+#: service/views/order_flow/cart.py:223
+msgid "Missing required session data"
+msgstr "Brak wymaganych danych w sesji"
+
+#: service/views/order_flow/cart.py:242
+#, python-format
+msgid "%(item)s is sold out."
+msgstr "%(item)s jest wyprzedany."
+
+#: service/views/order_flow/cart.py:247
+#, python-format
+msgid "%(item)s: only %(n)d portion(s) left."
+msgstr "%(item)s: zostało tylko %(n)d porcji."
+
+#: service/views/order_flow/cart.py:256
+msgid "An error occurred while creating the order"
+msgstr "Wystąpił błąd podczas tworzenia zamówienia"
+
+#: service/views/order_flow/cart.py:261
+#, python-format
+msgid "Order #%(pk)s completed."
+msgstr "Zamówienie na rachunek #%(pk)s zostało ukończone."
+
+#: service/views/order_flow/cart.py:263
+#, python-format
+msgid "Order #%(pk)s updated."
+msgstr "Zamówienie na rachunek #%(pk)s zostało zaktualizowane."
+
+#: service/views/order_flow/table_select.py:24
+msgid "Select a table to proceed to the order"
+msgstr "Wybierz stolik aby przejść do zamówienia"
+
+#: service/views/service.py:56
+msgid "Quantity must be an integer!"
+msgstr "Ilość musi być liczbą całkowitą!"
+
+#: service/views/service.py:59
+msgid "Quantity must be greater than 0"
+msgstr "Ilość musi być większa niż 0"
+
+#: service/views/service.py:71
+#, python-format
+msgid "Some additions were not found, ids: %(ids)s"
+msgstr "Nie znaleziono wszystkich dodatków, o id: %(ids)s"
+
+#: service/views/service.py:83 service/views/service.py:96
+msgid "Item not found"
+msgstr "Nie znaleziono produktu"
+
+#: service/views/service.py:101
+msgid "Item added to order"
+msgstr "Dodano danie do zamówienia"
+
+#: service/views/service.py:129
+msgid "Order has been cancelled."
+msgstr "Zamówienie zostało anulowane."
+
+#: service/views/table_view.py:37
+#, python-format
+msgid "Hall '%(name)s' created."
+msgstr "Sala '%(name)s' została utworzona."
+
+#: service/views/table_view.py:51
+#, python-format
+msgid "Hall '%(name)s' updated."
+msgstr "Sala '%(name)s' została zaktualizowana."
+
+#: service/views/table_view.py:119
+#, fuzzy
+#| msgid "Tables have been released."
+msgid "Table has been changed."
+msgstr "Stoliki zostały zwolnione."
+
+#: templates/403.html:4
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:29
+msgid "Forbidden"
+msgstr ""
+
+#: templates/403.html:12
+msgid "Access Forbidden"
+msgstr "Brak dostępu"
+
+#: templates/403.html:13
+msgid "You do not have permission to view this page."
+msgstr "Nie masz uprawnień do wyświetlenia tej strony."
+
+#: templates/403.html:14
+msgid "Go to home"
+msgstr "Strona główna"
+
+#: templates/base.html:86
+msgid "New alerts"
+msgstr "Nowe powiadomienia"
+
+#: templates/base.html:104
+msgid "Service"
+msgstr "Obsługa"
+
+#: templates/base.html:109
+msgid "Hall"
+msgstr "Sala"
+
+#: templates/base.html:134
+msgid "Management"
+msgstr "Zarządzanie"
+
+#: templates/base.html:138
+msgid "Order history"
+msgstr "Historia wydań"
+
+#: templates/base.html:146
+#, fuzzy
+#| msgid "Menu management"
+msgid "Menu manager"
+msgstr "Zarządzanie menu"
+
+#: templates/base.html:150
+#, fuzzy
+#| msgid "Tall rectangle"
+msgid "Hall manager"
+msgstr "Wysoki prostokąt"
+
+#: templates/base.html:154
+msgid "Reports"
+msgstr "Raporty"
+
+#: templates/base.html:164 templates/base.html:173
+#: worker/templates/worker/list-worker.html:4
+#: worker/templates/worker/list-worker.html:11
+msgid "Workers"
+msgstr "Pracownicy"
+
+#: templates/base.html:167 worker/templates/worker/clock-in.html:4
+msgid "Clock in"
+msgstr "Rozpocznij pracę"
+
+#: templates/base.html:170 worker/templates/worker/clock-out.html:4
+msgid "Clock out"
+msgstr "Zakończ pracę"
+
+#: templates/base.html:180
+msgid "Add worker"
+msgstr "Dodaj pracownika"
+
+#: templates/base.html:184
+msgid "Not finished work"
+msgstr "Niezakończona praca"
+
+#: templates/base.html:187 worker/templates/worker/settlement.html:4
+#: worker/templates/worker/settlement.html:12
+msgid "Settlements"
+msgstr "Rozliczenia"
+
+#: templates/base.html:211
+msgid "Admin"
+msgstr "Admin"
+
+#: templates/base.html:216
+msgid "Logout"
+msgstr "Wyloguj"
+
+#: templates/registration/logged_out.html:4
+msgid "Logged out"
+msgstr ""
+
+#: templates/registration/logged_out.html:11
+msgid "See you next time!"
+msgstr "Do zobaczenia!"
+
+#: templates/registration/logged_out.html:12
+msgid "You have been successfully logged out."
+msgstr "Zostałeś pomyślnie wylogowany."
+
+#: templates/registration/logged_out.html:13
+msgid "Sign in again"
+msgstr "Zaloguj się ponownie"
+
+#: templates/registration/login.html:4
+msgid "Login"
+msgstr "Logowanie"
+
+#: templates/registration/login.html:12
+msgid "Welcome back"
+msgstr "Witaj ponownie"
+
+#: templates/registration/login.html:13
+msgid "Sign in to continue"
+msgstr "Zaloguj się, aby kontynuować"
+
+#: templates/registration/login.html:19
+msgid "Sign in"
+msgstr "Zaloguj się"
+
+#: venv/lib/python3.12/site-packages/click/_termui_impl.py:613
+#, python-brace-format
+msgid "{editor}: Editing failed"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/_termui_impl.py:617
+#, python-brace-format
+msgid "{editor}: Editing failed: {e}"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/core.py:1114
+#: venv/lib/python3.12/site-packages/click/core.py:1151
+#, python-brace-format
+msgid "{text} {deprecated_message}"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/core.py:1170
+#, fuzzy
+#| msgid "position"
+msgid "Options"
+msgstr "stanowisko"
+
+#: venv/lib/python3.12/site-packages/click/core.py:1245
+#, python-brace-format
+msgid "Got unexpected extra argument ({args})"
+msgid_plural "Got unexpected extra arguments ({args})"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/click/core.py:1264
+msgid "DeprecationWarning: The command {name!r} is deprecated.{extra_message}"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/core.py:1448
+msgid "Aborted!"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/core.py:1822
+msgid "Commands"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/core.py:1853
+msgid "Missing command."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/core.py:1931
+msgid "No such command {name!r}."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/core.py:2355
+msgid "Value must be an iterable."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/core.py:2378
+#, python-brace-format
+msgid "Takes {nargs} values but 1 was given."
+msgid_plural "Takes {nargs} values but {len} were given."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/click/core.py:2567
+msgid ""
+"DeprecationWarning: The {param_type} {name!r} is deprecated.{extra_message}"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/core.py:3015
+#, python-brace-format
+msgid "env var: {var}"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/core.py:3018
+#, python-brace-format
+msgid "default: {default}"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/core.py:3082
+msgid "(dynamic)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/decorators.py:465
+#, python-format
+msgid "%(prog)s, version %(version)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/decorators.py:522
+msgid "Show the version and exit."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/decorators.py:548
+msgid "Show this message and exit."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/exceptions.py:50
+#: venv/lib/python3.12/site-packages/click/exceptions.py:89
+#, python-brace-format
+msgid "Error: {message}"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/exceptions.py:81
+#, python-brace-format
+msgid "Try '{command} {option}' for help."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/exceptions.py:130
+#, python-brace-format
+msgid "Invalid value: {message}"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/exceptions.py:132
+#, python-brace-format
+msgid "Invalid value for {param_hint}: {message}"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/exceptions.py:190
+msgid "Missing argument"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/exceptions.py:192
+msgid "Missing option"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/exceptions.py:194
+msgid "Missing parameter"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/exceptions.py:196
+#, python-brace-format
+msgid "Missing {param_type}"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/exceptions.py:203
+#, python-brace-format
+msgid "Missing parameter: {param_name}"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/exceptions.py:223
+#, python-brace-format
+msgid "No such option: {name}"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/exceptions.py:235
+#, python-brace-format
+msgid "Did you mean {possibility}?"
+msgid_plural "(Possible options: {possibilities})"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/click/exceptions.py:282
+msgid "unknown error"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/exceptions.py:289
+msgid "Could not open file {filename!r}: {message}"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/parser.py:199
+msgid "Argument {name!r} takes {nargs} values."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/parser.py:381
+msgid "Option {name!r} does not take a value."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/parser.py:444
+msgid "Option {name!r} requires an argument."
+msgid_plural "Option {name!r} requires {nargs} arguments."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/click/shell_completion.py:332
+msgid "Shell completion is not supported for Bash versions older than 4.4."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/shell_completion.py:339
+msgid "Couldn't detect Bash version, shell completion is not supported."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/termui.py:165
+msgid "Repeat for confirmation"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/termui.py:181
+msgid "Error: The value you entered was invalid."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/termui.py:183
+#, python-brace-format
+msgid "Error: {e.message}"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/termui.py:194
+msgid "Error: The two entered values do not match."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/termui.py:253
+msgid "Error: invalid input"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/termui.py:872
+msgid "Press any key to continue..."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/types.py:332
+#, python-brace-format
+msgid ""
+"Choose from:\n"
+"\t{choices}"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/types.py:369
+msgid "{value!r} is not {choice}."
+msgid_plural "{value!r} is not one of {choices}."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/click/types.py:460
+msgid "{value!r} does not match the format {format}."
+msgid_plural "{value!r} does not match the formats {formats}."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/click/types.py:482
+msgid "{value!r} is not a valid {number_type}."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/types.py:538
+#, python-brace-format
+msgid "{value} is not in the range {range}."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/types.py:719
+msgid "{value!r} is not a valid boolean. Recognized values: {states}"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/types.py:747
+msgid "{value!r} is not a valid UUID."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/types.py:937
+msgid "file"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/types.py:939
+msgid "directory"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/types.py:941
+msgid "path"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/types.py:988
+msgid "{name} {filename!r} does not exist."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/types.py:997
+msgid "{name} {filename!r} is a file."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/types.py:1005
+msgid "{name} {filename!r} is a directory."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/types.py:1014
+msgid "{name} {filename!r} is not readable."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/types.py:1023
+msgid "{name} {filename!r} is not writable."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/types.py:1032
+msgid "{name} {filename!r} is not executable."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/click/types.py:1099
+#, python-brace-format
+msgid "{len_type} values are required, but {len_value} was given."
+msgid_plural "{len_type} values are required, but {len_value} were given."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/django/contrib/messages/apps.py:16
+msgid "Messages"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/contrib/sitemaps/apps.py:8
+msgid "Site Maps"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/contrib/staticfiles/apps.py:9
+msgid "Static Files"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/contrib/syndication/apps.py:7
+msgid "Syndication"
+msgstr ""
+
+#. Translators: String used to replace omitted page numbers in elided page
+#. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
+#: venv/lib/python3.12/site-packages/django/core/paginator.py:30
+msgid "…"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/paginator.py:32
+msgid "That page number is not an integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/paginator.py:33
+msgid "That page number is less than 1"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/paginator.py:34
+msgid "That page contains no results"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:22
+msgid "Enter a valid value."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:70
+msgid "Enter a valid domain name."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:153
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:775
+msgid "Enter a valid URL."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:200
+msgid "Enter a valid integer."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:211
+msgid "Enter a valid email address."
+msgstr ""
+
+#. Translators: "letters" means latin letters: a-z and A-Z.
+#: venv/lib/python3.12/site-packages/django/core/validators.py:289
+msgid ""
+"Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:297
+msgid ""
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
+"hyphens."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:309
+#: venv/lib/python3.12/site-packages/django/core/validators.py:318
+#: venv/lib/python3.12/site-packages/django/core/validators.py:332
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2220
+#, python-format
+msgid "Enter a valid %(protocol)s address."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:311
+msgid "IPv4"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:320
+#: venv/lib/python3.12/site-packages/django/utils/ipv6.py:43
+msgid "IPv6"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:334
+msgid "IPv4 or IPv6"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:375
+msgid "Enter only digits separated by commas."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:381
+#, python-format
+msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:416
+#, python-format
+msgid "Ensure this value is less than or equal to %(limit_value)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:425
+#, python-format
+msgid "Ensure this value is greater than or equal to %(limit_value)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:434
+#, python-format
+msgid "Ensure this value is a multiple of step size %(limit_value)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:441
+#, python-format
+msgid ""
+"Ensure this value is a multiple of step size %(limit_value)s, starting from "
+"%(offset)s, e.g. %(offset)s, %(valid_value1)s, %(valid_value2)s, and so on."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:473
+#, python-format
+msgid ""
+"Ensure this value has at least %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at least %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:491
+#, python-format
+msgid ""
+"Ensure this value has at most %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at most %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:514
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:366
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:405
+msgid "Enter a number."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:516
+#, python-format
+msgid "Ensure that there are no more than %(max)s digit in total."
+msgid_plural "Ensure that there are no more than %(max)s digits in total."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:521
+#, python-format
+msgid "Ensure that there are no more than %(max)s decimal place."
+msgid_plural "Ensure that there are no more than %(max)s decimal places."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:526
+#, python-format
+msgid ""
+"Ensure that there are no more than %(max)s digit before the decimal point."
+msgid_plural ""
+"Ensure that there are no more than %(max)s digits before the decimal point."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:597
+#, python-format
+msgid ""
+"File extension “%(extension)s” is not allowed. Allowed extensions are: "
+"%(allowed_extensions)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:659
+msgid "Null characters are not allowed."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/base.py:1600
+#: venv/lib/python3.12/site-packages/django/forms/models.py:908
+msgid "and"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/base.py:1602
+#, python-format
+msgid "%(model_name)s with this %(field_labels)s already exists."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/constraints.py:22
+#, python-format
+msgid "Constraint “%(name)s” is violated."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:134
+#, python-format
+msgid "Value %(value)r is not a valid choice."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:135
+msgid "This field cannot be null."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:136
+msgid "This field cannot be blank."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:137
+#, python-format
+msgid "%(model_name)s with this %(field_label)s already exists."
+msgstr ""
+
+#. Translators: The 'lookup_type' is one of 'date', 'year' or
+#. 'month'. Eg: "Title must be unique for pub_date year"
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:141
+#, python-format
+msgid ""
+"%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:180
+#, python-format
+msgid "Field of type: %(field_type)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1162
+#, python-format
+msgid "“%(value)s” value must be either True or False."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1163
+#, python-format
+msgid "“%(value)s” value must be either True, False, or None."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1165
+msgid "Boolean (Either True or False)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1215
+#, python-format
+msgid "String (up to %(max_length)s)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1217
+msgid "String (unlimited)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1326
+msgid "Comma-separated integers"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1427
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
+"format."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1431
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1566
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
+"date."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1435
+#, fuzzy
+#| msgid "Update work time"
+msgid "Date (without time)"
+msgstr "Edytuj czas pracy"
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1562
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[."
+"uuuuuu]][TZ] format."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1570
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+"[TZ]) but it is an invalid date/time."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1575
+#, fuzzy
+#| msgid "Update work time"
+msgid "Date (with time)"
+msgstr "Edytuj czas pracy"
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1702
+#, python-format
+msgid "“%(value)s” value must be a decimal number."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1704
+msgid "Decimal number"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1864
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in [DD] [[HH:]MM:]ss[."
+"uuuuuu] format."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1868
+#: worker/templates/worker/detail-worker.html:38
+#: worker/templates/worker/settlement.html:58
+#: worker/templates/worker/settlement_summary.html:19
+msgid "Duration"
+msgstr "Czas trwania"
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1920
+msgid "Email address"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1945
+msgid "File path"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2023
+#, python-format
+msgid "“%(value)s” value must be a float."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2025
+msgid "Floating point number"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2065
+#, python-format
+msgid "“%(value)s” value must be an integer."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2067
+msgid "Integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2163
+msgid "Big (8 byte) integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2180
+msgid "Small integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2188
+msgid "IPv4 address"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2219
+msgid "IP address"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2310
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2311
+#, python-format
+msgid "“%(value)s” value must be either None, True or False."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2313
+msgid "Boolean (Either True, False or None)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2364
+msgid "Positive big integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2379
+msgid "Positive integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2394
+msgid "Positive small integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2410
+#, python-format
+msgid "Slug (up to %(max_length)s)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2446
+msgid "Text"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2526
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
+"format."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2530
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
+"invalid time."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2642
+msgid "URL"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2666
+msgid "Raw binary data"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2731
+#, python-format
+msgid "“%(value)s” is not a valid UUID."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2733
+msgid "Universally unique identifier"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/files.py:244
+msgid "File"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/files.py:420
+msgid "Image"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/json.py:24
+msgid "A JSON object"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/json.py:26
+msgid "Value must be valid JSON."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:979
+#, python-format
+msgid "%(model)s instance with %(field)s %(value)r is not a valid choice."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:982
+msgid "Foreign Key (type determined by related field)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:1276
+msgid "One-to-one relationship"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:1333
+#, python-format
+msgid "%(from)s-%(to)s relationship"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:1335
+#, python-format
+msgid "%(from)s-%(to)s relationships"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:1383
+msgid "Many-to-many relationship"
+msgstr ""
+
+#. Translators: If found as last label character, these punctuation
+#. characters will prevent the default label_suffix to be appended to the label
+#: venv/lib/python3.12/site-packages/django/forms/boundfield.py:185
+msgid ":?.!"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:95
+msgid "This field is required."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:315
+msgid "Enter a whole number."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:486
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1267
+msgid "Enter a valid date."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:509
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1268
+msgid "Enter a valid time."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:536
+msgid "Enter a valid date/time."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:570
+msgid "Enter a valid duration."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:571
+#, python-brace-format
+msgid "The number of days must be between {min_days} and {max_days}."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:640
+msgid "No file was submitted. Check the encoding type on the form."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:641
+msgid "No file was submitted."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:642
+msgid "The submitted file is empty."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:644
+#, python-format
+msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgid_plural ""
+"Ensure this filename has at most %(max)d characters (it has %(length)d)."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:649
+msgid "Please either submit a file or check the clear checkbox, not both."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:717
+msgid ""
+"Upload a valid image. The file you uploaded was either not an image or a "
+"corrupted image."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:889
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:975
+#: venv/lib/python3.12/site-packages/django/forms/models.py:1592
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:977
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1096
+#: venv/lib/python3.12/site-packages/django/forms/models.py:1590
+msgid "Enter a list of values."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1097
+msgid "Enter a complete value."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1339
+msgid "Enter a valid UUID."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1369
+msgid "Enter a valid JSON."
+msgstr ""
+
+#. Translators: This is the default suffix added to form field labels
+#: venv/lib/python3.12/site-packages/django/forms/forms.py:97
+msgid ":"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/forms.py:239
+#, python-format
+msgid "(Hidden field %(name)s) %(error)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:61
+#, python-format
+msgid ""
+"ManagementForm data is missing or has been tampered with. Missing fields: "
+"%(field_names)s. You may need to file a bug report if the issue persists."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:65
+#, python-format
+msgid "Please submit at most %(num)d form."
+msgid_plural "Please submit at most %(num)d forms."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:70
+#, python-format
+msgid "Please submit at least %(num)d form."
+msgid_plural "Please submit at least %(num)d forms."
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:499
+msgid "Delete"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:901
+#, python-format
+msgid "Please correct the duplicate data for %(field)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:906
+#, python-format
+msgid "Please correct the duplicate data for %(field)s, which must be unique."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:913
+#, python-format
+msgid ""
+"Please correct the duplicate data for %(field_name)s which must be unique "
+"for the %(lookup)s in %(date_field)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:922
+msgid "Please correct the duplicate values below."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:1359
+msgid "The inline value did not match the parent instance."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:1450
+msgid "Select a valid choice. That choice is not one of the available choices."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:1594
+#, python-format
+msgid "“%(pk)s” is not a valid value."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/utils.py:229
+#, python-format
+msgid ""
+"%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
+"may be ambiguous or it may not exist."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:528
+msgid "Currently"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:529
+msgid "Change"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:866
+msgid "Unknown"
+msgstr ""
+
+#. Translators: Please do not add spaces around commas.
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:873
+msgid "yes,no,maybe"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:903
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:920
+#, python-format
+msgid "%(size)d byte"
+msgid_plural "%(size)d bytes"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:922
+#, python-format
+msgid "%s KB"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:924
+#, python-format
+msgid "%s MB"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:926
+#, python-format
+msgid "%s GB"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:928
+#, python-format
+msgid "%s TB"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:930
+#, python-format
+msgid "%s PB"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:74
+msgid "p.m."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:75
+msgid "a.m."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:80
+msgid "PM"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:81
+msgid "AM"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:153
+msgid "midnight"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:155
+msgid "noon"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:7
+msgid "Monday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:8
+msgid "Tuesday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:9
+msgid "Wednesday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:10
+msgid "Thursday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:11
+msgid "Friday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:12
+msgid "Saturday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:13
+msgid "Sunday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:16
+msgid "Mon"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:17
+msgid "Tue"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:18
+msgid "Wed"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:19
+msgid "Thu"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:20
+msgid "Fri"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:21
+#, fuzzy
+#| msgid "Start"
+msgid "Sat"
+msgstr "Początek"
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:22
+msgid "Sun"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:25
+msgid "January"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:26
+msgid "February"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:27
+msgid "March"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:28
+msgid "April"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:29
+msgid "May"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:30
+msgid "June"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:31
+msgid "July"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:32
+msgid "August"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:33
+msgid "September"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:34
+msgid "October"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:35
+msgid "November"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:36
+msgid "December"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:39
+msgid "jan"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:40
+msgid "feb"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:41
+msgid "mar"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:42
+msgid "apr"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:43
+msgid "may"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:44
+msgid "jun"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:45
+msgid "jul"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:46
+msgid "aug"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:47
+msgid "sep"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:48
+msgid "oct"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:49
+msgid "nov"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:50
+msgid "dec"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:53
+msgctxt "abbrev. month"
+msgid "Jan."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:54
+msgctxt "abbrev. month"
+msgid "Feb."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:55
+msgctxt "abbrev. month"
+msgid "March"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:56
+msgctxt "abbrev. month"
+msgid "April"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:57
+msgctxt "abbrev. month"
+msgid "May"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:58
+msgctxt "abbrev. month"
+msgid "June"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:59
+msgctxt "abbrev. month"
+msgid "July"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:60
+msgctxt "abbrev. month"
+msgid "Aug."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:61
+msgctxt "abbrev. month"
+msgid "Sept."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:62
+msgctxt "abbrev. month"
+msgid "Oct."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:63
+msgctxt "abbrev. month"
+msgid "Nov."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:64
+msgctxt "abbrev. month"
+msgid "Dec."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:67
+msgctxt "alt. month"
+msgid "January"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:68
+msgctxt "alt. month"
+msgid "February"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:69
+msgctxt "alt. month"
+msgid "March"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:70
+msgctxt "alt. month"
+msgid "April"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:71
+msgctxt "alt. month"
+msgid "May"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:72
+msgctxt "alt. month"
+msgid "June"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:73
+msgctxt "alt. month"
+msgid "July"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:74
+msgctxt "alt. month"
+msgid "August"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:75
+msgctxt "alt. month"
+msgid "September"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:76
+msgctxt "alt. month"
+msgid "October"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:77
+msgctxt "alt. month"
+msgid "November"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:78
+msgctxt "alt. month"
+msgid "December"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/ipv6.py:20
+msgid "This is not a valid IPv6 address."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/text.py:76
+#, python-format
+msgctxt "String to return when truncating text"
+msgid "%(truncated_text)s…"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/text.py:287
+msgid "or"
+msgstr ""
+
+#. Translators: This string is used as a separator between list elements
+#: venv/lib/python3.12/site-packages/django/utils/text.py:306
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:135
+msgid ", "
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:8
+#, python-format
+msgid "%(num)d year"
+msgid_plural "%(num)d years"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:9
+#, python-format
+msgid "%(num)d month"
+msgid_plural "%(num)d months"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:10
+#, python-format
+msgid "%(num)d week"
+msgid_plural "%(num)d weeks"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:11
+#, python-format
+msgid "%(num)d day"
+msgid_plural "%(num)d days"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:12
+#, python-format
+msgid "%(num)d hour"
+msgid_plural "%(num)d hours"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:13
+#, python-format
+msgid "%(num)d minute"
+msgid_plural "%(num)d minutes"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:30
+msgid "CSRF verification failed. Request aborted."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:34
+msgid ""
+"You are seeing this message because this HTTPS site requires a “Referer "
+"header” to be sent by your web browser, but none was sent. This header is "
+"required for security reasons, to ensure that your browser is not being "
+"hijacked by third parties."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:40
+msgid ""
+"If you have configured your browser to disable “Referer” headers, please re-"
+"enable them, at least for this site, or for HTTPS connections, or for “same-"
+"origin” requests."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:45
+msgid ""
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
+"including the “Referrer-Policy: no-referrer” header, please remove them. The "
+"CSRF protection requires the “Referer” header to do strict referer checking. "
+"If you’re concerned about privacy, use alternatives like <a "
+"rel=\"noreferrer\" …> for links to third-party sites."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:54
+msgid ""
+"You are seeing this message because this site requires a CSRF cookie when "
+"submitting forms. This cookie is required for security reasons, to ensure "
+"that your browser is not being hijacked by third parties."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:60
+msgid ""
+"If you have configured your browser to disable cookies, please re-enable "
+"them, at least for this site, or for “same-origin” requests."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:66
+msgid "More information is available with DEBUG=True."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:44
+msgid "No year specified"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:64
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:115
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:214
+msgid "Date out of range"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:94
+msgid "No month specified"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:147
+msgid "No day specified"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:194
+msgid "No week specified"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:353
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:384
+#, python-format
+msgid "No %(verbose_name_plural)s available"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:680
+#, python-format
+msgid ""
+"Future %(verbose_name_plural)s not available because %(class_name)s."
+"allow_future is False."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:720
+#, python-format
+msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/detail.py:56
+#, python-format
+msgid "No %(verbose_name)s found matching the query"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/list.py:70
+msgid "Page is not “last”, nor can it be converted to an int."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/list.py:77
+#, python-format
+msgid "Invalid page (%(page_number)s): %(message)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/list.py:173
+#, python-format
+msgid "Empty list and “%(class_name)s.allow_empty” is False."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/static.py:49
+msgid "Directory indexes are not allowed here."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/static.py:51
+#, python-format
+msgid "“%(path)s” does not exist"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/static.py:68
+#: venv/lib/python3.12/site-packages/django/views/templates/directory_index.html:8
+#: venv/lib/python3.12/site-packages/django/views/templates/directory_index.html:11
+#, python-format
+msgid "Index of %(directory)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:7
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:204
+msgid "The install worked successfully! Congratulations!"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:206
+#, python-format
+msgid ""
+"View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
+"target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:208
+#, python-format
+msgid ""
+"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
+"%(version)s/ref/settings/#debug\" target=\"_blank\" "
+"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
+"configured any URLs."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:217
+msgid "Django Documentation"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:218
+msgid "Topics, references, &amp; how-to’s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:226
+msgid "Tutorial: A Polling App"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:227
+msgid "Get started with Django"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:235
+msgid "Django Community"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:236
+msgid "Connect, get help, or contribute"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/kombu/transport/qpid.py:1311
+#, python-format
+msgid "Attempting to connect to qpid with SASL mechanism %s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/kombu/transport/qpid.py:1316
+#, python-format
+msgid "Connected to qpid with SASL mechanism %s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/kombu/transport/qpid.py:1334
+#, python-format
+msgid "Unable to connect to qpid with SASL mechanism %s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/silk/middleware.py:80
+msgid ""
+"SILKY_AUTHENTICATION can not be enabled without Session, Authentication or "
+"Message Django's middlewares"
+msgstr ""
+
+#: worker/forms.py:24
+msgid "Finish time must be after start time."
+msgstr "Czas zakończenia musi być późniejszy niż czas rozpoczęcia."
+
+#: worker/models.py:13
+msgid "Chef"
+msgstr "Kucharz"
+
+#: worker/models.py:14
+msgid "Assistant"
+msgstr "Asystent"
+
+#: worker/models.py:15
+msgid "Barista"
+msgstr "Barysta"
+
+#: worker/models.py:19
+msgid "first name"
+msgstr "imię"
+
+#: worker/models.py:20
+msgid "last name"
+msgstr "nazwisko"
+
+#: worker/models.py:26
+msgid "per hour"
+msgstr "za godzinę"
+
+#: worker/models.py:27
+msgid "salary"
+msgstr "wynagrodzenie"
+
+#: worker/models.py:36
+msgid "position"
+msgstr "stanowisko"
+
+#: worker/models.py:43
+msgid "pin"
+msgstr "pin"
+
+#: worker/templates/worker/_settlement_rows.html:19
+msgid "No unsettled work times found."
+msgstr "Nie znaleziono nierozliczonych czasów pracy."
+
+#: worker/templates/worker/_worktime_rows.html:18
+msgid "No work times recorded."
+msgstr "Brak zarejestrowanych godzin pracy."
+
+#: worker/templates/worker/_worktime_rows.html:28
+msgid "Show more"
+msgstr "Pokaż więcej"
+
+#: worker/templates/worker/clock-in.html:12
+msgid "Nice to see you again!"
+msgstr "Miło cię widzieć!"
+
+#: worker/templates/worker/clock-in.html:13
+msgid "Choose your name to start your shift"
+msgstr "Wybierz swoje imię, aby rozpocząć zmianę"
+
+#: worker/templates/worker/clock-in.html:25
+#: worker/templates/worker/list-worker.html:33
+msgid "No workers available — time to hire someone!"
+msgstr "Brak dostępnych pracowników — czas kogoś zatrudnić!"
+
+#: worker/templates/worker/clock-out.html:12
+msgid "It's time to go home!"
+msgstr "Czas do domu!"
+
+#: worker/templates/worker/clock-out.html:14
+msgid "Choose your name to end your shift"
+msgstr "Wybierz swoje imię, aby zakończyć zmianę"
+
+#: worker/templates/worker/clock-out.html:27
+msgid "No workers available. Call it a day ;)"
+msgstr "Brak pracowników na zmianie. Na dziś koniec ;)"
+
+#: worker/templates/worker/create-worker.html:4
+#: worker/templates/worker/create-worker.html:12
+msgid "New employee"
+msgstr "Nowy pracownik"
+
+#: worker/templates/worker/create-worker.html:13
+msgid "Fill in the details and save the profile"
+msgstr "Wypełnij dane i zapisz profil"
+
+#: worker/templates/worker/detail-worker.html:22
+msgid "Total hours worked"
+msgstr "Łączne przepracowane godziny"
+
+#: worker/templates/worker/detail-worker.html:31
+#: worker/templates/worker/list_worktime_not_finished.html:18
+msgid "Work times"
+msgstr "Godziny pracy"
+
+#: worker/templates/worker/detail-worker.html:37
+msgid "Finish"
+msgstr "Koniec"
+
+#: worker/templates/worker/list_worktime_not_finished.html:4
+#: worker/templates/worker/list_worktime_not_finished.html:12
+msgid "Not Finished Work Times"
+msgstr "Niezakończone czasy pracy"
+
+#: worker/templates/worker/list_worktime_not_finished.html:42
+msgid "All workers clock out."
+msgstr "Wszyscy pracownicy zakończyli pracę."
+
+#: worker/templates/worker/settlement.html:22
+msgid "All workers"
+msgstr "Wszyscy pracownicy"
+
+#: worker/templates/worker/settlement.html:44
+msgid "Unsettled work times"
+msgstr "Nierozliczone czasy pracy"
+
+#: worker/templates/worker/settlement.html:56
+#: worker/templates/worker/settlement_summary.html:17
+msgid "Date"
+msgstr "Data"
+
+#: worker/templates/worker/settlement.html:59
+#: worker/templates/worker/settlement_summary.html:20
+msgid "Amount"
+msgstr "Kwota"
+
+#: worker/templates/worker/settlement.html:69
+msgid "Settle selected"
+msgstr "Rozlicz zaznaczone"
+
+#: worker/templates/worker/settlement_summary.html:4
+#: worker/templates/worker/settlement_summary.html:11
+msgid "Settlement Summary"
+msgstr "Podsumowanie rozliczenia"
+
+#: worker/templates/worker/settlement_summary.html:34
+msgid "No records."
+msgstr "Brak rekordów."
+
+#: worker/templates/worker/settlement_summary.html:54
+msgid "Undo settlement"
+msgstr "Cofnij rozliczenie"
+
+#: worker/templates/worker/update-work-time.html:4
+msgid "Update work time"
+msgstr "Edytuj czas pracy"
+
+#: worker/templates/worker/update-work-time.html:12
+msgid "Update Work Time"
+msgstr "Edytuj czas pracy"
+
+#: worker/templates/worker/update-worker.html:4
+#: worker/templates/worker/update-worker.html:12
+msgid "Update employee"
+msgstr "Edytuj pracownika"
+
+#: worker/templates/worker/update-worker.html:13
+msgid "Edit the details and save the profile"
+msgstr "Zmień dane i zapisz profil"
+
+#: worker/views.py:80
+#, fuzzy
+#| msgid "Work time has been successfully updated!"
+msgid "Worker detail has been updated!"
+msgstr "Czas pracy został pomyślnie zaktualizowany!"
+
+#: worker/views.py:93
+msgid "Work time has been successfully updated!"
+msgstr "Czas pracy został pomyślnie zaktualizowany!"
+
+#: worker/views.py:114
+#, python-format
+msgid "Have a great shift, %(name)s!"
+msgstr "Miłej zmiany, %(name)s!"
+
+#: worker/views.py:143
+#, python-format
+msgid "Goodbye, %(name)s!"
+msgstr "Do widzenia, %(name)s!"
+
+#~ msgid "Edit menu"
+#~ msgstr "Edytuj menu"
+
+#~ msgid "Change status"
+#~ msgstr "Zmień status"
+
+#, fuzzy
+#~| msgid "last name"
+#~ msgid "Asystent"
+#~ msgstr "Asystent"
+
+#~ msgid "Page %(current)s of %(total)s"
+#~ msgstr "Strona %(current)s z %(total)s"
+
+#~ msgid "Wide rectangle (default)"
+#~ msgstr "Szeroki prostokąt (domyślny)"
+
+#~ msgid "Standard rectangle"
+#~ msgstr "Standardowy prostokąt"
+
+#~ msgid "Square"
+#~ msgstr "Kwadrat"
+
+#~ msgid "Width"
+#~ msgstr "Szerokość"
+
+#~ msgid "Height"
+#~ msgstr "Wysokość"
+
+#~ msgid "Shape"
+#~ msgstr "Kształt"
+
+#~ msgid "with"
+#~ msgstr "z"
+
+#~ msgid "is ready"
+#~ msgstr "jest gotowe"
+
+#~ msgid "call"
+#~ msgstr "wzywa"

@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+    {% trans "Bills" %}
+{% endblock title %}
+{% block content %}
+    <div class="container-fluid px-3 py-3">
+        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+            <h1 class="h4 fw-bold mb-0">{% trans "Bills" %}</h1>
+            <form method="get" class="d-flex align-items-center gap-2 flex-wrap">
+                {{ filter.form.created_at }}
+                {{ filter.form.table }}
+                <button type="submit" class="btn btn-primary rounded-pill px-4">{% trans "Filter" %}</button>
+                {% if request.GET.created_at or request.GET.table %}
+                    <a href="?" class="btn btn-outline-secondary rounded-pill px-4">{% trans "Clear" %}</a>
+                {% endif %}
+            </form>
+        </div>
+        {% if object_list %}
+            <div class="row g-3">
+                {% for bill in object_list %}
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="card border-0 rounded-4 shadow h-100">
+                            <div class="card-header fw-bold d-flex justify-content-between align-items-center">
+                                <span class="d-flex align-items-center gap-2">
+                                    <a href="{% url 'detail-bill' bill.id %}"
+                                       class="stretched-link text-decoration-none text-reset">
+                                        {% trans "Bill" %} #{{ bill.id }}
+                                    </a>
+                                    {% if bill.status == "open" %}
+                                        <span class="badge bg-success rounded-pill">{% trans "Open" %}</span>
+                                    {% elif bill.status == "closed_and_occupied" %}
+                                        <span class="badge bg-warning text-dark rounded-pill">{% trans "Occupied" %}</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary rounded-pill">{% trans "Closed" %}</span>
+                                    {% endif %}
+                                </span>
+                                <span class="text-muted fw-normal small">
+                                    {% with tables=bill.table.all %}
+                                        {% if tables %}
+                                            {% for t in tables %}
+                                                {{ t.hall.name }} · {{ t.name }}
+                                                {% if not forloop.last %},{% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            {% trans "Take-away" %}
+                                        {% endif %}
+                                    {% endwith %}
+                                </span>
+                            </div>
+                            <div class="list-group list-group-flush">
+                                {% for order in bill.orders.all %}
+                                    {% for item in order.order_items.all %}
+                                        {% with dropdown_id="additions-"|add:bill.id|stringformat:"s"|add:"-"|add:order.id|stringformat:"s"|add:"-"|add:forloop.counter|stringformat:"s" %}
+                                            {% if item.order_item_additions.all %}
+                                                <div class="dropdown">
+                                                    <div class="list-group-item d-flex justify-content-between"
+                                                         role="button"
+                                                         data-bs-toggle="dropdown"
+                                                         aria-expanded="false"
+                                                         id="{{ dropdown_id }}">
+                                                        <span>{{ item.name_snapshot }} <span class="text-muted small">▾</span></span>
+                                                        <span>{{ item.line_subtotal }} zł</span>
+                                                    </div>
+                                                    <ul class="dropdown-menu w-100 shadow-sm"
+                                                        aria-labelledby="{{ dropdown_id }}">
+                                                        {% for addition in item.order_item_additions.all %}
+                                                            <li class="dropdown-item d-flex justify-content-between text-muted small">
+                                                                <span>+ {{ addition.name_snapshot }}</span>
+                                                                <span>{{ addition.line_subtotal }} zł</span>
+                                                            </li>
+                                                        {% endfor %}
+                                                    </ul>
+                                                </div>
+                                            {% else %}
+                                                <div class="list-group-item d-flex justify-content-between">
+                                                    <span>{{ item.name_snapshot }}</span>
+                                                    <span>{{ item.line_subtotal }} zł</span>
+                                                </div>
+                                            {% endif %}
+                                        {% endwith %}
+                                    {% endfor %}
+                                {% endfor %}
+                            </div>
+                            <div class="card-footer d-flex justify-content-between fw-bold">
+                                <span>{% trans "Total" %}</span>
+                                <span>{{ bill.compute_total }} zł</span>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% if is_paginated %}
+                <nav class="mt-4 d-flex justify-content-center gap-2"
+                     aria-label='{% trans "Pagination" %}'>
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}"
+                           class="btn btn-outline-secondary rounded-pill px-4">← {% trans "Previous" %}</a>
+                    {% endif %}
+                    <span class="btn btn-light rounded-pill px-4 disabled">
+                        {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}
+                    </span>
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}"
+                           class="btn btn-outline-secondary rounded-pill px-4">{% trans "Next" %} →</a>
+                    {% endif %}
+                </nav>
+            {% endif %}
+        {% else %}
+            <div class="card border-0 rounded-4 shadow-sm">
+                <div class="card-body p-5 text-center text-secondary">
+                    <p class="mb-0">{% trans "No bills found." %}</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %}

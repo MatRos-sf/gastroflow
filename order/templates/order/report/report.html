@@ -1,0 +1,322 @@
+{% extends "base.html" %}
+{% load i18n duration_extras %}
+{% block title %}
+    {% trans "Daily Report" %}
+{% endblock title %}
+{% block content %}
+    <div class="container py-4">
+        <!-- Header -->
+        <div class="d-flex align-items-start justify-content-between flex-wrap gap-3 mb-4">
+            <div>
+                <h2 class="fw-bold mb-0">{% trans "Daily Report Admin" %}</h2>
+                <p class="text-muted mb-0">
+                    {% if date_from %}
+                        {{ date_from }}
+                        {% if date_to %}— {{ date_to }}{% endif %}
+                    {% else %}
+                        {% trans "All time" %}
+                    {% endif %}
+                </p>
+            </div>
+            <form method="post" action="{% url 'report-generate' %}">
+                {% csrf_token %}
+                <input type="hidden" name="from_date" value="{{ date_from|date:'Y-m-d' }}">
+                <input type="hidden" name="to_date" value="{{ date_to|date:'Y-m-d' }}">
+                <button type="submit" class="btn btn-primary rounded-pill">{% trans "Send report to email" %}</button>
+            </form>
+        </div>
+        <!-- Date filter -->
+        <form method="get" class="card border-0 rounded-4 shadow mb-4">
+            <div class="card-body">
+                <div class="row g-2 align-items-end">
+                    <div class="col-12 col-sm-5">
+                        <label class="form-label small text-muted text-uppercase fw-bold mb-1">{% trans "From" %}</label>
+                        {{ form.from_date }}
+                    </div>
+                    <div class="col-12 col-sm-5">
+                        <label class="form-label small text-muted text-uppercase fw-bold mb-1">{% trans "To" %}</label>
+                        {{ form.to_date }}
+                    </div>
+                    <div class="col-12 col-sm-2 d-grid">
+                        <button type="submit" class="btn btn-primary rounded-pill">{% trans "Filter" %}</button>
+                    </div>
+                </div>
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger mt-2 mb-0 py-2">
+                        {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </form>
+        {% with bills=report.bills_status %}
+            {% with total=bills.opened|add:bills.closed %}
+                <!-- Bills summary -->
+                <div class="card border-0 rounded-4 shadow mb-4">
+                    <div class="card-body text-center py-4">
+                        {% if bills.opened %}
+                            <p class="text-muted small text-uppercase fw-bold mb-1">{% trans "Bills" %}</p>
+                            <h2 class="fw-bold mb-1">
+                                <span class="text-success">{{ bills.closed }}</span>
+                                <span class="text-muted fs-5 fw-normal">{% trans "closed" %}</span>
+                                <span class="text-muted fs-4 mx-1">/</span>
+                                <span>{{ total }}</span>
+                                <span class="text-muted fs-5 fw-normal">{% trans "total" %}</span>
+                            </h2>
+                            <span class="badge bg-warning text-dark rounded-pill px-3">{{ bills.opened }} {% trans "open" %}</span>
+                        {% else %}
+                            <p class="text-muted small text-uppercase fw-bold mb-1">{% trans "Bills today" %}</p>
+                            <h2 class="fw-bold text-success mb-1">{{ total }}</h2>
+                            <span class="badge bg-success rounded-pill px-3">{% trans "All closed" %}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <!-- Bills stats row -->
+                <div class="row g-3 mb-4">
+                    <div class="col-6 col-lg-3">
+                        <div class="card border-0 rounded-4 shadow h-100">
+                            <div class="card-body text-center">
+                                <p class="text-muted small text-uppercase fw-bold mb-1">{% trans "Guests" %}</p>
+                                <h3 class="fw-bold mb-0">{{ bills.guest_count }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3">
+                        <div class="card border-0 rounded-4 shadow h-100">
+                            <div class="card-body text-center">
+                                <p class="text-muted small text-uppercase fw-bold mb-1">{% trans "Card" %}</p>
+                                <h3 class="fw-bold mb-0">{{ bills.pay_by_card }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3">
+                        <div class="card border-0 rounded-4 shadow h-100">
+                            <div class="card-body text-center">
+                                <p class="text-muted small text-uppercase fw-bold mb-1">{% trans "Cash" %}</p>
+                                <h3 class="fw-bold mb-0">{{ bills.pay_by_cash }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-3">
+                        <div class="card border-0 rounded-4 shadow h-100">
+                            <div class="card-body text-center">
+                                <p class="text-muted small text-uppercase fw-bold mb-1">{% trans "Not printed" %}</p>
+                                <h3 class="fw-bold mb-0 {% if bills.not_printed %}text-warning{% endif %}">{{ bills.not_printed }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endwith %}
+        {% endwith %}
+        <!-- Order items section -->
+        {% with items=report.order_item_quantity %}
+            <h5 class="fw-bold text-uppercase text-muted small mb-3">{% trans "Order items" %}</h5>
+            <div class="row g-3">
+                <div class="col-12 col-md-2">
+                    <div class="card border-0 rounded-4 shadow h-100">
+                        <div class="card-body text-center">
+                            <p class="text-muted small text-uppercase fw-bold mb-1">{% trans "Total" %}</p>
+                            <h3 class="fw-bold mb-0">{{ items.total }}</h3>
+                            <small class="text-muted">{% trans "items" %}</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="card border-0 rounded-4 shadow h-100">
+                        <div class="card-body text-center">
+                            <p class="text-muted small text-uppercase fw-bold mb-1">{% trans "Kitchen" %}</p>
+                            <h3 class="fw-bold mb-0">{{ items.sum_kitchen|default:0 }}</h3>
+                            <small class="text-muted">{% trans "items" %}</small>
+                            {% if items.not_ready_kitchen %}
+                                <span class="badge bg-warning text-dark rounded-pill px-2">{{ items.not_ready_kitchen }} {% trans "pending" %}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-2">
+                    <div class="card border-0 rounded-4 shadow h-100">
+                        <div class="card-body text-center">
+                            <p class="text-muted small text-uppercase fw-bold mb-1">{% trans "Bar" %}</p>
+                            <h3 class="fw-bold mb-0">{{ items.sum_bar|default:0 }}</h3>
+                            <small class="text-muted">{% trans "items" %}</small>
+                            {% if items.not_ready_bar %}
+                                <span class="badge bg-warning text-dark rounded-pill px-2">{{ items.not_ready_bar }} {% trans "pending" %}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endwith %}
+        <!-- Earnings section -->
+        {% with earn=report.bill_earn %}
+            <h5 class="fw-bold text-uppercase text-muted small mb-3 mt-4">{% trans "Earnings" %}</h5>
+            <div class="card border-0 rounded-4 shadow mb-3">
+                <div class="card-body text-center py-4">
+                    <p class="text-muted small text-uppercase fw-bold mb-1">{% trans "Total earn" %}</p>
+                    <h2 class="fw-bold mb-0 text-success">{{ earn.total_earn }} zł</h2>
+                </div>
+            </div>
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-md-3">
+                    <div class="card border-0 rounded-4 shadow h-100">
+                        <div class="card-body text-center">
+                            <p class="text-muted small text-uppercase fw-bold mb-1">{% trans "Printed" %}</p>
+                            <h3 class="fw-bold mb-0">{{ earn.total_print }} zł</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card border-0 rounded-4 shadow h-100">
+                        <div class="card-body text-center">
+                            <p class="text-muted small text-uppercase fw-bold mb-1">{% trans "Not printed" %}</p>
+                            <h3 class="fw-bold mb-0 {% if earn.total_no_print %}text-warning{% endif %}">{{ earn.total_no_print }} zł</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card border-0 rounded-4 shadow h-100">
+                        <div class="card-body text-center">
+                            <p class="text-muted small text-uppercase fw-bold mb-1">{% trans "Card" %}</p>
+                            <h3 class="fw-bold mb-0">{{ earn.total_card }} zł</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card border-0 rounded-4 shadow h-100">
+                        <div class="card-body text-center">
+                            <p class="text-muted small text-uppercase fw-bold mb-1">{% trans "Cash" %}</p>
+                            <h3 class="fw-bold mb-0">{{ earn.total_cash }} zł</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endwith %}
+        <!-- Avg preparation time section -->
+        {% with avg=report.avg_preparation_time %}
+            <h5 class="fw-bold text-uppercase text-muted small mb-3 mt-4">{% trans "Avg preparation time" %}</h5>
+            <div class="row g-3">
+                <div class="col-6 col-md-3">
+                    <div class="card border-0 rounded-4 shadow h-100">
+                        <div class="card-body text-center">
+                            <p class="text-muted small text-uppercase fw-bold mb-1">{% trans "Kitchen" %}</p>
+                            <h3 class="fw-bold mb-0">{{ avg.kitchen|duration_human }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="card border-0 rounded-4 shadow h-100">
+                        <div class="card-body text-center">
+                            <p class="text-muted small text-uppercase fw-bold mb-1">{% trans "Bar" %}</p>
+                            <h3 class="fw-bold mb-0">{{ avg.bar|duration_human }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endwith %}
+        <!-- Hourly distribution chart -->
+        {% with dist=report.hourly_distribution %}
+            {% if dist %}
+                <h5 class="fw-bold text-uppercase text-muted small mb-3 mt-4">{% trans "Orders by hour" %}</h5>
+                <div class="card border-0 rounded-4 shadow mb-4">
+                    <div class="card-body">
+                        <canvas id="hourlyChart" height="80"></canvas>
+                    </div>
+                </div>
+                {{ dist|json_script:"hourly-data" }}
+            {% endif %}
+        {% endwith %}
+        <!-- Waiter stats section -->
+        {% with waiters=report.waiter_stats %}
+            {% if waiters %}
+                <h5 class="fw-bold text-uppercase text-muted small mb-3 mt-4">{% trans "Waiter stats" %}</h5>
+                <div class="card border-0 rounded-4 shadow mb-4">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr class="text-muted small text-uppercase">
+                                        <th class="ps-3">{% trans "Waiter" %}</th>
+                                        <th class="text-center">{% trans "Bills" %}</th>
+                                        <th class="text-center">{% trans "Guests" %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for waiter in waiters %}
+                                        <tr>
+                                            <td class="ps-3 fw-bold">{{ waiter.waiter__first_name }} {{ waiter.waiter__last_name }}</td>
+                                            <td class="text-center">{{ waiter.bill_count }}</td>
+                                            <td class="text-center">{{ waiter.guest_count }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endwith %}
+        <!-- Worker salary section -->
+        {% with salary=report.worker_salary %}
+            {% if salary.workers %}
+                <h5 class="fw-bold text-uppercase text-muted small mb-3 mt-4">{% trans "Worker salary" %}</h5>
+                <div class="card border-0 rounded-4 shadow mb-4">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover mb-0">
+                                <thead>
+                                    <tr class="text-muted small text-uppercase">
+                                        <th class="ps-3">{% trans "Worker" %}</th>
+                                        <th>{% trans "Position" %}</th>
+                                        <th class="text-center">{% trans "Hours" %}</th>
+                                        <th class="text-end pe-3">{% trans "Salary" %}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for worker in salary.workers %}
+                                        <tr>
+                                            <td class="ps-3 fw-bold">
+                                                {{ worker.name }}
+                                                {% if worker.is_working %}
+                                                    <span class="badge bg-success rounded-pill ms-1">{% trans "working" %}</span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="text-muted">{{ worker.position }}</td>
+                                            <td class="text-center text-muted">{{ worker.hours_worked|duration_human }}</td>
+                                            <td class="text-end pe-3 fw-bold">{{ worker.total_earn }} zł</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endwith %}
+    </div>
+{% endblock content %}
+{% block extra_js %}
+    {% if report.hourly_distribution %}
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+        <script>
+    const hourlyData = JSON.parse(document.getElementById("hourly-data").textContent);
+    new Chart(document.getElementById("hourlyChart"), {
+        type: "bar",
+        data: {
+            labels: hourlyData.map(d => d.hour + ":00"),
+            datasets: [{
+                data: hourlyData.map(d => d.count),
+                backgroundColor: "rgba(13, 110, 253, 0.75)",
+                borderRadius: 6,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: { beginAtZero: true, ticks: { stepSize: 1 } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+        </script>
+    {% endif %}
+{% endblock extra_js %}

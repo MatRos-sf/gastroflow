@@ -1,0 +1,152 @@
+{
+    "license": {
+        "file": "",
+        "url": "",
+        "templicensefolder": "",
+        "autorenew": true,
+        "autorenewdays": 40,
+        "checkevery": 10
+    },
+    "logger": {
+        "nodejs": {
+            "path": "log",
+            "logrequest": true,
+            "logresponse": false
+        },
+        "native": {
+            "path": "log",
+            "filename": "native.log",
+            "rolloutwhenrunning": 1
+        },
+        "printer": {
+            "path": "log",
+            "level": "POSNET_DEBUG_NONE",
+            "levelcustom": 0,
+            "filename": "printer.log+"
+        },
+        "extras": {
+            "logmetrics": true,
+            "logmetricsevery": 20000
+        },
+        "fulldebug": false
+    },
+    "remoteconfig": {
+        "active": false
+    },
+    "printing": {
+        "transaction": {
+            "enabled": false
+        }
+    },
+    "dlq": {
+        "enabled": false,
+        "directory": "dlq"
+    },
+    "fiscalmemory": {
+        "cache": {
+            "directory": "fiscalcache"
+        }
+    },
+    "posnet": {
+        "driver": "native",
+        "commandresponsetimeout": 10000,
+        "commanddelay": 120,
+        "waitdelay": 100,
+        "responsewaitdelay": 100,
+        "paper": {
+            "width": 57
+        },
+        "ping": {
+            "enabled": false,
+            "interval": 60000,
+            "type": "status"
+        },
+        "edocument": {
+            "service": {
+                "url": "https://eparagon.cloud:4051",
+                "sha1_footprint_update": {
+                    "enabled": false,
+                    "interval": 48,
+                    "onstart": false
+                }
+            }
+        },
+        "connection": {
+            "type": "eth",
+            "rs232": {
+                "disable_ioctl": false,
+                "params": "/dev/ttyS0,9600,8,N,1,N"
+            },
+            "eth": {
+                "ip": "10.10.10.10",
+                "port": "6666"
+            },
+            "tunnel": {
+                "url": "http://localhost:3040"
+            }
+        }
+    },
+    "throttling": {
+        "rate": "5/s",
+        "rate_limit": 5,
+        "disabled": false,
+        "privileged": {
+            "ip": ["::ffff:127.0.0.1"]
+        }
+    },
+    "retry": {
+        "callbacks": {
+            "times": 5,
+            "interval": 7000
+        },
+        "errors": [
+            {
+                "error": 4392950,
+                "active": true,
+                "times": 3,
+                "interval": 5000
+            }
+        ]
+    },
+    "plugins": {
+        "azure-service-bus": {
+            "enabled": false
+        },
+        "amqp-client": {
+            "enabled": false
+        },
+        "opakowania-zwrotne": {
+            "enabled": false
+        },
+        "xml-custom-input": {
+            "enabled": false
+        }
+    },
+    "auth": {
+        "active": false,
+        "secret": "change-me-in-production",
+        "users_file": "users.enc"
+    },
+    "token": {
+        "active": false,
+        "secret": "change-me-in-production"
+    },
+    "heartbeat": {
+        "allowed": ["::ffff:127.0.0.1"]
+    },
+    "server": {
+        "tempdir": "/tmp",
+        "http": {
+            "active": true,
+            "port": 3020
+        },
+        "https": {
+            "active": true,
+            "port": 3021,
+            "sslcertificates": {
+                "key": "./cert/server.key",
+                "crt": "./cert/server.crt"
+            }
+        }
+    }
+}

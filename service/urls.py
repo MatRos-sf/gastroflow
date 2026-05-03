@@ -1,37 +1,70 @@
 from django.urls import path
 
-from . import views
+from .views.action import ActionBillListView
+from .views.order_flow.cart import CartSummaryView
+from .views.order_flow.menu import MenuWaiterView
+from .views.order_flow.table_select import table_select_view
+from .views.service import (
+    CartAddView,
+    clear_cart,
+    main_menu_view,
+    remove_item_from_cart,
+    select_existing_bill,
+    unread_notifications_api,
+)
+from .views.table_view import (
+    HallCreateView,
+    HallFloorEditorView,
+    HallListView,
+    HallUpdateView,
+    change_table,
+    hall_floor_editor_save,
+)
 
-app_name = "service"  # dodajemy namespace!
+app_name = "service"
 
-urlpatterns = [
-    path("", views.menu_waiter, name="menu-waiter"),
-    path("items/", views.item_list, name="items-waiter"),
-    path("api/add-to-cart/", views.add_to_cart, name="add-to-cart"),
-    path("cart/", views.cart, name="cart-waiter"),
+api_urlpatterns = [
     path(
         "api/remove-from-cart/<int:index>/",
-        views.api_remove_from_cart,
+        remove_item_from_cart,
         name="remove-from-cart",
-    ),
-    path("cart/summary/", views.do_order, name="summary-waiter"),
-    path("clear-cart/", views.clear_cart, name="clear-cart"),
-    path("bill/", views.BillListView.as_view(), name="bill"),
-    path("bill/<int:pk>/", views.BillDetailView.as_view(), name="bill-detail"),
-    path("bill/<int:pk>/close/", views.close_bill, name="close-bill"),
-    path("order/table", views.tables_view, name="order-table"),
-    path("order/table/settle", views.table_settle_view, name="table-settle"),
-    path(
-        "service/notifications/", views.waiter_notification, name="waiter-notifications"
-    ),
-    path(
-        "order/table/settle/bill/<int:pk>",
-        views.add_order_to_bill,
-        name="table-settle-add-order",
     ),
     path(
         "api/notifications/check/",
-        views.check_notifications,
+        unread_notifications_api,
         name="check-notifications",
     ),
 ]
+
+urlpatterns = [
+    path("", main_menu_view, name="main-menu"),
+    path("order/select/table", table_select_view, name="order-select-table"),
+    path("order/select/items", MenuWaiterView.as_view(), name="order-select-items"),
+    path("order/cart/summary/", CartSummaryView.as_view(), name="order-cart-summary"),
+    path("service/cart/add/", CartAddView.as_view(), name="cart-add-item"),
+    path(
+        "service/bill/<int:pk>/add-order/",
+        select_existing_bill,
+        name="bill-add-order",
+    ),
+    path(
+        "action/<str:action>/<int:table>/",
+        ActionBillListView.as_view(),
+        name="open-bill-list",
+    ),
+    path("cart/clear", clear_cart, name="cart-clear"),
+    path("bill/<int:pk>/change-table/", change_table, name="change-table"),
+    path("halls/", HallListView.as_view(), name="hall-list"),
+    path("halls/create/", HallCreateView.as_view(), name="hall-create"),
+    path("halls/<int:pk>/update/", HallUpdateView.as_view(), name="hall-update"),
+    path(
+        "halls/<int:pk>/floor-editor/",
+        HallFloorEditorView.as_view(),
+        name="hall-floor-editor",
+    ),
+    path(
+        "halls/<int:pk>/floor-editor/save/",
+        hall_floor_editor_save,
+        name="hall-floor-editor-save",
+    ),
+] + api_urlpatterns

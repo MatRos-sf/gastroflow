@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load i18n crispy_forms_tags %}
+{% block title %}
+    {% trans "Edit hall" %} — {{ hall.name }}
+{% endblock title %}
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <div class="d-flex align-items-center gap-3 mb-4">
+                <a href="{% url 'service:hall-list' %}"
+                   class="btn btn-outline-secondary rounded-pill px-4">← {% trans "Halls" %}</a>
+                <div>
+                    <h1 class="h4 fw-bold mb-0">{{ hall.name }}</h1>
+                    <small class="text-secondary">{% trans "Edit hall" %}</small>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-12 col-md-6">
+                    <div class="card border-0 rounded-4 shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <form method="post">
+                                {% csrf_token %}
+                                {{ form|crispy }}
+                                <div class="d-flex gap-2 mt-3">
+                                    <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">{% trans "Save" %}</button>
+                                    <a href="{% url 'service:hall-list' %}"
+                                       class="btn btn-outline-secondary rounded-pill px-4">{% trans "Cancel" %}</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <div class="card border-0 rounded-4 shadow-sm h-100">
+                        <div class="card-body p-4 d-flex flex-column">
+                            <h6 class="fw-bold mb-1">{% trans "Canvas preview" %}</h6>
+                            <p class="text-secondary small mb-3">{% trans "Updates as you change the ratio fields." %}</p>
+                            <div class="flex-grow-1 d-flex align-items-center justify-content-center">
+                                <div class="hall-preview-wrapper">
+                                    <div id="hall-preview">
+                                        <span class="text-secondary small fw-bold" id="preview-label">{{ hall.aspect_w }} : {{ hall.aspect_h }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-3 border-top">
+                                <a href="{% url 'service:hall-floor-editor' hall.pk %}"
+                                   class="btn btn-outline-primary rounded-pill w-100">
+                                    {% trans "Open floor editor" %} →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+{% block extra_js %}
+    <style>
+    .hall-preview-wrapper { width: 100%; max-width: 280px; }
+    #hall-preview {
+        width: 100%;
+        aspect-ratio: {{ hall.aspect_w }}/{{ hall.aspect_h }};
+        background: #f0f4ff;
+        border: 2px dashed #6c8ebf;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: aspect-ratio 0.2s;
+    }
+    </style>
+    <script>
+    const wInput = document.getElementById("id_aspect_w");
+    const hInput = document.getElementById("id_aspect_h");
+    const preview = document.getElementById("hall-preview");
+    const label = document.getElementById("preview-label");
+
+    function updatePreview() {
+        const w = parseInt(wInput.value) || 1;
+        const h = parseInt(hInput.value) || 1;
+        preview.style.aspectRatio = `${w}/${h}`;
+        label.textContent = `${w} : ${h}`;
+    }
+
+    wInput.addEventListener("input", updatePreview);
+    hInput.addEventListener("input", updatePreview);
+    </script>
+{% endblock extra_js %}

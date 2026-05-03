@@ -1,65 +1,165 @@
+from django.core.cache import cache
 from django.db import models
+from django.db.models.signals import post_delete, post_save
+from django.dispatch import receiver
+from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
-
-class MenuType(models.TextChoices):
-    MAIN = "menu", "Menu"
-    MENU_FOR_CHILDREN = "menu dla dzieci", "Menu dla dzieci"
-    DRINK = "napoje", "Napoje"
-    COLD_DRINK = "zimne napoje", "Zimne napoje"
-    DESSERT = "deser", "Deser"
-    OTHER = "inne", "Inne"
-    UNAVAILABLE = "niedostępny", "Niedostępny"
-
-
-class SubMenuType(models.TextChoices):
-    COFFEE = "kawa", "Kawa"
-    TEA = "herbata", "Herbata"
-    MATCHA = "matcha", "Matcha"
-    COCKTAIL = "koktajle", "Koktajle"
-    SOFT_DRINK = "pitku", "Pitku"
-    WAFFLE = "gofry", "Gofry"
-    CAKE = "ciasto", "Ciasto"
+CATEGORIES_CACHE_KEY = "menu:categories"
 
 
 class Location(models.TextChoices):
-    BAR = "bar", "BAR"
-    KITCHEN = "kitchen", "KITCHEN"
+    BAR = "bar", _("Bar")
+    KITCHEN = "kitchen", _("Kitchen")
+
+
+class VAT(models.IntegerChoices):
+    VAT_23 = 0, _("23% VAT")
+    VAT_8 = 1, _("8% VAT")
+    VAT_5 = 2, _("2% VAT")
+    VAT_0 = 3, _("0% VAT")
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=100, verbose_name=_("name"))
+
+    class Meta:
+        verbose_name = _("category")
+        verbose_name_plural = _("categories")
+
+    def __str__(self):
+        return self.name
+
+
+@receiver([post_save, post_delete], sender="menu.Category")
+def invalidate_categories_cache(sender, **kwargs):
+    cache.delete(CATEGORIES_CACHE_KEY)
+
+
+class SubCategory(models.Model):
+    name = models.CharField(max_length=100, verbose_name=_("name"))
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, verbose_name=_("category")
+    )
+
+    class Meta:
+        verbose_name = _("subcategory")
+        verbose_name_plural = _("subcategories")
+
+    def __str__(self):
+        return f"{self.category.name}: {self.name}"
+
+
+class Addition(models.Model):
+    name = models.CharField(max_length=100, verbose_name=_("name"))
+    bill_name = models.CharField(
+        max_length=40,
+        verbose_name=_("bill name"),
+        blank=True,
+        null=True,
+        help_text=_("Name as it will appear on the bill"),
+    )
+    vat = models.SmallIntegerField(
+        choices=VAT.choices, default=VAT.VAT_23, verbose_name=_("VAT")
+    )
+    price = models.DecimalField(max_digits=7, decimal_places=2, verbose_name=_("price"))
+    id_checkout = models.PositiveIntegerField(
+        help_text=_("Cash register product ID"), verbose_name=_("checkout ID")
+    )
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("created at"))
+    is_delete = models.BooleanField(default=False, verbose_name=_("deleted"))
+    priority = models.SmallIntegerField(default=1, verbose_name=_("priority"))
+
+    class Meta:
+        ordering = ["priority"]
+        verbose_name = _("addition")
+        verbose_name_plural = _("additions")
+
+    def __str__(self):
+        return self.name
 
 
 class Item(models.Model):
-    menu = models.CharField(
-        max_length=20,
-        choices=MenuType.choices,
-        default=MenuType.MAIN,
-        blank=True,
-        null=True,
-    )
-    sub_menu = models.CharField(
-        max_length=20,
-        choices=SubMenuType.choices,
-        default=None,
-        blank=True,
-        null=True,
-    )
+    """
+    Represents any orderable product in the restaurant: dishes, drinks,
+    desserts, packages, or any other item available on the menu.
+    Items are grouped by Category (and optionally SubCategory) and routed
+    to the kitchen or bar based on preparation_location.
+    """
 
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, verbose_name=_("category")
+    )
+    sub_menu = models.ForeignKey(
+        SubCategory,
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        verbose_name=_("subcategory"),
+    )
     preparation_location = models.CharField(
         max_length=30,
         choices=Location.choices,
         default=Location.KITCHEN,
         blank=True,
         null=True,
+        verbose_name=_("preparation location"),
     )
-    name = models.CharField(max_length=100, help_text="Name of dish")
-    description = models.CharField(
-        help_text="Description of dish", blank=True, null=True
+    name = models.CharField(
+        max_length=100, help_text=_("Item name"), verbose_name=_("name")
+    )
+    bill_name = models.CharField(
+        max_length=40,
+        verbose_name=_("bill name"),
+        blank=True,
+        null=True,
+        help_text=_("Name as it will appear on the bill"),
+    )
+    vat = models.SmallIntegerField(
+        choices=VAT.choices, default=VAT.VAT_23, verbose_name=_("VAT")
+    )
+    description = models.TextField(
+        help_text=_("Item description"),
+        blank=True,
+        null=True,
+        max_length=500,
+        verbose_name=_("description"),
     )
     additions = models.ManyToManyField(
-        "self", blank=True, symmetrical=False, related_name="is_addition_to"
+        Addition, blank=True, related_name="item_related", verbose_name=_("additions")
     )
-    is_available = models.BooleanField(default=True)
-    id_checkout = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=5, decimal_places=2)
-    created_at = models.DateTimeField(auto_now_add=True)
+    daily_stock = models.PositiveIntegerField(
+        null=True,
+        blank=True,
+        help_text=_(
+            "Number of portions available today. None = unlimited, 0 = sold out."
+        ),
+        verbose_name=_("daily stock"),
+    )
+    id_checkout = models.PositiveIntegerField(
+        help_text=_("Cash register product ID"), verbose_name=_("checkout ID")
+    )
+    price = models.DecimalField(max_digits=7, decimal_places=2, verbose_name=_("price"))
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("created at"))
+    is_delete = models.BooleanField(default=False, verbose_name=_("deleted"))
+
+    class Meta:
+        verbose_name = _("item")
+        verbose_name_plural = _("items")
 
     def __str__(self):
         return self.name
+
+    def get_absolute_url(self):
+        return reverse("gf-menu:item-detail", kwargs={"pk": self.pk})
+
+
+class MenuPeriod(models.Model):
+    name = models.CharField(max_length=100)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    items = models.ManyToManyField(Item, blank=True)
+    is_enabled = models.BooleanField(default=True)
+
+    def get_absolute_url(self):
+        return reverse("gf-menu:menu-period-detail", kwargs={"pk": self.pk})

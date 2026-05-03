@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+    {% trans "Open Bills" %}
+    {% if object_list %}— {{ object_list.0.str_tables }}{% endif %}
+{% endblock title %}
+{% block content %}
+    <div class="container-fluid px-3 py-3">
+        <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+            <div class="text-center flex-grow-1">
+                <h1 class="h4 fw-bold mb-0">
+                    {% trans "Open Bills" %} - {% trans "Table" %} {{ request.resolver_match.kwargs.table }}
+                </h1>
+                <p class="text-secondary small mb-0">{% trans "Additions are not shown in this view." %}</p>
+            </div>
+            <a href="{% url 'service:main-menu' %}"
+               class="btn btn-outline-secondary rounded-pill px-4">← {% trans "Back" %}</a>
+        </div>
+        {% if object_list %}
+            <div class="row g-3">
+                {% for bill in object_list %}
+                    <div class="col-12 col-sm-6 col-lg-4">
+                        <div class="card border-0 rounded-4 shadow h-100">
+                            <div class="card-body d-flex flex-column gap-2 p-4">
+                                <div class="text-secondary small">
+                                    <span>{% trans "Waiter" %}: {{ bill.waiter }}</span>
+                                    <span class="ms-2">· {{ bill.created_at|date:"H:i" }}</span>
+                                    <span class="ms-2">· #{{ bill.pk }}</span>
+                                </div>
+                                {% if bill.note %}<p class="text-secondary small mb-0">{{ bill.note }}</p>{% endif %}
+                                <ul class="list-unstyled small mb-0">
+                                    {% for order in bill.orders.all %}
+                                        {% for order_item in order.order_items.all %}<li>{{ order_item }}</li>{% endfor %}
+                                    {% endfor %}
+                                </ul>
+                                <div class="mt-auto pt-2">
+                                    {% if action == "close-bill" %}
+                                        <a href="{% url 'detail-bill' bill.pk %}"
+                                           class="btn btn-primary rounded-pill w-100">{% trans "Details" %}</a>
+                                    {% else %}
+                                        <a href="{% url 'service:bill-add-order' bill.id %}"
+                                           class="btn btn-primary rounded-pill w-100">{% trans "Add to order" %}</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="card border-0 rounded-4 shadow-sm">
+                <div class="card-body p-5 text-center text-secondary">
+                    {% if action == "close-bill" %}
+                        <p class="mb-0">{% trans "No open bills to close." %}</p>
+                    {% else %}
+                        <p class="mb-0">{% trans "No open bills to add to." %}</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %}

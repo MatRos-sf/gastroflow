@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+    {% trans "Edit Menu Period" %}
+{% endblock title %}
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-11 col-lg-9">
+            <!-- Header -->
+            <div class="text-center mb-3">
+                <h4 class="fw-bold mb-0">{% trans "Edit menu period" %}</h4>
+                <p class="text-muted small mb-0">{{ object.name }}</p>
+            </div>
+            <form method="post">
+                {% csrf_token %}
+                <!-- Basic info -->
+                <div class="card border-0 rounded-4 shadow mb-4">
+                    <div class="card-body p-4">
+                        <h6 class="fw-bold mb-3">{% trans "Details" %}</h6>
+                        <div class="mb-3">
+                            <label for="id_name" class="form-label fw-semibold small">{% trans "Name" %}</label>
+                            <input type="text"
+                                   name="name"
+                                   id="id_name"
+                                   class="form-control rounded-3{% if form.name.errors %} is-invalid{% endif %}"
+                                   value="{{ form.name.value|default:'' }}"
+                                   placeholder="{% trans 'e.g. Breakfast, Lunch' %}">
+                            {% if form.name.errors %}<div class="invalid-feedback">{{ form.name.errors|join:", " }}</div>{% endif %}
+                        </div>
+                        <div class="row g-3 mb-3">
+                            <div class="col-6">
+                                <label for="id_start_time" class="form-label fw-semibold small">{% trans "Start time" %}</label>
+                                <input type="time"
+                                       name="start_time"
+                                       id="id_start_time"
+                                       class="form-control rounded-3{% if form.start_time.errors %} is-invalid{% endif %}"
+                                       value="{{ form.start_time.value|default:'' }}">
+                                {% if form.start_time.errors %}<div class="invalid-feedback">{{ form.start_time.errors|join:", " }}</div>{% endif %}
+                            </div>
+                            <div class="col-6">
+                                <label for="id_end_time" class="form-label fw-semibold small">{% trans "End time" %}</label>
+                                <input type="time"
+                                       name="end_time"
+                                       id="id_end_time"
+                                       class="form-control rounded-3{% if form.end_time.errors %} is-invalid{% endif %}"
+                                       value="{{ form.end_time.value|default:'' }}">
+                                {% if form.end_time.errors %}<div class="invalid-feedback">{{ form.end_time.errors|join:", " }}</div>{% endif %}
+                            </div>
+                        </div>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="is_enabled"
+                                   id="id_is_enabled"
+                                   {% if form.is_enabled.value %}checked{% endif %}>
+                            <label class="form-check-label fw-semibold small" for="id_is_enabled">{% trans "Enabled" %}</label>
+                        </div>
+                    </div>
+                </div>
+                <!-- Items -->
+                <div class="card border-0 rounded-4 shadow mb-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold mb-0">{% trans "Items" %}</h6>
+                            <span class="badge bg-dark rounded-pill" id="selectedCount">0 {% trans "selected" %}</span>
+                        </div>
+                        <!-- Search -->
+                        <input type="text"
+                               id="itemSearch"
+                               class="form-control rounded-3 mb-3"
+                               placeholder="{% trans 'Search items...' %}">
+                        {% if form.items.errors %}<div class="text-danger small mb-2">{{ form.items.errors|join:", " }}</div>{% endif %}
+                        <!-- Category accordion -->
+                        <div class="accordion accordion-flush" id="categoryAccordion">
+                            {% for category in categories %}
+                                <div class="accordion-item border rounded-3 mb-2 category-block"
+                                     data-category="{{ category.name|lower }}">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed fw-semibold rounded-3"
+                                                type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#cat-{{ category.pk }}"
+                                                aria-expanded="false">
+                                            {{ category.name }}
+                                            <span class="badge bg-secondary rounded-pill ms-2">{{ category.item_set.all|length }}</span>
+                                        </button>
+                                    </h2>
+                                    <div id="cat-{{ category.pk }}" class="accordion-collapse collapse">
+                                        <div class="accordion-body pt-1">
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <button type="button"
+                                                        class="btn btn-sm btn-outline-secondary rounded-pill px-3 select-all-btn"
+                                                        data-cat="cat-{{ category.pk }}">
+                                                    {% trans "Select all" %}
+                                                </button>
+                                                <button type="button"
+                                                        class="btn btn-sm btn-link text-muted px-0 deselect-all-btn"
+                                                        data-cat="cat-{{ category.pk }}">{% trans "Clear" %}</button>
+                                            </div>
+                                            {% for item in category.item_set.all %}
+                                                <div class="form-check item-row" data-name="{{ item.name|lower }}">
+                                                    <input class="form-check-input item-checkbox"
+                                                           type="checkbox"
+                                                           name="items"
+                                                           value="{{ item.pk }}"
+                                                           id="item_{{ item.pk }}"
+                                                           {% if item.pk in selected_item_pks %}checked{% endif %}>
+                                                    <label class="form-check-label" for="item_{{ item.pk }}">
+                                                        {{ item.name }}
+                                                        <span class="text-muted small ms-1">{{ item.id_checkout }}</span>
+                                                    </label>
+                                                </div>
+                                            {% empty %}
+                                                <p class="text-muted small mb-0">{% trans "No items in this category." %}</p>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <p class="text-muted">{% trans "No categories found." %}</p>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <!-- Actions -->
+                <div class="d-grid gap-2 d-sm-flex">
+                    <button type="submit" class="btn btn-dark rounded-pill px-4 w-100">{% trans "Save" %}</button>
+                    <a href="{% url 'gf-menu:menu-period-detail' object.pk %}"
+                       class="btn btn-outline-secondary rounded-pill px-4 w-100">{% trans "Cancel" %}</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock content %}
+{% block extra_js %}
+    <script>
+        // Selected count badge
+        function updateCount() {
+            const n = document.querySelectorAll('.item-checkbox:checked').length;
+            document.getElementById('selectedCount').textContent = n + ' {% trans "selected" %}';
+        }
+        document.addEventListener('change', e => {
+            if (e.target.classList.contains('item-checkbox')) updateCount();
+        });
+        updateCount();
+
+        // Select / deselect all in category
+        document.querySelectorAll('.select-all-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll(`#${btn.dataset.cat} .item-checkbox:not([style*="display: none"])`).forEach(cb => cb.checked = true);
+                updateCount();
+            });
+        });
+        document.querySelectorAll('.deselect-all-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll(`#${btn.dataset.cat} .item-checkbox`).forEach(cb => cb.checked = false);
+                updateCount();
+            });
+        });
+
+        // Live search — shows matching items, expands their category, hides empty categories
+        document.getElementById('itemSearch').addEventListener('input', function () {
+            const q = this.value.toLowerCase().trim();
+            document.querySelectorAll('.category-block').forEach(block => {
+                let visible = 0;
+                block.querySelectorAll('.item-row').forEach(row => {
+                    const match = !q || row.dataset.name.includes(q);
+                    row.style.display = match ? '' : 'none';
+                    if (match) visible++;
+                });
+                block.style.display = visible ? '' : 'none';
+                // Auto-expand if searching
+                const collapse = block.querySelector('.accordion-collapse');
+                if (q && visible) collapse.classList.add('show');
+                else if (!q) collapse.classList.remove('show');
+            });
+        });
+    </script>
+{% endblock extra_js %}

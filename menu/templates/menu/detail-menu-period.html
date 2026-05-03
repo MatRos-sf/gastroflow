@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}
+    {{ object.name }}
+{% endblock title %}
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-11 col-lg-9">
+            <!-- Header -->
+            <div class="text-center mb-3">
+                <h4 class="fw-bold mb-0">{{ object.name }}</h4>
+                <p class="text-muted small mb-0">
+                    {{ object.start_time|time:"H:i" }} – {{ object.end_time|time:"H:i" }}
+                    {% if not object.is_enabled %}
+                        <span class="badge bg-secondary rounded-pill ms-1">{% trans "Disabled" %}</span>
+                    {% endif %}
+                </p>
+            </div>
+            <!-- Actions -->
+            <div class="d-flex justify-content-end mb-3">
+                <a href="{% url 'gf-menu:menu-period-update' object.pk %}"
+                   class="btn btn-dark rounded-pill px-4">{% trans "Edit" %}</a>
+            </div>
+            <!-- Info card -->
+            <div class="card border-0 rounded-4 shadow mb-4">
+                <div class="card-body p-4">
+                    <h6 class="fw-bold mb-3">{% trans "Details" %}</h6>
+                    <div class="row g-2 text-muted small">
+                        <div class="col-6">
+                            <span class="fw-semibold text-dark">{% trans "Start time" %}</span>
+                            <br>
+                            {{ object.start_time|time:"H:i" }}
+                        </div>
+                        <div class="col-6">
+                            <span class="fw-semibold text-dark">{% trans "End time" %}</span>
+                            <br>
+                            {{ object.end_time|time:"H:i" }}
+                        </div>
+                        <div class="col-12 mt-2">
+                            <span class="fw-semibold text-dark">{% trans "Status" %}</span>
+                            <br>
+                            {% if object.is_enabled %}
+                                <span class="badge bg-success rounded-pill">{% trans "Enabled" %}</span>
+                            {% else %}
+                                <span class="badge bg-secondary rounded-pill">{% trans "Disabled" %}</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Items grouped by category -->
+            <div class="card border-0 rounded-4 shadow">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold mb-0">{% trans "Items" %}</h6>
+                        <span class="badge bg-dark rounded-pill">{{ object.items.count }}</span>
+                    </div>
+                    {% regroup object.items.all|dictsort:"category.name" by category as items_by_category %}
+                    {% if items_by_category %}
+                        <div class="accordion accordion-flush">
+                            {% for group in items_by_category %}
+                                <div class="accordion-item border rounded-3 mb-2">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed fw-semibold rounded-3"
+                                                type="button"
+                                                data-bs-toggle="collapse"
+                                                data-bs-target="#detail-cat-{{ forloop.counter }}"
+                                                aria-expanded="false">
+                                            <span class="text-uppercase small" style="letter-spacing:.05em">{{ group.grouper }}</span>
+                                            <span class="badge bg-secondary rounded-pill ms-2">{{ group.list|length }}</span>
+                                        </button>
+                                    </h2>
+                                    <div id="detail-cat-{{ forloop.counter }}"
+                                         class="accordion-collapse collapse">
+                                        <div class="accordion-body pt-1 pb-2">
+                                            {% for item in group.list %}
+                                                <div class="d-flex justify-content-between align-items-center py-1 border-bottom">
+                                                    <span class="small">{{ item.name }}</span>
+                                                    <span class="text-muted small">{{ item.id_checkout }}</span>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted small mb-0">{% trans "No items assigned." %}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

@@ -54,6 +54,14 @@ coverage.xml
 # Django stuff:
 *.log
 local_settings.py
+staticfiles/
+
+# Private fixtures (restaurant-specific data)
+menu/fixtures/
+
+# POSNET server binary — must be placed manually in posnet/ before building
+posnet/*.tar.gz
+posnet/*.zip
 
 # Flask stuff:
 instance/
@@ -184,6 +192,5 @@ fabric.properties
 # idea folder, uncomment if you don't need it
 # .idea
 
-*/migrations/0*.py
 *.sqlite3
 .idea

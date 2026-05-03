@@ -1,22 +1,91 @@
+from datetime import timedelta
+from decimal import Decimal
+
 from django.db import models
+from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
+
+from tools.models.validators import validate_digits
 
 
 class Position(models.TextChoices):
-    WAITER = "kelner", "Kelner"
-    CHEF = "kucharz", "Kucharz"
-    ASSISTANT = "asystent", "Asystent"
-    BARISTA = "barysta", "Barysta"
+    WAITER = "waiter", _("Waiter")
+    CHEF = "chef", _("Chef")
+    ASSISTANT = "assistant", _("Assistant")
+    BARISTA = "barista", _("Barista")
 
 
 class Worker(models.Model):
-    user = models.ForeignKey("auth.User", on_delete=models.CASCADE)
-    salary = models.DecimalField(max_digits=7, decimal_places=2, default=0.00)
+    first_name = models.CharField(max_length=30, verbose_name=_("first name"))
+    last_name = models.CharField(max_length=30, verbose_name=_("last name"))
 
+    salary = models.DecimalField(
+        max_digits=7,
+        decimal_places=2,
+        default=0.00,
+        help_text=_("per hour"),
+        verbose_name=_("salary"),
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
     position = models.CharField(
-        max_length=20, choices=Position.choices, default=Position.WAITER
+        max_length=20,
+        choices=Position.choices,
+        default=Position.WAITER,
+        verbose_name=_("position"),
+    )
+    pin = models.CharField(
+        max_length=4,
+        blank=True,
+        null=True,
+        validators=[validate_digits],
+        verbose_name=_("pin"),
     )
 
     def __str__(self):
-        return f"{self.user.username} - {self.position}"
+        return f"{self.first_name} {self.last_name}"
+
+    def get_absolute_url(self):
+        return reverse("gf-worker:worker-detail", kwargs={"pk": self.pk})
+
+
+class WorkTime(models.Model):
+    worker = models.ForeignKey(Worker, on_delete=models.SET_NULL, null=True)
+    start_time = models.DateTimeField()
+    finish_time = models.DateTimeField(blank=True, null=True)
+    salary_snapshot = models.DecimalField(max_digits=7, decimal_places=2)
+    is_settled = models.BooleanField(
+        default=False,
+        help_text="Indicates whether the order has been settled (payment finalized).",
+    )
+    settled_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text="Timestamp of when the worker time was settled. Null if not yet settled.",
+    )
+
+    @property
+    def duration(self) -> timedelta | None:
+        if self.finish_time:
+            return self.finish_time - self.start_time
+        return None
+
+    @property
+    def earnings(self) -> Decimal | None:
+        duration = self.duration
+        if not self.duration:
+            return None
+        return Decimal(duration.total_seconds() / 3600) * self.salary_snapshot
+
+    def __str__(self):
+        return f"Worker: {self.duration}"
+
+    def save(self, *args, **kwargs):
+        if not self.pk:
+            if not self.worker:
+                self.salary_snapshot = Decimal("0.00")
+            else:
+                self.salary_snapshot = self.worker.salary
+
+        super().save(*args, **kwargs)
